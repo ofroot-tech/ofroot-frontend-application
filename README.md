@@ -82,3 +82,4 @@ You can start editing the home page by modifying `app/page.tsx`. The page auto-u
 ---
 
 This frontend is designed to work seamlessly with a Laravel backend and is optimized for Vercel hosting.
+# ofroot-frontend-application
