@@ -130,7 +130,7 @@ export default function Home() {
       <section id="featured" className="py-16 px-8 sm:px-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2 bg-gradient-to-r from-white to-gray-50 p-8 rounded-lg shadow-md">
-            <h3 className="text-2xl font-bold mb-2">Featured Product — onTask</h3>
+            <h3 className="text-2xl font-bold mb-2">Featured Product — HELPR</h3>
             <p className="text-gray-700 mb-4">onTask is our vertical product for home service businesses — scheduling, invoicing, and crew management built with reliability and speed in mind. Built as a separate brand and product to preserve OfRoot's focus on technology and enterprise work.</p>
             <p className="text-gray-600 mb-6">Two distinct paths: customers book services quickly; providers manage work, dispatch, and payments. We support multi-tenant SaaS models and deep marketplace integrations.</p>
             <a href="https://ontask.app" target="_blank" rel="noopener noreferrer" className="inline-block bg-[#20b2aa] text-white py-3 px-6 rounded-md font-semibold hover:bg-[#1a8f85] transition">Visit onTask</a>

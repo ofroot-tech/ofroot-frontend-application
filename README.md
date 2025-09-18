@@ -79,7 +79,31 @@ You can start editing the home page by modifying `app/page.tsx`. The page auto-u
 - [Vercel Deployment Docs](https://nextjs.org/docs/app/building-your-application/deploying)
 - [Vanta.js Documentation](https://www.vantajs.com/)
 
+## Vercel Deployment (recommended)
+
+Recommended settings to ensure a smooth deployment:
+
+- Framework Preset: `Next.js` (auto-detects the App Router and static/SSR routes).
+- Root Directory: `./` (use this if the project lives at the repository root).
+- Install Command: `npm ci` (or `npm install` if you prefer).
+- Build Command: `npm run build` (Vercel will run `next build`).
+- Output Directory: leave blank (Vercel auto-detects Next.js output). If you need to set one, use `.next`.
+- Environment Variables: add any runtime keys (for example `NEXT_PUBLIC_API_URL`, `API_URL`, or third-party keys) under the "Environment Variables" panel before deploying.
+- Node Version: pin via `engines` in `package.json` or add a `.nvmrc` if you want a specific Node.js version on Vercel.
+
+Notes and best practices:
+- Keep `Framework Preset` as `Next.js` and `Root Directory` as `./` for the defaults shown in your screenshot — this is correct for this repo.
+- Vanta effects are client-only; ensure components using Vanta include `'use client'` and use dynamic imports (this repo already does this in `app/page.tsx`).
+- If you see the warning about `@next/font`, migrate to the built-in `next/font` (Next.js 14 will remove `@next/font`). You can run the codemod: `npx @next/codemod@latest built-in-next-font .` before deploying.
+- Add any required environment variables before deployment so server-side builds that depend on them succeed.
+
+Deploying:
+1. Import the repository into Vercel and choose the `ofroot-frontend-application` project name.
+2. Confirm the framework preset is `Next.js` and the root directory is `./`.
+3. Add environment variables (if any) and click Deploy.
+
+This project is configured to work with Vercel's default Next.js settings.
+
 ---
 
 This frontend is designed to work seamlessly with a Laravel backend and is optimized for Vercel hosting.
-# ofroot-frontend-application
