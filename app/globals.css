@@ -27,3 +27,40 @@ html {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
+
+/* Modern "smokey" glassmorphism card style.
+   Targets elements that use the common set of utility classes used as cards
+   (rounded-lg + shadow-lg + border). Placed after Tailwind imports so it
+   overrides the default white backgrounds. */
+.rounded-lg.shadow-lg.border {
+  background-color: rgba(255,255,255,0.62);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+  border-color: rgba(16,24,40,0.06) !important;
+  box-shadow: 0 10px 30px rgba(16,24,40,0.08) !important;
+}
+
+/* Slight variation for smaller elevated cards that use only rounded-lg and shadow */
+.rounded-lg.shadow-lg {
+  background-color: rgba(255,255,255,0.58);
+  -webkit-backdrop-filter: blur(6px) saturate(115%);
+  backdrop-filter: blur(6px) saturate(115%);
+  box-shadow: 0 8px 24px rgba(16,24,40,0.06) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rounded-lg.shadow-lg.border,
+  .rounded-lg.shadow-lg {
+    background-color: rgba(7,10,13,0.46);
+    border-color: rgba(255,255,255,0.04) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6) !important;
+  }
+
+  /* Make text inside cards slightly lighter in dark mode */
+  .rounded-lg.shadow-lg.border, .rounded-lg.shadow-lg {
+    color: rgba(255,255,255,0.92);
+  }
+}
+
+/* Make images inside logo/nav scale nicely when using the larger logo */
+header img, header .next-image, header picture { max-height: 64px; }
