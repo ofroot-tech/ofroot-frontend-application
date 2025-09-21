@@ -11,7 +11,7 @@ export default function Footer() {
         <a href="#" aria-label="Twitter" className="text-[#20b2aa] hover:text-[#1a8f85]">
           🐦
         </a>
-        <a href="#" aria-label="LinkedIn" className="text-[#20b2aa] hover:text-[#1a8f85]">
+        <a href="https://www.linkedin.com/company/106671711/admin/dashboard/" aria-label="OfRoot on LinkedIn" className="text-[#20b2aa] hover:text-[#1a8f85]" target="_blank" rel="noopener noreferrer">
           💼
         </a>
       </div>

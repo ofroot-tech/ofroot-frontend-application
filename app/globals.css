@@ -62,5 +62,84 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Make images inside logo/nav scale nicely when using the larger logo */
-header img, header .next-image, header picture { max-height: 64px; }
+/* Enhance card glass effect: more transparent at edges using radial gradient + inset shadow */
+.rounded-lg.shadow-lg.border,
+.rounded-lg.shadow-lg {
+  /* make underlying utility bg-white irrelevant */
+  background-color: transparent !important;
+  background-image: radial-gradient(circle at center, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 35%, rgba(255,255,255,0.40) 70%, rgba(255,255,255,0.18) 100%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(10px) saturate(130%);
+  border: 1px solid rgba(16,24,40,0.06) !important;
+  box-shadow: 0 20px 40px rgba(16,24,40,0.08), inset 0 0 60px rgba(255,255,255,0.65) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rounded-lg.shadow-lg.border,
+  .rounded-lg.shadow-lg {
+    background-image: radial-gradient(circle at center, rgba(10,12,14,0.72) 0%, rgba(10,12,14,0.58) 35%, rgba(10,12,14,0.36) 70%, rgba(10,12,14,0.18) 100%) !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6), inset 0 0 60px rgba(255,255,255,0.03) !important;
+  }
+}
+
+/* Section gradients: gentle, smooth backgrounds using brand tones */
+section#services { background-image: linear-gradient(180deg, rgba(32,178,170,0.03), rgba(0,123,255,0.03)); }
+section#featured { background-image: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(32,178,170,0.02)); }
+section#case-studies { background-image: linear-gradient(180deg, rgba(0,123,255,0.02), rgba(32,178,170,0.02)); }
+section#how { background-image: linear-gradient(180deg, rgba(32,178,170,0.02), rgba(0,123,255,0.02)); }
+section#proof { background-image: linear-gradient(180deg, rgba(32,178,170,0.04), rgba(0,123,255,0.04)); }
+section#contact { background-image: linear-gradient(180deg, rgba(0,123,255,0.03), rgba(32,178,170,0.03)); }
+
+/* Ensure gradients are subtle and don't override section backgrounds that are explicitly set */
+section[id] { background-repeat: no-repeat; background-size: cover; }
+
+/* Increase contrast for card headings inside glass cards */
+.rounded-lg.shadow-lg.border h3,
+.rounded-lg.shadow-lg h3,
+.rounded-lg.shadow-lg.border h4,
+.rounded-lg.shadow-lg h4 {
+  color: #0f172a; /* slate-900 */
+}
+
+/* Mobile menu glass panel */
+@media (max-width: 768px) {
+  header[role="banner"] .mobile-glass,
+  .mobile-glass {
+    background-color: transparent !important;
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 35%, rgba(255,255,255,0.40) 70%, rgba(255,255,255,0.18) 100%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(16,24,40,0.06) !important;
+    box-shadow: 0 18px 36px rgba(16,24,40,0.08), inset 0 0 60px rgba(255,255,255,0.65) !important;
+  }
+}
+
+/* Animation helpers for mobile menu */
+@media (prefers-reduced-motion: reduce) {
+  .transform, .transition-all { transition: none !important; }
+}
+
+/* Focus styles for keyboard users */
+:focus {
+  outline: 3px solid rgba(32,178,170,0.18);
+  outline-offset: 3px;
+}
+
+/* Ensure nav links have better hit targets */
+nav a {
+  padding: 6px 2px;
+}
+
+/* sr-only accessible text helper */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
