@@ -103,7 +103,7 @@ export default function Navbar() {
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
           <a href="#services" className="text-gray-700 hover:text-[#20b2aa]">Services</a>
           <a href="#featured" className="text-gray-700 hover:text-[#20b2aa]">Featured</a>
-          <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a>
+          {/* <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a> */}
           <a href="#how" className="text-gray-700 hover:text-[#20b2aa]">How</a>
           <a href="#proof" className="text-gray-700 hover:text-[#20b2aa]">Proof</a>
           <a
