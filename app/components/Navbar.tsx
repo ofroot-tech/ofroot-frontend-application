@@ -7,7 +7,8 @@ import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
-  if (pathname !== "/") return null;
+  const showNavOnThesePages = ["/", "/blog"];
+  if (!showNavOnThesePages.includes(pathname)) return null;
 
   const [open, setOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
@@ -101,11 +102,23 @@ export default function Navbar() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
-          <a href="#services" className="text-gray-700 hover:text-[#20b2aa]">Services</a>
-          <a href="#featured" className="text-gray-700 hover:text-[#20b2aa]">Featured</a>
-          {/* <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a> */}
-          <a href="#how" className="text-gray-700 hover:text-[#20b2aa]">How</a>
-          <a href="#proof" className="text-gray-700 hover:text-[#20b2aa]">Proof</a>
+          {pathname === "/" && (
+            <>
+              <a href="#services" className="text-gray-700 hover:text-[#20b2aa]">Services</a>
+              <a href="#featured" className="text-gray-700 hover:text-[#20b2aa]">Featured</a>
+              <a href="#how" className="text-gray-700 hover:text-[#20b2aa]">How</a>
+              <a href="#proof" className="text-gray-700 hover:text-[#20b2aa]">Proof</a>
+              <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a>
+            </>
+          )}
+            {/* Show Blog link if not on /blog or any /blog/* page */}
+            {!(pathname === "/blog" || pathname.startsWith("/blog/")) && (
+              <a href="/blog" className="text-gray-700 hover:text-[#20b2aa]">Blog</a>
+            )}
+            {/* Show Home link if on /blog or any /blog/* page */}
+            {(pathname === "/blog" || pathname.startsWith("/blog/")) && (
+              <a href="/" className="text-gray-700 hover:text-[#20b2aa]">Home</a>
+            )}
           <a
             href="#contact"
             onClick={() => setOpen(false)}
@@ -159,9 +172,10 @@ export default function Navbar() {
         <div className="flex flex-col p-3 gap-3 max-w-6xl mx-auto">
           <a href="#services" onClick={() => toggleMenu(false)} className="text-gray-700">Services</a>
           <a href="#featured" onClick={() => toggleMenu(false)} className="text-gray-700">Featured</a>
-          <a href="#case-studies" onClick={() => toggleMenu(false)} className="text-gray-700">Case Studies</a>
+          {/* <a href="#case-studies" onClick={() => toggleMenu(false)} className="text-gray-700">Case Studies</a> */}
           <a href="#how" onClick={() => toggleMenu(false)} className="text-gray-700">How</a>
           <a href="#proof" onClick={() => toggleMenu(false)} className="text-gray-700">Proof</a>
+          <a href="/blog" onClick={()=> toggleMenu(false)} className="text-gray-700">Blog</a>
           <a href="#contact" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>
         </div>
       </div>
