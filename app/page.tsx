@@ -1,4 +1,6 @@
 'use client';
+// 1. IMPORT VERCEL ANALYTICS COMPONENT
+import { Analytics } from "@vercel/analytics/react"; 
 import Image from "next/image";
 import Script from 'next/script';
 import { useEffect, useRef, useState } from "react";
@@ -130,6 +132,10 @@ export default function Home() {
 
   return (
     <div className="font-sans">
+      {/* 2. VERCEL ANALYTICS COMPONENT PLACEMENT */}
+      {/* This component initializes the Vercel analytics script */}
+      <Analytics /> 
+      
       {/* Skip link for keyboard users */}
       <a href="#services" className="sr-only">Skip to content</a>
       
@@ -344,9 +350,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* UPDATED: How We Work - Render.com Style 
-        (Already updated in previous step, kept for completeness)
-      */}
+      {/* ----------------------------------------------------------- */}
+      {/* UPDATED: How We Work - Render.com Style */}
+      {/* ----------------------------------------------------------- */}
       <section id="how" className="py-16 px-8 sm:px-20">
         <div className="max-w-6xl mx-auto">
           
@@ -382,9 +388,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* UPDATED: Proof Section - Render.com Style 
-        (Already updated in previous step, kept for completeness)
-      */}
+      {/* ----------------------------------------------------------- */}
+      {/* UPDATED: Proof Section - Render.com Style */}
+      {/* ----------------------------------------------------------- */}
       <section id="proof" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10">
         <div className="max-w-6xl mx-auto">
           
