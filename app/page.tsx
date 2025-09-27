@@ -466,10 +466,10 @@ export default function Home() {
                   <span className="text-[#20b2aa] mr-3">📞</span>
                   <span>+1 (614) 500-2315</span>
                 </p>
-                <p className="flex items-center">
+                {/* <p className="flex items-center">
                   <span className="text-[#20b2aa] mr-3">📍</span>
                   <span>500 West Broad Street, Columbus, OH</span>
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -513,7 +513,7 @@ export default function Home() {
                   "@context": "https://schema.org",
                   "@type": "Organization",
                   "name": "OfRoot",
-                  "url": "https://ofroot.com",
+                  "url": "https://ofroot.technology",
                   "contactPoint": [{
                     "@type": "ContactPoint",
                     "telephone": "+1-614-500-2315",

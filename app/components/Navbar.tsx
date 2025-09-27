@@ -108,12 +108,12 @@ export default function Navbar() {
               <a href="#featured" className="text-gray-700 hover:text-[#20b2aa]">Featured</a>
               <a href="#how" className="text-gray-700 hover:text-[#20b2aa]">How</a>
               <a href="#proof" className="text-gray-700 hover:text-[#20b2aa]">Proof</a>
-              <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a>
+              {/* <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a> */}
             </>
           )}
             {/* Show Blog link if not on /blog or any /blog/* page */}
             {!(pathname === "/blog" || pathname.startsWith("/blog/")) && (
-              <a href="/blog" className="text-gray-700 hover:text-[#20b2aa]">Blog</a>
+              <a href="https://substack.com/@ofroot/posts" className="text-gray-700 hover:text-[#20b2aa]">Blog</a>
             )}
             {/* Show Home link if on /blog or any /blog/* page */}
             {(pathname === "/blog" || pathname.startsWith("/blog/")) && (
@@ -175,7 +175,7 @@ export default function Navbar() {
           {/* <a href="#case-studies" onClick={() => toggleMenu(false)} className="text-gray-700">Case Studies</a> */}
           <a href="#how" onClick={() => toggleMenu(false)} className="text-gray-700">How</a>
           <a href="#proof" onClick={() => toggleMenu(false)} className="text-gray-700">Proof</a>
-          <a href="/blog" onClick={()=> toggleMenu(false)} className="text-gray-700">Blog</a>
+          <a href="https://substack.com/@ofroot/posts" onClick={()=> toggleMenu(false)} className="text-gray-700">Blog</a>
           <a href="#contact" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>
         </div>
       </div>
