@@ -245,7 +245,7 @@ nav a {
 .floating-circles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
 /* darker, slightly more opaque circles for better visibility */
 .floating-circles span { position: absolute; display: block; border-radius: 9999px; opacity: 1.4; background: radial-gradient(circle at 30% 30%, rgba(16,150,140,0.98), rgba(16,150,140,0.75)); filter: blur(12px); transform: translate3d(0,0,0); }
-r
+
 /* faster motion: shorten animation durations significantly */
 .floating-circles .c1 { width: 220px; height: 220px; left: 8%; top: 10%; animation: floatSlow 10s ease-in-out infinite; }
 .floating-circles .c2 { width: 120px; height: 120px; left: 60%; top: 6%; animation: float 7.5s ease-in-out infinite; opacity: 0.22; }
@@ -294,4 +294,11 @@ r
   html { scroll-behavior: auto; }
   .hero-wrapper .fade-up { animation: none; transform: none; opacity: 1; }
   .transform, .transition-all { transition: none !important; }
+}
+
+/* Debug override — remove once root cause is fixed */
+html, body {
+  background: #ffffff !important;
+  background-image: none !important;
+  --background: #ffffff !important;
 }
