@@ -49,6 +49,61 @@ vantaEffect.current = TOPOLOGY({
 3. **Proper Cleanup**: Always destroy the Vanta effect in the cleanup function to prevent memory leaks.
 4. **Vercel Optimization**: Vanta works seamlessly with Vercel deployments. Ensure effects are initialized only on the client-side for optimal performance.
 
+## Landing pages
+Static, manifest-driven landing pages live under `app/landing/[slug]`.
+
+- Manifest file: `app/landing/manifest.json`
+- Add a new page by adding a key under `pages`, e.g.:
+```json
+{
+  "pages": {
+    "summer-campaign": {
+      "seo": { "title": "Summer Campaign" },
+      "hero": { "headline": "Save big this summer", "subheadline": "Limited-time offers" },
+      "cta": { "label": "Get started", "href": "/#contact" },
+      "features": [
+        { "emoji": "🔥", "title": "Hot deals", "text": "Great prices" }
+      ],
+      "embed": { "html": "<div>Optional embed HTML</div>" }
+    }
+  }
+}
+```
+- Visit `/landing/summer-campaign` to view it.
+- `generateStaticParams` prebuilds these routes on Vercel for speed.
+
+### Theme & A/B variants
+- Optional `theme` block per page: `{ "primary": "#20b2aa", "secondary": "#007bff" }` used for CTA background, etc.
+- Optional `variants` block to A/B test copy. Example:
+```json
+"variants": {
+  "default": "A",
+  "A": { "ctaLabel": "Schedule a call" },
+  "B": { "ctaLabel": "Get your consultation" }
+}
+```
+- Select variant via query: `/landing/ofroot-demo?v=B`. The active variant key is shown on the CTA.
+
+### Variant stickiness
+- Middleware at `middleware.ts` captures `?v=A|B|...` on `/landing/:slug` and sets a cookie `ofroot_variant_<slug>`, then redirects to a clean URL.
+- Page reads this cookie to choose the variant; if absent, falls back to `variants.default` from the manifest.
+- This keeps canonical URLs clean while preserving experiment assignment.
+
+## Analytics & A/B helpers
+- File: `app/lib/ab.ts`
+- Functions:
+  - `getActiveVariant(slug)` — reads `ofroot_variant_<slug>` cookie in the browser
+  - `track(event)` — vendor-agnostic; uses Vercel Analytics `va()` if available, else logs
+  - `trackVariantExposure({ slug, variant })` — call on page view
+  - `trackCtaClick({ slug, variant, label })` — call on CTA clicks
+- Landing pages dynamically import these helpers to avoid extra server bundle weight and call them on mount and on CTA clicks.
+
+Event taxonomy
+- category: `ab` | `cta` | `view`
+- action: `exposure` | `click`
+- label: usually the CTA label or slug
+- meta: includes `slug`, `variant`, and `path`
+
 ## Getting Started
 
 First, install dependencies:
@@ -79,6 +134,46 @@ You can start editing the home page by modifying `app/page.tsx`. The page auto-u
 - [Vercel Deployment Docs](https://nextjs.org/docs/app/building-your-application/deploying)
 - [Vanta.js Documentation](https://www.vantajs.com/)
 
+## Backend API configuration
+
+This frontend talks to the Laravel API. Configure the base URL via an environment variable.
+
+- Variable name: `NEXT_PUBLIC_API_BASE_URL`
+- Production (Vercel): set to `https://ofroot-leads.onrender.com/api` in Vercel → Project → Settings → Environment Variables. Scope to Production (and Preview if needed). Redeploy after saving.
+- Local development: copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api` (or your local URL).
+
+Tips
+- This variable is intentionally public so client components can call the API from the browser.
+- Avoid double slashes when joining (the app normalizes a trailing slash).
+
+### API client
+- File: `app/lib/api.ts`
+- Helpers: `api.createLead`, `api.assignLead`, `api.unassignLead`, `api.listTenants`, `api.createTenant`, `api.updateTenant`.
+- Form helper: `submitLead(formData)` to post to `/leads`.
+
+### Quick usage (client components)
+```tsx
+'use client';
+import { api } from '@/app/lib/api';
+
+export default function LeadForm() {
+  async function onSubmit() {
+    await api.createLead({ phone: '555-1111', service: 'plumbing', zip: '90210', tenant_id: null });
+  }
+  return <button onClick={onSubmit}>Send lead</button>;
+}
+```
+
+### Quick usage (server components / actions)
+```ts
+import { api } from '@/app/lib/api';
+
+export async function createLeadAction(formData: FormData) {
+  const phone = String(formData.get('phone'));
+  await api.createLead({ phone, service: 'plumbing', zip: '90210', tenant_id: null });
+}
+```
+
 ## Vercel Deployment (recommended)
 
 Recommended settings to ensure a smooth deployment:
@@ -88,7 +183,7 @@ Recommended settings to ensure a smooth deployment:
 - Install Command: `npm ci` (or `npm install` if you prefer).
 - Build Command: `npm run build` (Vercel will run `next build`).
 - Output Directory: leave blank (Vercel auto-detects Next.js output). If you need to set one, use `.next`.
-- Environment Variables: add any runtime keys (for example `NEXT_PUBLIC_API_URL`, `API_URL`, or third-party keys) under the "Environment Variables" panel before deploying.
+- Environment Variables: add `NEXT_PUBLIC_API_BASE_URL` as described above. Example value for production: `https://ofroot-leads.onrender.com/api`.
 - Node Version: pin via `engines` in `package.json` or add a `.nvmrc` if you want a specific Node.js version on Vercel.
 
 Notes and best practices:
