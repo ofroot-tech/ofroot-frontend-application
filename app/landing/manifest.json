@@ -1,0 +1,35 @@
+{
+  "pages": {
+    "ofroot-demo": {
+      "seo": {
+        "title": "Ofroot Landing — Demo",
+        "description": "A simple demo landing page powered by a static manifest."
+      },
+      "theme": {
+        "primary": "#20b2aa",
+        "secondary": "#007bff"
+      },
+      "hero": {
+        "headline": "Launch faster with Ofroot",
+        "subheadline": "Composable landings with static content and optional embeds"
+      },
+      "cta": {
+        "label": "Schedule a call",
+        "href": "/#contact"
+      },
+      "variants": {
+        "default": "A",
+        "A": { "ctaLabel": "Schedule a call" },
+        "B": { "ctaLabel": "Get your consultation" }
+      },
+      "features": [
+        { "emoji": "⚡", "title": "Fast setup", "text": "Deploy static landings instantly on Vercel" },
+        { "emoji": "🧩", "title": "Composable", "text": "Blocks for hero, features, embeds" },
+        { "emoji": "🔒", "title": "Safe", "text": "No secret keys exposed; NEXT_PUBLIC_* only as needed" }
+      ],
+      "embed": {
+        "html": "<div style=\"border:1px solid #e5e7eb;padding:16px;border-radius:12px\"><h3 style=\"margin:0 0 8px 0;color:#20b2aa\">Calendly (example)</h3><div class=\"calendly-inline-widget\" data-url=\"https://calendly.com/dimitri-mcdaniel-9oh/new-meeting\" style=\"min-width:320px;height:640px\"></div><script src=\"https://assets.calendly.com/assets/external/widget.js\" async></script></div>"
+      }
+    }
+  }
+}

@@ -1,0 +1,244 @@
+"use client";
+
+/**
+ * SubscribeForm — A Typical SaaS Subscription Onramp
+ * ------------------------------------------------------------
+ * Design goals (marketing + UX):
+ * - Familiar pricing selector (Free • Pro • Business) with monthly/yearly toggle.
+ * - Simple account form; clear promise: no credit card required for Free.
+ * - Honest, minimal friction: default safe role set by backend; cookie set by proxy.
+ * - Accessibility: real radio buttons for plan selection, labels, and live regions.
+ * - Security: honeypot field to deter basic signup bots.
+ * - Literate structure: comments explain purpose so code is readable as prose.
+ */
+import { useForm } from 'react-hook-form';
+import { useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from '@/components/Toaster';
+import api from '@/app/utils/api';
+
+interface SubscribeInputs {
+  name: string;
+  email: string;
+  password: string;
+  // optional marketing field; not required/backed yet
+  coupon?: string;
+  // honeypot (hidden)
+  company?: string;
+}
+
+type PlanId = 'free' | 'pro' | 'business';
+
+const PLANS: Array<{
+  id: PlanId;
+  name: string;
+  priceMonthly: string;
+  priceYearly: string;
+  features: string[];
+  recommended?: boolean;
+}> = [
+  { id: 'free', name: 'Free', priceMonthly: '$0', priceYearly: '$0', features: ['1 project', 'Community support', 'Basic analytics'] },
+  { id: 'pro', name: 'Pro', priceMonthly: '$19', priceYearly: '$190', features: ['Unlimited projects', 'Priority support', 'Advanced analytics'], recommended: true },
+  { id: 'business', name: 'Business', priceMonthly: '$49', priceYearly: '$490', features: ['SSO & Roles', 'Audit logs', 'SLA support'] },
+];
+
+function scorePassword(pw: string): number {
+  // A tiny, readable heuristic: length + diversity signals
+  let s = 0;
+  if (pw.length >= 8) s += 1;
+  if (pw.length >= 12) s += 1;
+  if (/[A-Z]/.test(pw)) s += 1;
+  if (/[a-z]/.test(pw)) s += 1;
+  if (/\d/.test(pw)) s += 1;
+  if (/[^A-Za-z0-9]/.test(pw)) s += 1;
+  return Math.min(s, 5);
+}
+
+export default function SubscribeForm() {
+  const { register, handleSubmit, watch, formState } = useForm<SubscribeInputs>({ mode: 'onBlur' });
+  const { errors } = formState;
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [plan, setPlan] = useState<PlanId>('free');
+  const [accept, setAccept] = useState(false);
+  const [showPw, setShowPw] = useState(false);
+  const announceRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const password = watch('password') || '';
+  const pwScore = useMemo(() => scorePassword(password), [password]);
+
+  const onSubmit = async (data: SubscribeInputs) => {
+    try {
+      setLoading(true);
+      setError('');
+
+      // Simple honeypot: if filled, fail fast.
+      if (data.company && data.company.trim().length > 0) {
+        throw new Error('Invalid submission');
+      }
+
+      await api.post('/auth/register', { name: data.name, email: data.email, password: data.password, plan, billingCycle, coupon: data.coupon });
+      toast({ type: 'success', title: 'Welcome!', message: `Your ${plan} plan account has been created.` });
+      router.push('/dashboard/overview');
+    } catch (err: any) {
+      const msg = err?.response?.data?.error?.message || err?.response?.data?.message || err?.message || 'Subscription failed';
+      setError(msg);
+      toast({ type: 'error', title: 'Subscription failed', message: msg });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Small helper to announce plan/price updates to screen readers
+  function announce(text: string) {
+    if (announceRef.current) announceRef.current.textContent = text;
+  }
+
+  const isPaid = plan !== 'free';
+  const cta = isPaid ? 'Continue to checkout' : 'Start free';
+
+  return (
+    <div className="space-y-6">
+      {/* Billing cycle toggle */}
+      <div className="flex items-center gap-2 text-sm" role="group" aria-label="Billing cycle">
+        <button
+          type="button"
+          onClick={() => { setBillingCycle('monthly'); announce('Monthly billing selected'); }}
+          aria-pressed={billingCycle === 'monthly'}
+          className={`rounded-md border px-3 py-1.5 ${billingCycle === 'monthly' ? 'bg-black text-white' : 'bg-white hover:bg-gray-50'}`}
+        >
+          Monthly
+        </button>
+        <button
+          type="button"
+          onClick={() => { setBillingCycle('yearly'); announce('Yearly billing selected. Two months free'); }}
+          aria-pressed={billingCycle === 'yearly'}
+          className={`rounded-md border px-3 py-1.5 ${billingCycle === 'yearly' ? 'bg-black text-white' : 'bg-white hover:bg-gray-50'}`}
+        >
+          Yearly
+        </button>
+        <span className="text-xs text-gray-500">Save 2 months on yearly</span>
+      </div>
+
+      {/* Plans grid using accessible radio cards */}
+      <fieldset className="grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Select a plan">
+        <legend className="sr-only">Plan</legend>
+        {PLANS.map((p) => {
+          const price = billingCycle === 'monthly' ? p.priceMonthly : p.priceYearly;
+          const active = plan === p.id;
+          const recommended = Boolean(p.recommended);
+          const badgeId = `plan-${p.id}-badge`;
+          return (
+            <label
+              key={p.id}
+              className={
+                `relative cursor-pointer text-left rounded-lg border p-4 block overflow-hidden transition-colors ${
+                  active
+                    ? 'ring-2 ring-black bg-white'
+                    : recommended
+                      ? 'border-gray-300 bg-white'
+                      : 'hover:bg-gray-50'
+                }`
+              }
+            >
+              <input
+                type="radio"
+                name="plan"
+                value={p.id}
+                className="sr-only"
+                checked={active}
+                onChange={() => { setPlan(p.id); announce(`${p.name} plan selected at ${price} per ${billingCycle === 'monthly' ? 'month' : 'year'}`); }}
+                aria-checked={active}
+                aria-describedby={recommended ? badgeId : undefined}
+              />
+
+              {/* Centered, compact badge for recommended plans */}
+              {recommended && (
+                <div className="flex justify-center mb-2">
+                  <span
+                    id={badgeId}
+                    className="inline-flex items-center rounded-full bg-black text-white px-2 py-0.5 text-[9px] font-medium leading-4 whitespace-nowrap select-none"
+                  >
+                    Most popular
+                  </span>
+                </div>
+              )}
+
+              {/* Title row */}
+              <div className="flex items-center justify-between">
+                <div className="font-medium">{p.name}</div>
+              </div>
+
+              <div className="mt-1 text-2xl font-semibold">{price}<span className="text-sm text-gray-500">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span></div>
+              <ul className="mt-2 text-sm text-gray-600 space-y-1">
+                {p.features.map((f) => (<li key={f}>• {f}</li>))}
+              </ul>
+              <div className="sr-only">{active ? 'Selected' : 'Not selected'}</div>
+            </label>
+          );
+        })}
+      </fieldset>
+
+      {/* Screen reader live announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" ref={announceRef} />
+
+      {/* Account form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
+        {/* Hidden fields to ensure Next API receives plan info even if we convert to FormData later */}
+        <input type="hidden" name="plan" value={plan} />
+        <input type="hidden" name="billingCycle" value={billingCycle} />
+        <div>
+          <label htmlFor="name" className="sr-only">Name</label>
+          <input id="name" {...register('name', { required: 'Please enter your name' })} type="text" placeholder="Name" className="border p-2 rounded w-full" aria-invalid={!!errors.name} aria-describedby={errors.name ? 'name-error' : undefined} required />
+          {errors.name && <p id="name-error" className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="email" className="sr-only">Email</label>
+          <input id="email" {...register('email', { required: 'Please enter a valid email' })} type="email" placeholder="Email" className="border p-2 rounded w-full" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} required />
+          {errors.email && <p id="email-error" className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
+        </div>
+        <div>
+          <label htmlFor="password" className="sr-only">Password</label>
+          <div className="relative">
+            <input id="password" {...register('password', { required: 'Please choose a password', minLength: { value: 8, message: 'Use at least 8 characters' } })} type={showPw ? 'text' : 'password'} placeholder="Password" className="border p-2 rounded w-full pr-24" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : 'password-help'} required minLength={8} />
+            <button type="button" onClick={() => setShowPw(v => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-xs underline" aria-pressed={showPw} aria-label={showPw ? 'Hide password' : 'Show password'}>{showPw ? 'Hide' : 'Show'}</button>
+          </div>
+          {/* Password strength meter */}
+          <div className="mt-1 h-1 w-full bg-gray-200 rounded" aria-hidden>
+            <div className={`h-1 rounded ${pwScore <= 2 ? 'bg-red-500' : pwScore === 3 ? 'bg-yellow-500' : 'bg-green-600'}`} style={{ width: `${(pwScore / 5) * 100}%` }} />
+          </div>
+          <div id="password-help" className="mt-1 text-xs text-gray-500">Use 12+ chars, with upper/lowercase, number, and symbol.</div>
+          {errors.password && <p id="password-error" className="mt-1 text-xs text-red-600">{errors.password.message}</p>}
+        </div>
+        {/* Optional coupon — note: applied at billing stage when using paid plans */}
+        <div>
+          <label htmlFor="coupon" className="sr-only">Coupon</label>
+          <input id="coupon" {...register('coupon')} type="text" placeholder={isPaid ? 'Coupon (optional)' : 'Coupon (paid plans only)'} className="border p-2 rounded w-full" disabled={!isPaid} />
+          {!isPaid && <p className="mt-1 text-xs text-gray-500">Coupons apply to paid plans.</p>}
+        </div>
+        {/* Honeypot */}
+        <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden>
+          <label htmlFor="company">Company</label>
+          <input id="company" {...register('company')} type="text" tabIndex={-1} autoComplete="off" />
+        </div>
+        {/* Terms */}
+        <label className="text-sm text-gray-700 inline-flex items-center gap-2">
+          <input type="checkbox" checked={accept} onChange={(e) => setAccept(e.currentTarget.checked)} />
+          I agree to the <a className="underline" href="/legal/terms">Terms</a> and <a className="underline" href="/legal/privacy">Privacy</a>.
+        </label>
+        {error && <p className="text-red-600 text-sm" role="alert" aria-live="polite">{error}</p>}
+        <button type="submit" disabled={loading || !accept} className={`p-2 rounded ${loading || !accept ? 'bg-gray-300 text-gray-600' : 'bg-black text-white'}`}>
+          {loading ? 'Creating account…' : cta}
+        </button>
+        {/* Honest fine print */}
+        {!isPaid ? (
+          <p className="text-xs text-gray-500">No credit card required.</p>
+        ) : (
+          <p className="text-xs text-gray-500">You will complete payment for the {plan} plan after account creation.</p>
+        )}
+      </form>
+    </div>
+  );
+}

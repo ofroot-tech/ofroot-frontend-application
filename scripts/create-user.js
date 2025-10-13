@@ -5,11 +5,22 @@ const bcrypt = require('bcryptjs');
 
 async function main() {
   const uri = process.env.MONGODB_URI;
-  const client = new MongoClient(uri);
-  const email = 'dimitri.mcdaniel@gmail.com';
-  const password = 'True1231d!';
-  const name = 'Dimitri McDaniel';
+  if (!uri) {
+    console.error('MONGODB_URI not set. Aborting.');
+    process.exit(1);
+  }
 
+  // Removed hardcoded credentials. Provide via env or CLI args if needed.
+  const email = process.env.SEED_USER_EMAIL;
+  const password = process.env.SEED_USER_PASSWORD;
+  const name = process.env.SEED_USER_NAME || 'Seed User';
+
+  if (!email || !password) {
+    console.error('Missing SEED_USER_EMAIL or SEED_USER_PASSWORD. Aborting.');
+    process.exit(1);
+  }
+
+  const client = new MongoClient(uri);
   const passwordHash = await bcrypt.hash(password, 10);
 
   try {

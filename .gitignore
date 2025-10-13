@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# Sentry Config File
+.env.sentry-build-plugin
+
+# AI instruction files (do not commit)
+/.github/instructions/
