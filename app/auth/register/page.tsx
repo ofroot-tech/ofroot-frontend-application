@@ -4,8 +4,9 @@ import Link from 'next/link';
 import RegisterForm from '@/components/auth/RegisterForm';
 import { toast } from '@/components/Toaster';
 
-export default function RegisterPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-  const flash = typeof searchParams?.flash === 'string' ? searchParams?.flash : undefined;
+export default async function RegisterPage({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const sp = (await searchParams) || {};
+  const flash = typeof sp.flash === 'string' ? sp.flash : undefined;
   if (flash === 'account-required' && typeof window !== 'undefined') {
     queueMicrotask(() => toast({ type: 'info', title: 'Please register', message: 'Create an account to continue.' }));
   }

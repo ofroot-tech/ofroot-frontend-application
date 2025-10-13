@@ -95,6 +95,8 @@ export type User = {
   email: string;
   email_verified_at?: string | null;
   tenant_id?: number | null;
+  plan?: string | null;
+  billing_cycle?: 'monthly' | 'yearly' | null;
   created_at?: string;
   updated_at?: string;
 };
@@ -103,6 +105,45 @@ export type CreateLeadInput = Omit<Lead, 'id' | 'created_at' | 'updated_at'>;
 
 // Auth result shapes
 export type AuthResponse = { message?: string; token: string; data: User };
+
+// Admin types
+export type AdminUser = {
+  id: number;
+  name: string;
+  email: string;
+  tenant_id?: number | null;
+  roles: Array<{ id: number; name: string; slug: string }>;
+  top_role: string;
+  plan?: 'free' | 'pro' | 'business' | null;
+  billing_cycle?: 'monthly' | 'yearly' | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type AdminMetrics = {
+  tenants: number;
+  users: number;
+  mrr: number;
+  subscribers: number;
+};
+
+export type Subscriber = {
+  id?: number | string;
+  name?: string | null;
+  email?: string | null;
+  plan?: string | null;
+  status?: string | null;
+  mrr?: number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  start_date?: string | null;
+};
+
+export type Paginated<T> = { data: T[]; meta: { total: number; current_page?: number; per_page?: number; last_page?: number } };
+
+// Docs types
+export type Doc = { slug: string; title: string; body: string; updated_at?: string };
+export type DocListItem = { slug: string; title: string; updated_at?: string };
 
 // --------- Endpoint wrappers ---------
 export const api = {
@@ -115,8 +156,12 @@ export const api = {
   login(email: string, password: string, deviceName?: string) {
     return http.postJson<AuthResponse>('/auth/login', { email, password, device_name: deviceName ?? 'web' });
   },
-  register(name: string, email: string, password: string) {
-    return http.postJson<AuthResponse>('/auth/register', { name, email, password });
+  register(name: string, email: string, password: string, options?: { plan?: 'free' | 'pro' | 'business'; billingCycle?: 'monthly' | 'yearly'; coupon?: string }) {
+    const payload: any = { name, email, password };
+    if (options?.plan) payload.plan = options.plan;
+    if (options?.billingCycle) payload.billingCycle = options.billingCycle;
+    if (options?.coupon) payload.coupon = options.coupon;
+    return http.postJson<AuthResponse>('/auth/register', payload);
   },
   me(token: string) {
     return http.get<User>('/auth/me', { token });
@@ -141,6 +186,66 @@ export const api = {
   },
   updateTenant(id: number, input: Partial<Tenant>, token: string) {
     return http.putJson<Tenant>(`/tenants/${id}`, input, { token });
+  },
+
+  // Admin users list
+  adminListUsers(token: string, opts?: { page?: number; per_page?: number }) {
+    const params = new URLSearchParams();
+    if (opts?.page) params.set('page', String(opts.page));
+    if (opts?.per_page) params.set('per_page', String(opts.per_page));
+    const path = `/admin/users${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<Paginated<AdminUser>>(path, { token });
+  },
+
+  // Admin tenants list
+  adminListTenants(token: string, opts?: { page?: number; per_page?: number }) {
+    const params = new URLSearchParams();
+    if (opts?.page) params.set('page', String(opts.page));
+    if (opts?.per_page) params.set('per_page', String(opts.per_page));
+    const path = `/admin/tenants${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<Paginated<Tenant>>(path, { token });
+  },
+
+  // Admin subscribers list
+  adminListSubscribers(token: string, opts?: { page?: number; per_page?: number }) {
+    const params = new URLSearchParams();
+    if (opts?.page) params.set('page', String(opts.page));
+    if (opts?.per_page) params.set('per_page', String(opts.per_page));
+    const path = `/admin/subscribers${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<Paginated<Subscriber>>(path, { token });
+  },
+
+  // Admin metrics
+  adminMetrics(token: string, opts?: { range?: '7d' | '30d' | '90d' }) {
+    const params = new URLSearchParams();
+    if (opts?.range) params.set('range', opts.range);
+    const path = `/admin/metrics${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<{ data: AdminMetrics }>(path, { token });
+  },
+
+  // Docs (public)
+  publicListDocs() {
+    return http.get<{ ok: true; data: { items: DocListItem[] } }>('/docs');
+  },
+  publicGetDoc(slug: string) {
+    return http.get<{ ok: true; data: Doc }>(`/docs/${encodeURIComponent(slug)}`);
+  },
+
+  // Docs (admin)
+  adminListDocs(token: string) {
+    return http.get<{ ok: true; data: { items: DocListItem[] } }>(`/admin/docs`, { token });
+  },
+  adminCreateDoc(input: { slug: string; title: string; body: string }, token: string) {
+    return http.postJson<{ ok: true; data: { slug: string } }>(`/admin/docs`, input, { token });
+  },
+  adminGetDoc(slug: string, token: string) {
+    return http.get<{ ok: true; data: Doc }>(`/admin/docs/${encodeURIComponent(slug)}`, { token });
+  },
+  adminUpdateDoc(slug: string, input: { title: string; body: string }, token: string) {
+    return http.putJson<{ ok: true; data: { slug: string } }>(`/admin/docs/${encodeURIComponent(slug)}`, input, { token });
+  },
+  adminDeleteDoc(slug: string, token: string) {
+    return http.del<{ ok: true; data: { slug: string } }>(`/admin/docs/${encodeURIComponent(slug)}`, { token });
   },
 };
 

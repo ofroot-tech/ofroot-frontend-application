@@ -6,6 +6,7 @@ import { api } from '@/app/lib/api';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { fail, ok } from '@/app/lib/response';
+import { captureRouteException } from '@/app/api/_helpers/sentry';
 
 export async function GET(_req: NextRequest) {
   const token = await getAuthTokenFromRequest();
@@ -16,6 +17,7 @@ export async function GET(_req: NextRequest) {
     const user = (raw as any)?.data ?? raw; // flatten Laravel { data: user } shape if present
     return ok(user);
   } catch (err: any) {
+    captureRouteException(err, { route: 'auth/me' });
     logger.warn('auth.me.failed', { status: err?.status, message: err?.message });
     return fail(err?.body?.message || 'Failed to fetch user', err?.status ?? 500);
   }

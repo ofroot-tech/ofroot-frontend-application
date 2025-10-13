@@ -302,3 +302,31 @@ html, body {
   background-image: none !important;
   --background: #ffffff !important;
 }
+
+/* Skip link for screen readers and keyboard users */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: auto;
+  height: auto;
+  padding: 8px 10px;
+  background: #111827;
+  color: white;
+  border-radius: 6px;
+  z-index: 1000;
+}
+
+/* Zebra rows for data tables */
+.data-table tbody tr:nth-child(even) { background-color: #fafafa; }
+@media (prefers-color-scheme: dark) {
+  .data-table tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.04); }
+}

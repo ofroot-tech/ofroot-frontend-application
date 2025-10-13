@@ -249,4 +249,14 @@ export type User = z.infer<typeof UserSchema>;
 
 This update centralizes cookie management. It normalizes responses. It adds small but important production safety features. It keeps the same overall flow.
 
------
+# Observability (Sentry) — frontend quick setup
+
+- Packages: @sentry/nextjs (runtime) and sentry-cli-binary (CI source maps)
+- Config files auto-loaded by Next: `sentry.client.config.ts`, `sentry.server.config.ts`
+- Env (dev/prod):
+  - NEXT_PUBLIC_SENTRY_DSN=<browser DSN>
+  - SENTRY_DSN=<server DSN or reuse browser DSN>
+  - SENTRY_ENVIRONMENT=production|staging|development
+  - Optional: NEXT_PUBLIC_SENTRY_TRACES=0.05, NEXT_PUBLIC_SENTRY_REPLAY_ERROR=0.1, NEXT_PUBLIC_SENTRY_REPLAY_SESSION=0
+- API routes use a helper (`app/api/_helpers/sentry.ts`) to capture exceptions.
+- Source maps: run `npm run build` in CI with release info, then `npm run sentry:sourcemaps`.

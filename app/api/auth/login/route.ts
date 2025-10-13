@@ -7,6 +7,7 @@ import { setAuthCookie } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { fail, ok } from '@/app/lib/response';
 import { loginSchema } from '@/types/auth';
+import { captureRouteException } from '@/app/api/_helpers/sentry';
 
 export async function POST(req: NextRequest) {
   // Support both form-encoded and JSON payloads
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
     logger.info('auth.login.success', { email });
     return res;
   } catch (err: any) {
+    captureRouteException(err, { route: 'auth/login' });
     logger.warn('auth.login.failed', { email, err: err?.message, status: err?.status });
     return fail(err?.body?.message || 'Login failed', err?.status ?? 500);
   }

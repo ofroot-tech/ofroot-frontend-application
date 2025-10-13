@@ -5,6 +5,7 @@ import { NextRequest } from 'next/server';
 import { api } from '@/app/lib/api';
 import { created, fail } from '@/app/lib/response';
 import { logger } from '@/app/lib/logger';
+import { captureRouteException } from '@/app/api/_helpers/sentry';
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
@@ -20,6 +21,7 @@ export async function POST(req: NextRequest) {
     const lead = await api.createLead(payload);
     return created(lead);
   } catch (err: any) {
+    captureRouteException(err, { route: 'leads' });
     logger.warn('leads.create.failed', { status: err?.status, message: err?.message });
     return fail(err?.body?.message || 'Failed to create lead', err?.status ?? 500);
   }
