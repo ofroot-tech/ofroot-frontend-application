@@ -7,7 +7,7 @@
  * and guide the reader to the next step with a clear note.
  */
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/Toaster";
@@ -21,9 +21,28 @@ interface RegisterInputs {
 export default function RegisterForm() {
   const { register, handleSubmit } = useForm<RegisterInputs>();
   const [error, setError] = useState("");
+  const [open, setOpen] = useState<boolean | null>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/register-status', { cache: 'no-store' });
+        const j = await res.json().catch(() => ({}));
+        if (!cancelled) setOpen(!!j?.open);
+      } catch {
+        if (!cancelled) setOpen(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   const onSubmit = async (data: RegisterInputs) => {
+    if (!open) {
+      toast({ type: 'info', title: 'Registration closed', message: 'Account creation is disabled.' });
+      return;
+    }
     try {
       await api.post('/auth/register', data);
       router.push('/auth/login?flash=registered');
@@ -33,6 +52,10 @@ export default function RegisterForm() {
       toast({ type: 'error', title: 'Registration failed', message: msg });
     }
   };
+
+  if (open === false) {
+    return <p className="text-sm text-gray-600">Registration is closed.</p>;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">

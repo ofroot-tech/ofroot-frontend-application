@@ -7,7 +7,7 @@
  * communicates errors candidly, and aligns with our brand tokens.
  */
 import { useForm } from "react-hook-form";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/Toaster";
 
@@ -23,6 +23,22 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [useMagic, setUseMagic] = useState(false);
+  const [regOpen, setRegOpen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/register-status', { cache: 'no-store' });
+        const j = await res.json().catch(() => ({}));
+        const open = !!(j?.data?.open ?? j?.open);
+        if (!cancelled) setRegOpen(open);
+      } catch {
+        if (!cancelled) setRegOpen(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
@@ -113,7 +129,7 @@ export default function LoginForm() {
       </button>
 
       <div className="flex items-center justify-between text-xs text-gray-500">
-        <a href="/auth/register" className="underline">Create account</a>
+        {regOpen ? <a href="/auth/register" className="underline">Create account</a> : <span />}
         <a href="#" className="underline" aria-disabled>Forgot password?</a>
       </div>
     </form>
