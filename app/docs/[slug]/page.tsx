@@ -55,7 +55,7 @@ export default async function DocPage({ params }: { params: { slug: string } }) 
       <div className="relative">
         <PublicNavbar />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
-        <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24">
+  <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24 reveal-in fade-only">
           <h1>{res.data.title}</h1>
           <div dangerouslySetInnerHTML={{ __html: html }} />
         </main>
@@ -73,7 +73,7 @@ export default async function DocPage({ params }: { params: { slug: string } }) 
     <div className="relative">
       <PublicNavbar />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
-      <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24">
+  <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24 reveal-in fade-only">
         <div dangerouslySetInnerHTML={{ __html: html }} />
       </main>
     </div>

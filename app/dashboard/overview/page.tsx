@@ -24,13 +24,14 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
   const range = (rangeParam === '30d' || rangeParam === '90d') ? rangeParam : '7d';
 
   // Pull admin metrics (real values or zero states from backend)
-  let tenants = 0, users = 0, subscribers = 0, mrr = 0;
+  let tenants = 0, users = 0, subscribers = 0, mrr = 0, hoursSavedWeek = 0;
   try {
     const res = await api.adminMetrics(token, { range });
     tenants = res.data?.tenants ?? 0;
     users = res.data?.users ?? 0;
     subscribers = res.data?.subscribers ?? 0;
     mrr = res.data?.mrr ?? 0;
+    hoursSavedWeek = (res.data as any)?.hours_saved_week ?? 0;
   } catch { /* ignore, stay zeros */ }
 
   const kpis = [
@@ -38,18 +39,19 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
     { title: 'Users', value: String(users) },
     { title: 'Subscribers', value: String(subscribers) },
     { title: 'MRR', value: `$${mrr}` },
+    { title: 'Hours saved this week', value: String(hoursSavedWeek) },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-in fade-only">
       <PageHeader
         title="Overview"
         subtitle="Key metrics, health, and recent activity across the application."
         meta={<RangeSelect value={range} />}
       />
 
-      {/* KPI row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  {/* KPI row */}
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {kpis.map((k) => (
           <Card key={k.title}>
             <CardBody>
@@ -82,6 +84,36 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
               <span className="text-xs text-gray-500">Last {range}</span>
             </div>
             <p className="text-sm text-gray-600 mt-2">No activity yet.</p>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Activation checklist (lightweight) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <Card className="lg:col-span-3">
+          <CardBody>
+            <div className="flex items-center justify-between">
+              <h2 className="font-medium">Get activated</h2>
+              <span className="text-xs text-gray-500">Goal: live site + first lead in 48h</span>
+            </div>
+            <ul className="mt-3 text-sm space-y-2">
+              <li className="flex items-center justify-between">
+                <span>Brand your workspace</span>
+                <a className="underline text-gray-700" href="/settings/branding">Open</a>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Publish your landing page</span>
+                <a className="underline text-gray-700" href="/landing/new">Start</a>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Add a lead capture form</span>
+                <a className="underline text-gray-700" href="/docs#lead-form">How to</a>
+              </li>
+              <li className="flex items-center justify-between">
+                <span>Install tracking</span>
+                <a className="underline text-gray-700" href="/docs#tracking">Guide</a>
+              </li>
+            </ul>
           </CardBody>
         </Card>
       </div>

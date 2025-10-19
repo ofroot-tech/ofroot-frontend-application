@@ -44,7 +44,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams?:
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-in fade-only">
       <PageHeader
         title="Subscribers"
         subtitle="Your paying customers and plans."

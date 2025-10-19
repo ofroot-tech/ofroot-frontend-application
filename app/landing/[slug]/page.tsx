@@ -24,6 +24,7 @@ import data from '@/app/landing/manifest.json';
 import Exposure from '@/app/landing/components/Exposure';
 import CtaLink from '@/app/landing/components/CtaLink';
 import SafeEmbed from '@/app/landing/components/SafeEmbed';
+import LeadCapture from '@/app/landing/components/LeadCapture';
 
 /** Compute the active variant key using cookies and manifest defaults. */
 async function resolveVariantKey(opts: {
@@ -63,13 +64,28 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
   const ctaLabel = (variant.ctaLabel ?? page.cta?.label) as string | undefined;
 
   return (
-    <main>
+  <main className="reveal-in">
+      {/* SEO JSON-LD */}
+      {page.seo?.title && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebPage',
+              name: page.seo.title,
+              description: page.seo.description || undefined,
+              url: `https://ofroot.com/landing/${slug}`,
+            }),
+          }}
+        />
+      )}
       {/* Client analytics: exposure event */}
       <Exposure slug={slug} variant={variantKey} />
 
       {/* Hero */}
       {page.hero && (
-        <section className="py-16 px-6 sm:px-12 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10">
+  <section className="py-16 px-6 sm:px-12 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in fade-only">
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl sm:text-6xl font-extrabold mb-4">{page.hero.headline}</h1>
             {page.hero.subheadline && <p className="text-lg text-gray-700 max-w-3xl mx-auto">{page.hero.subheadline}</p>}
@@ -92,7 +108,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
       {/* Features */}
       {page.features?.length ? (
-        <section className="py-16 px-6 sm:px-12">
+  <section className="py-16 px-6 sm:px-12 reveal-in">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
             {page.features.map((f: any, i: number) => (
               <div key={i} className="p-6 rounded-lg shadow border border-gray-200">
@@ -105,9 +121,18 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
         </section>
       ) : null}
 
+      {/* Simple lead capture for service niches */}
+      {['plumbers', 'hvac', 'roofers'].includes(slug) && (
+  <section className="py-8 px-6 sm:px-12 reveal-in fade-only">
+          <div className="max-w-3xl mx-auto">
+            <LeadCapture service={slug} />
+          </div>
+        </section>
+      )}
+
       {/* Optional embed block (e.g., Calendly, form) */}
       {page.embed?.html && (
-        <section className="py-16 px-6 sm:px-12">
+  <section className="py-16 px-6 sm:px-12 reveal-in">
           <div className="max-w-4xl mx-auto">
             <SafeEmbed html={page.embed.html} />
           </div>
@@ -115,4 +140,18 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       )}
     </main>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const page = (data as any).pages[slug];
+  if (!page) return {};
+  const title = page.seo?.title || page.hero?.headline || 'OfRoot';
+  const description = page.seo?.description || page.hero?.subheadline || undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/landing/${slug}` },
+    openGraph: { title, description, url: `/landing/${slug}` },
+  };
 }

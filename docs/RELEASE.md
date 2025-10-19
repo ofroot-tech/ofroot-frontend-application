@@ -66,4 +66,12 @@ Cookies:
 
 ---
 
+## Recent Additions
+- Role-based impersonation and Super Tools quick actions wired to live dashboard routes.
+- Blog management tooling (requires blog add-on) with seeded demo posts for test accounts.
+- Higher z-index toasts and refreshed dashboard navigation that surfaces the active tool and user context.
+- Sign-in UI contrast fixes and expanded database seeders for end-to-end feature testing.
+
+---
+
 If all checklist items are satisfied, this frontend is safe to release to production.

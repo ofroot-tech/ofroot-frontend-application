@@ -14,36 +14,116 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import SubscribeForm from '@/components/SubscribeForm';
 import PublicNavbar from '@/app/components/PublicNavbar';
+import PromoBanner from '@/components/PromoBanner';
+import BottomPromoBanner from '@/components/BottomPromoBanner';
+import ClientViewPing from '@/components/ClientViewPing';
+import AuditRequestButton from '@/components/AuditRequestButton';
+import { PRODUCT_CATALOG, type ProductConfig } from '@/app/config/products';
+import { api } from '@/app/lib/api';
 
-export default async function SubscribePage() {
+export default async function SubscribePage({ searchParams }: { searchParams?: URLSearchParams | { [key: string]: string | string[] | undefined } | Promise<URLSearchParams | { [key: string]: string | string[] | undefined }> }) {
   // Server-side guard: if already authenticated, take them to the dashboard.
   const store = await cookies();
   const token = store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
   if (token) redirect('/dashboard/overview');
+
+  // Next.js 15 may provide searchParams as a Promise. Await if needed.
+  const awaited = (searchParams && typeof (searchParams as any)?.then === 'function')
+    ? await (searchParams as Promise<URLSearchParams | { [key: string]: string | string[] | undefined }>)
+    : (searchParams as URLSearchParams | { [key: string]: string | string[] | undefined } | undefined);
+  let productParam: string | null | undefined;
+  if (awaited && typeof (awaited as any).get === 'function') {
+    productParam = (awaited as unknown as URLSearchParams).get('product');
+  } else {
+    const spObj = (awaited as { [key: string]: string | string[] | undefined } | undefined) || {};
+    const maybe = spObj.product;
+    productParam = Array.isArray(maybe) ? maybe[0] : maybe;
+  }
+  const productSlug = (productParam || '').toString().toLowerCase();
+  // Try to fetch product details from backend; fallback to static catalog
+  let productConfig: ProductConfig | undefined = productSlug ? PRODUCT_CATALOG[productSlug] : undefined;
+  if (productSlug) {
+    try {
+      const items = await api.publicListProducts();
+      const match = (items || []).find((p) => p.slug === productSlug);
+      if (match) {
+        const planPrices: ProductConfig['planPrices'] = {};
+        (match.pricingRules || []).forEach((r) => {
+          if (r.plan === 'pro' || r.plan === 'business') {
+            const monthly = r.monthly != null ? String(r.monthly) : undefined;
+            const yearly = r.yearly != null ? String(r.yearly) : undefined;
+            if (monthly || yearly) {
+              planPrices[r.plan] = {
+                monthly: monthly ?? (productConfig?.planPrices?.[r.plan]?.monthly || ''),
+                yearly: yearly ?? (productConfig?.planPrices?.[r.plan]?.yearly || ''),
+              } as any;
+            }
+          }
+        });
+        productConfig = {
+          slug: match.slug,
+          kind: match.kind,
+          name: match.name,
+          anchorPrice: match.anchor_price ?? productConfig?.anchorPrice ?? '$49',
+          heroTitle: match.hero_title ?? productConfig?.heroTitle,
+          heroSubtitle: match.hero_subtitle ?? productConfig?.heroSubtitle,
+          planPrices: Object.keys(planPrices).length ? planPrices : productConfig?.planPrices,
+          includes: (match.includes && Array.isArray(match.includes) ? match.includes : productConfig?.includes) ?? [],
+          defaultPlan: match.default_plan ?? productConfig?.defaultPlan,
+        } as ProductConfig;
+      }
+    } catch {
+      // Ignore network/JSON errors and keep static fallback
+    }
+  }
+  // Anchor price derived from catalog (fallback to $49)
+  const anchorPrice = productConfig?.anchorPrice || '$49';
+  // Precompute a single end date label so banners match exactly
+  const end = new Date();
+  end.setDate(end.getDate() + 5);
+  const endStr = end.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
   // The page renders a compact, approachable form. We pair it with a benefits
   // column that stays visible (sticky) on taller screens to reinforce value.
   return (
     <div className="relative">
       <PublicNavbar />
+      {/* Promo banner — client-rendered for date math and dismiss state */}
+      <Suspense>
+        <PromoBanner spaced anchorPrice={anchorPrice} endStr={endStr} />
+      </Suspense>
       {/* Background flourish for subtle depth */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
 
-      <div className="mx-auto max-w-6xl px-4 md:px-6 pt-20 md:pt-24 pb-12 md:pb-16">
+  <div className="mx-auto max-w-6xl px-4 md:px-6 pt-20 md:pt-24 pb-12 md:pb-16 reveal-in fade-only">
+  {/* Fire a lightweight view event client-side */}
+  <ClientViewPing />
         <header className="mb-8 md:mb-12">
           <h1 className="text-balance text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">Start your subscription</span>
+            <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your $1 trial'}</span>
           </h1>
-          <p className="mt-3 text-base sm:text-lg text-gray-600 max-w-2xl">Pick a plan, create your account, and get started in minutes.</p>
+          {productConfig?.heroSubtitle ? (
+            <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{productConfig.heroSubtitle}</p>
+          ) : (
+            <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Normally {anchorPrice}/month — try it for $1 for 14 days. Cancel anytime.</p>
+          )}
+          <p className="mt-1 text-sm text-gray-500">After your trial, continue on the plan you choose. You’ll confirm billing details after signup.</p>
+          <p className="mt-3 text-sm font-medium text-gray-700">Trusted by local pros.</p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
           <section className="rounded-xl border bg-white/80 backdrop-blur p-5 sm:p-6 shadow-sm">
             {/* We keep the form self-contained and accessible. */}
-            <SubscribeForm />
+            <SubscribeForm productConfig={productConfig} />
+            <div className="mt-4 text-sm text-gray-700">
+              <div className="font-medium">Add modules anytime</div>
+              <p className="mt-1">Start with a trial and add features, marketing, development capacity, or automation as you grow.</p>
+              <a href="/services/add-ons" className="underline">See add‑ons</a>
+            </div>
             <p className="mt-5 text-sm text-gray-600">Already have an account? <a className="underline" href="/auth/login">Sign in</a></p>
           </section>
 
@@ -51,11 +131,51 @@ export default async function SubscribePage() {
             <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
               <div className="font-medium">What’s included</div>
               <ul className="mt-2 space-y-2 text-gray-600">
-                <li className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>Secure authentication and role-based access</span></li>
-                <li className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>Admin dashboard with metrics and user management</span></li>
-                <li className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>Tenants and subscribers pages</span></li>
-                <li className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>Observability with Sentry</span></li>
+                {(productConfig?.includes || [
+                  'Secure authentication and role-based access',
+                  'Admin dashboard with metrics and user management',
+                  'Tenants and subscribers pages',
+                  'Observability with Sentry',
+                ]).map((inc) => (
+                  <li key={inc} className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>{inc}</span></li>
+                ))}
               </ul>
+            </div>
+            {productConfig?.comparison && (
+              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm space-y-3">
+                <div className="font-medium">How we stack up to {productConfig.comparison.competitor}</div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Matches</div>
+                  <ul className="mt-1 space-y-2 text-gray-600">
+                    {productConfig.comparison.parity.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">OnTask extras</div>
+                  <ul className="mt-1 space-y-2 text-gray-600">
+                    {productConfig.comparison.differentiators.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#20b2aa]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
+              <div className="font-medium">Free AI audit (website + ads)</div>
+              <p className="mt-1 text-gray-600">No‑cost review of your site and ad accounts. Get quick wins and a prioritized action list within 48 hours.</p>
+              <p className="mt-2 text-gray-600">Ready to implement? Upgrade to the monthly plan and we’ll execute the recommendations for you.</p>
+              {/* Inline client-only audit request button */}
+              {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+              <AuditRequestButton />
             </div>
             <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
               <div className="font-medium">Need help?</div>
@@ -68,6 +188,12 @@ export default async function SubscribePage() {
           </aside>
         </div>
       </div>
+      {/* Bottom banner only shows when near the end of the page */}
+      <Suspense>
+        <BottomPromoBanner anchorPrice={anchorPrice} endStr={endStr} />
+      </Suspense>
     </div>
   );
 }
+
+// (Client components moved to components/* and imported above.)

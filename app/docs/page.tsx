@@ -23,7 +23,7 @@ export default async function DocsIndex() {
     <div className="relative">
       <PublicNavbar />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
-      <main className="mx-auto max-w-3xl px-4 md:px-6 pt-20 md:pt-24 pb-12">
+  <main className="mx-auto max-w-3xl px-4 md:px-6 pt-20 md:pt-24 pb-12 reveal-in fade-only">
         <h1 className="mb-4 text-2xl font-semibold">Documentation</h1>
         {augmented.length === 0 ? (
           <p className="text-gray-600">No documents yet.</p>

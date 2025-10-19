@@ -15,7 +15,7 @@
       },
       "cta": {
         "label": "Schedule a call",
-        "href": "/#contact"
+        "href": "https://form.jotform.com/252643426225151"
       },
       "variants": {
         "default": "A",
@@ -30,6 +30,46 @@
       "embed": {
         "html": "<div style=\"border:1px solid #e5e7eb;padding:16px;border-radius:12px\"><h3 style=\"margin:0 0 8px 0;color:#20b2aa\">Calendly (example)</h3><div class=\"calendly-inline-widget\" data-url=\"https://calendly.com/dimitri-mcdaniel-9oh/new-meeting\" style=\"min-width:320px;height:640px\"></div><script src=\"https://assets.calendly.com/assets/external/widget.js\" async></script></div>"
       }
+    }
+    ,
+    "plumbers": {
+      "seo": { "title": "BluePro for Plumbers — Book More Jobs", "description": "Scheduling, invoices, and reviews that drive repeat work." },
+      "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
+      "hero": { "headline": "Get More Plumbing Jobs with BluePro", "subheadline": "Scheduling, invoices, and reviews that drive repeat work." },
+      "cta": { "label": "Start $149 plan", "href": "/subscribe/bluepro-plumber" },
+      "features": [
+        { "emoji": "🗓️", "title": "Scheduling & Dispatch", "text": "Calendar views and reminders" },
+        { "emoji": "💳", "title": "Payments", "text": "Invoices and receipts that get paid" },
+        { "emoji": "⭐", "title": "Reviews", "text": "Automated follow-ups to boost ratings" }
+      ]
+    },
+    "hvac": {
+      "seo": { "title": "BluePro for HVAC — Convert More Calls", "description": "Estimates, scheduling, and financing integrations." },
+      "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
+      "hero": { "headline": "HVAC Pros: Convert Calls into Revenue", "subheadline": "Estimates, scheduling, and financing integrations." },
+      "cta": { "label": "Start $199 plan", "href": "/subscribe/bluepro-hvac" },
+      "features": [
+        { "emoji": "📋", "title": "Estimates", "text": "Fast, professional quotes" },
+        { "emoji": "🧰", "title": "Scheduling", "text": "Technician calendars and reminders" },
+        { "emoji": "🏦", "title": "Financing", "text": "Integrations that boost close rates" }
+      ]
+    },
+    "roofers": {
+      "seo": { "title": "BluePro for Roofers — Close Bigger Jobs", "description": "Lead capture, estimates, and CRM basics." },
+      "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
+      "hero": { "headline": "Roofing Teams Win with BluePro", "subheadline": "Lead capture, estimates, and CRM basics." },
+      "cta": { "label": "Start $179 plan", "href": "/subscribe/bluepro-roofer" }
+    },
+  "cto": {
+      "seo": { "title": "Fractional CTO for Service Businesses", "description": "Roadmaps, architecture, hiring, and hands-on delivery." },
+      "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
+      "hero": { "headline": "Fractional CTO: Strategy + Execution", "subheadline": "Roadmaps, architecture, hiring, and hands-on delivery." },
+  "cta": { "label": "Talk to sales", "href": "https://form.jotform.com/252643426225151" },
+      "features": [
+        { "emoji": "🧭", "title": "Technical Strategy", "text": "Architect systems aligned to business goals" },
+        { "emoji": "🚀", "title": "Delivery", "text": "Sprints, demos, outcomes" },
+        { "emoji": "👥", "title": "Team", "text": "Hire, coach, and level up execution" }
+      ]
     }
   }
 }

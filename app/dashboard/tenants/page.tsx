@@ -44,7 +44,7 @@ export default async function TenantsPage({ searchParams }: { searchParams?: Pro
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-in fade-only">
       <PageHeader
         title="Tenants"
         subtitle="Organizations in your system."

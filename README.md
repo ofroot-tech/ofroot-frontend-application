@@ -134,6 +134,7 @@ You can start editing the home page by modifying `app/page.tsx`. The page auto-u
 - [Vercel Deployment Docs](https://nextjs.org/docs/app/building-your-application/deploying)
 - [Vanta.js Documentation](https://www.vantajs.com/)
 
+
 ## Backend API configuration
 
 This frontend talks to the Laravel API. Configure the base URL via an environment variable.
@@ -202,3 +203,33 @@ This project is configured to work with Vercel's default Next.js settings.
 ---
 
 This frontend is designed to work seamlessly with a Laravel backend and is optimized for Vercel hosting.
+
+## Contact & Email configuration
+
+We centralize contact emails and optional email sending via environment variables so nothing sensitive is committed to git.
+
+Variables (Next.js app on Vercel):
+- `NEXT_PUBLIC_CONTACT_EMAIL` — Public-facing email to display on the site (safe to expose). Example: `ofroot.technology@gmail.com`.
+- `CONTACT_EMAIL` — Recipient inbox for form submissions (server-only). If omitted, falls back to `NEXT_PUBLIC_CONTACT_EMAIL`.
+- `RESEND_API_KEY` — Optional. If set, audit and sales inquiry routes will send emails via Resend; otherwise they will log.
+- `RESEND_FROM` — Optional. Sender email for Resend (e.g., `no-reply@ofroot.technology`). Must be verified in Resend.
+- `RESEND_FROM_NAME` — Optional. Sender display name (e.g., `OfRoot`).
+
+Where used:
+- Display email: `app/config/public.ts` → used in `app/page.tsx` contact section.
+- Mail sending: `app/api/audit-inquiry/route.ts` and `app/api/sales-inquiry/route.ts`.
+
+Local setup:
+1. Copy `.env.local.example` to `.env.local` and set `NEXT_PUBLIC_CONTACT_EMAIL`. Leave `RESEND_API_KEY` empty unless testing sending.
+2. Never commit `.env.local` (already gitignored).
+
+Vercel (production):
+1. Add the vars above in Project → Settings → Environment Variables.
+2. Redeploy.
+
+Render (Laravel API):
+- Not required for these frontend email routes. If moving email to Laravel later, configure `MAIL_*` there per Laravel docs.
+
+Security hygiene:
+- Keep this repo public if you want GitHub activity — just ensure secrets live in Vercel/Render envs, not in git.
+- Rotate keys immediately if a secret ever lands in commit history.

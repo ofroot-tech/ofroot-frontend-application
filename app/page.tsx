@@ -12,12 +12,19 @@
  *  - Inserts JSON-LD with a client-side useEffect that creates a <script type="application/ld+json"> element
  *    and sets textContent (plain string). This prevents the `appendChild` Unexpected token ':' error.
  *  - Adds a timeout fallback for Calendly initialization and scoped diagnostic listeners.
+ *
+ * Update (subscription narrative)
+ *  - Clarifies the OfRoot offering: on-demand engineering, automation, and AI by subscription.
+ *  - Adds a prominent CTA to start a subscription and a section outlining inclusions.
  */
 
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
-import { useEffect, useRef, useState } from "react";
-import Footer from "./components/Footer";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CONTACT_EMAIL_PUBLIC } from './config/public';
+import PromoBanner from "@/components/PromoBanner";
+import { Search, Target, PenTool, Code2, PlugZap, Rocket, CalendarDays, ClipboardList, Users, Wrench, BadgeDollarSign } from 'lucide-react';
+import { track } from '@/app/lib/ab';
 
 /* ------------------------------
    Constants
@@ -27,6 +34,17 @@ const calendlySrc = 'https://assets.calendly.com/assets/external/widget.js';
 
 // Timeout (ms) to consider Calendly failed to initialize if global Calendly is not present
 const CALENDLY_INIT_TIMEOUT = 8000;
+
+// Preload heavy Vanta deps ASAP on the client to reduce time-to-first-frame
+const __IS_BROWSER__ = typeof window !== 'undefined';
+let __vantaPreload: Promise<[any, any]> | null = null;
+if (__IS_BROWSER__) {
+  // Kick off both imports in parallel
+  __vantaPreload = Promise.all([
+    import(/* webpackPreload: true */ 'p5'),
+    import(/* webpackPreload: true */ 'vanta/dist/vanta.topology.min'),
+  ]);
+}
 
 export default function Home() {
   /* ------------------------------
@@ -76,9 +94,7 @@ export default function Home() {
      - Uses dynamic import for p5 and Vanta topology module.
      - Robust try/catch and cleanup on unmount to avoid leaving canvas listeners behind.
      ------------------------------ */
-  useEffect(() => {
-    if (!hasMounted) return;
-
+  useLayoutEffect(() => {
     let cancelled = false;
 
     const initVanta = async () => {
@@ -88,17 +104,22 @@ export default function Home() {
         // If effect already exists or target ref missing, skip initialization.
         if (vantaEffect.current || !vantaRef.current) return;
 
-        // Dynamic import of p5 (large) and Vanta topology module.
-        const p5Module = await import('p5').catch((e) => {
-          console.error('Failed to import p5 for Vanta:', e);
+        // Parallel dynamic import of p5 and Vanta topology module (or use preloaded promise)
+        let p5Module: any, TOPOLOGYModule: any;
+        try {
+          if (__vantaPreload) {
+            [p5Module, TOPOLOGYModule] = await __vantaPreload;
+          } else {
+            [p5Module, TOPOLOGYModule] = await Promise.all([
+              import(/* webpackPreload: true */ 'p5'),
+              import(/* webpackPreload: true */ 'vanta/dist/vanta.topology.min'),
+            ]);
+          }
+        } catch (e) {
+          console.error('Failed to import Vanta dependencies:', e);
           throw e;
-        });
+        }
         const p5 = (p5Module?.default ?? p5Module) as any;
-
-        const TOPOLOGYModule = await import('vanta/dist/vanta.topology.min').catch((e) => {
-          console.error('Failed to import Vanta topology module:', e);
-          throw e;
-        });
         const TOPOLOGY = (TOPOLOGYModule?.default ?? TOPOLOGYModule) as any;
 
         if (cancelled) return;
@@ -113,8 +134,9 @@ export default function Home() {
           minWidth: 200.0,
           scale: 1.0,
           scaleMobile: 1.0,
-          color: '#20b2aa',
-          backgroundColor: '#ffffff',
+          speed: 15.90,
+          color: 0x20b2aa,
+          backgroundColor: 0xffffff,
         });
 
         updateHealth('vanta', 'ok');
@@ -139,7 +161,7 @@ export default function Home() {
         updateHealth('vanta', 'unknown');
       }
     };
-  }, [hasMounted]);
+  }, []);
 
   /* ------------------------------
      Calendly loading & diagnostics (client-only)
@@ -196,7 +218,7 @@ export default function Home() {
   /* ------------------------------
      JSON-LD insertion (client-only)
      - We do NOT use next/Script for JSON-LD due to issues seen with some Next/Turbopack versions.
-     - Instead we create a <script type="application/ld+json"> element and set textContent to a string.
+     - Instead we create a <script type="application/ld+json"> element and set its textContent to a string.
      - Setting textContent guarantees the browser appends a plain text node (avoids appendChild parsing issues).
      ------------------------------ */
   useEffect(() => {
@@ -255,6 +277,33 @@ export default function Home() {
   })();
 
   /* ------------------------------
+     Reveal-in on scroll (client-only)
+     - Uses IntersectionObserver to add 'in-view' to sections as they enter viewport.
+     - Respects prefers-reduced-motion.
+     ------------------------------ */
+  useEffect(() => {
+    if (!hasMounted) return;
+    const m = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (m.matches) return;
+
+    const els = document.querySelectorAll<HTMLElement>('.reveal-in');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -10% 0px' }
+    );
+
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [hasMounted]);
+
+  /* ------------------------------
      Render (JSX)
      ------------------------------ */
   return (
@@ -264,6 +313,9 @@ export default function Home() {
 
       {/* Accessibility skip link */}
       <a href="#services" className="sr-only">Skip to content</a>
+
+      {/* Marketing banner with extra top spacing, home-only */}
+      <PromoBanner spaced />
 
       {/* Hero section with Vanta background */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
@@ -276,7 +328,9 @@ export default function Home() {
             width: "100%",
             height: "100%",
             zIndex: 0,
+            pointerEvents: 'none',
           }}
+          data-vanta
           aria-hidden
         />
         <div style={{ position: "relative", zIndex: 1, height: "100%" }} className="hero-wrapper flex items-center justify-center p-8 sm:p-20">
@@ -290,12 +344,13 @@ export default function Home() {
                 OFROOT
               </h1>
 
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-black mb-8 fade-up delayed">
-                Innovative Technology Solutions
+              {/* Updated value prop: subscription-focused */}
+              <h2 className="text-3xl sm:text-5xl font-extrabold text-black mb-6 fade-up delayed">
+                On‑demand engineering, automation, and AI — by subscription
               </h2>
 
               <p className="text-xl sm:text-2xl text-black/90 max-w-4xl mb-12 fade-up delayed readable">
-                Empowering businesses with cutting-edge technology. From web and app development to automation and AI integrations, we deliver solutions that drive growth and efficiency.
+                Ship product faster with a monthly engagement. We design and build web apps, automate workflows, and integrate AI — delivered in focused sprints with clear outcomes and transparent pricing.
               </p>
             </div>
 
@@ -308,12 +363,22 @@ export default function Home() {
                 Explore Services
               </a>
               <a
-                className="bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed gradient-glow-text"
-                href="#contact"
+                className="bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed"
+                href="https://form.jotform.com/252643426225151"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Book a 20 minute scoping call"
                 style={{ boxShadow: '0 8px 24px rgba(255,255,255,0.72), 0 6px 18px rgba(32,178,170,0.14)' }}
               >
                 Book a 20-min scoping call
+              </a>
+              {/* Updated CTA to scroll to subscription section */}
+              <a
+                className="bg-black text-white hover:bg-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed"
+                href="#subscription"
+                aria-label="Start your subscription"
+              >
+                Subscribe
               </a>
             </div>
           </main>
@@ -322,19 +387,8 @@ export default function Home() {
 
       {/* Content area */}
       <div className="content-area relative">
-        <div className="floating-circles" aria-hidden="true">
-          <span className="c1" />
-          <span className="c2" />
-          <span className="c3" />
-          <span className="c4" />
-          <span className="c5" />
-          <span className="c6" />
-          <span className="c7" />
-          <span className="c8" />
-        </div>
-
         {/* Services section */}
-        <section id="services" className="py-20 px-8 sm:px-20">
+        <section id="services" className="py-20 px-8 sm:px-20 reveal-in">
           <div className="max-w-6xl mx-auto">
             <div className="mb-12 max-w-4xl mx-auto">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1 text-center">
@@ -344,77 +398,268 @@ export default function Home() {
                 Our Core Services
               </h2>
               <p className="text-lg text-gray-600 text-center readable max-w-3xl mx-auto">
-                Focused expertise to accelerate product development, automate operations, and integrate intelligent systems — with pragmatic roadmaps and measurable outcomes.
+                Subscribe to a monthly, outcome‑oriented engagement. We build product features, automate operations, and integrate AI — the work that compounds.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-stretch">
-              <div className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col items-start text-left">
-                <div className="w-12 h-12 bg-[#20b2aa] rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white text-2xl">⚙️</span>
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+                <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
+                  <span className="text-white text-3xl">⚙️</span>
                 </div>
-                <h3 className="font-bold text-2xl mb-2">Automation</h3>
-                <p className="text-gray-600">Automate workflows, orchestration, and business processes to reduce manual work and increase reliability.</p>
-              </div>
+                <h3 className="font-bold text-2xl">Automation</h3>
+                <p className="flex-1 text-gray-600">Automate workflows, orchestration, and business processes to reduce manual work and increase reliability.</p>
+                <a
+                  href="/services/development-automation"
+                  onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'development-automation' }); } catch {} }}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#20b2aa] px-5 py-3 font-semibold text-white transition-colors hover:bg-[#1a8f85]"
+                  aria-label="Learn more about Automation"
+                >
+                  Learn more
+                </a>
+              </article>
 
-              <div className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex flex-col items-start text-left">
-                <div className="w-12 h-12 bg-[#20b2aa] rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white text-2xl">🌐</span>
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+                <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
+                  <span className="text-white text-3xl">🌐</span>
                 </div>
-                <h3 className="font-bold text-2xl mb-2">Website & App Development</h3>
-                <p className="text-gray-600">Full-stack web and mobile development — prototypes, SaaS platforms, migrations, and performance-driven product engineering.</p>
-              </div>
+                <h3 className="font-bold text-2xl">Website & App Development</h3>
+                <p className="flex-1 text-gray-600">Full-stack web and mobile development — prototypes, SaaS platforms, migrations, and performance-driven product engineering.</p>
+                <a
+                  href="/services/website-app-development"
+                  onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'website-app-development' }); } catch {} }}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#20b2aa] px-5 py-3 font-semibold text-white transition-colors hover:bg-[#1a8f85]"
+                  aria-label="Learn more about Website & App Development"
+                >
+                  Learn more
+                </a>
+              </article>
 
-              <div className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1 flex flex-col items-start text-left">
-                <div className="w-12 h-12 bg-[#20b2aa] rounded-full flex items-center justify-center mb-4">
-                  <span className="text-white text-2xl">🤖</span>
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+                <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
+                  <span className="text-white text-3xl">🤖</span>
                 </div>
-                <h3 className="font-bold text-2xl mb-2">AI Development & Integrations</h3>
-                <p className="text-gray-600">
+                <h3 className="font-bold text-2xl">AI Development & Integrations</h3>
+                <p className="flex-1 text-gray-600">
                   Custom AI models, LLM integrations, and automation of knowledge work to enhance decision-making and customer experience.
                 </p>
+                <a
+                  href="/services/ai-development-integrations"
+                  onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'ai-development-integrations' }); } catch {} }}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#20b2aa] px-5 py-3 font-semibold text-white transition-colors hover:bg-[#1a8f85]"
+                  aria-label="Learn more about AI Development & Integrations"
+                >
+                  Learn more
+                </a>
+              </article>
+
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+                <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
+                  <span className="text-white text-3xl">🧪</span>
+                </div>
+                <h3 className="font-bold text-2xl">AI Website & Ads Audit</h3>
+                <p className="flex-1 text-gray-600">A free audit to identify quick wins in your site and ad accounts. Get a prioritized list within 48 hours.</p>
+                <a
+                  href="/services/ai-audit"
+                  onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'ai-audit' }); } catch {} }}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#20b2aa] px-5 py-3 font-semibold text-white transition-colors hover:bg-[#1a8f85]"
+                  aria-label="Learn more about the AI Website & Ads Audit"
+                >
+                  Learn more
+                </a>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        {/* Subscription section — what’s included */}
+        <section id="subscription" className="py-16 px-8 sm:px-20 reveal-in">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-3xl font-extrabold mb-3">A subscription that ships</h3>
+              <p className="text-gray-600 mb-6">
+                One simple plan to move fast: sprint planning, design + build, weekly demos, and clear rollouts. Cancel anytime.
+              </p>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Feature development for web and mobile</li>
+                <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Workflow automation and integrations</li>
+                <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> AI assistants, retrieval, and orchestration</li>
+                <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Observability, performance, and reliability</li>
+                <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Admin dashboards and data models</li>
+              </ul>
+              <div className="mt-8 flex gap-3">
+                <a href="/subscribe" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
+                <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="underline text-gray-700">Talk to us first</a>
+              </div>
+            </div>
+            <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="text-sm text-gray-600">
+                <div className="font-medium">How it works</div>
+                <ol className="list-decimal ml-5 mt-2 space-y-2">
+                  <li>Scope goals and quick wins (30 minutes)</li>
+                  <li>Prioritize a sprint plan and outcomes</li>
+                  <li>Build, integrate, and demo weekly</li>
+                  <li>Ship and iterate with clear metrics</li>
+                </ol>
               </div>
             </div>
           </div>
         </section>
 
         {/* Featured / How / Proof sections (kept as in your original) */}
-        <section id="featured" className="py-20 px-8 sm:px-20">
+        <section id="featured" className="py-20 px-8 sm:px-20 reveal-in">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-10 text-center">
+              <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">FEATURED PRODUCTS</span>
+              <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 text-gray-800">Built to run real businesses</h2>
+              <p className="text-gray-600 max-w-3xl mx-auto">OfRoot hosts multiple apps under one roof. Here are two we actively develop and support for service companies.</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+              {/* Helpr card */}
+              <article className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <header className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold">Helpr</h3>
+                    <p className="text-gray-600">Vertical SaaS for home service businesses</p>
+                  </div>
+                </header>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><CalendarDays size={18} aria-hidden /> Scheduling & dispatch with calendar views</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><BadgeDollarSign size={18} aria-hidden /> Invoicing, payments, and receipts</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Users size={18} aria-hidden /> Crew management and permissions</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><ClipboardList size={18} aria-hidden /> Customer portal, estimates, and work orders</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Wrench size={18} aria-hidden /> Multi-tenant foundation and integrations</span></li>
+                </ul>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <a href="https://form.jotform.com/252643454932157" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full text-center">Join the waitlist</a>
+                  <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="underline text-gray-700 text-center">Talk to us</a>
+                </div>
+              </article>
+
+              {/* OnTask card */}
+              <article className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <header className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold">OnTask</h3>
+                    <p className="text-gray-600">A practical toolkit for service companies</p>
+                  </div>
+                </header>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Target size={18} aria-hidden /> SEO‑optimized landing pages</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><PenTool size={18} aria-hidden /> Built‑in blog & content tools</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Users size={18} aria-hidden /> Branding help and collateral</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><ClipboardList size={18} aria-hidden /> CRM basics: leads, estimates, invoices</span></li>
+                  <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><PlugZap size={18} aria-hidden /> Automations for follow‑ups and reviews</span></li>
+                </ul>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <a href="/ontask" className="bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full text-center">Explore OnTask</a>
+                  <a href="https://form.jotform.com/252643454932157" className="underline text-gray-700 text-center">Join the waitlist</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="how" className="py-16 px-8 sm:px-20 reveal-in">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-10 text-center">
+              <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">PROCESS</span>
+              <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 text-gray-800">How we go from idea to MVP</h2>
+              <p className="text-gray-600 max-w-3xl mx-auto">A clear, outcome‑driven sequence. We partner closely, validate quickly, and ship working software on a predictable cadence.</p>
+            </div>
+
+            {/* Steps grid: mobile-first, scales to 3 columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+              {/* Step */}
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Search size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 1</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Discover & Align</h3>
+                <p className="text-gray-600">Identify goals, constraints, users, and success metrics. Gather the essentials to move fast with clarity.</p>
+              </div>
+
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Target size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 2</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Scope the MVP</h3>
+                <p className="text-gray-600">Define a small, valuable slice. Prioritize core flows, data model, and the shortest path to value.</p>
+              </div>
+
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><PenTool size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 3</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Design the experience</h3>
+                <p className="text-gray-600">Wireframes, UI, and copy that make the MVP intuitive and on‑brand. Accessibility and responsiveness by default.</p>
+              </div>
+
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Code2 size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 4</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Build & integrate</h3>
+                <p className="text-gray-600">Implement backend APIs (Laravel), frontend (Next.js), auth, and key integrations. Ship weekly demos.</p>
+              </div>
+
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><PlugZap size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 5</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Automate & add AI</h3>
+                <p className="text-gray-600">Wire up workflows, assistants, and retrieval where they create leverage. Measure impact from day one.</p>
+              </div>
+
+              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Rocket size={20} aria-hidden /></div>
+                  <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 6</div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">Launch & iterate</h3>
+                <p className="text-gray-600">Release, observe, and refine. We keep shipping improvements that compound into a product moat.</p>
+              </div>
+            </div>
+
+            {/* Mobile CTA under the grid */}
+            <div className="mt-8 text-center sm:hidden">
+              <a href="/subscribe" className="inline-flex items-center justify-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
+            </div>
+          </div>
+        </section>
+
+        <section id="proof" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in">
           {/* (content unchanged) */}
         </section>
 
-        <section id="how" className="py-16 px-8 sm:px-20">
-          {/* (content unchanged) */}
-        </section>
-
-        <section id="proof" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10">
-          {/* (content unchanged) */}
-        </section>
-
-        {/* Contact / Calendly area */}
-        <section id="contact" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10">
+  {/* Contact area (de-emphasized): prefer JotForm contact form */}
+  <section id="contact" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/5 to-[#007bff]/5 reveal-in">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1 text-center">
                 GET STARTED
               </span>
               <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-gray-800">
-                Book a 20-min scoping call
+                Prefer a quick form?
               </h2>
             </div>
 
             <p className="text-lg text-gray-600 mb-12 readable">
-              Ready to explore a scoped plan or quick win? Book a short call and we'll prepare a brief agenda to make the most of our time.
+              We now handle inquiries primarily via our contact form. You can still book a call below if you’d like.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
               <div className="p-6 rounded-lg shadow-lg border border-gray-200">
                 <h3 className="font-semibold text-xl mb-4 text-[#20b2aa]">Contact Information</h3>
                 <div className="space-y-3 text-left">
-                  <p className="flex items-center">
-                    <span className="text-[#20b2aa] mr-3">📧</span>
-                    <span>dimitri.mcdaniel@gmail.com</span>
-                  </p>
+                  <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📝</span><a className="underline" href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer">Open contact form</a></p>
+                  <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📧</span><span>{CONTACT_EMAIL_PUBLIC}</span></p>
                   <p className="flex items-center">
                     <span className="text-[#20b2aa] mr-3">📞</span>
                     <span>+1 (614) 500-2315</span>
@@ -423,8 +668,8 @@ export default function Home() {
               </div>
 
               <div className="p-6 rounded-lg shadow-lg border border-gray-200">
-                <h3 className="font-semibold text-xl mb-4 text-[#20b2aa]">Schedule a Call</h3>
-                <p className="text-sm text-gray-600 mb-3">Use the scheduler below to book a 20-minute scoping call. The Calendly widget loads client-side.</p>
+                <h3 className="font-semibold text-xl mb-4 text-[#20b2aa]">Schedule a Call (optional)</h3>
+                <p className="text-sm text-gray-600 mb-3">Prefer a call? You can still book below. Otherwise, the contact form is preferred for fastest response.</p>
 
                 {/* Calendly Script injection (only when client-side and no duplicate script exists) */}
                 {hasMounted && !calendlyScriptExists && (
@@ -481,9 +726,6 @@ export default function Home() {
             <p className="text-sm text-gray-500">We'll respond within 1-2 business days. Looking forward to connecting!</p>
           </div>
         </section>
-
-        <Footer />
-
         <style jsx>{`
           .gradient-glow-text {
             text-shadow:

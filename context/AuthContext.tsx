@@ -8,6 +8,9 @@ export type AuthUser = {
   id: number;
   name: string;
   email: string;
+  plan?: string | null;
+  billing_cycle?: 'monthly' | 'yearly' | null;
+  has_blog_addon?: boolean;
 };
 
 interface AuthContextType {

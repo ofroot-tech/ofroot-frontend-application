@@ -43,7 +43,7 @@ export default async function UsersPage({ searchParams }: { searchParams?: Promi
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-in fade-only">
       <PageHeader
         title="Users"
         subtitle="Manage access and roles across your organization."

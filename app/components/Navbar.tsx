@@ -2,53 +2,58 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
-import { usePathname } from "next/navigation";
+import { type MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { X, Cog, Star, PlayCircle, CheckCircle, BookOpen, ExternalLink, Mail, MessageCircle, Home } from 'lucide-react';
+
+type NavItem = {
+  label: string;
+  href?: string;
+  external?: boolean;
+  chat?: boolean;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+};
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const showNavOnThesePages = ["/", "/blog"];
-  if (!showNavOnThesePages.includes(pathname)) return null;
+  const pathname = (usePathname() ?? '/') || '/';
+  const normalized = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
+  // Show navbar on home and blog pages
+  const showNavOnThesePages = new Set<string>(['/', '/blog']);
+  const shouldRenderNav = showNavOnThesePages.has(normalized);
 
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  // Toggle helper that also sets live region message
   const toggleMenu = (next = !open) => {
     setOpen(next);
-    setLiveMessage(next ? 'Mobile menu opened' : 'Mobile menu closed');
+    setLiveMessage(next ? 'Navigation opened' : 'Navigation closed');
   };
 
-  // Focus trap and Escape handling
+  // focus trap & body scroll lock
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!open) return;
-
       if (e.key === 'Escape') {
         e.preventDefault();
         toggleMenu(false);
       }
-
       if (e.key === 'Tab') {
         const container = menuRef.current;
         if (!container) return;
         const focusable = Array.from(
-          container.querySelectorAll<HTMLElement>(
-            'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-          )
+          container.querySelectorAll<HTMLElement>('button,a[href]')
         ).filter((el) => !el.hasAttribute('disabled'));
-
-        if (focusable.length === 0) return;
-
+        if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-
-        if (e.shiftKey && document.activeElement === first) {
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && active === first) {
           e.preventDefault();
           last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
+        } else if (!e.shiftKey && active === last) {
           e.preventDefault();
           first.focus();
         }
@@ -56,39 +61,130 @@ export default function Navbar() {
     };
 
     if (open) {
-      // Save previously focused element to restore later
       previouslyFocused.current = document.activeElement as HTMLElement | null;
-
-      // Focus first focusable element in menu
-      window.setTimeout(() => {
+      setTimeout(() => {
         const container = menuRef.current;
         if (!container) return;
-        const focusable = container.querySelectorAll<HTMLElement>('a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])');
-        if (focusable.length) {
-          (focusable[0] as HTMLElement).focus();
-        }
+        const focusable = container.querySelectorAll<HTMLElement>('button,a[href]');
+        if (focusable.length) focusable[0]?.focus();
       }, 0);
-
       document.addEventListener('keydown', handleKeyDown);
-      // prevent body scroll while menu open
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
-      // restore focus
-      if (previouslyFocused.current) {
-        previouslyFocused.current.focus();
-        previouslyFocused.current = null;
-      }
+      previouslyFocused.current?.focus?.();
+      previouslyFocused.current = null;
     };
   }, [open]);
 
+  // Top-fixed header with high z-index so it sits above hero
+  const headerClass = 'fixed top-0 left-0 right-0 z-[99999] isolate pointer-events-auto bg-white/95 backdrop-blur-sm border-b border-gray-100 will-change-transform transform-gpu';
+
+  const navItems: NavItem[] = (() => {
+    const items: NavItem[] = [];
+    if (pathname !== '/') items.push({ label: 'Home', href: '/', icon: Home });
+    if (pathname === '/') {
+      items.push({ label: 'Services', href: '#services', icon: Cog });
+      items.push({ label: 'Featured', href: '#featured', icon: Star });
+      items.push({ label: 'How it works', href: '#how', icon: PlayCircle });
+      items.push({ label: 'Proof', href: '#proof', icon: CheckCircle });
+    }
+  items.push({ label: 'Blog', href: '/blog', icon: BookOpen });
+  items.push({ label: 'Substack', href: 'https://substack.com/@ofroot/posts', external: true, icon: ExternalLink });
+  // Route contact to external JotForm per sales flow
+  items.push({ label: 'Contact', href: 'https://form.jotform.com/252643426225151', external: true, icon: Mail });
+    items.push({ label: 'Chat with OfRoot', chat: true, icon: MessageCircle });
+    return items;
+  })();
+
+  const handleNavClick = (item: NavItem) => {
+    if (item.chat) {
+      window.dispatchEvent(new CustomEvent('ofroot:chat-open'));
+      toggleMenu(false);
+      return;
+    }
+
+    if (item.external && item.href) {
+      window.open(item.href, '_blank', 'noopener,noreferrer');
+      toggleMenu(false);
+      return;
+    }
+
+    if (item.href?.startsWith('#')) {
+      toggleMenu(false);
+      if (pathname === '/') {
+        const target = document.querySelector(item.href);
+        if (target) {
+          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+        }
+      } else {
+        router.push(`/${item.href}`);
+      }
+      return;
+    }
+
+    toggleMenu(false);
+    if (item.href) {
+      router.push(item.href);
+    }
+  };
+
+  const NavButton = ({ item }: { item: NavItem }) => {
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const frame = useRef<number | null>(null);
+
+    const animateScale = (scale: number) => {
+      if (!buttonRef.current) return;
+      buttonRef.current.style.setProperty('--press-scale', scale.toString());
+    };
+
+    const handleMove = (event: ReactMouseEvent<HTMLButtonElement>) => {
+      if (!buttonRef.current) return;
+      const rect = buttonRef.current.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      const dist = Math.sqrt(x * x + y * y);
+      const scale = Math.max(0.9, 1 - dist * 0.12);
+  if (frame.current !== null) cancelAnimationFrame(frame.current);
+  frame.current = requestAnimationFrame(() => animateScale(scale));
+    };
+
+    const resetScale = () => {
+  if (frame.current !== null) cancelAnimationFrame(frame.current);
+  frame.current = null;
+      animateScale(1);
+    };
+
+    return (
+      <button
+        ref={buttonRef}
+        key={item.label}
+        type="button"
+        onClick={() => handleNavClick(item)}
+        onMouseMove={handleMove}
+        onMouseLeave={resetScale}
+        onBlur={resetScale}
+        onFocus={() => animateScale(0.95)}
+        aria-label={item.label}
+        className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-r from-white to-gray-50 px-4 py-2 sm:px-6 sm:py-3 text-lg font-semibold text-gray-900 shadow-lg transition-all duration-300 ease-out hover:bg-[#20b2aa] hover:text-white hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:ring-offset-2 flex items-center justify-center"
+        style={{ transform: 'scale(var(--press-scale, 1))', willChange: 'transform' }}
+      >
+        <item.icon size={24} className="sm:w-6 sm:h-6 w-5 h-5" />
+      </button>
+    );
+  };
+
+  if (!shouldRenderNav) {
+    return null;
+  }
+
   return (
-    <header role="banner" className="w-full fixed top-0 left-0 z-50 bg-transparent backdrop-blur-sm h-14 md:h-16">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-full">
-        <div className="flex items-center">
+    <header role="banner" className={`${headerClass} h-14 md:h-16 transition-all duration-300`}>
+      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 md:px-6">
+        <div className="flex items-center gap-2">
           <Link href="/" aria-label="OfRoot homepage">
             <Image
               src="/ofroot-logo.png"
@@ -96,87 +192,88 @@ export default function Navbar() {
               width={64}
               height={64}
               priority
-              className="rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] w-10 h-10 md:w-16 md:h-16"
+              className="h-10 w-10 rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] md:h-16 md:w-16"
             />
           </Link>
-        </div>
-
-        <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
-          {pathname === "/" && (
-            <>
-              <a href="#services" className="text-gray-700 hover:text-[#20b2aa]">Services</a>
-              <a href="#featured" className="text-gray-700 hover:text-[#20b2aa]">Featured</a>
-              <a href="#how" className="text-gray-700 hover:text-[#20b2aa]">How</a>
-              <a href="#proof" className="text-gray-700 hover:text-[#20b2aa]">Proof</a>
-              {/* <a href="#case-studies" className="text-gray-700 hover:text-[#20b2aa]">Case Studies</a> */}
-            </>
-          )}
-            {/* Show Blog link if not on /blog or any /blog/* page */}
-            {!(pathname === "/blog" || pathname.startsWith("/blog/")) && (
-              <a href="https://substack.com/@ofroot/posts" className="text-gray-700 hover:text-[#20b2aa]">Blog</a>
-            )}
-            {/* Show Home link if on /blog or any /blog/* page */}
-            {(pathname === "/blog" || pathname.startsWith("/blog/")) && (
-              <a href="/" className="text-gray-700 hover:text-[#20b2aa]">Home</a>
-            )}
-          <a
-            href="#contact"
-            onClick={() => setOpen(false)}
-            className="bg-[#20b2aa] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#1a8f85] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
-            aria-label="Go to contact section to book a scoping call"
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('ofroot:chat-toggle'))}
+            className="hidden md:inline-flex items-center gap-2 rounded-full border border-gray-300 bg-black px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-              <path d="M7 10h10M7 14h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.6" />
-            </svg>
-            <span>Contact</span>
+            Chat
+          </button>
+        </div>
+        {/* Inline links on desktop for a clean look */}
+        <nav className="hidden md:flex items-center gap-4">
+          <Link href="/blog" className="text-sm font-medium text-gray-700 hover:text-[#20b2aa]">Blog</Link>
+          <a
+            href="https://substack.com/@ofroot/posts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-gray-700 hover:text-[#20b2aa]"
+          >
+            Substack
           </a>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <button
-            className="md:hidden p-2 text-xl"
-            onClick={() => toggleMenu(!open)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-          >
-            {open ? '✕' : '☰'}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => toggleMenu()}
+          className="relative h-10 w-10 rounded-full border border-gray-300 bg-white text-gray-900 shadow-sm transition hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+          aria-label={open ? 'Close navigation' : 'Open navigation'}
+          aria-expanded={open}
+          aria-controls="ofroot-nav-overlay"
+        >
+          <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ${open ? 'scale-95 rotate-45' : 'scale-100 rotate-0'}`}>
+            <span className="grid grid-cols-2 grid-rows-2 gap-[3px]">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <span
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={idx}
+                  className="h-2 w-2 rounded-full bg-gray-900 transition-transform duration-200"
+                />
+              ))}
+            </span>
+          </span>
+        </button>
       </div>
 
-      {/* Live region for screen readers to announce menu state */}
-      <div aria-live="polite" className="sr-only">{liveMessage}</div>
+      <div aria-live="polite" className="sr-only">
+        {liveMessage}
+      </div>
 
-      {/* Backdrop overlay behind mobile menu (click to close) */}
       <div
         onClick={() => toggleMenu(false)}
         role="presentation"
         aria-hidden={!open}
-        className={`fixed inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-gray-600/50 transition-opacity duration-300 ${open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
       />
 
-      {/* Mobile menu: always rendered so animation + focus trap work reliably */}
       <div
-        id="mobile-menu"
+        id="ofroot-nav-overlay"
         ref={menuRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Mobile menu"
         aria-hidden={!open}
-        className={
-          `md:hidden mobile-glass border-t border-gray-200 rounded-b-lg rounded-t-none p-3 m-3 shadow-lg rounded-lg transform origin-top transition-transform duration-200 ease-in-out ${open ? 'opacity-100 translate-y-0 scale-100 z-50' : 'opacity-0 -translate-y-2 scale-95 pointer-events-none'}`
-        }
+        className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 ${open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
       >
-        <div className="flex flex-col p-3 gap-3 max-w-6xl mx-auto">
-          <a href="#services" onClick={() => toggleMenu(false)} className="text-gray-700">Services</a>
-          <a href="#featured" onClick={() => toggleMenu(false)} className="text-gray-700">Featured</a>
-          {/* <a href="#case-studies" onClick={() => toggleMenu(false)} className="text-gray-700">Case Studies</a> */}
-          <a href="#how" onClick={() => toggleMenu(false)} className="text-gray-700">How</a>
-          <a href="#proof" onClick={() => toggleMenu(false)} className="text-gray-700">Proof</a>
-          <a href="https://substack.com/@ofroot/posts" onClick={()=> toggleMenu(false)} className="text-gray-700">Blog</a>
-          <a href="#contact" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>
+        <div className={`absolute inset-0 bg-white/80 backdrop-blur-xl transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-6'}`} />
+        <div
+          className={`relative z-10 mx-auto flex max-w-lg flex-col items-stretch gap-6 px-6 text-center transition-all duration-300 ${open ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+        >
+          <button
+            type="button"
+            onClick={() => toggleMenu(false)}
+            className="self-end mb-4 rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+            aria-label="Close navigation"
+          >
+            <X size={24} />
+          </button>
+          <div className="grid grid-cols-2 gap-4">
+            {navItems.map((item) => (
+              <NavButton key={item.label} item={item} />
+            ))}
+          </div>
         </div>
       </div>
     </header>

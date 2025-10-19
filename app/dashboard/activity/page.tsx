@@ -44,7 +44,7 @@ export default async function ActivityPage({ searchParams }: { searchParams?: Pr
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 reveal-in fade-only">
       <PageHeader title="Activity" subtitle="All notable events across users, tenants, billing, and system." meta={filters} />
 
       <Card>

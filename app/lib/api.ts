@@ -125,6 +125,7 @@ export type AdminMetrics = {
   users: number;
   mrr: number;
   subscribers: number;
+  hours_saved_week?: number;
 };
 
 export type Subscriber = {
@@ -138,15 +139,96 @@ export type Subscriber = {
   updated_at?: string | null;
   start_date?: string | null;
 };
+export type BlogPost = {
+  id: number;
+  user_id: number;
+  tenant_id?: number | null;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  body: string;
+  status: 'draft' | 'published';
+  published_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
 
 export type Paginated<T> = { data: T[]; meta: { total: number; current_page?: number; per_page?: number; last_page?: number } };
 
 // Docs types
 export type Doc = { slug: string; title: string; body: string; updated_at?: string };
 export type DocListItem = { slug: string; title: string; updated_at?: string };
+// Public config types
+export type PricingRule = { id?: number; product_id?: number; plan: 'pro' | 'business'; monthly?: string | number | null; yearly?: string | number | null };
+export type PublicProduct = {
+  id?: number;
+  slug: string;
+  kind: 'product' | 'service';
+  name: string;
+  hero_title?: string | null;
+  hero_subtitle?: string | null;
+  anchor_price?: string | null;
+  includes?: string[] | null;
+  default_plan?: 'pro' | 'business' | null;
+  pricingRules?: PricingRule[];
+};
+export type PublicLanding = { id?: number; slug: string; title?: string | null; body?: string | null };
+
+// Invoicing types
+export type InvoiceItem = {
+  id?: number;
+  invoice_id?: number;
+  description: string;
+  quantity: number;
+  unit_amount_cents: number;
+  total_cents: number;
+};
+
+export type Payment = {
+  id: number;
+  invoice_id: number;
+  amount_cents: number;
+  currency: string;
+  status: 'succeeded' | 'pending' | 'failed' | 'refunded';
+  provider?: string | null;
+  provider_payment_id?: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type Invoice = {
+  id: number;
+  tenant_id?: number | null;
+  user_id?: number | null;
+  number: string;
+  currency: string;
+  amount_cents: number;
+  amount_paid_cents: number;
+  amount_due_cents: number;
+  status: 'draft' | 'sent' | 'paid' | 'void';
+  due_date?: string | null;
+  period_start?: string | null;
+  period_end?: string | null;
+  external_id?: string | null;
+  meta?: Record<string, any> | null;
+  created_at?: string;
+  updated_at?: string;
+  items?: InvoiceItem[];
+  payments?: Payment[];
+  payments_count?: number;
+  items_count?: number;
+};
 
 // --------- Endpoint wrappers ---------
 export const api = {
+  // Super admin impersonation (returns token for a user with the requested role/plan)
+  adminImpersonate: (token: string, params: { role?: string; plan?: string }) => {
+    return http.postJson<{ message: string; token: string; user: User }>(
+      '/admin/impersonate',
+      params,
+      { token }
+    );
+  },
   // Public
   createLead(input: CreateLeadInput) {
     return http.postJson<Lead>('/leads', input);
@@ -215,6 +297,18 @@ export const api = {
     return http.get<Paginated<Subscriber>>(path, { token });
   },
 
+  // Blog posts (blog add-on)
+  blogList(token: string, opts?: { status?: 'draft' | 'published' }) {
+    const params = new URLSearchParams();
+    if (opts?.status) params.set('status', opts.status);
+    const path = `/blog-posts${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<{ data: BlogPost[] }>(path, { token });
+  },
+
+  chatSend(message: string, token: string) {
+    return http.postJson<{ data: { reply: string } }>('/chat', { message }, { token });
+  },
+
   // Admin metrics
   adminMetrics(token: string, opts?: { range?: '7d' | '30d' | '90d' }) {
     const params = new URLSearchParams();
@@ -229,6 +323,14 @@ export const api = {
   },
   publicGetDoc(slug: string) {
     return http.get<{ ok: true; data: Doc }>(`/docs/${encodeURIComponent(slug)}`);
+  },
+
+  // Public config (admin-managed content)
+  publicListProducts() {
+    return http.get<PublicProduct[]>('/public/products');
+  },
+  publicListLandings() {
+    return http.get<PublicLanding[]>('/public/landings');
   },
 
   // Docs (admin)
@@ -246,6 +348,38 @@ export const api = {
   },
   adminDeleteDoc(slug: string, token: string) {
     return http.del<{ ok: true; data: { slug: string } }>(`/admin/docs/${encodeURIComponent(slug)}`, { token });
+  },
+
+  // Invoices (admin)
+  adminListInvoices(token: string, opts?: { page?: number; per_page?: number }) {
+    const params = new URLSearchParams();
+    if (opts?.page) params.set('page', String(opts.page));
+    if (opts?.per_page) params.set('per_page', String(opts.per_page));
+    const path = `/admin/invoices${params.toString() ? `?${params.toString()}` : ''}`;
+    return http.get<{ data: Invoice[]; meta: Paginated<unknown>['meta'] }>(path, { token });
+  },
+  adminGetInvoice(id: number, token: string) {
+    return http.get<{ data: Invoice }>(`/admin/invoices/${id}`, { token });
+  },
+  adminCreateInvoice(input: {
+    tenant_id?: number | null;
+    currency?: string;
+    due_date?: string;
+    period_start?: string;
+    period_end?: string;
+    items: Array<{ description: string; quantity?: number; unit_amount_cents: number }>;
+    meta?: Record<string, any>;
+  }, token: string) {
+    return http.postJson<{ data: Invoice }>(`/admin/invoices`, input, { token });
+  },
+  adminUpdateInvoice(id: number, input: Partial<Pick<Invoice, 'status'|'due_date'|'meta'>>, token: string) {
+    return http.putJson<{ data: Invoice }>(`/admin/invoices/${id}`, input, { token });
+  },
+  adminSendInvoice(id: number, token: string) {
+    return http.postJson<{ data: Invoice }>(`/admin/invoices/${id}/send`, {}, { token });
+  },
+  adminRecordPayment(id: number, input: { amount_cents: number; currency?: string; status?: 'succeeded'|'pending'|'failed'|'refunded'; provider?: string; provider_payment_id?: string }, token: string) {
+    return http.postJson<{ data: Invoice }>(`/admin/invoices/${id}/payments`, input, { token });
   },
 };
 
