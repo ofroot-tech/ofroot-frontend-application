@@ -96,62 +96,66 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
                     </tr>
                   ))}
                 </tbody>
-                      <div className="text-sm text-gray-600 mt-4">Reassign</div>
-                      <form action={async (formData) => {
-                        'use server';
-                        const tokenInner = await getToken();
-                        if (!tokenInner) redirect('/auth/login');
-                        const tenantVal = (formData.get('tenant_id') ?? '').toString().trim();
-                        const userVal = (formData.get('user_id') ?? '').toString().trim();
-                        const tenantNum = /^\d+$/.test(tenantVal) ? Number(tenantVal) : undefined;
-                        const userNum = /^\d+$/.test(userVal) ? Number(userVal) : undefined;
-                        await api.adminUpdateInvoice(invoice.id, {
-                          tenant_id: tenantNum,
-                          user_id: userNum,
-                        } as any, tokenInner);
-                        revalidatePath(`/dashboard/billing/invoices/${invoice.id}`);
-                      }} className="space-y-2">
-                        <select name="tenant_id" defaultValue={invoice.tenant_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
-                          <option value="">—</option>
-                          {tenants.map((t) => (
-                            <option key={t.id} value={t.id}>{t.name || `Tenant #${t.id}`}</option>
-                          ))}
-                        </select>
-                        <select name="user_id" defaultValue={invoice.user_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
-                          <option value="">—</option>
-                          {users.map((u) => (
-                            <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
-                          ))}
-                        </select>
-                        <button type="submit" className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:border-black">Save</button>
-                      </form>
-                      <div className="text-sm text-gray-600 mt-4">Payments</div>
-                      {invoice.payments && invoice.payments.length > 0 ? (
-                        <table className="w-full text-xs">
-                          <thead>
-                            <tr className="text-left text-gray-500">
-                              <th className="py-1">Date</th>
-                              <th className="py-1">Amount</th>
-                              <th className="py-1">Status</th>
-                              <th className="py-1">Provider</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {invoice.payments.map((p) => (
-                              <tr key={p.id}>
-                                <td className="py-1">{p.created_at?.slice(0,10) ?? '—'}</td>
-                                <td className="py-1">${(p.amount_cents/100).toFixed(2)} {p.currency?.toUpperCase()}</td>
-                                <td className="py-1">{p.status}</td>
-                                <td className="py-1">{p.provider ?? '—'}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      ) : (
-                        <div className="text-sm text-gray-600">No payments yet.</div>
-                      )}
               </table>
             </div>
+
+            {/* Reassign form (outside of table for valid DOM) */}
+            <div className="text-sm text-gray-600 mt-4">Reassign</div>
+            <form action={async (formData) => {
+              'use server';
+              const tokenInner = await getToken();
+              if (!tokenInner) redirect('/auth/login');
+              const tenantVal = (formData.get('tenant_id') ?? '').toString().trim();
+              const userVal = (formData.get('user_id') ?? '').toString().trim();
+              const tenantNum = /^\d+$/.test(tenantVal) ? Number(tenantVal) : undefined;
+              const userNum = /^\d+$/.test(userVal) ? Number(userVal) : undefined;
+              await api.adminUpdateInvoice(invoice.id, {
+                tenant_id: tenantNum,
+                user_id: userNum,
+              } as any, tokenInner);
+              revalidatePath(`/dashboard/billing/invoices/${invoice.id}`);
+            }} className="space-y-2">
+              <select name="tenant_id" defaultValue={invoice.tenant_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
+                <option value="">—</option>
+                {tenants.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name || `Tenant #${t.id}`}</option>
+                ))}
+              </select>
+              <select name="user_id" defaultValue={invoice.user_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
+                <option value="">—</option>
+                {users.map((u) => (
+                  <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                ))}
+              </select>
+              <button type="submit" className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:border-black">Save</button>
+            </form>
+
+            {/* Payments table (separate table) */}
+            <div className="text-sm text-gray-600 mt-4">Payments</div>
+            {invoice.payments && invoice.payments.length > 0 ? (
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="text-left text-gray-500">
+                    <th className="py-1">Date</th>
+                    <th className="py-1">Amount</th>
+                    <th className="py-1">Status</th>
+                    <th className="py-1">Provider</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoice.payments.map((p) => (
+                    <tr key={p.id}>
+                      <td className="py-1">{p.created_at?.slice(0,10) ?? '—'}</td>
+                      <td className="py-1">${(p.amount_cents/100).toFixed(2)} {p.currency?.toUpperCase()}</td>
+                      <td className="py-1">{p.status}</td>
+                      <td className="py-1">{p.provider ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-sm text-gray-600">No payments yet.</div>
+            )}
           </CardBody>
         </Card>
         <Card>

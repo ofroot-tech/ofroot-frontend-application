@@ -20,7 +20,7 @@
 			"isBackground": false,
 			"problemMatcher": [
 				"$tsc",
-				"$eslint - stylish"
+				"$eslint-stylish"
 			],
 			"group": "build"
 		}
