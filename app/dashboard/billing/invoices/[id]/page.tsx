@@ -140,6 +140,7 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
                     <th className="py-1">Amount</th>
                     <th className="py-1">Status</th>
                     <th className="py-1">Provider</th>
+                    <th className="py-1">Reference</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -149,6 +150,7 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
                       <td className="py-1">${(p.amount_cents/100).toFixed(2)} {p.currency?.toUpperCase()}</td>
                       <td className="py-1">{p.status}</td>
                       <td className="py-1">{p.provider ?? '—'}</td>
+                      <td className="py-1">{(p as any).provider_payment_id ?? (p as any).provider_charge_id ?? '—'}</td>
                     </tr>
                   ))}
                 </tbody>

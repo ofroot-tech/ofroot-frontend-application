@@ -59,11 +59,26 @@ export async function updateInvoiceStatusAction(id: number, status: 'draft'|'sen
   }
 }
 
-export async function recordPaymentAction(id: number, amountUsd: number) {
+export async function recordPaymentAction(
+  id: number,
+  amountUsd: number,
+  opts?: { provider?: string; reference?: string; status?: 'succeeded'|'pending'|'failed'|'refunded'; currency?: string }
+) {
   const token = await getToken();
   if (!token) return { ok: false as const, error: 'unauthorized' };
   try {
-    await api.adminRecordPayment(id, { amount_cents: Math.round(amountUsd * 100) }, token);
+    await api.adminRecordPayment(
+      id,
+      {
+        amount_cents: Math.round(amountUsd * 100),
+        currency: opts?.currency,
+        status: opts?.status,
+        provider: opts?.provider,
+        // Backend maps provider_payment_id -> provider_charge_id for storage
+        provider_payment_id: opts?.reference,
+      },
+      token
+    );
     revalidatePath(`/dashboard/billing/invoices/${id}`);
     revalidatePath('/dashboard/billing');
     return { ok: true as const };
