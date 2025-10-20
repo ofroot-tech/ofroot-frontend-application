@@ -23,6 +23,7 @@ import { useUnsavedChangesPrompt } from '@/app/hooks/useUnsavedChangesPrompt';
 import { toast } from '@/components/Toaster';
 import { createInvoiceAction, type CreateInvoicePayload } from '../actions';
 import { type Tenant, type AdminUser } from '@/app/lib/api';
+import AmountDisplay from '@/app/dashboard/billing/_components/AmountDisplay';
 
 type Line = { id: string; description: string; quantity: number; amount: string };
 
@@ -310,10 +311,10 @@ export default function CreateInvoiceForm({ tenants, users }: Props) {
           <input type="number" min={0} step="0.01" value={discountAmount} onChange={(e) => setDiscountAmount(e.target.value)} className="w-full border rounded px-2 py-1 text-sm" placeholder="0.00" />
         </div>
         <div className="md:col-span-3 text-sm text-gray-700">
-          <div>Subtotal: <span className="font-medium">{subtotal.toLocaleString(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() })}</span></div>
-          {tax > 0 && <div>Tax: <span className="font-medium">{tax.toLocaleString(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() })}</span></div>}
-          {discount > 0 && <div>Discount: <span className="font-medium">-{discount.toLocaleString(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() })}</span></div>}
-          <div className="mt-1">Total: <span className="font-semibold">{grandTotal.toLocaleString(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() })}</span></div>
+          <div>Subtotal: <span className="font-medium"><AmountDisplay value={subtotal} currency={(currency || 'USD')} /></span></div>
+          {tax > 0 && <div>Tax: <span className="font-medium"><AmountDisplay value={tax} currency={(currency || 'USD')} /></span></div>}
+          {discount > 0 && <div>Discount: <span className="font-medium text-red-600">-<AmountDisplay value={discount} currency={(currency || 'USD')} /></span></div>}
+          <div className="mt-1">Total: <span className="font-semibold"><AmountDisplay value={grandTotal} currency={(currency || 'USD')} /></span></div>
           {discount > 0 && <div className="text-xs text-gray-500 mt-1">Note: discount is stored as metadata only; totals reflect tax line addition.</div>}
         </div>
         <div className="flex items-center justify-end">

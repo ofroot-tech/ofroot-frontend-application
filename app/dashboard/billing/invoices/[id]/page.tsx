@@ -6,6 +6,7 @@ import { api, type Invoice, type Tenant, type AdminUser } from '@/app/lib/api';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import { revalidatePath } from 'next/cache';
 import ClientControls from '@/app/dashboard/billing/invoices/[id]/ClientControls';
+import AmountDisplay from '@/app/dashboard/billing/_components/AmountDisplay';
 
 async function getToken() {
   const store = await cookies();
@@ -83,11 +84,11 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-gray-500">Total</div>
-                <div className="text-2xl font-semibold">${total.toFixed(2)} {invoice.currency?.toUpperCase()}</div>
+                <div className="text-2xl font-semibold"><AmountDisplay value={total} currency={invoice.currency} /></div>
               </div>
               <div className="text-right">
                 <div className="text-sm text-gray-500">Due</div>
-                <div className="text-xl font-medium">${due.toFixed(2)}</div>
+                <div className="text-xl font-medium"><AmountDisplay value={due} currency={invoice.currency} /></div>
                 {invoice.due_date && <div className="text-xs text-gray-600 mt-1">Due {invoice.due_date.slice(0,10)}</div>}
               </div>
             </div>
@@ -108,8 +109,8 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
                     <tr key={it.id} className="border-t">
                       <td className="px-3 py-2">{it.description}</td>
                       <td className="px-3 py-2">{it.quantity}</td>
-                      <td className="px-3 py-2">${(it.unit_amount_cents/100).toFixed(2)}</td>
-                      <td className="px-3 py-2">${(it.total_cents/100).toFixed(2)}</td>
+                      <td className="px-3 py-2"><AmountDisplay value={(it.unit_amount_cents/100)} currency={invoice.currency} /></td>
+                      <td className="px-3 py-2"><AmountDisplay value={(it.total_cents/100)} currency={invoice.currency} /></td>
                     </tr>
                   ))}
                 </tbody>
