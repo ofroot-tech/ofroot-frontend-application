@@ -13,19 +13,25 @@ async function getToken() {
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
-export default async function BillingPage() {
+export default async function BillingPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
   const me = await api.me(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
+  const pageParam = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : Array.isArray(searchParams?.page) ? Number(searchParams?.page[0]) : 1;
+  const perPageParam = typeof searchParams?.per_page === 'string' ? Number(searchParams?.per_page) : Array.isArray(searchParams?.per_page) ? Number(searchParams?.per_page[0]) : 20;
+  const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
+  const per_page = Number.isFinite(perPageParam) && perPageParam > 0 ? perPageParam : 20;
+
   const [list, tenantsRes, usersRes] = await Promise.all([
-    api.adminListInvoices(token).catch(() => null),
+    api.adminListInvoices(token, { page, per_page }).catch(() => null),
     api.adminListTenants(token).catch(() => null),
     api.adminListUsers(token).catch(() => null),
   ]);
   const invoices: Invoice[] = list?.data ?? [];
+  const meta = list?.meta;
   const tenants: Tenant[] = tenantsRes?.data ?? [];
   const users: AdminUser[] = usersRes?.data ?? [];
   return (
@@ -77,6 +83,24 @@ export default async function BillingPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+            {/* Pagination controls */}
+            {meta && meta.total > (meta.per_page ?? per_page) && (
+              <div className="mt-3 flex items-center justify-between text-sm">
+                <div className="text-gray-600">Page {meta.current_page ?? page} of {meta.last_page ?? Math.ceil(meta.total / (meta.per_page ?? per_page))}</div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`?page=${Math.max(1, (meta.current_page ?? page) - 1)}&per_page=${meta.per_page ?? per_page}`}
+                    className={`px-2 py-1 rounded border ${((meta.current_page ?? page) <= 1) ? 'pointer-events-none opacity-40' : 'hover:border-black'}`}
+                    aria-disabled={(meta.current_page ?? page) <= 1}
+                  >Prev</a>
+                  <a
+                    href={`?page=${Math.min((meta.last_page ?? Math.ceil(meta.total / (meta.per_page ?? per_page))), (meta.current_page ?? page) + 1)}&per_page=${meta.per_page ?? per_page}`}
+                    className={`px-2 py-1 rounded border ${((meta.current_page ?? page) >= (meta.last_page ?? Math.ceil(meta.total / (meta.per_page ?? per_page)))) ? 'pointer-events-none opacity-40' : 'hover:border-black'}`}
+                    aria-disabled={(meta.current_page ?? page) >= (meta.last_page ?? Math.ceil(meta.total / (meta.per_page ?? per_page)))}
+                  >Next</a>
+                </div>
               </div>
             )}
           </CardBody>
