@@ -309,8 +309,8 @@ header[role="banner"] {
   p, li { line-height: 1.5; }
 }
 
-/* Ensure new lines of text start left-aligned for neat layout */
-:root body :where(h1,h2,h3,h4,h5,h6,p,li,blockquote) {
+/* Align paragraphs to the left; let headings/lists follow component defaults */
+:root body :where(p) {
   text-align: left !important;
 }
 

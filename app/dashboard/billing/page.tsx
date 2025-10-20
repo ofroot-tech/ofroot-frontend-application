@@ -14,15 +14,16 @@ async function getToken() {
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
-export default async function BillingPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
+export default async function BillingPage({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
   const me = await api.me(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
-  const pageParam = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : Array.isArray(searchParams?.page) ? Number(searchParams?.page[0]) : 1;
-  const perPageParam = typeof searchParams?.per_page === 'string' ? Number(searchParams?.per_page) : Array.isArray(searchParams?.per_page) ? Number(searchParams?.per_page[0]) : 20;
+  const sp = (await searchParams) ?? {};
+  const pageParam = typeof sp.page === 'string' ? Number(sp.page) : Array.isArray(sp.page) ? Number(sp.page[0]) : 1;
+  const perPageParam = typeof sp.per_page === 'string' ? Number(sp.per_page) : Array.isArray(sp.per_page) ? Number(sp.per_page[0]) : 20;
   const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
   const per_page = Number.isFinite(perPageParam) && perPageParam > 0 ? perPageParam : 20;
 

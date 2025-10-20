@@ -169,10 +169,11 @@ export default function Navbar() {
         onBlur={resetScale}
         onFocus={() => animateScale(0.95)}
         aria-label={item.label}
-        className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-r from-white to-gray-50 px-4 py-2 sm:px-6 sm:py-3 text-lg font-semibold text-gray-900 shadow-lg transition-all duration-300 ease-out hover:bg-[#20b2aa] hover:text-white hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:ring-offset-2 flex items-center justify-center"
+        className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-r from-white to-gray-50 px-4 py-2 sm:px-6 sm:py-3 text-lg font-semibold text-gray-900 shadow-lg transition-all duration-300 ease-out hover:bg-[#20b2aa] hover:text-white hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:ring-offset-2 flex items-center justify-center gap-2"
         style={{ transform: 'scale(var(--press-scale, 1))', willChange: 'transform' }}
       >
         <item.icon size={24} className="sm:w-6 sm:h-6 w-5 h-5" />
+        <span className="hidden md:inline text-sm font-medium">{item.label}</span>
       </button>
     );
   };
@@ -195,45 +196,30 @@ export default function Navbar() {
               className="h-10 w-10 rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] md:h-16 md:w-16"
             />
           </Link>
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('ofroot:chat-toggle'))}
-            className="hidden md:inline-flex items-center gap-2 rounded-full border border-gray-300 bg-black px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
-          >
-            Chat
-          </button>
         </div>
-        {/* Inline links on desktop for a clean look */}
-        <nav className="hidden md:flex items-center gap-4">
-          <Link href="/blog" className="text-sm font-medium text-gray-700 hover:text-[#20b2aa]">Blog</Link>
-          <a
-            href="https://substack.com/@ofroot/posts"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-medium text-gray-700 hover:text-[#20b2aa]"
-          >
-            Substack
-          </a>
-        </nav>
 
         <button
           type="button"
           onClick={() => toggleMenu()}
-          className="relative h-10 w-10 rounded-full border border-gray-300 bg-white text-gray-900 shadow-sm transition hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+          className="relative z-[100000] h-10 w-10 rounded-full border border-gray-300 bg-white text-gray-900 shadow-sm transition hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
           aria-label={open ? 'Close navigation' : 'Open navigation'}
           aria-expanded={open}
           aria-controls="ofroot-nav-overlay"
         >
-          <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-300 ${open ? 'scale-95 rotate-45' : 'scale-100 rotate-0'}`}>
-            <span className="grid grid-cols-2 grid-rows-2 gap-[3px]">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <span
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={idx}
-                  className="h-2 w-2 rounded-full bg-gray-900 transition-transform duration-200"
-                />
-              ))}
-            </span>
+          <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-200`}>
+            {open ? (
+              <X size={20} />
+            ) : (
+              <span className="grid grid-cols-2 grid-rows-2 gap-[3px]">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <span
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={idx}
+                    className="h-2 w-2 rounded-full bg-gray-900 transition-transform duration-200"
+                  />
+                ))}
+              </span>
+            )}
           </span>
         </button>
       </div>
@@ -255,7 +241,7 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-hidden={!open}
-        className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 ${open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-[99990] flex items-center justify-center transition-opacity duration-300 ${open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
       >
         <div className={`absolute inset-0 bg-white/80 backdrop-blur-xl transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-6'}`} />
         <div

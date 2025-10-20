@@ -155,7 +155,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
       </div>
 
       {/* Plans grid using accessible radio cards */}
-      <fieldset className="grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Select a plan">
+      <fieldset className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Select a plan">
         <legend className="sr-only">Plan</legend>
         {PLANS.map((p) => {
           const price = billingCycle === 'monthly' ? p.priceMonthly : p.priceYearly;
@@ -167,7 +167,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
             <label
               key={p.id}
               className={
-                `relative cursor-pointer text-left rounded-lg border p-4 block overflow-hidden transition-colors ${
+                `relative cursor-pointer text-left rounded-lg border p-4 block overflow-hidden transition-colors min-h-[280px] ${
                   active
                     ? 'ring-2 ring-black bg-white'
                     : recommended
@@ -197,17 +197,19 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
                 aria-checked={active}
                 aria-describedby={recommended ? badgeId : undefined}
               />
-
-              {/* Centered, compact badge for recommended plans */}
+              {/* Top-left "Most popular" pill for Pro */}
               {recommended && (
-                <div className="flex justify-center mb-2">
-                  <span
-                    id={badgeId}
-                    className="inline-flex items-center rounded-full bg-black text-white px-2 py-0.5 text-[9px] font-medium leading-4 whitespace-nowrap select-none"
-                  >
-                    Most popular
-                  </span>
-                </div>
+                <span
+                  id={badgeId}
+                  className="absolute left-3 top-3 inline-flex items-center rounded-full bg-black text-white px-2 py-0.5 text-[10px] font-medium leading-4 whitespace-nowrap select-none"
+                >
+                  Most popular
+                </span>
+              )}
+
+              {/* Top-right yearly savings chip per screenshot */}
+              {billingCycle === 'yearly' && (
+                <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-[#fef3c7] text-[#92400e] px-2 py-0.5 text-[10px] font-medium leading-4 select-none">2 mo</span>
               )}
 
               {/* Title row */}
@@ -218,11 +220,6 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
               <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
                 <span>{price}</span>
                 <span className="text-sm text-gray-500">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
-                {billingCycle === 'yearly' && (
-                  <span className="ml-1 inline-flex items-center rounded-full bg-[#fef3c7] text-[#92400e] px-2 py-0.5 text-[10px] font-medium leading-4 whitespace-nowrap select-none">
-                    2 months free
-                  </span>
-                )}
                 {billingCycle === 'yearly' && (
                   (() => {
                     const m = Number((p.priceMonthly || '').replace(/[^\d.]/g, ''));

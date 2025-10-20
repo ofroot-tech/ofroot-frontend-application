@@ -35,6 +35,16 @@
 				"$eslint-stylish"
 			],
 			"group": "build"
+		},
+		{
+			"label": "dev-check",
+			"type": "shell",
+			"command": "npm run build --silent",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
 		}
 	]
 }
