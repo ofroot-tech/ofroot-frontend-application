@@ -133,8 +133,8 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
 
   return (
     <div className="space-y-6">
-      {/* Billing cycle toggle */}
-      <div className="flex items-center gap-2 text-sm" role="group" aria-label="Billing cycle">
+  {/* Billing cycle toggle */}
+  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm" role="group" aria-label="Billing cycle">
         <button
           type="button"
           onClick={() => { setBillingCycle('monthly'); announce('Monthly billing selected'); track({ category: 'ab', action: 'billing_toggle', label: 'monthly' }); }}
@@ -152,7 +152,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
           Yearly
         </button>
         {/* More prominent savings badge */}
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0c5132] bg-[#d1fae5] border border-[#10b981]/40 rounded-full px-2 py-0.5">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0c5132] bg-[#d1fae5] border border-[#10b981]/40 rounded-full px-2 py-0.5 mt-2 sm:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           Save 2 months with yearly
         </span>
@@ -213,7 +213,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
 
               {/* Top-right yearly savings chip per screenshot */}
               {billingCycle === 'yearly' && (
-                <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-[#fef3c7] text-[#92400e] px-2 py-0.5 text-[10px] font-medium leading-4 select-none">2 mo</span>
+                <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-[#fef3c7] text-[#92400e] px-2 py-0.5 text-[10px] font-medium leading-4 select-none max-sm:hidden">2 mo</span>
               )}
 
               {/* Title row */}
