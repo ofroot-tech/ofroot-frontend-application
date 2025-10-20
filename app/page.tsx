@@ -354,27 +354,27 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex gap-6 items-center flex-col sm:flex-row">
+            <div className="flex items-center flex-col sm:flex-row gap-3 sm:gap-4">
               <a
-                className="bg-white text-[#20b2aa] hover:bg-gray-100 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed"
+                className="inline-flex items-center justify-center bg-white text-[#20b2aa] hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#services"
                 aria-label="Explore OfRoot services"
               >
                 Explore Services
               </a>
               <a
-                className="bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed"
+                className="inline-flex items-center justify-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="https://form.jotform.com/252643426225151"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Book a 20 minute scoping call"
-                style={{ boxShadow: '0 8px 24px rgba(255,255,255,0.72), 0 6px 18px rgba(32,178,170,0.14)' }}
+                style={{ boxShadow: '0 6px 18px rgba(255,255,255,0.6), 0 4px 12px rgba(32,178,170,0.16)' }}
               >
                 Book a 20-min scoping call
               </a>
               {/* Updated CTA to scroll to subscription section */}
               <a
-                className="bg-black text-white hover:bg-gray-900 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl text-lg fade-up delayed"
+                className="inline-flex items-center justify-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#subscription"
                 aria-label="Start your subscription"
               >
