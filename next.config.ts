@@ -26,6 +26,10 @@ function buildCsp() {
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Silence workspace root inference warning by declaring the project root explicitly
+  turbopack: {
+    root: __dirname,
+  },
   async rewrites() {
     // Vanity paths for marketing-friendly URLs
     const vanity = [

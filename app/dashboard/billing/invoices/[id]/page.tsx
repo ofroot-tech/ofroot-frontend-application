@@ -55,8 +55,25 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
   return (
     <div className="space-y-6 reveal-in fade-only">
       <PageHeader title={`Invoice ${invoice.number}`} subtitle={`Status: ${invoice.status}`} />
-      <div>
+      <div className="flex items-center gap-3">
         <a href={`/dashboard/billing/invoices/${invoice.id}/print`} target="_blank" className="text-sm text-blue-600 hover:underline">Open print view</a>
+        <button
+          className="text-xs rounded border border-gray-300 px-2 py-1 hover:border-black"
+          onClick={async () => {
+            // Open print-friendly view in a new tab and trigger print
+            const url = `/dashboard/billing/invoices/${invoice.id}/print`;
+            const w = window.open(url, '_blank');
+            if (w) {
+              // Give the new tab a moment to render, then ask it to print
+              setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 600);
+            } else {
+              // Fallback: navigate current tab
+              window.location.href = url;
+            }
+          }}
+        >
+          Print / Download
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -20,6 +20,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [recent, setRecent] = useState<string[]>([]);
 
   const toggle = () => setOpen((v) => !v);
   useEffect(() => {
@@ -27,6 +28,10 @@ export default function ChatWidget() {
     const handleToggle = () => setOpen((v) => !v);
     window.addEventListener('ofroot:chat-open', handleOpen);
     window.addEventListener('ofroot:chat-toggle', handleToggle);
+    try {
+      const saved = JSON.parse(localStorage.getItem('ofroot_recent_chats_v1') || '[]');
+      if (Array.isArray(saved)) setRecent(saved.slice(0, 10));
+    } catch {}
     return () => {
       window.removeEventListener('ofroot:chat-open', handleOpen);
       window.removeEventListener('ofroot:chat-toggle', handleToggle);
@@ -39,6 +44,12 @@ export default function ChatWidget() {
 
     const userMessage: ChatMessage = { id: Date.now().toString(36), from: 'user', text: trimmed };
     setMessages((prev) => [...prev, userMessage]);
+    // store in recent list (front-end only, $0 infra)
+    try {
+      const next = [trimmed, ...recent.filter((t) => t !== trimmed)].slice(0, 10);
+      setRecent(next);
+      localStorage.setItem('ofroot_recent_chats_v1', JSON.stringify(next));
+    } catch {}
     setInput('');
     setSending(true);
 
@@ -82,6 +93,26 @@ export default function ChatWidget() {
               ✕
             </button>
           </div>
+          {recent.length > 0 && (
+            <div className="border-b px-4 py-2">
+              <div className="text-xs font-medium text-gray-600 mb-1">Recent messages</div>
+              <ul className="space-y-1 max-h-24 overflow-auto pr-1">
+                {recent.map((t, i) => (
+                  <li key={`${i}-${t}`} className="group flex items-start gap-2 text-xs text-gray-700">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-300" />
+                    <button
+                      type="button"
+                      onClick={() => setInput(t)}
+                      className="text-left hover:underline line-clamp-2"
+                      title={t}
+                    >
+                      {t}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className="max-h-72 overflow-y-auto px-4 py-3 space-y-3 text-sm">
             {messages.map((message) => (
               <div
@@ -121,7 +152,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={toggle}
-        className="flex items-center gap-2 rounded-full bg-black px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-gray-800"
+        className="flex items-center gap-2 rounded-full bg-black px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-gray-800 border border-white"
         aria-expanded={open}
         aria-controls="ofroot-chat-widget"
       >

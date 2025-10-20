@@ -309,6 +309,14 @@ header[role="banner"] {
   p, li { line-height: 1.5; }
 }
 
+/* Ensure new lines of text start left-aligned for neat layout */
+:root body :where(h1,h2,h3,h4,h5,h6,p,li,blockquote) {
+  text-align: left !important;
+}
+
+/* Utility to force left-aligned text if tailwind class conflict occurs */
+.text-left-force { text-align: left !important; }
+
 /* Preserve reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
