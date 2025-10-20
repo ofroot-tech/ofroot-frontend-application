@@ -127,6 +127,10 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
 
   const cta = 'Start $1 trial (14 days)';
 
+  // Consistent form input styling
+  const baseInput = 'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-[15px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors disabled:opacity-60 disabled:cursor-not-allowed';
+  const inputClass = (hasError?: boolean) => `${baseInput} ${hasError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''}`;
+
   return (
     <div className="space-y-6">
       {/* Billing cycle toggle */}
@@ -262,18 +266,18 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
         <input type="hidden" name="billingCycle" value={billingCycle} />
         <div>
           <label htmlFor="name" className="sr-only">Name</label>
-          <input id="name" {...register('name', { required: 'Please enter your name' })} type="text" placeholder="Name" className="border p-2 rounded w-full" aria-invalid={!!errors.name} aria-describedby={errors.name ? 'name-error' : undefined} required />
+          <input id="name" {...register('name', { required: 'Please enter your name' })} type="text" placeholder="Name" className={inputClass(!!errors.name)} aria-invalid={!!errors.name} aria-describedby={errors.name ? 'name-error' : undefined} required />
           {errors.name && <p id="name-error" className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
         </div>
         <div>
           <label htmlFor="email" className="sr-only">Email</label>
-          <input id="email" {...register('email', { required: 'Please enter a valid email' })} type="email" placeholder="Email" className="border p-2 rounded w-full" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} required />
+          <input id="email" {...register('email', { required: 'Please enter a valid email' })} type="email" placeholder="Email" className={inputClass(!!errors.email)} aria-invalid={!!errors.email} aria-describedby={errors.email ? 'email-error' : undefined} required />
           {errors.email && <p id="email-error" className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password" className="sr-only">Password</label>
           <div className="relative">
-            <input id="password" {...register('password', { required: 'Please choose a password', minLength: { value: 8, message: 'Use at least 8 characters' } })} type={showPw ? 'text' : 'password'} placeholder="Password" className="border p-2 rounded w-full pr-24" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : 'password-help'} required minLength={8} />
+            <input id="password" {...register('password', { required: 'Please choose a password', minLength: { value: 8, message: 'Use at least 8 characters' } })} type={showPw ? 'text' : 'password'} placeholder="Password" className={`${inputClass(!!errors.password)} pr-24`} aria-invalid={!!errors.password} aria-describedby={errors.password ? 'password-error' : 'password-help'} required minLength={8} />
             <button type="button" onClick={() => setShowPw(v => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 text-xs underline" aria-pressed={showPw} aria-label={showPw ? 'Hide password' : 'Show password'}>{showPw ? 'Hide' : 'Show'}</button>
           </div>
           {/* Password strength meter */}
@@ -286,7 +290,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
         {/* Optional coupon — note: applied at billing stage when using paid plans */}
         <div>
           <label htmlFor="coupon" className="sr-only">Coupon</label>
-          <input id="coupon" {...register('coupon')} type="text" placeholder={'Coupon (optional)'} className="border p-2 rounded w-full" />
+          <input id="coupon" {...register('coupon')} type="text" placeholder={'Coupon (optional)'} className={baseInput} />
           <p className="mt-1 text-xs text-gray-500">Trial eligible coupons apply at the end of your trial.</p>
         </div>
         {/* Honeypot */}

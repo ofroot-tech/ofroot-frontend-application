@@ -135,19 +135,19 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
               } as any, tokenInner);
               revalidatePath(`/dashboard/billing/invoices/${invoice.id}`);
             }} className="space-y-2">
-              <select name="tenant_id" defaultValue={invoice.tenant_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
+              <select name="tenant_id" defaultValue={invoice.tenant_id ?? ''} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black">
                 <option value="">—</option>
                 {tenants.map((t) => (
                   <option key={t.id} value={t.id}>{t.name || `Tenant #${t.id}`}</option>
                 ))}
               </select>
-              <select name="user_id" defaultValue={invoice.user_id ?? ''} className="w-full border rounded px-2 py-1 text-sm">
+              <select name="user_id" defaultValue={invoice.user_id ?? ''} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black">
                 <option value="">—</option>
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
                 ))}
               </select>
-              <button type="submit" className="text-xs px-3 py-1.5 rounded border border-gray-300 hover:border-black">Save</button>
+              <button type="submit" className="text-xs px-3 py-2 rounded-lg border border-gray-300 hover:border-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black">Save</button>
             </form>
 
             {/* Payments table (separate table) */}
