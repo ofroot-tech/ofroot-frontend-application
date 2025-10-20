@@ -304,10 +304,10 @@ function ImpersonateSwitcher() {
 	}
 
 	return (
-		<div className="flex flex-col gap-2">
-			<div className="flex gap-2">
+			<div className="flex flex-col gap-2">
+				<div className="flex gap-2 flex-wrap">
 				<select
-					className="border rounded px-2 py-1 text-sm"
+						className="border rounded px-2 py-1 text-sm w-[120px]"
 					value={role}
 					onChange={event => setRole(event.target.value)}
 				>
@@ -316,7 +316,7 @@ function ImpersonateSwitcher() {
 					))}
 				</select>
 				<select
-					className="border rounded px-2 py-1 text-sm"
+							className="border rounded px-2 py-1 text-sm w-[120px]"
 					value={plan}
 					onChange={event => setPlan(event.target.value)}
 				>
@@ -324,8 +324,8 @@ function ImpersonateSwitcher() {
 						<option key={p.value} value={p.value}>{p.label}</option>
 					))}
 				</select>
-				<button
-					className="bg-blue-600 text-white rounded px-3 py-1 text-sm disabled:opacity-50"
+						<button
+							className="bg-blue-600 text-white rounded px-3 py-1 text-sm disabled:opacity-50 w-full sm:w-auto"
 					onClick={handleImpersonate}
 					disabled={loading}
 				>

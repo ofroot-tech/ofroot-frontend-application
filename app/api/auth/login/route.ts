@@ -2,6 +2,7 @@
 // Server action route to call backend login and set httpOnly cookie
 
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { api } from '@/app/lib/api';
 import { setAuthCookie } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
