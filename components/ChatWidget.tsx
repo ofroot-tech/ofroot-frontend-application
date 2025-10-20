@@ -21,6 +21,8 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
+  // Live region text for screen readers; updated on assistant replies
+  const [announcement, setAnnouncement] = useState('');
 
   const toggle = () => setOpen((v) => !v);
   useEffect(() => {
@@ -68,6 +70,8 @@ export default function ChatWidget() {
         ...prev,
         { id: `${userMessage.id}-reply`, from: 'ofroot', text: replyText },
       ]);
+      // Update live region so screen readers announce the new reply
+      setAnnouncement(replyText);
     } catch (err: any) {
       toast({ type: 'error', title: 'Chat unavailable', message: err?.message || 'Please try again in a moment.' });
     } finally {
@@ -77,8 +81,10 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-14 right-4 z-[9000] flex flex-col items-end gap-3">
+      {/* ARIA live region: polite announcements for assistant replies */}
+      <div aria-live="polite" aria-atomic="true" role="status" className="sr-only">{announcement}</div>
       {open && (
-        <div className="w-80 max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-2xl">
+        <div id="ofroot-chat-widget" className="w-80 max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-label="OfRoot Assistant chat window">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <div>
               <div className="text-sm font-semibold text-gray-900">OfRoot Assistant</div>
