@@ -96,6 +96,7 @@ export default function PublicNavbar() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
+          <Link href="/services" className={linkClass('/services')}>Services</Link>
           <Link href="/" className={linkClass('/')}>Development</Link>
           <Link href="/marketing" className={linkClass('/marketing')}>Marketing</Link>
           <Link href="/blog" className={linkClass('/blog')}>Blog</Link>
@@ -133,6 +134,7 @@ export default function PublicNavbar() {
         className={`md:hidden mobile-glass border-t border-gray-200 rounded-b-lg rounded-t-none p-3 m-3 shadow-lg rounded-lg transform origin-top transition-transform duration-200 ease-in-out ${open ? 'opacity-100 translate-y-0 scale-100 z-50' : 'opacity-0 -translate-y-2 scale-95 pointer-events-none'}`}
       >
         <div className="flex flex-col p-3 gap-3 max-w-6xl mx-auto">
+          <Link href="/services" onClick={() => toggleMenu(false)} className="text-gray-700">Services</Link>
           <Link href="/" onClick={() => toggleMenu(false)} className="text-gray-700">Development</Link>
           <Link href="/marketing" onClick={() => toggleMenu(false)} className="text-gray-700">Marketing</Link>
           <Link href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700">Blog</Link>

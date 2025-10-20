@@ -60,7 +60,7 @@ export function RangeSelect({
             <select
                 aria-label="Range"
                 defaultValue={value}
-                className="text-sm rounded-md border px-2 py-1.5 bg-white"
+                className="text-sm rounded-md border px-2 py-1.5 bg-white text-gray-900"
                 onChange={e => {
                     const v = e.currentTarget.value as '7d' | '30d' | '90d';
                     const qs = new URLSearchParams(sp?.toString() || '');
@@ -178,7 +178,7 @@ export function ToolbarButton({
     onClick?: () => void;
 }) {
     const classes = `text-sm rounded-md border px-3 py-1.5 ${
-        disabled ? 'bg-gray-100 text-gray-400' : 'bg-white hover:bg-gray-50'
+        disabled ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900 hover:bg-gray-50'
     }`;
     return href ? (
         <Link href={href} className={classes} onClick={onClick}>
@@ -230,7 +230,7 @@ export function Pagination({
             </span>
             {prev ? (
                 <Link
-                    className="text-sm rounded-md border px-3 py-1.5 bg-white hover:bg-gray-50"
+                    className="text-sm rounded-md border px-3 py-1.5 bg-white text-gray-900 hover:bg-gray-50"
                     href={`${basePath}${q(prev)}`}
                     prefetch={false}
                 >
@@ -246,7 +246,7 @@ export function Pagination({
             )}
             {next ? (
                 <Link
-                    className="text-sm rounded-md border px-3 py-1.5 bg-white hover:bg-gray-50"
+                    className="text-sm rounded-md border px-3 py-1.5 bg-white text-gray-900 hover:bg-gray-50"
                     href={`${basePath}${q(next)}`}
                     prefetch={false}
                 >

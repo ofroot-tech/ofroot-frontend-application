@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
+import { Newspaper } from 'lucide-react';
 
 /**
  * OfRoot Marketing: Scalable Growth for Your Business
@@ -18,6 +19,10 @@ export default function MarketingNavbar() {
   const [liveMessage, setLiveMessage] = useState('');
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  // New: Blog dropdown state + ref
+  const [blogOpen, setBlogOpen] = useState(false);
+  const blogMenuRef = useRef<HTMLDivElement | null>(null);
 
   const toggleMenu = (next = !open) => {
     setOpen(next);
@@ -74,6 +79,26 @@ export default function MarketingNavbar() {
     };
   }, [open]);
 
+  // Close blog dropdown on outside click or Escape
+  useEffect(() => {
+    if (!blogOpen) return;
+    const onDocClick = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (blogMenuRef.current && target && !blogMenuRef.current.contains(target)) {
+        setBlogOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setBlogOpen(false);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [blogOpen]);
+
   return (
     <header role="banner" className="w-full fixed top-0 left-0 z-50 bg-transparent backdrop-blur-sm h-14 md:h-16">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-full">
@@ -92,7 +117,48 @@ export default function MarketingNavbar() {
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
           <a href="/" className="text-gray-700 hover:text-[#20b2aa]">Development</a>
           <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#20b2aa]">Waitlist</a>
-          <a href="/blog" className="text-gray-700 hover:text-[#20b2aa]">Blog</a>
+          {/* Blog dropdown */}
+          <div className="relative" ref={blogMenuRef}>
+            <button
+              type="button"
+              onClick={() => setBlogOpen(v => !v)}
+              aria-haspopup="menu"
+              aria-expanded={blogOpen}
+              aria-controls="mk-blog-menu"
+              className="group inline-flex items-center gap-2 bg-[#20b2aa] text-white hover:bg:white hover:text-black border border-transparent hover:border-black py-2 px-4 rounded-full shadow-sm hover:shadow-lg transform-gpu will-change-transform transition-all duration-200 motion-reduce:transition-none hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+            >
+              <Newspaper size={16} aria-hidden className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black" />
+              <span className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black">Blog</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" className={`transition-transform duration-200 motion-reduce:transition-none ${blogOpen ? 'rotate-180' : ''}`}><path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <div
+              id="mk-blog-menu"
+              role="menu"
+              aria-label="Blog menu"
+              className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#1a8f85] bg-[#20b2aa] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+            >
+              <a
+                href="/blog"
+                role="menuitem"
+                data-analytics="nav_blog_internal"
+                className="block px-4 py-2.5 text-white hover:bg:white hover:text-black focus:bg:white focus:text-black focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 transition-colors duration-150"
+                onClick={() => setBlogOpen(false)}
+              >
+                Internal blog
+              </a>
+              <a
+                href="https://substack.com/@ofroot/posts"
+                target="_blank"
+                rel="noopener noreferrer"
+                role="menuitem"
+                data-analytics="nav_blog_substack"
+                className="block px-4 py-2.5 text-white hover:bg:white hover:text-black focus:bg:white focus:text-black focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 transition-colors duration-150"
+                onClick={() => setBlogOpen(false)}
+              >
+                Substack
+              </a>
+            </div>
+          </div>
           <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="bg-[#20b2aa] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#1a8f85] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#20b2aa]">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
               <path d="M7 10h10M7 14h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -134,7 +200,12 @@ export default function MarketingNavbar() {
         <div className="flex flex-col p-3 gap-3 max-w-6xl mx-auto">
           <a href="/marketing" onClick={() => toggleMenu(false)} className="text-gray-700">Home</a>
           <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" onClick={() => toggleMenu(false)} className="text-gray-700">Waitlist</a>
-          <a href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700">Blog</a>
+          {/* Blog group in mobile */}
+          <div className="pt-1">
+            <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Blog</div>
+            <a href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700 block py-1">Internal blog</a>
+            <a href="https://substack.com/@ofroot/posts" target="_blank" rel="noopener noreferrer" onClick={()=> toggleMenu(false)} className="text-gray-700 block py-1">Substack</a>
+          </div>
           <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>
         </div>
       </div>

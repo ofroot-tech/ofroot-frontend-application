@@ -26,6 +26,38 @@ function buildCsp() {
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Silence workspace root inference warning by declaring the project root explicitly
+  turbopack: {
+    root: __dirname,
+  },
+  async rewrites() {
+    // Vanity paths for marketing-friendly URLs
+    const vanity = [
+      // keep /marketing as a dedicated page; add /mktg for service vanity
+      { source: '/mktg', destination: '/services/marketing-automation' },
+      { source: '/development', destination: '/services/development-automation' },
+      { source: '/dev', destination: '/services/development-automation' },
+      { source: '/audit', destination: '/services/ai-audit' },
+      { source: '/addons', destination: '/services/add-ons' },
+      { source: '/webdev', destination: '/services/website-app-development' },
+      { source: '/sites', destination: '/services/website-app-development' },
+      { source: '/ai', destination: '/services/ai-development-integrations' },
+      { source: '/ai-dev', destination: '/services/ai-development-integrations' },
+      // Niche landings
+      { source: '/plumbers', destination: '/landing/plumbers' },
+      { source: '/hvac', destination: '/landing/hvac' },
+      { source: '/roofers', destination: '/landing/roofers' },
+      // CTO offer
+      { source: '/cto', destination: '/landing/cto' },
+    ];
+
+    // Support /subscribe/:product -> /subscribe?product=:product
+    const subscribe = [
+      { source: '/subscribe/:product', destination: '/subscribe?product=:product' },
+    ];
+
+    return [...vanity, ...subscribe];
+  },
   async headers() {
     // Allow disabling CSP in case of issues via env toggle
     const enableCsp = process.env.NEXT_ENABLE_CSP === 'true';

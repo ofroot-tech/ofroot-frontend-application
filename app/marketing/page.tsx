@@ -7,7 +7,6 @@ import {
   Mail,
   Palette,
 } from "lucide-react";
-import Footer from "../components/Footer";
 import MarketingNavbar from "./MarketingNavbar";
 
 export default function MarketingPage() {
@@ -139,8 +138,6 @@ export default function MarketingPage() {
           Join the Waitlist
         </Link>
       </section>
-      {/* Footer Section */}
-      <Footer />
     </main>
   );
 }

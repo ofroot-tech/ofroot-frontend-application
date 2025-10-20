@@ -4,6 +4,10 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
 import Toaster from "@/components/Toaster";
+import RevealObserver from "@/app/components/RevealObserver";
+import Footer from "@/app/components/Footer";
+import ExitIntentPrompt from "@/components/ExitIntentPrompt";
+import ChatWidget from "@/components/ChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,13 +51,31 @@ export default function RootLayout({
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="robots" content="index,follow" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <Navbar />
           <Toaster />
-          {children}
+          <ExitIntentPrompt />
+          {/* Render Navbar at the top-level (outside overflow/transform wrappers)
+              so it stays fixed relative to the viewport and above effects */}
+          <Navbar />
+          <div className="relative flex min-h-screen flex-col overflow-hidden bg-white">
+            <div className="floating-circles pointer-events-none" aria-hidden="true">
+              <span className="c1" />
+              <span className="c2" />
+              <span className="c3" />
+              <span className="c4" />
+              <span className="c5" />
+              <span className="c6" />
+              <span className="c7" />
+              <span className="c8" />
+            </div>
+            <RevealObserver />
+            <main className="relative z-10 flex-1">{children}</main>
+            <div className="relative z-10">
+              <Footer />
+            </div>
+          </div>
+          <ChatWidget />
         </AuthProvider>
       </body>
     </html>

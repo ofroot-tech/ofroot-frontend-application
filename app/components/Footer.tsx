@@ -31,7 +31,8 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full p-0 bg-gradient-to-br from-[#20b2aa] to-[#1a8f85] text-white animate-fade-in shadow-2xl">
+    <footer className="w-full p-0 bg-black text-white animate-fade-in shadow-2xl">
+      <div className="w-full h-1.5 bg-gradient-to-r from-[#20b2aa] via-[#1a8f85] to-[#20b2aa]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between py-10 px-6 gap-8">
         <div className="flex flex-col items-center md:items-start">
           <div className="flex items-center gap-3 mb-4">
@@ -49,7 +50,7 @@ export default function Footer() {
               <a href="#" onClick={e => {e.preventDefault(); window.open('https://form.jotform.com/252643454932157', '_blank');}} className="hover:underline hover:text-[#ffe082] transition">Helpr</a>
             </li>
             <li>
-              <a href="#" onClick={e => {e.preventDefault(); window.open('https://form.jotform.com/252643454932157', '_blank');}} className="hover:underline hover:text-[#ffe082] transition">OnTask</a>
+              <a href="/ontask" className="hover:underline hover:text-[#ffe082] transition">OnTask</a>
             </li>
             <li>
               <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-[#ffe082] transition">Waitlist</a>

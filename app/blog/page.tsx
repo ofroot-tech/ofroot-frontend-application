@@ -1,12 +1,10 @@
 'use client';
 
 import Link from "next/link";
-import Navbar from "../components/Navbar";
 const blogPosts = [
 	{
 		title: "LLMs vs. SLMs: What's the Difference, and Why Does It Matter?",
 		date: "September 21, 2025",
-		image: "/blog/llms-vs-slms.png",
 		excerpt: "A deep dive into the differences between LLMs and SLMs, and why it matters for your business.",
 		tags: ["AI", "Industry"],
 		href: "/blog/llms-vs-slms",
@@ -14,7 +12,6 @@ const blogPosts = [
 	{
 		title: "Build and Test AI Applications with Langflow + Ollama on Vast.ai",
 		date: "September 18, 2025",
-		image: "/blog/langflow-ollama.png",
 		excerpt: "How to quickly build and test AI apps using Langflow and Ollama on Vast.ai.",
 		tags: ["AI", "GPU"],
 		href: "/blog/langflow-ollama",
@@ -25,8 +22,7 @@ const blogPosts = [
 export default function BlogPage() {
 	return (
         <>
-        <main className="min-h-screen bg-white text-gray-900 py-20 px-4">
-        <Navbar />
+        <main className="min-h-screen bg-white text-gray-900 pt-24 pb-20 px-4">
 			<div className="max-w-5xl mx-auto">
 				<h1 className="text-4xl font-bold mb-8 text-left">Blog</h1>
 				<div className="flex flex-wrap gap-3 mb-8">
@@ -54,12 +50,11 @@ export default function BlogPage() {
 							className={`group flex flex-col md:flex-row items-stretch bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 fade-in-milky`}
 							style={{ animationDelay: `${i * 120}ms` }}
 						>
-							<div className="md:w-1/3 w-full h-48 md:h-auto bg-gray-100 flex items-center justify-center overflow-hidden">
-								<img
-									src={post.image}
-									alt={post.title}
-									className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-								/>
+							<div
+								className={`md:w-1/3 w-full h-48 md:h-auto md:min-h-[12rem] flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]`}
+								aria-hidden="true"
+							>
+								<div className={`w-full h-full ${i % 2 === 0 ? 'bg-black' : 'bg-[#20b2aa]'}`} />
 							</div>
 							<div className="flex-1 p-6 flex flex-col justify-between">
 								<div>

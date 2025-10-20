@@ -10,6 +10,11 @@
   --type-mid: 16px;      /* preferred base */
   --type-max: 18px;      /* maximum base on large screens */
   --measure: 65ch;       /* comfortable measure for body text */
+
+  /* animation tokens */
+  --reveal-distance: 16px;
+  --reveal-duration: 700ms;
+  --reveal-ease: cubic-bezier(.2,.9,.2,1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -145,7 +150,7 @@ section#featured { background-image: linear-gradient(180deg, rgba(255,255,255,0.
 section#case-studies { background-image: linear-gradient(180deg, rgba(0,123,255,0.02), rgba(32,178,170,0.02)); }
 section#how { background-image: linear-gradient(180deg, rgba(32,178,170,0.02), rgba(0,123,255,0.02)); }
 section#proof { background-image: linear-gradient(180deg, rgba(32,178,170,0.04), rgba(0,123,255,0.04)); }
-section#contact { background-image: linear-gradient(180deg, rgba(0,123,255,0.03), rgba(32,178,170,0.03)); }
+/* Contact section is de-emphasized; styling now driven inline in page. */
 
 /* Ensure gradients are subtle and don't override section backgrounds that are explicitly set */
 section[id] { background-repeat: no-repeat; background-size: cover; }
@@ -200,6 +205,21 @@ nav a {
   border: 0 !important;
 }
 
+/* Ensure Vanta background never blocks interactions or overlaps header */
+[data-vanta],
+[data-vanta] canvas,
+.vanta-canvas,
+#vanta,
+#vanta canvas {
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+/* Create a safe stacking context for top header when used */
+header[role="banner"] {
+  position: fixed;
+  z-index: 99999;
+}
+
 /* Milky emergence effect for hero content */
 .hero-wrapper {
   position: relative;
@@ -244,31 +264,31 @@ nav a {
 .content-area { position: relative; z-index: 0; }
 .floating-circles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
 /* darker, slightly more opaque circles for better visibility */
-.floating-circles span { position: absolute; display: block; border-radius: 9999px; opacity: 1.4; background: radial-gradient(circle at 30% 30%, rgba(16,150,140,0.98), rgba(16,150,140,0.75)); filter: blur(12px); transform: translate3d(0,0,0); }
+.floating-circles span { position: absolute; display: block; border-radius: 9999px; opacity: 0.35; background: radial-gradient(circle at 30% 30%, rgba(16,150,140,0.92), rgba(16,150,140,0.6)); filter: blur(14px); transform: translate3d(0,0,0); }
 
-/* faster motion: shorten animation durations significantly */
-.floating-circles .c1 { width: 220px; height: 220px; left: 8%; top: 10%; animation: floatSlow 10s ease-in-out infinite; }
-.floating-circles .c2 { width: 120px; height: 120px; left: 60%; top: 6%; animation: float 7.5s ease-in-out infinite; opacity: 0.22; }
-.floating-circles .c3 { width: 160px; height: 160px; left: 30%; top: 30%; animation: floatSlow 11s ease-in-out infinite; opacity: 0.16; }
-.floating-circles .c4 { width: 90px; height: 90px; left: 75%; top: 34%; animation: float 8.5s ease-in-out infinite; opacity: 0.14; }
-.floating-circles .c5 { width: 260px; height: 260px; left: 2%; top: 48%; animation: floatVerySlow 16s ease-in-out infinite; opacity: 0.12; }
-.floating-circles .c6 { width: 110px; height: 110px; left: 50%; top: 58%; animation: float 8.0s ease-in-out infinite; opacity: 0.18; }
-.floating-circles .c7 { width: 70px; height: 70px; left: 85%; top: 62%; animation: floatSlow 12s ease-in-out infinite; opacity: 0.14; }
-.floating-circles .c8 { width: 140px; height: 140px; left: 18%; top: 72%; animation: float 9.5s ease-in-out infinite; opacity: 0.12; }
+/* faster, livelier motion across the site */
+.floating-circles .c1 { width: 220px; height: 220px; left: 8%; top: 10%; animation: floatSlow 6s ease-in-out infinite; }
+.floating-circles .c2 { width: 120px; height: 120px; left: 60%; top: 6%; animation: float 4.6s ease-in-out infinite; opacity: 0.28; }
+.floating-circles .c3 { width: 160px; height: 160px; left: 30%; top: 30%; animation: floatSlow 6.8s ease-in-out infinite; opacity: 0.2; }
+.floating-circles .c4 { width: 90px; height: 90px; left: 75%; top: 34%; animation: float 5.2s ease-in-out infinite; opacity: 0.18; }
+.floating-circles .c5 { width: 260px; height: 260px; left: 2%; top: 48%; animation: floatVerySlow 8.5s ease-in-out infinite; opacity: 0.16; }
+.floating-circles .c6 { width: 110px; height: 110px; left: 50%; top: 58%; animation: float 4.9s ease-in-out infinite; opacity: 0.22; }
+.floating-circles .c7 { width: 70px; height: 70px; left: 85%; top: 62%; animation: floatSlow 7.4s ease-in-out infinite; opacity: 0.18; }
+.floating-circles .c8 { width: 140px; height: 140px; left: 18%; top: 72%; animation: float 5.6s ease-in-out infinite; opacity: 0.18; }
 
 @keyframes float {
   0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-22px) translateX(12px) scale(1.03); }
+  50% { transform: translateY(-32px) translateX(24px) scale(1.05); }
   100% { transform: translateY(0) translateX(0) scale(1); }
 }
 @keyframes floatSlow {
   0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-36px) translateX(-18px) scale(1.04); }
+  50% { transform: translateY(-48px) translateX(-28px) scale(1.06); }
   100% { transform: translateY(0) translateX(0) scale(1); }
 }
 @keyframes floatVerySlow {
   0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-52px) translateX(26px) scale(1.05); }
+  50% { transform: translateY(-62px) translateX(34px) scale(1.07); }
   100% { transform: translateY(0) translateX(0) scale(1); }
 }
 
@@ -288,6 +308,14 @@ nav a {
   :root { --measure: 48ch; }
   p, li { line-height: 1.5; }
 }
+
+/* Ensure new lines of text start left-aligned for neat layout */
+:root body :where(h1,h2,h3,h4,h5,h6,p,li,blockquote) {
+  text-align: left !important;
+}
+
+/* Utility to force left-aligned text if tailwind class conflict occurs */
+.text-left-force { text-align: left !important; }
 
 /* Preserve reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
@@ -330,3 +358,26 @@ html, body {
 @media (prefers-color-scheme: dark) {
   .data-table tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.04); }
 }
+
+/* Reveal-in animation for sections */
+.reveal-in { opacity: 0; transform: translateY(var(--reveal-distance)); transition: opacity var(--reveal-duration) var(--reveal-ease), transform var(--reveal-duration) var(--reveal-ease); }
+.reveal-in.in-view { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-in, .reveal-in.in-view { opacity: 1; transform: none; transition: none; }
+}
+
+/* Utility: modern, generous vertical spacing rhythm for sections */
+.section-pad {
+  padding-top: clamp(3rem, 6vw, 6rem);
+  padding-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+/* Utility: slightly increased spacing for feature grids */
+.grid-gap-modern {
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+/* Utility: gentle fade-in (opacity only) when .in-view is applied */
+.fade-only { opacity: 0; transition: opacity var(--reveal-duration) var(--reveal-ease); }
+.fade-only.in-view { opacity: 1; }

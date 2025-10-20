@@ -67,7 +67,7 @@ export default function Toaster() {
   }
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[1000]">
+    <div className="fixed inset-0 pointer-events-none z-[9999]">
       <div className="absolute right-4 top-4 flex w-full max-w-sm flex-col gap-2">
         {toasts.map((t) => (
           <div

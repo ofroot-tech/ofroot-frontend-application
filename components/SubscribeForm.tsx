@@ -16,6 +16,9 @@ import { useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/Toaster';
 import api from '@/app/utils/api';
+import { trackCtaClick, track } from '@/app/lib/ab';
+import type { ProductConfig } from '@/app/config/products';
+import { useUnsavedChangesPrompt } from '@/app/hooks/useUnsavedChangesPrompt';
 
 interface SubscribeInputs {
   name: string;
@@ -27,9 +30,9 @@ interface SubscribeInputs {
   company?: string;
 }
 
-type PlanId = 'free' | 'pro' | 'business';
+type PlanId = 'pro' | 'business';
 
-const PLANS: Array<{
+const BASE_PLANS: Array<{
   id: PlanId;
   name: string;
   priceMonthly: string;
@@ -37,9 +40,8 @@ const PLANS: Array<{
   features: string[];
   recommended?: boolean;
 }> = [
-  { id: 'free', name: 'Free', priceMonthly: '$0', priceYearly: '$0', features: ['1 project', 'Community support', 'Basic analytics'] },
-  { id: 'pro', name: 'Pro', priceMonthly: '$19', priceYearly: '$190', features: ['Unlimited projects', 'Priority support', 'Advanced analytics'], recommended: true },
-  { id: 'business', name: 'Business', priceMonthly: '$49', priceYearly: '$490', features: ['SSO & Roles', 'Audit logs', 'SLA support'] },
+  { id: 'pro', name: 'Pro', priceMonthly: '$49', priceYearly: '$490', features: ['Unlimited projects', 'Priority support', 'Advanced analytics'], recommended: true },
+  { id: 'business', name: 'Business', priceMonthly: '$99', priceYearly: '$990', features: ['SSO & Roles', 'Audit logs', 'SLA support'] },
 ];
 
 function scorePassword(pw: string): number {
@@ -54,20 +56,39 @@ function scorePassword(pw: string): number {
   return Math.min(s, 5);
 }
 
-export default function SubscribeForm() {
+export default function SubscribeForm({ productConfig }: { productConfig?: ProductConfig }) {
   const { register, handleSubmit, watch, formState } = useForm<SubscribeInputs>({ mode: 'onBlur' });
   const { errors } = formState;
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [plan, setPlan] = useState<PlanId>('free');
+  const [plan, setPlan] = useState<PlanId>((productConfig?.defaultPlan as PlanId) || 'pro');
   const [accept, setAccept] = useState(false);
   const [showPw, setShowPw] = useState(false);
+  // Sales inquiries use external JotForm now
+  const SALES_URL = 'https://form.jotform.com/252643426225151';
   const announceRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const password = watch('password') || '';
   const pwScore = useMemo(() => scorePassword(password), [password]);
+
+  // Resolve plan prices with optional per-product overrides
+  const PLANS = useMemo(() => {
+    return BASE_PLANS.map((p) => {
+      const override = productConfig?.planPrices && (productConfig.planPrices as any)[p.id] as { monthly?: string; yearly?: string } | undefined;
+      const priceMonthly = override?.monthly || p.priceMonthly;
+      const priceYearly = override?.yearly || p.priceYearly;
+      return { ...p, priceMonthly, priceYearly };
+    });
+  }, [productConfig]);
+
+  // Unsaved changes detection: if any fields filled or non-default selection
+  const watchedName = watch('name') || '';
+  const watchedEmail = watch('email') || '';
+  const watchedCoupon = watch('coupon') || '';
+  const dirty = Boolean(watchedName || watchedEmail || password || watchedCoupon || plan !== ((productConfig?.defaultPlan as PlanId) || 'pro') || billingCycle !== 'monthly');
+  useUnsavedChangesPrompt(dirty && !loading);
 
   const onSubmit = async (data: SubscribeInputs) => {
     try {
@@ -79,7 +100,15 @@ export default function SubscribeForm() {
         throw new Error('Invalid submission');
       }
 
-      await api.post('/auth/register', { name: data.name, email: data.email, password: data.password, plan, billingCycle, coupon: data.coupon });
+      // Derive product context from URL if present (?product=ontask|helpr|...)
+      let product: string | undefined;
+      try {
+        const sp = new URLSearchParams(window.location.search);
+        const p = sp.get('product');
+        if (p) product = p.toLowerCase();
+      } catch {}
+
+      await api.post('/auth/register', { name: data.name, email: data.email, password: data.password, plan, billingCycle, coupon: data.coupon, product });
       toast({ type: 'success', title: 'Welcome!', message: `Your ${plan} plan account has been created.` });
       router.push('/dashboard/overview');
     } catch (err: any) {
@@ -96,8 +125,7 @@ export default function SubscribeForm() {
     if (announceRef.current) announceRef.current.textContent = text;
   }
 
-  const isPaid = plan !== 'free';
-  const cta = isPaid ? 'Continue to checkout' : 'Start free';
+  const cta = 'Start $1 trial (14 days)';
 
   return (
     <div className="space-y-6">
@@ -105,7 +133,7 @@ export default function SubscribeForm() {
       <div className="flex items-center gap-2 text-sm" role="group" aria-label="Billing cycle">
         <button
           type="button"
-          onClick={() => { setBillingCycle('monthly'); announce('Monthly billing selected'); }}
+          onClick={() => { setBillingCycle('monthly'); announce('Monthly billing selected'); track({ category: 'ab', action: 'billing_toggle', label: 'monthly' }); }}
           aria-pressed={billingCycle === 'monthly'}
           className={`rounded-md border px-3 py-1.5 ${billingCycle === 'monthly' ? 'bg-black text-white' : 'bg-white hover:bg-gray-50'}`}
         >
@@ -113,13 +141,17 @@ export default function SubscribeForm() {
         </button>
         <button
           type="button"
-          onClick={() => { setBillingCycle('yearly'); announce('Yearly billing selected. Two months free'); }}
+          onClick={() => { setBillingCycle('yearly'); announce('Yearly billing selected. Two months free'); track({ category: 'ab', action: 'billing_toggle', label: 'yearly' }); }}
           aria-pressed={billingCycle === 'yearly'}
           className={`rounded-md border px-3 py-1.5 ${billingCycle === 'yearly' ? 'bg-black text-white' : 'bg-white hover:bg-gray-50'}`}
         >
           Yearly
         </button>
-        <span className="text-xs text-gray-500">Save 2 months on yearly</span>
+        {/* More prominent savings badge */}
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0c5132] bg-[#d1fae5] border border-[#10b981]/40 rounded-full px-2 py-0.5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17l-5-5" stroke="#065f46" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          Save 2 months with yearly
+        </span>
       </div>
 
       {/* Plans grid using accessible radio cards */}
@@ -130,6 +162,7 @@ export default function SubscribeForm() {
           const active = plan === p.id;
           const recommended = Boolean(p.recommended);
           const badgeId = `plan-${p.id}-badge`;
+          const isBusiness = p.id === 'business';
           return (
             <label
               key={p.id}
@@ -149,7 +182,18 @@ export default function SubscribeForm() {
                 value={p.id}
                 className="sr-only"
                 checked={active}
-                onChange={() => { setPlan(p.id); announce(`${p.name} plan selected at ${price} per ${billingCycle === 'monthly' ? 'month' : 'year'}`); }}
+                onChange={(e) => {
+                  if (isBusiness) {
+                    e.preventDefault();
+                    announce('Business plan selected — opening contact form');
+                    track({ category: 'cta', action: 'plan_select', label: 'business' });
+                    window.open(SALES_URL, '_blank', 'noopener,noreferrer');
+                    return;
+                  }
+                  setPlan(p.id);
+                  announce(`${p.name} plan selected at ${price} per ${billingCycle === 'monthly' ? 'month' : 'year'}`);
+                  track({ category: 'cta', action: 'plan_select', label: p.id });
+                }}
                 aria-checked={active}
                 aria-describedby={recommended ? badgeId : undefined}
               />
@@ -171,10 +215,39 @@ export default function SubscribeForm() {
                 <div className="font-medium">{p.name}</div>
               </div>
 
-              <div className="mt-1 text-2xl font-semibold">{price}<span className="text-sm text-gray-500">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span></div>
+              <div className="mt-1 text-2xl font-semibold flex items-center gap-2">
+                <span>{price}</span>
+                <span className="text-sm text-gray-500">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
+                {billingCycle === 'yearly' && (
+                  <span className="ml-1 inline-flex items-center rounded-full bg-[#fef3c7] text-[#92400e] px-2 py-0.5 text-[10px] font-medium leading-4 whitespace-nowrap select-none">
+                    2 months free
+                  </span>
+                )}
+                {billingCycle === 'yearly' && (
+                  (() => {
+                    const m = Number((p.priceMonthly || '').replace(/[^\d.]/g, ''));
+                    const y = Number((p.priceYearly || '').replace(/[^\d.]/g, ''));
+                    if (m > 0 && y > 0) {
+                      const pct = Math.round((1 - (y / (m * 12))) * 100);
+                      if (isFinite(pct) && pct > 0) {
+                        return <span className="ml-1 inline-flex items-center rounded-full bg-[#dcfce7] text-[#065f46] px-2 py-0.5 text-[10px] font-medium leading-4 whitespace-nowrap select-none">Save {pct}%</span>;
+                      }
+                    }
+                    return null;
+                  })()
+                )}
+              </div>
+              {billingCycle === 'yearly' && (
+                <div className="text-[11px] text-gray-500">≈ {(Number((p.priceYearly || '').replace(/[^\d.]/g, ''))/12).toLocaleString(undefined,{style:'currency',currency:'USD'})}/mo</div>
+              )}
               <ul className="mt-2 text-sm text-gray-600 space-y-1">
                 {p.features.map((f) => (<li key={f}>• {f}</li>))}
               </ul>
+              {isBusiness && (
+                <div className="mt-3">
+                  <a href={SALES_URL} target="_blank" rel="noopener noreferrer" className="text-sm underline">Talk to sales</a>
+                </div>
+              )}
               <div className="sr-only">{active ? 'Selected' : 'Not selected'}</div>
             </label>
           );
@@ -185,7 +258,8 @@ export default function SubscribeForm() {
       <div aria-live="polite" aria-atomic="true" className="sr-only" ref={announceRef} />
 
       {/* Account form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
+      <form id="subscribe-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 scroll-mt-24" noValidate>
+        {/* Sales handled via external contact form */}
         {/* Hidden fields to ensure Next API receives plan info even if we convert to FormData later */}
         <input type="hidden" name="plan" value={plan} />
         <input type="hidden" name="billingCycle" value={billingCycle} />
@@ -215,8 +289,8 @@ export default function SubscribeForm() {
         {/* Optional coupon — note: applied at billing stage when using paid plans */}
         <div>
           <label htmlFor="coupon" className="sr-only">Coupon</label>
-          <input id="coupon" {...register('coupon')} type="text" placeholder={isPaid ? 'Coupon (optional)' : 'Coupon (paid plans only)'} className="border p-2 rounded w-full" disabled={!isPaid} />
-          {!isPaid && <p className="mt-1 text-xs text-gray-500">Coupons apply to paid plans.</p>}
+          <input id="coupon" {...register('coupon')} type="text" placeholder={'Coupon (optional)'} className="border p-2 rounded w-full" />
+          <p className="mt-1 text-xs text-gray-500">Trial eligible coupons apply at the end of your trial.</p>
         </div>
         {/* Honeypot */}
         <div style={{ position: 'absolute', left: '-9999px' }} aria-hidden>
@@ -229,15 +303,23 @@ export default function SubscribeForm() {
           I agree to the <a className="underline" href="/legal/terms">Terms</a> and <a className="underline" href="/legal/privacy">Privacy</a>.
         </label>
         {error && <p className="text-red-600 text-sm" role="alert" aria-live="polite">{error}</p>}
-        <button type="submit" disabled={loading || !accept} className={`p-2 rounded ${loading || !accept ? 'bg-gray-300 text-gray-600' : 'bg-black text-white'}`}>
+        <button
+          type="submit"
+          disabled={loading || !accept}
+          className={`p-2 rounded ${loading || !accept ? 'bg-gray-300 text-gray-600' : 'bg-black text-white'}`}
+          onClick={() => trackCtaClick({ slug: 'subscribe', label: 'start_trial' })}
+        >
           {loading ? 'Creating account…' : cta}
         </button>
+        <p className="text-[11px] text-gray-500">Trusted by 300+ contractors. Limited early-access offer.</p>
         {/* Honest fine print */}
-        {!isPaid ? (
-          <p className="text-xs text-gray-500">No credit card required.</p>
-        ) : (
-          <p className="text-xs text-gray-500">You will complete payment for the {plan} plan after account creation.</p>
-        )}
+        <p className="text-xs text-gray-500">
+          $1 today for a 14-day trial. Cancel anytime. After the trial, continue on {plan} at {
+            billingCycle === 'monthly'
+              ? (plan === 'pro' ? `${PLANS.find(x => x.id === 'pro')?.priceMonthly || '$49'}/mo` : `${PLANS.find(x => x.id === 'business')?.priceMonthly || '$99'}/mo`)
+              : (plan === 'pro' ? `${PLANS.find(x => x.id === 'pro')?.priceYearly || '$490'}/yr` : `${PLANS.find(x => x.id === 'business')?.priceYearly || '$990'}/yr`)
+          } unless you cancel.
+        </p>
       </form>
     </div>
   );
