@@ -7,6 +7,7 @@ import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import { revalidatePath } from 'next/cache';
 import ClientControls from '@/app/dashboard/billing/invoices/[id]/ClientControls';
 import AmountDisplay from '@/app/dashboard/billing/_components/AmountDisplay';
+import CopyInvoiceLinkButton from '@/app/dashboard/billing/invoices/[id]/CopyInvoiceLinkButton';
 
 async function getToken() {
   const store = await cookies();
@@ -75,6 +76,7 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
         >
           Print / Download
         </button>
+        <CopyInvoiceLinkButton id={invoice.id} externalId={invoice.external_id} publicUrl={(invoice.meta as any)?.public_url} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
