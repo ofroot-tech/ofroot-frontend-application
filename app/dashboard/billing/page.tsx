@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { api, type Invoice, type Tenant, type AdminUser } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
+import AmountDisplay from './_components/AmountDisplay';
 import CreateInvoiceForm from './_components/CreateInvoiceForm';
 
 async function getToken() {
@@ -99,8 +100,12 @@ export default async function BillingPage({ searchParams }: { searchParams?: { [
                           )}
                         </td>
                         <td className="px-3 py-2">{inv.status}</td>
-                        <td className="px-3 py-2">${(inv.amount_cents / 100).toFixed(2)} {inv.currency?.toUpperCase()}</td>
-                        <td className="px-3 py-2">${(inv.amount_due_cents / 100).toFixed(2)}</td>
+                        <td className="px-3 py-2">
+                          <AmountDisplay value={inv.amount_cents / 100} currency={inv.currency ?? 'USD'} />
+                        </td>
+                        <td className="px-3 py-2">
+                          <AmountDisplay value={inv.amount_due_cents / 100} currency={inv.currency ?? 'USD'} />
+                        </td>
                         <td className="px-3 py-2">{inv.created_at?.slice(0,10) ?? '—'}</td>
                         <td className="px-3 py-2">
                           <a href={`/dashboard/billing/invoices/${inv.id}`} className="text-blue-600 hover:underline">View</a>
