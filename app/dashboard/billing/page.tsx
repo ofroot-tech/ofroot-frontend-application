@@ -48,6 +48,32 @@ export default async function BillingPage({ searchParams }: { searchParams?: { [
         <Card className="md:col-span-3">
           <CardBody>
             <h2 className="font-medium mb-3">Invoices</h2>
+            {/* List controls: per-page and jump-to-page (plain GET forms, no client JS) */}
+            <div className="mb-3 flex flex-wrap items-end gap-3 text-sm">
+              <form method="get" className="flex items-end gap-2">
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1" htmlFor="per_page">Per page</label>
+                  <select id="per_page" name="per_page" defaultValue={(meta?.per_page ?? per_page).toString()} className="border rounded px-2 py-1">
+                    {[10,20,50].map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Preserve current page when changing per_page */}
+                <input type="hidden" name="page" value={(meta?.current_page ?? page).toString()} />
+                <button type="submit" className="rounded border px-2 py-1 hover:border-black">Apply</button>
+              </form>
+
+              <form method="get" className="flex items-end gap-2">
+                {/* Preserve current per_page when jumping pages */}
+                <input type="hidden" name="per_page" value={(meta?.per_page ?? per_page).toString()} />
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1" htmlFor="page">Go to page</label>
+                  <input id="page" name="page" type="number" min={1} max={(meta?.last_page ?? Math.ceil((meta?.total ?? 0) / (meta?.per_page ?? per_page))) || 1} defaultValue={(meta?.current_page ?? page).toString()} className="w-24 border rounded px-2 py-1" />
+                </div>
+                <button type="submit" className="rounded border px-2 py-1 hover:border-black">Go</button>
+              </form>
+            </div>
             {invoices.length === 0 ? (
               <p className="text-sm text-gray-600">No invoices yet.</p>
             ) : (
