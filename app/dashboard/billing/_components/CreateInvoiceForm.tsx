@@ -18,7 +18,7 @@
  *   - When tax is present, we append a synthetic "Tax" line item so backend
  *     totals align while also recording meta for future fidelity.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useUnsavedChangesPrompt } from '@/app/hooks/useUnsavedChangesPrompt';
 import { toast } from '@/components/Toaster';
 import { createInvoiceAction, type CreateInvoicePayload } from '../actions';
@@ -29,6 +29,7 @@ type Line = { id: string; description: string; quantity: number; amount: string 
 type Props = { tenants: Tenant[]; users: AdminUser[] };
 
 export default function CreateInvoiceForm({ tenants, users }: Props) {
+  const DRAFT_KEY = 'ofroot_invoice_draft_v1';
   const [currency, setCurrency] = useState<string>('usd');
   const [tenantId, setTenantId] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
@@ -60,6 +61,65 @@ export default function CreateInvoiceForm({ tenants, users }: Props) {
     lines.some(l => l.description.trim() || Number(l.amount) > 0) || isRecurring
   );
   useUnsavedChangesPrompt(!!isDirty);
+
+  // Restore draft on first mount if form is pristine
+  useEffect(() => {
+    try {
+      if (isDirty) return; // don't clobber user input
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d || typeof d !== 'object') return;
+      if (typeof d.currency === 'string') setCurrency(d.currency);
+      if (typeof d.tenantId === 'string') setTenantId(d.tenantId);
+      if (typeof d.userId === 'string') setUserId(d.userId);
+      if (typeof d.billTo === 'string') setBillTo(d.billTo);
+      if (typeof d.dueDate === 'string') setDueDate(d.dueDate);
+      if (Array.isArray(d.lines)) setLines(d.lines);
+      if (typeof d.taxPercent === 'string') setTaxPercent(d.taxPercent);
+      if (typeof d.discountAmount === 'string') setDiscountAmount(d.discountAmount);
+      if (typeof d.isRecurring === 'boolean') setIsRecurring(d.isRecurring);
+      if (typeof d.recurringEvery === 'string') setRecurringEvery(d.recurringEvery);
+      if (typeof d.recurringCount === 'number') setRecurringCount(d.recurringCount);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Autosave draft on changes
+  useEffect(() => {
+    try {
+      const draft = {
+        currency,
+        tenantId,
+        userId,
+        billTo,
+        dueDate,
+        lines,
+        taxPercent,
+        discountAmount,
+        isRecurring,
+        recurringEvery,
+        recurringCount,
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch {}
+  }, [currency, tenantId, userId, billTo, dueDate, lines, taxPercent, discountAmount, isRecurring, recurringEvery, recurringCount]);
+
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    // Reset to initial
+    setCurrency('usd');
+    setTenantId('');
+    setUserId('');
+    setBillTo('');
+    setDueDate('');
+    setLines([{ id: Math.random().toString(36).slice(2), description: '', quantity: 1, amount: '' }]);
+    setTaxPercent('');
+    setDiscountAmount('');
+    setIsRecurring(false);
+    setRecurringEvery('month');
+    setRecurringCount(12);
+  }
 
   function addLine() {
     setLines((prev) => [...prev, { id: Math.random().toString(36).slice(2), description: '', quantity: 1, amount: '' }]);
@@ -142,6 +202,9 @@ export default function CreateInvoiceForm({ tenants, users }: Props) {
         setIsRecurring(false);
         setRecurringEvery('month');
         setRecurringCount(12);
+        setTenantId('');
+        setUserId('');
+        try { localStorage.removeItem(DRAFT_KEY); } catch {}
       } else {
         toast({ type: 'error', title: 'Failed', message: res.error || 'Could not create invoice.' });
       }
@@ -152,6 +215,9 @@ export default function CreateInvoiceForm({ tenants, users }: Props) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
+      <div className="flex items-center justify-end">
+        <button type="button" onClick={clearDraft} className="text-xs rounded border px-2 py-1 hover:border-black">Clear Draft</button>
+      </div>
   <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
         <div>
           <label className="block text-xs text-gray-600 mb-1">Currency</label>
