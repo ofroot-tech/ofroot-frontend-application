@@ -14,6 +14,9 @@ interface DocItem { slug: string; title: string }
 export default function DocsManagerPage() {
   const [items, setItems] = useState<DocItem[]>([]);
   const [loading, setLoading] = useState(true);
+  // Local folder path for internal docs on this machine
+  const LOCAL_DOCS_PATH = '/Users/ofroot/Desktop/development/ofroot/currentDevelopment/ofroot-api/resources/docs';
+  const VSCODE_URI = `vscode://file/${LOCAL_DOCS_PATH}`;
 
   async function load() {
     setLoading(true);
@@ -49,6 +52,29 @@ export default function DocsManagerPage() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-semibold">Docs</h1>
         <Link href="/dashboard/docs/new" className="rounded-md bg-brand-600 hover:bg-brand-700 text-white text-sm px-3 py-2">New</Link>
+      </div>
+      {/* Internal docs home (local folder) */}
+      <div className="rounded-md border p-3 mb-4 bg-gray-50">
+        <div className="text-sm font-medium text-gray-800 mb-1">Internal Docs (local folder)</div>
+        <code className="block text-xs overflow-x-auto mb-2">{LOCAL_DOCS_PATH}</code>
+        <div className="flex items-center gap-2">
+          <a href={VSCODE_URI} className="text-sm underline" onClick={(e) => {
+            // Some browsers may block custom URI schemes; let it attempt.
+          }}>Open in VS Code</a>
+          <button
+            className="text-sm underline"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(LOCAL_DOCS_PATH);
+                toast({ type: 'success', title: 'Path copied', message: 'Folder path copied to clipboard' });
+              } catch {
+                toast({ type: 'error', title: 'Copy failed', message: 'Could not copy path' });
+              }
+            }}
+          >Copy path</button>
+          <Link href="/dashboard/docs" className="text-sm underline">Docs manager</Link>
+          <Link href="/dashboard/docs/scheduling" className="text-sm underline">Scheduling doc</Link>
+        </div>
       </div>
       {loading ? (
         <p className="text-gray-500">Loading…</p>
