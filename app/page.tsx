@@ -215,56 +215,7 @@ export default function Home() {
     };
   }, [hasMounted]);
 
-  /* ------------------------------
-     JSON-LD insertion (client-only)
-     - We do NOT use next/Script for JSON-LD due to issues seen with some Next/Turbopack versions.
-     - Instead we create a <script type="application/ld+json"> element and set its textContent to a string.
-     - Setting textContent guarantees the browser appends a plain text node (avoids appendChild parsing issues).
-     ------------------------------ */
-  useEffect(() => {
-    if (!hasMounted) return;
-
-    // Prepare the JSON-LD payload and convert to a plain string
-    const jsonLd = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "OfRoot",
-      "url": "https://ofroot.technology",
-      "contactPoint": [{
-        "@type": "ContactPoint",
-        "telephone": "+1-614-500-2315",
-        "contactType": "Sales",
-        "areaServed": "US",
-        "availableLanguage": ["English"]
-      }]
-    });
-
-    // Create <script type="application/ld+json"> and set its textContent to the JSON string
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.textContent = jsonLd; // IMPORTANT: plain string
-    // add a data attribute so cleanup is straightforward and idempotent
-    script.setAttribute('data-ofroot-jsonld', '1');
-
-    const target = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
-    try {
-      // Append script into head (or fallback to documentElement). This should not fail because textContent is a string.
-      target.appendChild(script);
-    } catch (err) {
-      // If appendChild fails for any reason, log but do not break UX.
-      console.error('Failed to append JSON-LD <script> to head:', err);
-    }
-
-    // Remove the script on cleanup to avoid duplicates if the component unmounts/mounts again.
-    return () => {
-      try {
-        const existing = document.querySelector('script[data-ofroot-jsonld="1"]');
-        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
-      } catch (err) {
-        console.warn('Failed to remove JSON-LD script during cleanup:', err);
-      }
-    };
-  }, [hasMounted]);
+  // Note: JSON-LD for Organization + WebSite is now rendered SSR in the root layout for better SEO.
 
   /* ------------------------------
      Helper: detect existing Calendly script tag
@@ -356,14 +307,14 @@ export default function Home() {
 
             <div className="flex items-center flex-col sm:flex-row gap-3 sm:gap-4">
               <a
-                className="inline-flex items-center justify-center bg-white text-[#20b2aa] hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="inline-flex items-center justify-center text-center bg-white text-[#20b2aa] hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#services"
                 aria-label="Explore OfRoot services"
               >
                 Explore Services
               </a>
               <a
-                className="inline-flex items-center justify-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="inline-flex items-center justify-center text-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="https://form.jotform.com/252643426225151"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -374,7 +325,7 @@ export default function Home() {
               </a>
               {/* Updated CTA to scroll to subscription section */}
               <a
-                className="inline-flex items-center justify-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#subscription"
                 aria-label="Start your subscription"
               >
@@ -403,12 +354,12 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-stretch">
-              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa] bg-white text-black">
                 <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
                   <span className="text-white text-3xl">⚙️</span>
                 </div>
                 <h3 className="font-bold text-2xl">Automation</h3>
-                <p className="flex-1 text-gray-600">Automate workflows, orchestration, and business processes to reduce manual work and increase reliability.</p>
+                <p className="flex-1 text-black">Automate workflows, orchestration, and business processes to reduce manual work and increase reliability.</p>
                 <a
                   href="/services/development-automation"
                   onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'development-automation' }); } catch {} }}
@@ -419,12 +370,12 @@ export default function Home() {
                 </a>
               </article>
 
-              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa] bg-white text-black">
                 <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
                   <span className="text-white text-3xl">🌐</span>
                 </div>
                 <h3 className="font-bold text-2xl">Website & App Development</h3>
-                <p className="flex-1 text-gray-600">Full-stack web and mobile development — prototypes, SaaS platforms, migrations, and performance-driven product engineering.</p>
+                <p className="flex-1 text-black">Full-stack web and mobile development — prototypes, SaaS platforms, migrations, and performance-driven product engineering.</p>
                 <a
                   href="/services/website-app-development"
                   onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'website-app-development' }); } catch {} }}
@@ -435,12 +386,12 @@ export default function Home() {
                 </a>
               </article>
 
-              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa] bg-white text-black">
                 <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
                   <span className="text-white text-3xl">🤖</span>
                 </div>
                 <h3 className="font-bold text-2xl">AI Development & Integrations</h3>
-                <p className="flex-1 text-gray-600">
+                <p className="flex-1 text-black">
                   Custom AI models, LLM integrations, and automation of knowledge work to enhance decision-making and customer experience.
                 </p>
                 <a
@@ -453,12 +404,12 @@ export default function Home() {
                 </a>
               </article>
 
-              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa]">
+              <article className="rounded-lg p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 flex h-full flex-col gap-4 text-left focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#20b2aa] bg-white text-black">
                 <div className="w-16 h-16 bg-[#20b2aa] rounded-full flex items-center justify-center">
                   <span className="text-white text-3xl">🧪</span>
                 </div>
                 <h3 className="font-bold text-2xl">AI Website & Ads Audit</h3>
-                <p className="flex-1 text-gray-600">A free audit to identify quick wins in your site and ad accounts. Get a prioritized list within 48 hours.</p>
+                <p className="flex-1 text-black">A free audit to identify quick wins in your site and ad accounts. Get a prioritized list within 48 hours.</p>
                 <a
                   href="/services/ai-audit"
                   onClick={() => { try { track({ category: 'nav', action: 'home_service_card_click', label: 'ai-audit' }); } catch {} }}
@@ -488,12 +439,12 @@ export default function Home() {
                 <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Admin dashboards and data models</li>
               </ul>
               <div className="mt-8 flex gap-3">
-                <a href="/subscribe" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
+                <a href="/subscribe" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full text-center">Start subscription</a>
                 <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="underline text-gray-700">Talk to us first</a>
               </div>
             </div>
-            <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
-              <div className="text-sm text-gray-600">
+            <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
+              <div className="text-sm text-black">
                 <div className="font-medium">How it works</div>
                 <ol className="list-decimal ml-5 mt-2 space-y-2">
                   <li>Scope goals and quick wins (30 minutes)</li>
@@ -515,16 +466,16 @@ export default function Home() {
               <p className="text-gray-600 max-w-3xl mx-auto">OfRoot hosts multiple apps under one roof. Here are two we actively develop and support for service companies.</p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
               {/* Helpr card */}
-              <article className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <article className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <header className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-2xl font-bold">Helpr</h3>
-                    <p className="text-gray-600">Vertical SaaS for home service businesses</p>
+                    <h3 className="mb-0"><span className="inline-block bg-black text-white px-4 py-2 rounded-full text-2xl font-bold">Helpr</span></h3>
+                    <p className="text-black mt-2">Vertical SaaS for home service businesses</p>
                   </div>
                 </header>
-                <ul className="space-y-3 text-gray-700">
+                <ul className="space-y-3 text-black">
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><CalendarDays size={18} aria-hidden /> Scheduling & dispatch with calendar views</span></li>
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><BadgeDollarSign size={18} aria-hidden /> Invoicing, payments, and receipts</span></li>
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Users size={18} aria-hidden /> Crew management and permissions</span></li>
@@ -538,14 +489,14 @@ export default function Home() {
               </article>
 
               {/* OnTask card */}
-              <article className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <article className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <header className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-2xl font-bold">OnTask</h3>
-                    <p className="text-gray-600">A practical toolkit for service companies</p>
+                    <h3 className="mb-0"><span className="inline-block bg-black text-white px-4 py-2 rounded-full text-2xl font-bold">OnTask</span></h3>
+                    <p className="text-black mt-2">A practical toolkit for service companies</p>
                   </div>
                 </header>
-                <ul className="space-y-3 text-gray-700">
+                <ul className="space-y-3 text-black">
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Target size={18} aria-hidden /> SEO‑optimized landing pages</span></li>
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><PenTool size={18} aria-hidden /> Built‑in blog & content tools</span></li>
                   <li className="flex items-start gap-3"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span className="inline-flex items-center gap-2"><Users size={18} aria-hidden /> Branding help and collateral</span></li>
@@ -572,64 +523,64 @@ export default function Home() {
             {/* Steps grid: mobile-first, scales to 3 columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {/* Step */}
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Search size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 1</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Discover & Align</h3>
-                <p className="text-gray-600">Identify goals, constraints, users, and success metrics. Gather the essentials to move fast with clarity.</p>
+                <p className="text-black">Identify goals, constraints, users, and success metrics. Gather the essentials to move fast with clarity.</p>
               </div>
 
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Target size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 2</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Scope the MVP</h3>
-                <p className="text-gray-600">Define a small, valuable slice. Prioritize core flows, data model, and the shortest path to value.</p>
+                <p className="text-black">Define a small, valuable slice. Prioritize core flows, data model, and the shortest path to value.</p>
               </div>
 
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><PenTool size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 3</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Design the experience</h3>
-                <p className="text-gray-600">Wireframes, UI, and copy that make the MVP intuitive and on‑brand. Accessibility and responsiveness by default.</p>
+                <p className="text-black">Wireframes, UI, and copy that make the MVP intuitive and on‑brand. Accessibility and responsiveness by default.</p>
               </div>
 
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Code2 size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 4</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Build & integrate</h3>
-                <p className="text-gray-600">Implement backend APIs (Laravel), frontend (Next.js), auth, and key integrations. Ship weekly demos.</p>
+                <p className="text-black">Implement backend APIs (Laravel), frontend (Next.js), auth, and key integrations. Ship weekly demos.</p>
               </div>
 
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><PlugZap size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 5</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Automate & add AI</h3>
-                <p className="text-gray-600">Wire up workflows, assistants, and retrieval where they create leverage. Measure impact from day one.</p>
+                <p className="text-black">Wire up workflows, assistants, and retrieval where they create leverage. Measure impact from day one.</p>
               </div>
 
-              <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+              <div className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="h-10 w-10 rounded-full bg-[#20b2aa]/10 flex items-center justify-center text-[#20b2aa]"><Rocket size={20} aria-hidden /></div>
                   <div className="text-xs font-semibold tracking-wider uppercase text-gray-500">Step 6</div>
                 </div>
                 <h3 className="text-xl font-bold mb-1">Launch & iterate</h3>
-                <p className="text-gray-600">Release, observe, and refine. We keep shipping improvements that compound into a product moat.</p>
+                <p className="text-black">Release, observe, and refine. We keep shipping improvements that compound into a product moat.</p>
               </div>
             </div>
 
             {/* Mobile CTA under the grid */}
             <div className="mt-8 text-center sm:hidden">
-              <a href="/subscribe" className="inline-flex items-center justify-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
+              <a href="/subscribe" className="inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
             </div>
           </div>
         </section>
@@ -639,7 +590,7 @@ export default function Home() {
         </section>
 
   {/* Contact area (de-emphasized): prefer JotForm contact form */}
-  <section id="contact" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/5 to-[#007bff]/5 reveal-in">
+  <section id="contact" className="contact-section relative overflow-hidden py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/5 to-[#007bff]/5 reveal-in">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1 text-center">
@@ -654,9 +605,9 @@ export default function Home() {
               We now handle inquiries primarily via our contact form. You can still book a call below if you’d like.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="p-6 rounded-lg shadow-lg border border-gray-200">
-                <h3 className="font-semibold text-xl mb-4 text-[#20b2aa]">Contact Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              <div className="contact-card relative p-5 sm:p-6 rounded-xl shadow-lg border border-gray-200 bg-white text-black">
+                <h3 className="font-semibold text-lg md:text-xl mb-3 md:mb-4 text-[#20b2aa]">Contact Information</h3>
                 <div className="space-y-3 text-left">
                   <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📝</span><a className="underline" href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer">Open contact form</a></p>
                   <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📧</span><span>{CONTACT_EMAIL_PUBLIC}</span></p>
@@ -667,9 +618,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="p-6 rounded-lg shadow-lg border border-gray-200">
-                <h3 className="font-semibold text-xl mb-4 text-[#20b2aa]">Schedule a Call (optional)</h3>
-                <p className="text-sm text-gray-600 mb-3">Prefer a call? You can still book below. Otherwise, the contact form is preferred for fastest response.</p>
+              <div className="contact-card relative p-5 sm:p-6 rounded-xl shadow-lg border border-gray-200 bg-white text-black">
+                <h3 className="font-semibold text-lg md:text-xl mb-3 md:mb-4 text-[#20b2aa]">Schedule a Call (optional)</h3>
+                <p className="text-sm text-black mb-3">Prefer a call? You can still book below. Otherwise, the contact form is preferred for fastest response.</p>
 
                 {/* Calendly Script injection (only when client-side and no duplicate script exists) */}
                 {hasMounted && !calendlyScriptExists && (
@@ -697,7 +648,7 @@ export default function Home() {
                     ref={calendlyRef}
                     className="calendly-inline-widget"
                     data-url="https://calendly.com/dimitri-mcdaniel-9oh/new-meeting"
-                    style={{ minWidth: '320px', height: '640px' }}
+                    style={{ minWidth: '320px', height: '560px' }}
                     aria-label="Calendly booking widget"
                   />
                 )}
@@ -732,6 +683,36 @@ export default function Home() {
               0 0 8px #20b2aa,
               0 0 16px #1a8f85,
               0 0 24px #ffe082;
+          }
+          /* Subtle animated background for the contact section */
+          .contact-section::before {
+            content: "";
+            position: absolute;
+            inset: -25%;
+            background:
+              radial-gradient(40rem 30rem at 20% 15%, rgba(32,178,170,0.10), transparent 60%),
+              radial-gradient(36rem 28rem at 80% 85%, rgba(0,123,255,0.08), transparent 60%);
+            filter: blur(0.5px);
+            animation: contactDrift 18s ease-in-out infinite alternate;
+            pointer-events: none;
+          }
+          @keyframes contactDrift {
+            0% { transform: translate3d(0,0,0) scale(1); opacity: 0.8; }
+            100% { transform: translate3d(0,-10px,0) scale(1.02); opacity: 1; }
+          }
+          /* Card glow/pulse that's extremely subtle */
+          .contact-card::after {
+            content: "";
+            position: absolute;
+            inset: -30%;
+            background: radial-gradient(closest-side, rgba(32,178,170,0.10), transparent 70%);
+            transform: translateY(0) scale(1);
+            animation: cardBreathe 12s ease-in-out infinite;
+            pointer-events: none;
+          }
+          @keyframes cardBreathe {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.45; }
+            50% { transform: translateY(-6px) scale(1.02); opacity: 0.6; }
           }
         `}</style>
       </div>

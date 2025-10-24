@@ -17,10 +17,23 @@
 //
 // The layout is centered and constrained to a maximum width for readability.
 
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import DashboardShell from './_components/Shell';
 import { cookies } from 'next/headers';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+
+// Prevent indexing of admin dashboard pages
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 // The DashboardLayout component receives its content as children.
 // It arranges the navigation and content within a styled container.

@@ -8,6 +8,57 @@ import RevealObserver from "@/app/components/RevealObserver";
 import Footer from "@/app/components/Footer";
 import ExitIntentPrompt from "@/components/ExitIntentPrompt";
 import ChatWidget from "@/components/ChatWidget";
+import { SITE } from './config/site';
+
+// Default site-wide metadata for SEO/SMO
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'),
+  title: {
+    default: `${SITE.name} · Engineering, Automation, and AI`,
+    template: `%s · ${SITE.name}`,
+  },
+  description: 'On‑demand engineering, automation, and AI — by subscription. Ship faster with focused sprints and transparent pricing.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    url: SITE.url,
+    siteName: SITE.name,
+    title: `${SITE.name} · Engineering, Automation, and AI`,
+    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    images: [
+      {
+        url: `${SITE.url}/og.jpg`,
+        width: 1200,
+        height: 630,
+        alt: `${SITE.name} — Build faster with AI & automation`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@ofroot_tech',
+    creator: '@ofroot_tech',
+    title: `${SITE.name} · Engineering, Automation, and AI`,
+    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    images: [`${SITE.url}/og.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,26 +69,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  metadataBase: new URL('https://ofroot.technology'),
-  title: "ofroot",
-  description: "OfRoot — Innovative Technology Solutions",
-  icons: {
-    icon: '/ofroot-logo.png',
-    apple: '/ofroot-logo.png',
-  },
-  openGraph: {
-    title: 'ofroot',
-    description: 'OfRoot — Innovative Technology Solutions',
-    images: ['/ofroot-logo.png'],
-    authors: ['OfRoot'],
-    siteName: 'ofroot.technology',
-  },
-  other: {
-    sameAs: ['https://www.linkedin.com/company/106671711/']
-  }
-};
 
 export default function RootLayout({
   children,
@@ -76,6 +107,36 @@ export default function RootLayout({
             </div>
           </div>
           <ChatWidget />
+          {/* Organization + WebSite JSON-LD (SSR) */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: SITE.name,
+                url: SITE.url,
+                logo: SITE.logo,
+                sameAs: SITE.socials,
+              }),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: SITE.name,
+                url: SITE.url,
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: `${SITE.url}/search?q={search_term_string}`,
+                  'query-input': 'required name=search_term_string',
+                },
+              }),
+            }}
+          />
         </AuthProvider>
       </body>
     </html>
