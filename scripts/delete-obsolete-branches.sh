@@ -10,7 +10,7 @@ echo "  - feat/recurring-invoices-and-service-pages"
 echo ""
 echo "This action cannot be undone. Make sure you have proper authorization."
 echo ""
-read -p "Do you want to continue? (yes/no): " confirm
+read -r -p "Do you want to continue? (yes/no): " confirm
 
 if [ "$confirm" != "yes" ]; then
     echo "Operation cancelled."
