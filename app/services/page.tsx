@@ -1,5 +1,7 @@
 // app/services/page.tsx
 import Link from 'next/link';
+import JsonLd from '@/components/seo/JsonLd';
+import { SITE } from '@/app/config/site';
 
 export const metadata = {
   title: 'Services | OfRoot',
@@ -42,6 +44,29 @@ const cards = [
 export default function ServicesIndexPage() {
   return (
     <div>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Services',
+          url: `${SITE.url}/services`,
+          mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: cards.map((c, i) => ({
+              '@type': 'Service',
+              position: i + 1,
+              name: c.title,
+              description: c.desc,
+              url: `${SITE.url}${c.href}`,
+              provider: {
+                '@type': 'Organization',
+                name: SITE.name,
+                url: SITE.url,
+              },
+            })),
+          },
+        }}
+      />
       <header className="mb-10 text-center">
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Services</h1>
         <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">Outcome‑oriented engagements for shipping product, automating operations, and integrating AI.</p>

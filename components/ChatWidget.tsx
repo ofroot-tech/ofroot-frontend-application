@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { LiquidReveal } from '@/app/lib/ui/LiquidReveal';
 import { toast } from '@/components/Toaster';
 
 type ChatMessage = {
@@ -11,6 +12,8 @@ type ChatMessage = {
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [compact, setCompact] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'hello',
@@ -38,6 +41,30 @@ export default function ChatWidget() {
       window.removeEventListener('ofroot:chat-open', handleOpen);
       window.removeEventListener('ofroot:chat-toggle', handleToggle);
     };
+  }, []);
+
+  // Keep panel mounted a beat for close animation
+  useEffect(() => {
+    if (open) { setVisible(true); return; }
+    const t = setTimeout(() => setVisible(false), 220);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  // Observe footer visibility to compact the chat FAB when footer is on screen
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((e) => e.isIntersecting);
+        // When footer is visible, compact the FAB
+        setCompact(isVisible);
+      },
+      { root: null, threshold: 0.05 }
+    );
+    io.observe(footer);
+    return () => io.disconnect();
   }, []);
 
   async function sendMessage() {
@@ -83,8 +110,8 @@ export default function ChatWidget() {
     <div className="fixed bottom-14 right-4 z-[9000] flex flex-col items-end gap-3">
       {/* ARIA live region: polite announcements for assistant replies */}
       <div aria-live="polite" aria-atomic="true" role="status" className="sr-only">{announcement}</div>
-      {open && (
-        <div id="ofroot-chat-widget" className="w-80 max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-label="OfRoot Assistant chat window">
+      {visible && (
+        <LiquidReveal as="div" active={visible} mode={open ? 'open' : 'close'} options={{ spring: { stiffness: 380, damping: 34 } }} id="ofroot-chat-widget" className="w-80 max-w-[90vw] rounded-xl border border-gray-200 bg-white shadow-2xl" role="dialog" aria-modal="false" aria-label="OfRoot Assistant chat window">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <div>
               <div className="text-sm font-semibold text-gray-900">OfRoot Assistant</div>
@@ -153,16 +180,18 @@ export default function ChatWidget() {
               </button>
             </div>
           </div>
-        </div>
+        </LiquidReveal>
       )}
       <button
         type="button"
         onClick={toggle}
-        className="flex items-center gap-2 rounded-full bg-black px-4 py-3 text-sm font-semibold text-white shadow-lg hover:bg-gray-800 border border-white"
+        className={`flex items-center rounded-full bg-black text-sm font-semibold text-white shadow-lg hover:bg-gray-800 border border-white transition-all duration-300 ease-out ${compact ? 'gap-0 px-3 py-[10px]' : 'gap-2 px-4 py-3'}`}
         aria-expanded={open}
         aria-controls="ofroot-chat-widget"
       >
-        {open ? 'Hide chat' : 'Chat with OfRoot'}
+        {/* Icon-only when compact to save space near footer */}
+        <span className="inline-block" aria-hidden>💬</span>
+        {!compact && <span className="ml-2">{open ? 'Hide chat' : 'Chat with OfRoot'}</span>}
       </button>
     </div>
   );

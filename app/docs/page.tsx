@@ -2,7 +2,7 @@
 // Index for docs — lists available Markdown documents from the backend (persistent DB).
 
 import Link from 'next/link';
-import PublicNavbar from '@/app/components/PublicNavbar';
+// PublicNavbar removed — global Navbar renders in app/layout
 import { api } from '@/app/lib/api';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,7 @@ export default async function DocsIndex() {
 
   return (
     <div className="relative">
-      <PublicNavbar />
+      
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
   <main className="mx-auto max-w-3xl px-4 md:px-6 pt-20 md:pt-24 pb-12 reveal-in fade-only">
         <h1 className="mb-4 text-2xl font-semibold">Documentation</h1>

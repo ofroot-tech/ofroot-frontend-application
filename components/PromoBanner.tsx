@@ -36,7 +36,7 @@ export default function PromoBanner({ spaced = false, anchorPrice = '$49', endSt
   }
   const topMargin = spaced ? 'mt-16 md:mt-20' : 'mt-14 md:mt-16';
   return (
-    <div className={`w-full bg-black text-white ${topMargin}`}>
+    <div className={`promo-banner w-full bg-black text-white ${topMargin}`} role="region" aria-label="Promotional offer banner">
       <div className="mx-auto max-w-6xl px-4 md:px-6 py-2 text-sm flex items-center justify-between gap-3">
         <div>
           <strong>Trial offer:</strong> Normally {anchorPrice}/month — start for $1 today. Ends {endText}.

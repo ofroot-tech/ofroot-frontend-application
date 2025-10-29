@@ -11,17 +11,18 @@ export const metadata = {
 
 export default function WebsiteAppDevelopmentPage() {
   return (
-  <div className="reveal-in fade-only">
-      <ServiceHero
+    <div className="snap-page" style={{ ['--chevron-bottom-offset' as any]: '14px', ['--chevron-top-offset' as any]: '14px', ['--chevron-glow-opacity' as any]: 0.9 }}>
+      <section data-snap-section className="section-full snap-fade">
+        <ServiceHero
         title="Website & App Development"
         subtitle="Full‑stack product engineering for speed: MVPs, SaaS, mobile, and migrations — with observability and performance baked in."
         ctaHref="/subscribe?product=website-app-development"
         ctaLabel="Start $1 trial"
         analyticsServiceId="website-app-development"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
-      />
-
-  <section className="grid grid-cols-1 md:grid-cols-2 grid-gap-modern reveal-in">
+        />
+      </section>
+      <section data-snap-section className="section-full snap-fade grid grid-cols-1 md:grid-cols-2 grid-gap-modern py-12 px-6">
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">Outcomes</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
@@ -40,18 +41,20 @@ export default function WebsiteAppDevelopmentPage() {
           </ul>
         </div>
       </section>
-
-      <ServiceProof
+      <section data-snap-section className="section-full snap-fade py-12 px-6">
+        <ServiceProof
         logos={["/logos/logo-acme.svg", "/logos/logo-zen.svg"]}
         quotes={[{ quote: 'They shipped features weekly and boosted our Core Web Vitals.', author: 'Product Lead', role: 'SaaS Startup' }]}
-      />
-
-      <ServiceFAQ
+        />
+      </section>
+      <section data-snap-section className="section-full snap-fade py-12 px-6">
+        <ServiceFAQ
         items={[
           { q: 'Do you handle migrations?', a: 'Yes — from monoliths to modern stacks, with clear rollout plans.' },
           { q: 'Can you integrate our APIs?', a: 'Absolutely. We design integrations and ensure observability around them.' },
         ]}
-      />
+        />
+      </section>
 
       {/* FAQ JSON-LD */}
       <script

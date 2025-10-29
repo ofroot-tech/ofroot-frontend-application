@@ -66,7 +66,9 @@ export default function Footer() {
             <a href="#" aria-label="Twitter" className="hover:text-[#ffe082] transition scale-110">🐦</a>
             <a href="https://www.linkedin.com/company/106671711/admin/dashboard/" aria-label="OfRoot on LinkedIn" target="_blank" rel="noopener noreferrer" className="hover:text-[#ffe082] transition scale-110">💼</a>
           </div>
-          <div className="text-xs opacity-80 font-light tracking-wide">&copy; {new Date().getFullYear()} OfRoot. All rights reserved.</div>
+          <div className="text-xs opacity-80 font-light tracking-wide">
+            &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> OfRoot. All rights reserved.
+          </div>
         </div>
       </div>
       <div className="w-full h-2 bg-gradient-to-r from-[#ffe082] via-[#20b2aa] to-[#1a8f85] animate-gradient-move" />

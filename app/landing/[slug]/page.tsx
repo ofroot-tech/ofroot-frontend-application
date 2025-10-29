@@ -83,9 +83,12 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       {/* Client analytics: exposure event */}
       <Exposure slug={slug} variant={variantKey} />
 
+      {/* Wrap content in snap container for full-screen sections */}
+      <div className="snap-page" style={{ ['--chevron-bottom-offset' as any]: '18px', ['--chevron-top-offset' as any]: '18px', ['--chevron-glow-opacity' as any]: 0.95, ['--chevron-color' as any]: primary }}>
+
       {/* Hero */}
       {page.hero && (
-  <section className="py-16 px-6 sm:px-12 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in fade-only">
+  <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in fade-only">
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl sm:text-6xl font-extrabold mb-4">{page.hero.headline}</h1>
             {page.hero.subheadline && <p className="text-lg text-gray-700 max-w-3xl mx-auto">{page.hero.subheadline}</p>}
@@ -108,7 +111,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
       {/* Features */}
       {page.features?.length ? (
-  <section className="py-16 px-6 sm:px-12 reveal-in">
+  <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 reveal-in">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
             {page.features.map((f: any, i: number) => (
               <div key={i} className="p-6 rounded-lg shadow border border-gray-200">
@@ -123,7 +126,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
       {/* Simple lead capture for service niches */}
       {['plumbers', 'hvac', 'roofers'].includes(slug) && (
-  <section className="py-8 px-6 sm:px-12 reveal-in fade-only">
+  <section data-snap-section className="section-full snap-fade py-8 px-6 sm:px-12 reveal-in fade-only">
           <div className="max-w-3xl mx-auto">
             <LeadCapture service={slug} />
           </div>
@@ -132,12 +135,14 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
       {/* Optional embed block (e.g., Calendly, form) */}
       {page.embed?.html && (
-  <section className="py-16 px-6 sm:px-12 reveal-in">
+  <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 reveal-in">
           <div className="max-w-4xl mx-auto">
             <SafeEmbed html={page.embed.html} />
           </div>
         </section>
       )}
+
+      </div>
     </main>
   );
 }

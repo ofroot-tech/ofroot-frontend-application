@@ -68,7 +68,16 @@ export default function Toaster() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999]">
-      <div className="absolute right-4 top-4 flex w-full max-w-sm flex-col gap-2">
+      {/* Position: bottom-right on mobile (avoids header/hero overlap),
+          switches to a comfortable top offset on desktop. */}
+      <div
+        className="absolute right-4 bottom-20 md:top-20 md:bottom-auto flex w-full max-w-sm flex-col gap-2"
+        style={{
+          // Respect device safe areas so we don't collide with notches/home indicators
+          paddingRight: 'env(safe-area-inset-right, 0px)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+        }}
+      >
         {toasts.map((t) => (
           <div
             key={t.id}

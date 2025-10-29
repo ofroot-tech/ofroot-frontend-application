@@ -24,6 +24,7 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
   const sp = (await searchParams) ?? {};
   const pageParam = typeof sp.page === 'string' ? Number(sp.page) : Array.isArray(sp.page) ? Number(sp.page[0]) : 1;
   const perPageParam = typeof sp.per_page === 'string' ? Number(sp.per_page) : Array.isArray(sp.per_page) ? Number(sp.per_page[0]) : 20;
+  const statusParam = typeof sp.status === 'string' ? sp.status : Array.isArray(sp.status) ? sp.status[0] : '';
   const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
   const per_page = Number.isFinite(perPageParam) && perPageParam > 0 ? perPageParam : 20;
 
@@ -32,13 +33,19 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
     api.adminListTenants(token).catch(() => null),
     api.adminListUsers(token).catch(() => null),
   ]);
-  const invoices: Invoice[] = list?.data ?? [];
+  const invoices: Invoice[] = (list?.data ?? []).filter((i) => !statusParam || i.status === statusParam);
   const meta = list?.meta;
   const tenants: Tenant[] = tenantsRes?.data ?? [];
   const users: AdminUser[] = usersRes?.data ?? [];
   return (
     <div className="space-y-6 reveal-in fade-only">
       <PageHeader title="Billing" subtitle="Invoices, payments, and dunning." />
+
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs text-gray-700">
+        <span className="font-medium text-gray-800">Heads up:</span> Invoice due/overdue reminders are sent automatically on a daily schedule.
+        Cadence and send time are configured by the system admin (defaults: 7, 3, 1, 0 days; ~09:00).
+        <a href="/docs/invoicing" target="_blank" className="ml-1 underline">View reminder settings</a>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="md:col-span-3">
@@ -54,6 +61,22 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
             <div className="mb-3 flex flex-wrap items-end gap-3 text-sm">
               <form method="get" className="flex items-end gap-2">
                 <div>
+                  <label className="block text-xs text-gray-600 mb-1" htmlFor="status">Status</label>
+                  <select id="status" name="status" defaultValue={statusParam} className="border rounded px-2 py-1">
+                    <option value="">All</option>
+                    <option value="draft">Draft</option>
+                    <option value="sent">Sent</option>
+                    <option value="paid">Paid</option>
+                    <option value="void">Void</option>
+                  </select>
+                </div>
+                {/* Preserve current pagination when filtering */}
+                <input type="hidden" name="per_page" value={String(meta?.per_page ?? per_page)} />
+                <input type="hidden" name="page" value={String(meta?.current_page ?? page)} />
+                <button type="submit" className="rounded border px-2 py-1 hover:border-black">Filter</button>
+              </form>
+              <form method="get" className="flex items-end gap-2">
+                <div>
                   <label className="block text-xs text-gray-600 mb-1" htmlFor="per_page">Per page</label>
                   <select id="per_page" name="per_page" defaultValue={(meta?.per_page ?? per_page).toString()} className="border rounded px-2 py-1">
                     {[10,20,50].map((n) => (
@@ -63,18 +86,26 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
                 </div>
                 {/* Preserve current page when changing per_page */}
                 <input type="hidden" name="page" value={(meta?.current_page ?? page).toString()} />
+                {statusParam && <input type="hidden" name="status" value={statusParam} />}
                 <button type="submit" className="rounded border px-2 py-1 hover:border-black">Apply</button>
               </form>
 
               <form method="get" className="flex items-end gap-2">
                 {/* Preserve current per_page when jumping pages */}
                 <input type="hidden" name="per_page" value={(meta?.per_page ?? per_page).toString()} />
+                {statusParam && <input type="hidden" name="status" value={statusParam} />}
                 <div>
                   <label className="block text-xs text-gray-600 mb-1" htmlFor="page">Go to page</label>
                   <input id="page" name="page" type="number" min={1} max={(meta?.last_page ?? Math.ceil((meta?.total ?? 0) / (meta?.per_page ?? per_page))) || 1} defaultValue={(meta?.current_page ?? page).toString()} className="w-24 border rounded px-2 py-1" />
                 </div>
                 <button type="submit" className="rounded border px-2 py-1 hover:border-black">Go</button>
               </form>
+              <div className="ml-auto">
+                <a
+                  href={`/dashboard/billing/export${statusParam ? `?status=${encodeURIComponent(statusParam)}` : ''}`}
+                  className="inline-block rounded border px-2 py-1 hover:border-black"
+                >Export CSV</a>
+              </div>
             </div>
             {invoices.length === 0 ? (
               <p className="text-sm text-gray-600">No invoices yet.</p>

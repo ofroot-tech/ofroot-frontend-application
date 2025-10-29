@@ -37,7 +37,9 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     includes: [
       'Secure authentication with roles, audit trails, and staff permissions',
       'Automated lead capture, follow-ups, and review campaigns',
-      'Estimates, invoices, and payment reminders in one inbox',
+      'Estimates, invoices, and automated payment reminders in one inbox',
+      'Public invoice links with Stripe Checkout and receipts',
+      'Branded invoice and reminder emails',
       'Embedded reporting that shows source-to-revenue performance',
     ],
     comparison: {
@@ -50,6 +52,9 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
       differentiators: [
         'AI-powered follow-up copy + review nudges shipped automatically',
         'Pre-built marketing landing pages and blog templates included',
+        'Automated invoice due/overdue reminders at a configurable time',
+        'Public customer invoice links for easy payments',
+        'Branded email templates for invoices and reminders',
         'Hands-on quarterly automation tune-up from the OfRoot team',
       ],
     },

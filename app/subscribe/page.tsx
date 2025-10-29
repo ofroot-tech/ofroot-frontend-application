@@ -17,7 +17,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import SubscribeForm from '@/components/SubscribeForm';
-import PublicNavbar from '@/app/components/PublicNavbar';
+// PublicNavbar removed — global Navbar renders in app/layout
 import PromoBanner from '@/components/PromoBanner';
 import BottomPromoBanner from '@/components/BottomPromoBanner';
 import ClientViewPing from '@/components/ClientViewPing';
@@ -90,108 +90,120 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
   // The page renders a compact, approachable form. We pair it with a benefits
   // column that stays visible (sticky) on taller screens to reinforce value.
   return (
-    <div className="relative">
-      <PublicNavbar />
-      {/* Promo banner — client-rendered for date math and dismiss state */}
-      <Suspense>
-        <PromoBanner spaced anchorPrice={anchorPrice} endStr={endStr} />
-      </Suspense>
-      {/* Background flourish for subtle depth */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
+    <div className="relative snap-page" style={{ ['--chevron-bottom-offset' as any]: '18px', ['--chevron-top-offset' as any]: '18px', ['--chevron-glow-opacity' as any]: 0.9 }}>
+      {/* Section 1: Promo banner + intro header */}
+      <section data-snap-section className="section-full snap-fade">
+        {/* Promo banner — client-rendered for date math and dismiss state */}
+        <Suspense>
+          <PromoBanner spaced anchorPrice={anchorPrice} endStr={endStr} />
+        </Suspense>
+        {/* Background flourish for subtle depth */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
 
-  <div className="mx-auto max-w-6xl px-4 md:px-6 pt-20 md:pt-24 pb-12 md:pb-16 reveal-in fade-only">
-  {/* Fire a lightweight view event client-side */}
-  <ClientViewPing />
-        <header className="mb-8 md:mb-12">
-          <h1 className="text-balance text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your $1 trial'}</span>
-          </h1>
-          {productConfig?.heroSubtitle ? (
-            <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{productConfig.heroSubtitle}</p>
-          ) : (
-            <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Normally {anchorPrice}/month — try it for $1 for 14 days. Cancel anytime.</p>
-          )}
-          <p className="mt-1 text-sm text-gray-500">After your trial, continue on the plan you choose. You’ll confirm billing details after signup.</p>
-          <p className="mt-3 text-sm font-medium text-gray-700">Trusted by local pros.</p>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
-          <section className="rounded-xl border bg-white/80 backdrop-blur p-5 sm:p-6 shadow-sm">
-            {/* We keep the form self-contained and accessible. */}
-            <SubscribeForm productConfig={productConfig} />
-            <div className="mt-4 text-sm text-gray-700">
-              <div className="font-medium">Add modules anytime</div>
-              <p className="mt-1">Start with a trial and add features, marketing, development capacity, or automation as you grow.</p>
-              <a href="/services/add-ons" className="underline">See add‑ons</a>
-            </div>
-            <p className="mt-5 text-sm text-gray-600">Already have an account? <a className="underline" href="/auth/login">Sign in</a></p>
-          </section>
-
-          <aside className="md:sticky md:top-24 space-y-4 text-sm text-gray-700">
-            <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
-              <div className="font-medium">What’s included</div>
-              <ul className="mt-2 space-y-2 text-gray-600">
-                {(productConfig?.includes || [
-                  'Secure authentication and role-based access',
-                  'Admin dashboard with metrics and user management',
-                  'Tenants and subscribers pages',
-                  'Observability with Sentry',
-                ]).map((inc) => (
-                  <li key={inc} className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>{inc}</span></li>
-                ))}
-              </ul>
-            </div>
-            {productConfig?.comparison && (
-              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm space-y-3">
-                <div className="font-medium">How we stack up to {productConfig.comparison.competitor}</div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Matches</div>
-                  <ul className="mt-1 space-y-2 text-gray-600">
-                    {productConfig.comparison.parity.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">OnTask extras</div>
-                  <ul className="mt-1 space-y-2 text-gray-600">
-                    {productConfig.comparison.differentiators.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#20b2aa]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+        <div className="mx-auto max-w-6xl px-4 md:px-6 pt-20 md:pt-24 pb-12 md:pb-16">
+          {/* Fire a lightweight view event client-side */}
+          <ClientViewPing />
+          <header className="mb-8 md:mb-12">
+            <h1 className="text-balance text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+              <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your $1 trial'}</span>
+            </h1>
+            {productConfig?.heroSubtitle ? (
+              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{productConfig.heroSubtitle}</p>
+            ) : (
+              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Normally {anchorPrice}/month — try it for $1 for 14 days. Cancel anytime.</p>
             )}
-
-            <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
-              <div className="font-medium">Free AI audit (website + ads)</div>
-              <p className="mt-1 text-gray-600">No‑cost review of your site and ad accounts. Get quick wins and a prioritized action list within 48 hours.</p>
-              <p className="mt-2 text-gray-600">Ready to implement? Upgrade to the monthly plan and we’ll execute the recommendations for you.</p>
-              {/* Inline client-only audit request button */}
-              {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-              <AuditRequestButton />
-            </div>
-            <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
-              <div className="font-medium">Need help?</div>
-              <p className="mt-1 text-gray-600">Contact support and we’ll get you set up quickly.</p>
-            </div>
-            <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
-              <div className="font-medium">Why teams choose us</div>
-              <p className="mt-1 text-gray-600">Fast setup, hardened auth, and a production-ready admin so you can focus on your product.</p>
-            </div>
-          </aside>
+            <p className="mt-1 text-sm text-gray-500">After your trial, continue on the plan you choose. You’ll confirm billing details after signup.</p>
+            <p className="mt-3 text-sm font-medium text-gray-700">Trusted by local pros.</p>
+          </header>
         </div>
-      </div>
-      {/* Bottom banner only shows when near the end of the page */}
-      <Suspense>
-        <BottomPromoBanner anchorPrice={anchorPrice} endStr={endStr} />
-      </Suspense>
+      </section>
+
+      {/* Section 2: Subscribe form + value column */}
+      <section data-snap-section className="section-full snap-fade">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 pb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
+            <div className="rounded-xl border bg-white/80 backdrop-blur p-5 sm:p-6 shadow-sm">
+              {/* We keep the form self-contained and accessible. */}
+              <SubscribeForm productConfig={productConfig} />
+              <div className="mt-4 text-sm text-gray-700">
+                <div className="font-medium">Add modules anytime</div>
+                <p className="mt-1">Start with a trial and add features, marketing, development capacity, or automation as you grow.</p>
+                <a href="/services/add-ons" className="underline">See add‑ons</a>
+              </div>
+              <p className="mt-5 text-sm text-gray-600">Already have an account? <a className="underline" href="/auth/login">Sign in</a></p>
+            </div>
+
+            <aside className="md:sticky md:top-24 space-y-4 text-sm text-gray-700">
+              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
+                <div className="font-medium">What’s included</div>
+                <ul className="mt-2 space-y-2 text-gray-600">
+                  {(productConfig?.includes || [
+                    'Secure authentication and role-based access',
+                    'Admin dashboard with metrics and user management',
+                    'Tenants and subscribers pages',
+                    'Observability with Sentry',
+                  ]).map((inc) => (
+                    <li key={inc} className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>{inc}</span></li>
+                  ))}
+                </ul>
+              </div>
+              {productConfig?.comparison && (
+                <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm space-y-3">
+                  <div className="font-medium">How we stack up to {productConfig.comparison.competitor}</div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Matches</div>
+                    <ul className="mt-1 space-y-2 text-gray-600">
+                      {productConfig.comparison.parity.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">OnTask extras</div>
+                    <ul className="mt-1 space-y-2 text-gray-600">
+                      {productConfig.comparison.differentiators.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#20b2aa]" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
+                <div className="font-medium">Free AI audit (website + ads)</div>
+                <p className="mt-1 text-gray-600">No‑cost review of your site and ad accounts. Get quick wins and a prioritized action list within 48 hours.</p>
+                <p className="mt-2 text-gray-600">Ready to implement? Upgrade to the monthly plan and we’ll execute the recommendations for you.</p>
+                {/* Inline client-only audit request button */}
+                {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+                <AuditRequestButton />
+              </div>
+              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
+                <div className="font-medium">Need help?</div>
+                <p className="mt-1 text-gray-600">Contact support and we’ll get you set up quickly.</p>
+              </div>
+              <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
+                <div className="font-medium">Why teams choose us</div>
+                <p className="mt-1 text-gray-600">Fast setup, hardened auth, and a production-ready admin so you can focus on your product.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Bottom promo banner */}
+      <section data-snap-section className="section-full snap-fade">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-16">
+          <Suspense>
+            <BottomPromoBanner anchorPrice={anchorPrice} endStr={endStr} />
+          </Suspense>
+        </div>
+      </section>
     </div>
   );
 }

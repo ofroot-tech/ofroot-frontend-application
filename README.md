@@ -204,6 +204,46 @@ This project is configured to work with Vercel's default Next.js settings.
 
 This frontend is designed to work seamlessly with a Laravel backend and is optimized for Vercel hosting.
 
+## Admin and Blog add-on
+
+Role and feature visibility in the dashboard are controlled via server-side environment variables and the authenticated user:
+
+- Super admin allowlist: set `ADMIN_EMAILS` to a comma-separated list of emails on the API and on the frontend server runtime (for the server route below). For both local and production, use:
+  - `ADMIN_EMAILS=1.dimitri.mcdaniel@gmail.com`
+- Blog add-on flag: users can have a boolean `has_blog_addon` feature flag on the backend. Admins can toggle this from the dashboard Users table.
+
+Main-company publishing (super admins):
+- If the logged-in user is a super admin (email is included in `ADMIN_EMAILS`), any new blog post they create, or any draft they publish from the editor, will be attributed to the "main OfRoot tenant" by setting a `tenant_id` in the API payload.
+- Configure which tenant is considered the main OfRoot tenant by setting `OFROOT_TENANT_ID` in the frontend server runtime (e.g., `.env.local` for dev, Vercel Project → Settings for prod). Example: `OFROOT_TENANT_ID=1`.
+- With this set, super-admin posts will surface at the public site (e.g., https://ofroot.technology/blog) under the main tenant.
+
+How it works:
+- The dashboard shell calls a server route `GET /api/admin/me` to determine `isSuperAdmin` and `hasBlogAddon` in order to show/hide links (Docs, Blog).
+- Super admin checks read `process.env.ADMIN_EMAILS` server-side (App Router route).
+- Admin-only backend routes are protected by a middleware that also checks `ADMIN_EMAILS`.
+
+API endpoints involved:
+- Toggle blog add-on (admin-only): `PUT /api/admin/users/{id}/features { has_blog_addon: boolean }`
+- Current user: `GET /api/auth/me`
+
+UI surface:
+- Dashboard → Users: per-row “Blog add-on” chip + Enable/Disable button.
+- Dashboard → Blog: only visible if `hasBlogAddon` or `isSuperAdmin`.
+
+## Public blog pages
+
+The public marketing site exposes a simple blog powered by the API’s public endpoints.
+
+- Listing: `/blog` — SSR; fetches `GET /api/public/blog-posts?limit=24`.
+- Detail: `/blog/[slug]` — SSR; fetches `GET /api/public/blog-posts/{slug}?tenant_id=...`. If `tenant_id` isn’t in the URL, the page resolves it by listing posts and matching the slug.
+- SEO: JSON-LD for CollectionPage/BlogPosting is injected server-side.
+
+Environment:
+- Ensure the frontend is pointed at the API: `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api` for local dev.
+- For super admin link visibility in the dashboard shell, set `ADMIN_EMAILS` in the frontend runtime (server-only; not exposed to the client), e.g. via `.env.local` for dev. Use:
+  - `ADMIN_EMAILS=1.dimitri.mcdaniel@gmail.com`
+- To route super-admin blog publishes to the main tenant on the public site, set `OFROOT_TENANT_ID` in the frontend runtime to the tenant ID used by the API for the main OfRoot company.
+
 ## Contact & Email configuration
 
 We centralize contact emails and optional email sending via environment variables so nothing sensitive is committed to git.

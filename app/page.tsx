@@ -25,17 +25,14 @@ import { CONTACT_EMAIL_PUBLIC } from './config/public';
 import PromoBanner from "@/components/PromoBanner";
 import { Search, Target, PenTool, Code2, PlugZap, Rocket, CalendarDays, ClipboardList, Users, Wrench, BadgeDollarSign } from 'lucide-react';
 import { track } from '@/app/lib/ab';
+import SectionSnapper from '@/components/SectionSnapper';
 
-/* ------------------------------
-   Constants
-   ------------------------------ */
 // Calendly external widget URL (served by Calendly's CDN)
 const calendlySrc = 'https://assets.calendly.com/assets/external/widget.js';
 
 // Timeout (ms) to consider Calendly failed to initialize if global Calendly is not present
 const CALENDLY_INIT_TIMEOUT = 8000;
 
-// Preload heavy Vanta deps ASAP on the client to reduce time-to-first-frame
 const __IS_BROWSER__ = typeof window !== 'undefined';
 let __vantaPreload: Promise<[any, any]> | null = null;
 if (__IS_BROWSER__) {
@@ -46,7 +43,7 @@ if (__IS_BROWSER__) {
   ]);
 }
 
-export default function Home() {
+export default function HomePage() {
   /* ------------------------------
      Refs & state
      ------------------------------ */
@@ -268,8 +265,12 @@ export default function Home() {
       {/* Marketing banner with extra top spacing, home-only */}
       <PromoBanner spaced />
 
-      {/* Hero section with Vanta background */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+  {/* Snapper controls fade states for full-screen sections */}
+  <SectionSnapper containerId="home-snap" />
+
+  <div id="home-snap" className="snap-page">
+  {/* Hero section with Vanta background (full-screen) */}
+  <section data-snap-section className="section-full snap-fade" style={{ position: "relative", overflow: "hidden" }}>
         <div
           ref={vantaRef}
           style={{
@@ -307,14 +308,14 @@ export default function Home() {
 
             <div className="flex items-center flex-col sm:flex-row gap-3 sm:gap-4">
               <a
-                className="inline-flex items-center justify-center text-center bg-white text-[#20b2aa] hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="loading-on-click inline-flex items-center justify-center text-center bg-white text-[#20b2aa] hover:bg-gray-100 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#services"
                 aria-label="Explore OfRoot services"
               >
                 Explore Services
               </a>
               <a
-                className="inline-flex items-center justify-center text-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="loading-on-click inline-flex items-center justify-center text-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="https://form.jotform.com/252643426225151"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -325,7 +326,7 @@ export default function Home() {
               </a>
               {/* Updated CTA to scroll to subscription section */}
               <a
-                className="inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
+                className="loading-on-click inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-lg text-base fade-up delayed"
                 href="#subscription"
                 aria-label="Start your subscription"
               >
@@ -334,12 +335,20 @@ export default function Home() {
             </div>
           </main>
         </div>
+        {/* Scroll chevron indicator */}
+        <div className="pointer-events-auto absolute inset-x-0 bottom-6 flex justify-center">
+          <a href="#services" className="scroll-indicator" aria-label="Scroll">
+            <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </a>
+        </div>
       </section>
 
       {/* Content area */}
       <div className="content-area relative">
         {/* Services section */}
-        <section id="services" className="py-20 px-8 sm:px-20 reveal-in">
+        <section id="services" data-snap-section className="section-full snap-fade scroll-target py-20 px-8 sm:px-20 reveal-in">
           <div className="max-w-6xl mx-auto">
             <div className="mb-12 max-w-4xl mx-auto">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1 text-center">
@@ -424,7 +433,7 @@ export default function Home() {
         </section>
 
         {/* Subscription section — what’s included */}
-        <section id="subscription" className="py-16 px-8 sm:px-20 reveal-in">
+  <section id="subscription" data-snap-section className="section-full snap-fade py-16 px-8 sm:px-20 reveal-in">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-3xl font-extrabold mb-3">A subscription that ships</h3>
@@ -439,7 +448,7 @@ export default function Home() {
                 <li className="flex items-start gap-2"><span className="mt-2 h-1.5 w-1.5 rounded-full bg-gray-400" /> Admin dashboards and data models</li>
               </ul>
               <div className="mt-8 flex gap-3">
-                <a href="/subscribe" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full text-center">Start subscription</a>
+                <a href="/subscribe" className="loading-on-click bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full text-center">Start subscription</a>
                 <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="underline text-gray-700">Talk to us first</a>
               </div>
             </div>
@@ -458,7 +467,7 @@ export default function Home() {
         </section>
 
         {/* Featured / How / Proof sections (kept as in your original) */}
-        <section id="featured" className="py-20 px-8 sm:px-20 reveal-in">
+  <section id="featured" data-snap-section className="section-full snap-fade py-20 px-8 sm:px-20 reveal-in">
           <div className="max-w-6xl mx-auto">
             <div className="mb-10 text-center">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">FEATURED PRODUCTS</span>
@@ -471,7 +480,9 @@ export default function Home() {
               <article className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <header className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="mb-0"><span className="inline-block bg-black text-white px-4 py-2 rounded-full text-2xl font-bold">Helpr</span></h3>
+                    <h3 className="mb-0">
+                      <span className="inline-block bg-black !text-white px-4 py-2 rounded-full text-2xl font-bold">Helpr</span>
+                    </h3>
                     <p className="text-black mt-2">Vertical SaaS for home service businesses</p>
                   </div>
                 </header>
@@ -492,7 +503,7 @@ export default function Home() {
               <article className="rounded-xl border p-6 bg-white shadow-lg text-black">
                 <header className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="mb-0"><span className="inline-block bg-black text-white px-4 py-2 rounded-full text-2xl font-bold">OnTask</span></h3>
+                    <h3 className="mb-0"><span className="inline-block bg-black !text-white px-4 py-2 rounded-full text-2xl font-bold">OnTask</span></h3>
                     <p className="text-black mt-2">A practical toolkit for service companies</p>
                   </div>
                 </header>
@@ -512,7 +523,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="how" className="py-16 px-8 sm:px-20 reveal-in">
+  <section id="how" data-snap-section className="section-full snap-fade py-16 px-8 sm:px-20 reveal-in">
           <div className="max-w-6xl mx-auto">
             <div className="mb-10 text-center">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">PROCESS</span>
@@ -580,17 +591,13 @@ export default function Home() {
 
             {/* Mobile CTA under the grid */}
             <div className="mt-8 text-center sm:hidden">
-              <a href="/subscribe" className="inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
+              <a href="/subscribe" className="loading-on-click inline-flex items-center justify-center text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start subscription</a>
             </div>
           </div>
         </section>
 
-        <section id="proof" className="py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in">
-          {/* (content unchanged) */}
-        </section>
-
   {/* Contact area (de-emphasized): prefer JotForm contact form */}
-  <section id="contact" className="contact-section relative overflow-hidden py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/5 to-[#007bff]/5 reveal-in">
+  <section id="contact" data-snap-section className="section-full snap-fade contact-section relative overflow-hidden py-20 px-8 sm:px-20 bg-gradient-to-r from-[#20b2aa]/5 to-[#007bff]/5 reveal-in">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
               <span className="block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1 text-center">
@@ -715,6 +722,7 @@ export default function Home() {
             50% { transform: translateY(-6px) scale(1.02); opacity: 0.6; }
           }
         `}</style>
+      </div>
       </div>
     </div>
   );

@@ -8,13 +8,16 @@ import {
   Palette,
 } from "lucide-react";
 import MarketingNavbar from "./MarketingNavbar";
+import SectionSnapper from "@/components/SectionSnapper";
 
 export default function MarketingPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
       <MarketingNavbar />
+      <SectionSnapper containerId="marketing-snap" />
+  <div id="marketing-snap" className="snap-page" style={{ ['--chevron-color' as any]: '#ffffff', ['--chevron-bottom-offset' as any]: '22px', ['--chevron-top-offset' as any]: '22px', ['--chevron-glow-opacity' as any]: 0.95 }}>
       {/* Hero Section */}
-      <section className="py-20 px-6 text-center bg-gradient-to-br from-[#20b2aa] to-[#1a8f85] text-white">
+      <section data-snap-section className="section-full snap-fade relative px-6 text-center bg-gradient-to-br from-[#20b2aa] to-[#1a8f85] text-white">
         <h1 className="text-5xl font-bold mb-4">Grow Your Business with OfRoot</h1>
         <p className="text-xl mb-8 max-w-2xl mx-auto">
           Ads, SEO, content, and automation — everything you need to get more calls, more jobs, and more revenue.
@@ -38,27 +41,35 @@ export default function MarketingPage() {
             Contact
           </Link>
         </div>
+        {/* Scroll chevron indicator */}
+        <div className="pointer-events-auto absolute inset-x-0 bottom-6 flex justify-center">
+          <a href="#why" className="scroll-indicator text-white" aria-label="Scroll">
+            <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </a>
+        </div>
       </section>
 
       {/* Why Choose Section */}
-      <section className="py-16 px-6 max-w-5xl mx-auto bg-white md:bg-transparent md:mb-0 mb-8">
+      <section id="why" data-snap-section className="section-full snap-fade scroll-target py-16 px-6 max-w-5xl mx-auto bg-white md:bg-transparent md:mb-0 mb-8">
         <h2 className="text-3xl font-bold text-center mb-10">Why Choose ofroot?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-gray-50 rounded-lg p-6 shadow text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 grid-gap-comfy smart-flow">
+          <div className="bg-gray-50 rounded-lg p-6 shadow text-center responsive-card">
             <h3 className="text-xl font-semibold mb-2">All-in-One Growth</h3>
             <p>
               We handle ads, SEO, content, social, and email so you can focus on
               running your business.
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-6 shadow text-center">
+          <div className="bg-gray-50 rounded-lg p-6 shadow text-center responsive-card">
             <h3 className="text-xl font-semibold mb-2">Automation & AI</h3>
             <p>
               From lead follow-ups to reporting, we automate repetitive work and
               boost conversions with AI.
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-6 shadow text-center">
+          <div className="bg-gray-50 rounded-lg p-6 shadow text-center responsive-card">
             <h3 className="text-xl font-semibold mb-2">Expert Support</h3>
             <p>
               Get strategy, creative, and hands-on execution from a team that
@@ -69,10 +80,10 @@ export default function MarketingPage() {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 px-6 bg-[#f7fafc]">
+      <section id="services" data-snap-section className="section-full snap-fade scroll-target py-20 px-6 bg-[#f7fafc]">
         <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-gap-comfy max-w-6xl mx-auto smart-flow">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <Megaphone className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Paid Ads Management</h3>
             <p>
@@ -80,7 +91,7 @@ export default function MarketingPage() {
               bookings, and ROI.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <Search className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">SEO & Content</h3>
             <p>
@@ -88,7 +99,7 @@ export default function MarketingPage() {
               that compound over time.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <Users className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Social Media Growth</h3>
             <p>
@@ -96,7 +107,7 @@ export default function MarketingPage() {
               where customers spend time.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <BarChart3 className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Conversion Funnels</h3>
             <p>
@@ -104,7 +115,7 @@ export default function MarketingPage() {
               not just clicks.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <Mail className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Email & SMS Marketing</h3>
             <p>
@@ -112,7 +123,7 @@ export default function MarketingPage() {
               top-of-mind and drive repeat work.
             </p>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow text-center">
+          <div className="bg-white rounded-lg p-6 shadow text-center responsive-card">
             <Palette className="w-10 h-10 text-[#20b2aa] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Branding & Creative</h3>
             <p>
@@ -124,7 +135,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-16 px-6 text-center">
+      <section data-snap-section className="section-full snap-fade py-16 px-6 text-center">
         <h2 className="text-2xl font-bold mb-4">Ready to grow?</h2>
         <p className="mb-8">
           Join our waitlist and be the first to know when new campaigns and
@@ -138,6 +149,7 @@ export default function MarketingPage() {
           Join the Waitlist
         </Link>
       </section>
+      </div>
     </main>
   );
 }

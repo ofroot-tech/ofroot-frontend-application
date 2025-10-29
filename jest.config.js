@@ -6,4 +6,13 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    },
+  },
+  // Allow per-file environment via docblock; jsdom is needed for DOM-based tests
+  testEnvironmentOptions: {},
 };

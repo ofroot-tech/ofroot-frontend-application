@@ -45,6 +45,29 @@
 				"$tsc"
 			],
 			"group": "build"
+		},
+		{
+			"label": "Run tests for physics feature",
+			"type": "shell",
+			"command": "npm test --silent",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc",
+				"$eslint - stylish"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Next.js app",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"group": "build"
 		}
 	]
 }

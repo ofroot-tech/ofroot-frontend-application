@@ -11,17 +11,19 @@ export const metadata = {
 
 export default function DevelopmentAutomationPage() {
   return (
-    <div>
-      <ServiceHero
+    <div className="snap-page" style={{ ['--chevron-bottom-offset' as any]: '14px', ['--chevron-top-offset' as any]: '14px', ['--chevron-glow-opacity' as any]: 0.9 }}>
+      <section data-snap-section className="section-full snap-fade">
+        <ServiceHero
         title="Development Automation"
         subtitle="Ship features faster with pipelines, scaffolds, and repeatable integrations. Reduce regressions, increase velocity."
         ctaHref="/subscribe?product=development-automation"
         ctaLabel="Start $1 trial"
   analyticsServiceId="development-automation"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
-      />
+        />
+      </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section data-snap-section className="section-full snap-fade grid grid-cols-1 md:grid-cols-2 gap-6 py-12 px-6">
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">Outcomes</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
@@ -39,18 +41,20 @@ export default function DevelopmentAutomationPage() {
           </ul>
         </div>
       </section>
-
-      <ServiceProof
+      <section data-snap-section className="section-full snap-fade py-12 px-6">
+        <ServiceProof
         logos={["/logos/logo-acme.svg", "/logos/logo-zen.svg"]}
         quotes={[{ quote: 'We shipped our MVP 2x faster with OfRoot.', author: 'Founder', role: 'Home Services SaaS' }]}
-      />
-
-      <ServiceFAQ
+        />
+      </section>
+      <section data-snap-section className="section-full snap-fade py-12 px-6">
+        <ServiceFAQ
         items={[
           { q: 'Is this a fit for my stack?', a: 'We specialize in Laravel + Next.js, but adapt where it makes sense.' },
           { q: 'How fast can we start?', a: 'Within a week. We begin with a 30-minute alignment call and a sprint plan.' },
         ]}
-      />
+        />
+      </section>
       {/* FAQ JSON-LD */}
       <script
         type="application/ld+json"

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -53,6 +53,8 @@ export default function DashboardShell({ children, authed = false }: Props) {
 	const nav = authed
 		? [
 			...baseNav,
+			{ href: '/dashboard/crm/leads', label: 'Leads', icon: ClipboardList },
+			{ href: '/dashboard/crm/contacts', label: 'Contacts', icon: Users },
 			{ href: '/dashboard/releases', label: 'Releases', icon: Tag },
 			...((hasBlogAddon || isSuperAdmin) ? ([{ href: '/dashboard/blog', label: 'Blog', icon: NotebookPen }] as const) : ([] as const)),
 			...(isSuperAdmin ? ([{ href: '/dashboard/docs', label: 'Docs', icon: Book }] as const) : ([] as const)),

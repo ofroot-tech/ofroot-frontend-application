@@ -8,7 +8,7 @@
 import LoginForm from '@/components/LoginForm';
 import Link from 'next/link';
 import FlashToast from '@/components/FlashToast';
-import PublicNavbar from '@/app/components/PublicNavbar';
+// PublicNavbar removed — global Navbar renders in app/layout
 
 export default async function LoginPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
   const sp = searchParams || {};
@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: { [ke
 
   return (
     <div className="relative">
-      <PublicNavbar />
+      
       {/* Background flourish for subtle depth */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
 

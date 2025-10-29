@@ -121,7 +121,7 @@ export default function PublicNavbar() {
         onClick={() => toggleMenu(false)}
         role="presentation"
         aria-hidden={!open}
-        className={`fixed inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 nav-backdrop-teal transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       />
 
       <div

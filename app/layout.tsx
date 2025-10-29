@@ -9,6 +9,11 @@ import Footer from "@/app/components/Footer";
 import ExitIntentPrompt from "@/components/ExitIntentPrompt";
 import ChatWidget from "@/components/ChatWidget";
 import { SITE } from './config/site';
+import AlphaTextReveal from "@/components/AlphaTextReveal";
+import SectionSnapperAll from "@/components/SectionSnapperAll";
+import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
+import SectionAutoChevron from "@/components/SectionAutoChevron";
+import LoadingOnClickManager from "@/components/LoadingOnClickManager";
 
 // Default site-wide metadata for SEO/SMO
 export const metadata: Metadata = {
@@ -86,6 +91,7 @@ export default function RootLayout({
         <AuthProvider>
           <Toaster />
           <ExitIntentPrompt />
+      <AlphaTextReveal />
           {/* Render Navbar at the top-level (outside overflow/transform wrappers)
               so it stays fixed relative to the viewport and above effects */}
           <Navbar />
@@ -101,6 +107,14 @@ export default function RootLayout({
               <span className="c8" />
             </div>
             <RevealObserver />
+            {/* Auto-enable snap/fade behavior wherever a page opts into .snap-page */}
+            <SectionSnapperAll />
+            {/* Smooth in-container anchor scrolling across the site */}
+            <SmoothAnchorScroll />
+            {/* Auto-inject glowing chevrons for next-section navigation */}
+            <SectionAutoChevron />
+            {/* Lightweight global loading state for CTA buttons */}
+            <LoadingOnClickManager />
             <main className="relative z-10 flex-1">{children}</main>
             <div className="relative z-10">
               <Footer />

@@ -2,6 +2,7 @@
 // Users — people, roles, last seen.
 
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { api, type AdminUser } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
@@ -42,6 +43,20 @@ export default async function UsersPage({ searchParams }: { searchParams?: Promi
     lastPage = 1;
   }
 
+  async function toggleBlogAddonAction(formData: FormData) {
+    'use server';
+    const token = await getToken();
+    if (!token) return;
+    const id = Number(formData.get('user_id'));
+    const next = String(formData.get('next')) === 'true';
+    try {
+      await api.adminUpdateUserFeatures(id, { has_blog_addon: next }, token);
+    } catch (e) {
+      // no-op: keep UX simple; admin list will refresh regardless
+    }
+    revalidatePath('/dashboard/users');
+  }
+
   return (
     <div className="space-y-6 reveal-in fade-only">
       <PageHeader
@@ -60,12 +75,13 @@ export default async function UsersPage({ searchParams }: { searchParams?: Promi
             { key: 'name', title: 'Name' },
             { key: 'email', title: 'Email' },
             { key: 'role', title: 'Role' },
+            { key: 'blog', title: 'Blog add-on' },
             { key: 'last', title: 'Last seen' },
             { key: 'actions', title: '', align: 'right' },
           ]}>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-gray-600">No users yet.</td>
+                <td colSpan={6} className="px-4 py-6 text-center text-gray-600">No users yet.</td>
               </tr>
             ) : (
               rows.map((u) => (
@@ -73,6 +89,18 @@ export default async function UsersPage({ searchParams }: { searchParams?: Promi
                   <td className="px-4 py-3">{u.name}</td>
                   <td className="px-4 py-3">{u.email}</td>
                   <td className="px-4 py-3">{u.top_role}</td>
+                  <td className="px-4 py-3">
+                    <form action={toggleBlogAddonAction} className="inline-flex items-center gap-2">
+                      <input type="hidden" name="user_id" value={u.id} />
+                      <input type="hidden" name="next" value={String(!u.has_blog_addon)} />
+                      <span className={`text-xs rounded-full px-2 py-0.5 ${u.has_blog_addon ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700'}`}>
+                        {u.has_blog_addon ? 'Enabled' : 'Disabled'}
+                      </span>
+                      <button type="submit" className="text-xs underline">
+                        {u.has_blog_addon ? 'Disable' : 'Enable'}
+                      </button>
+                    </form>
+                  </td>
                   <td className="px-4 py-3">—</td>
                   <td className="px-4 py-3 text-right"><button className="text-xs underline">View</button></td>
                 </tr>

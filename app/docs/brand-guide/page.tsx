@@ -5,8 +5,10 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import PublicNavbar from '@/app/components/PublicNavbar';
+// PublicNavbar removed — global Navbar renders in app/layout
 import { notFound } from 'next/navigation';
+import JsonLd from '@/components/seo/JsonLd';
+import { SITE } from '@/app/config/site';
 
 export const dynamic = 'force-static';
 
@@ -68,7 +70,31 @@ export default async function BrandGuidePage() {
 
   return (
     <div className="relative">
-      <PublicNavbar />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'TechArticle',
+          headline: 'Brand & UI Design Guide',
+          name: 'Brand & UI Design Guide',
+          url: `${SITE.url}/docs/brand-guide`,
+          inLanguage: 'en',
+          about: {
+            '@type': 'Thing',
+            name: 'Design System',
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: SITE.name,
+            url: SITE.url,
+            logo: {
+              '@type': 'ImageObject',
+              url: SITE.logo.url,
+              width: SITE.logo.width,
+              height: SITE.logo.height,
+            },
+          },
+        }}
+      />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
       <main className="mx-auto max-w-3xl px-4 md:px-6 pt-20 md:pt-24 pb-12 prose prose-gray">
         <div dangerouslySetInnerHTML={{ __html: html }} />
