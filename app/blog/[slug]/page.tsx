@@ -3,6 +3,7 @@ import { SITE } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
 import { notFound } from 'next/navigation';
 import { marked } from 'marked';
+import { sanitizeHtml } from '@/app/lib/sanitize';
 
 function formatDate(input?: string | null) {
   if (!input) return '';
@@ -60,7 +61,8 @@ export default async function BlogPostPage({ params, searchParams }: { params: {
   }
 
   const post = await fetchWithFallback();
-  const html = await marked.parse(post.body || '');
+  const rawHtml = await marked.parse(post.body || '');
+  const html = sanitizeHtml(rawHtml);
 
   const jsonLd = {
     '@context': 'https://schema.org',

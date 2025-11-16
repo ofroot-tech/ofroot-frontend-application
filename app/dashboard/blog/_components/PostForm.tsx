@@ -64,7 +64,11 @@ export function PostForm({
 
   /** Basic excerpt from ~160 chars of the body with word boundary trimming */
   function summarize(fromBody: string, max = 160) {
-    const clean = (fromBody || '').replace(/\s+/g, ' ').trim();
+    // Strip markdown syntax for cleaner excerpts
+    const clean = (fromBody || '')
+      .replace(/[#*_`>\-]+/g, ' ')  // Remove markdown formatting characters
+      .replace(/\s+/g, ' ')          // Normalize whitespace
+      .trim();
     if (clean.length <= max) return clean;
     const slice = clean.slice(0, max);
     const lastSpace = slice.lastIndexOf(' ');
