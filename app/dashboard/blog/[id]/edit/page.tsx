@@ -50,6 +50,16 @@ export default async function EditBlogPostPage({ params }: { params: { id: strin
     const slugRaw = String(formData.get('slug') || '').trim();
     const body = String(formData.get('body') || '').trim();
     const excerptVal = String(formData.get('excerpt') || '').trim();
+    const tagsPresent = formData.get('__tags_present') === '1';
+    const metaTitle = String(formData.get('meta_title') || '').trim();
+    const metaDescription = String(formData.get('meta_description') || '').trim();
+    const featuredImageUrl = String(formData.get('featured_image_url') || '').trim();
+    const tags = tagsPresent
+      ? formData
+          .getAll('tags[]')
+          .map((tag) => String(tag).trim())
+          .filter(Boolean)
+      : undefined;
     const status = (String(formData.get('status') || 'draft') === 'published' ? 'published' : 'draft') as 'draft'|'published';
 
     if (!title || !body) {
@@ -64,6 +74,13 @@ export default async function EditBlogPostPage({ params }: { params: { id: strin
       status,
       published_at: status === 'published' ? new Date().toISOString() : null,
     };
+
+    input.meta_title = metaTitle || (formData.has('meta_title') ? null : undefined);
+    input.meta_description = metaDescription || (formData.has('meta_description') ? null : undefined);
+    input.featured_image_url = featuredImageUrl || (formData.has('featured_image_url') ? null : undefined);
+    if (tagsPresent) {
+      input.tags = tags ?? [];
+    }
 
     // For super admins, ensure saves target the main OfRoot tenant when publishing
     try {
@@ -155,6 +172,10 @@ export default async function EditBlogPostPage({ params }: { params: { id: strin
             excerpt: post?.excerpt ?? undefined,
             body: post?.body,
             status: post?.status,
+            meta_title: post?.meta_title ?? undefined,
+            meta_description: post?.meta_description ?? undefined,
+            featured_image_url: post?.featured_image_url ?? undefined,
+            tags: post?.tags ?? undefined,
           }} />
         </CardBody>
       </Card>

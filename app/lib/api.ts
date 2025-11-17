@@ -216,6 +216,20 @@ export type Subscriber = {
 };
 
 // ---------- Blog ----------
+export type BlogPostAiContext = {
+  provider?: string | null;
+  model?: string | null;
+  mock?: boolean;
+  topic?: string;
+  options?: {
+    tone?: string | null;
+    keywords?: string[];
+    tenant_id?: number | null;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+} | null;
+
 export type BlogPost = {
   id: number;
   user_id: number;
@@ -224,6 +238,11 @@ export type BlogPost = {
   slug: string;
   excerpt?: string | null;
   body: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  featured_image_url?: string | null;
+  tags?: string[] | null;
+  ai_context?: BlogPostAiContext;
   status: 'draft' | 'published';
   published_at?: string | null;
   created_at?: string;
@@ -232,12 +251,35 @@ export type BlogPost = {
 
 export type BlogPostInput = {
   title: string;
+  slug?: string | null;
+  excerpt?: string | null;
+  body: string;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  featured_image_url?: string | null;
+  tags?: string[] | null;
+  ai_context?: BlogPostAiContext;
+  status?: 'draft' | 'published';
+  published_at?: string | null;
+  tenant_id?: number | null;
+};
+
+export type BlogPostGenerationInput = {
+  topic: string;
+  tone?: string | null;
+  keywords?: string[];
+};
+
+export type BlogPostGenerationResult = {
+  title: string;
   slug: string;
   excerpt?: string | null;
   body: string;
-  status: 'draft' | 'published';
-  published_at?: string | null;
-  tenant_id?: number | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  featured_image_url?: string | null;
+  tags?: string[] | null;
+  ai_context?: BlogPostAiContext;
 };
 
 // ---------- Generic Pagination ----------
@@ -481,6 +523,9 @@ export const api = {
   blogDelete(id: number, token: string) {
     return http.del<{ ok?: boolean }>(`/blog-posts/${id}`, { token });
   },
+  blogGenerate(input: BlogPostGenerationInput, token: string) {
+    return http.postJson<{ data: BlogPostGenerationResult }>(`/blog-posts/generate`, input, { token });
+  },
 
   // ---------- Chat ----------
   chatSend(message: string, token: string) {
@@ -528,17 +573,17 @@ export const api = {
       params.set('limit', String(lim));
     }
     const path = `/public/blog-posts${params.toString() ? `?${params.toString()}` : ''}`;
-    return http.get<{ ok: true; data: { items: Array<Pick<BlogPost, 'id' | 'title' | 'slug' | 'excerpt' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'>> } }>(path);
+    return http.get<{ ok: true; data: { items: Array<Pick<BlogPost, 'id' | 'title' | 'meta_title' | 'slug' | 'excerpt' | 'meta_description' | 'featured_image_url' | 'tags' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'>> } }>(path);
   },
   publicGetBlogPost(slug: string, tenantId: number) {
     const params = new URLSearchParams();
     params.set('tenant_id', String(tenantId));
     const path = `/public/blog-posts/${encodeURIComponent(slug)}?${params.toString()}`;
-    return http.get<{ ok: true; data: Pick<BlogPost, 'id' | 'title' | 'slug' | 'excerpt' | 'body' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'> }>(path);
+    return http.get<{ ok: true; data: Pick<BlogPost, 'id' | 'title' | 'meta_title' | 'slug' | 'excerpt' | 'meta_description' | 'featured_image_url' | 'tags' | 'body' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'> }>(path);
   },
   publicGetBlogPostAny(slug: string) {
     const path = `/public/blog-posts/${encodeURIComponent(slug)}`;
-    return http.get<{ ok: true; data: Pick<BlogPost, 'id' | 'title' | 'slug' | 'excerpt' | 'body' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'> }>(path);
+    return http.get<{ ok: true; data: Pick<BlogPost, 'id' | 'title' | 'meta_title' | 'slug' | 'excerpt' | 'meta_description' | 'featured_image_url' | 'tags' | 'body' | 'tenant_id' | 'published_at' | 'created_at' | 'updated_at'> }>(path);
   },
 
   // ---------- Public Config ----------

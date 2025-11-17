@@ -38,6 +38,16 @@ export default async function NewBlogPostPage() {
     const slugRaw = String(formData.get('slug') || '').trim();
     const body = String(formData.get('body') || '').trim();
     const excerptVal = String(formData.get('excerpt') || '').trim();
+    const tagsPresent = formData.get('__tags_present') === '1';
+    const metaTitle = String(formData.get('meta_title') || '').trim();
+    const metaDescription = String(formData.get('meta_description') || '').trim();
+    const featuredImageUrl = String(formData.get('featured_image_url') || '').trim();
+    const tags = tagsPresent
+      ? formData
+          .getAll('tags[]')
+          .map((tag) => String(tag).trim())
+          .filter(Boolean)
+      : [];
     const status = (String(formData.get('status') || 'draft') === 'published' ? 'published' : 'draft') as 'draft'|'published';
 
     if (!title || !body) {
@@ -53,6 +63,11 @@ export default async function NewBlogPostPage() {
       status,
       published_at: status === 'published' ? new Date().toISOString() : null,
     };
+
+    if (metaTitle) input.meta_title = metaTitle;
+    if (metaDescription) input.meta_description = metaDescription;
+    if (featuredImageUrl) input.featured_image_url = featuredImageUrl;
+    if (tagsPresent) input.tags = tags;
 
     // If user is super admin, publish to the main OfRoot tenant
     // a) on blog admin, if user is admin/super admin assume b)
