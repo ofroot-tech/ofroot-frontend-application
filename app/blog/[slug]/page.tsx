@@ -4,6 +4,13 @@ import JsonLd from '@/components/seo/JsonLd';
 import { notFound } from 'next/navigation';
 import { marked } from 'marked';
 
+// ------------------------------------------------------------
+// Force dynamic rendering to avoid build-time API failures
+// Reason: Blog posts are fetched from an external API that may not
+// be available during Vercel's static generation phase.
+// ------------------------------------------------------------
+export const dynamic = 'force-dynamic';
+
 function formatDate(input?: string | null) {
   if (!input) return '';
   try {

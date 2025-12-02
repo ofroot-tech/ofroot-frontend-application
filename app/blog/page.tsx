@@ -3,6 +3,13 @@ import JsonLd from '@/components/seo/JsonLd';
 import Link from 'next/link';
 import { api } from '@/app/lib/api';
 
+// ------------------------------------------------------------
+// Force dynamic rendering to avoid build-time API failures
+// Reason: The blog page fetches from an external API that may not
+// be available during Vercel's static generation phase.
+// ------------------------------------------------------------
+export const dynamic = 'force-dynamic';
+
 function formatDate(input?: string | null) {
   if (!input) return '';
   try {
@@ -14,8 +21,15 @@ function formatDate(input?: string | null) {
 }
 
 export default async function BlogPage() {
-  const res = await api.publicListBlogPosts({ limit: 24 });
-  const items = res.data.items || [];
+  let items: Awaited<ReturnType<typeof api.publicListBlogPosts>>['data']['items'] = [];
+  
+  try {
+    const res = await api.publicListBlogPosts({ limit: 24 });
+    items = res.data.items || [];
+  } catch (err) {
+    // Log error but don't crash - show empty state instead
+    console.error('[BlogPage] Failed to fetch posts:', err);
+  }
 
   const listLd = {
     '@context': 'https://schema.org',
