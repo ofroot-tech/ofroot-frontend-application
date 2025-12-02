@@ -337,16 +337,20 @@ export default function Navbar() {
               >
                 Contact Sales
               </ArrowButton>
+              {/* Console button temporarily hidden
               <ArrowButton href="/dashboard" variant="outline">
                 Console
               </ArrowButton>
+              */}
             </div>
 
             {/* Mobile: CTA + Hamburger */}
             <div className="flex lg:hidden items-center gap-4">
+              {/* Console button temporarily hidden
               <ArrowButton href="/dashboard" variant="outline" className="text-sm">
                 Console
               </ArrowButton>
+              */}
               <button
                 type="button"
                 onClick={() => toggleMobileMenu()}
@@ -442,6 +446,7 @@ export default function Navbar() {
                   <ArrowRight className="w-5 h-5 text-white" />
                 </a>
               </div>
+              {/* Console button temporarily hidden
               <div className="flex items-center justify-between">
                 <span className="text-[#20b2aa] text-base font-medium">Console</span>
                 <Link
@@ -453,6 +458,7 @@ export default function Navbar() {
                   <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
                 </Link>
               </div>
+              */}
             </div>
 
             {/* Divider */}
