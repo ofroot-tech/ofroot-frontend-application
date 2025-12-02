@@ -113,8 +113,8 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
       {page.features?.length ? (
   <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 reveal-in">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-            {page.features.map((f: any, i: number) => (
-              <div key={i} className="p-6 rounded-lg shadow border border-gray-200">
+            {page.features.map((f: any) => (
+              <div key={f.title} className="p-6 rounded-lg shadow border border-gray-200">
                 <div className="text-2xl mb-2">{f.emoji}</div>
                 <h3 className="font-semibold text-xl mb-1">{f.title}</h3>
                 <p className="text-gray-600">{f.text}</p>

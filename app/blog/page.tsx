@@ -58,7 +58,8 @@ export default async function BlogPage() {
                 >
                   <div
                     className={`md:w-1/3 w-full h-48 md:h-auto md:min-h-[12rem] flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]`}
-                    aria-hidden="true"
+                    role="img"
+                    aria-label={`Decorative background for ${post.title}`}
                   >
                     <div className={`w-full h-full ${i % 2 === 0 ? 'bg-black' : 'bg-[#20b2aa]'}`} />
                   </div>

@@ -29,14 +29,15 @@ function formatDate(value?: string | null) {
 export default async function BlogAdminPage({
   searchParams,
 }: {
-  searchParams?: { status?: string };
+  searchParams?: Promise<{ status?: string }>;
 }) {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
+  const resolvedParams = await searchParams;
   const requestedStatus =
-    searchParams?.status === 'draft' || searchParams?.status === 'published'
-      ? searchParams.status
+    resolvedParams?.status === 'draft' || resolvedParams?.status === 'published'
+      ? resolvedParams.status
       : undefined;
 
   let posts: BlogPost[] = [];

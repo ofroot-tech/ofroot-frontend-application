@@ -44,8 +44,9 @@ function mdToHtml(source: string) {
   return out.join('\n');
 }
 
-export default async function DocPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug.replace(/[^a-z0-9-_]/gi, '');
+export default async function DocPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: rawSlug } = await params;
+  const slug = rawSlug.replace(/[^a-z0-9-_]/gi, '');
 
   // First, try backend (DB) doc
   try {

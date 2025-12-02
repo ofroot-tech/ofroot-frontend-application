@@ -10,8 +10,10 @@ import Link from 'next/link';
 import FlashToast from '@/components/FlashToast';
 // PublicNavbar removed — global Navbar renders in app/layout
 
-export default async function LoginPage({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-  const sp = searchParams || {};
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default async function LoginPage({ searchParams }: { searchParams?: SearchParams }) {
+  const sp = (await searchParams) || {};
   const flash = typeof sp.flash === 'string' ? sp.flash : undefined;
 
   return (

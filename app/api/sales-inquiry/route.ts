@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const TO_EMAIL = process.env.CONTACT_EMAIL || process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'ofroot.technology@gmail.com';
+const TO_EMAIL = process.env.CONTACT_EMAIL || process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'communications@ofroot.technology';
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM || 'no-reply@ofroot.technology';
 const FROM_NAME = process.env.RESEND_FROM_NAME || 'OfRoot';

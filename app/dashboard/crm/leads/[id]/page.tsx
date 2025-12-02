@@ -13,8 +13,8 @@ async function getToken() {
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
-export default async function LeadDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const leadId = Number(id);
   const token = await getToken();
   if (!token) redirect('/auth/login');

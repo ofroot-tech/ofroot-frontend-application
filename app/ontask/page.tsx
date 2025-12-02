@@ -27,14 +27,6 @@ export default function OnTaskLanding() {
           </div>
           <p className="mt-3 text-sm text-gray-600">Starter $25/month • Cancel anytime • No long setup</p>
         </div>
-        {/* Scroll chevron indicator */}
-        <div className="pointer-events-auto absolute inset-x-0 bottom-6 flex justify-center">
-          <a href="#social-proof" className="scroll-indicator" aria-label="Scroll">
-            <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </a>
-        </div>
       </section>
 
   {/* Social Proof */}

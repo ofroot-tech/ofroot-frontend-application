@@ -14,16 +14,12 @@ function formatDate(input?: string | null) {
   }
 }
 
-type RouteParams = Promise<{ slug: string }> | { slug: string };
-type RouteSearchParams = Promise<{ [k: string]: string | string[] | undefined }> | { [k: string]: string | string[] | undefined };
-
-function isPromise<T>(value: T | Promise<T>): value is Promise<T> {
-  return typeof (value as any)?.then === 'function';
-}
+type RouteParams = Promise<{ slug: string }>;
+type RouteSearchParams = Promise<{ [k: string]: string | string[] | undefined }>;
 
 export default async function BlogPostPage({ params, searchParams }: { params: RouteParams; searchParams: RouteSearchParams }) {
-  const resolvedParams = isPromise(params) ? await params : params;
-  const resolvedSearch = isPromise(searchParams) ? await searchParams : searchParams;
+  const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
 
   const slug = decodeURIComponent(resolvedParams.slug);
   const qTenant = Array.isArray(resolvedSearch?.tenant_id) ? resolvedSearch?.tenant_id[0] : resolvedSearch?.tenant_id;

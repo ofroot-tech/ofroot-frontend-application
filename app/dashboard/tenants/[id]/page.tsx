@@ -30,14 +30,15 @@ async function fetchTenantById(id: number, token: string): Promise<Tenant | null
   return null;
 }
 
-export default async function TenantDetailPage({ params }: { params: { id: string } }) {
+export default async function TenantDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
   const me = await api.me(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!Number.isFinite(id)) redirect('/dashboard/tenants');
 
   const tenant = await fetchTenantById(id, token);

@@ -4,12 +4,12 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { toast } from '@/components/Toaster';
 import { useRouter } from 'next/navigation';
 
-export default function EditDocPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default function EditDocPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [loading, setLoading] = useState(true);

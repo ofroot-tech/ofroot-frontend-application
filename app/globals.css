@@ -5,6 +5,14 @@
   --background: #ffffff;
   --foreground: #171717;
 
+  /* Brand color tokens */
+  --color-primary: #20b2aa;          /* Teal - primary brand color */
+  --color-primary-dark: #1a8f85;     /* Darker teal for hover/active states */
+  --color-primary-light: #3cc4bc;    /* Lighter teal for accents */
+  --color-accent: #ffe082;           /* Gold/amber accent */
+  --color-text: #171717;             /* Default text color */
+  --color-text-muted: #6b7280;       /* Muted/secondary text */
+
   /* typographic scale tokens (used by clamp rules below) */
   --type-min: 14px;      /* minimum readable size on smallest devices */
   --type-mid: 16px;      /* preferred base */
@@ -60,22 +68,18 @@ h2 {
   line-height: 1.08;
 }
 
-/* Enforce heading colors globally */
-h1, h2 {
-  color: #000 !important;
+/*
+  Text color defaults
+  - Uses CSS variables for consistent theming
+  - Can be overridden by component-specific styles where needed
+*/
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text);
 }
 
-/*
-  Hard color lock for headings and paragraphs
-  - Requirement: Regardless of browser or system theme, ensure all headings and
-    paragraph content render as black.
-  - This overrides component or dark-mode styles that might change text color.
-*/
-body { color: #000 !important; }
-:where(h1,h2,h3,h4,h5,h6),
-:where(h1,h2,h3,h4,h5,h6) * { color: #000 !important; }
-:where(p),
-:where(p) * { color: #000 !important; }
+body {
+  color: var(--color-text);
+}
 
 h3 {
   font-size: clamp(1.125rem, 1rem + 1.2vw, 1.75rem);
@@ -638,7 +642,7 @@ body.ofroot-nav-fading .promo-banner {
   height: 100svh;
   overflow-y: auto;
   overscroll-behavior: auto; /* allow natural chaining to the outer document at boundaries */
-  scroll-snap-type: y mandatory; /* ensure only one section is centered */
+  scroll-snap-type: y proximity; /* gentle snap - allows smooth free scrolling */
   scroll-behavior: smooth; /* smooth in-container anchor scrolls */
   /* Reserve space to avoid layout shift when the scrollbar appears (where supported) */
   scrollbar-gutter: stable both-edges;
@@ -701,12 +705,59 @@ body.ofroot-nav-fading .promo-banner {
   padding-top: clamp(2rem, 6vw, 6rem);
   padding-bottom: clamp(2rem, 6vw, 6rem);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal; /* allow smooth scrolling past sections */
 }
-.snap-fade { transition: opacity 420ms var(--reveal-ease), transform 420ms var(--reveal-ease); will-change: opacity, transform; }
-.snap-fade.is-past { opacity: 0; transform: translateY(-8px); pointer-events: none; }
-.snap-fade.is-active { opacity: 1; transform: none; pointer-events: auto; }
-.snap-fade.is-future { opacity: 0; pointer-events: none; }
+
+/**
+ * Progressive reveal animation using CSS custom property --section-progress
+ * Set by SectionSnapper.tsx based on scroll position:
+ * - 10% scrolled in = 0% visible
+ * - 80% scrolled in = 100% visible
+ */
+.snap-fade {
+  --section-progress: 0;
+  /* Smooth opacity transition based on progress */
+  opacity: calc(0.05 + (var(--section-progress) * 0.95));
+  /* Clip from bottom: at 0% progress, clip 90%; at 100% progress, clip 0% */
+  clip-path: inset(0 0 calc((1 - var(--section-progress)) * 70%) 0);
+  /* Gentle upward movement as section reveals */
+  transform: translateY(calc((1 - var(--section-progress)) * 20px));
+  transition: opacity 150ms ease-out, clip-path 150ms ease-out, transform 150ms ease-out;
+  will-change: opacity, clip-path, transform;
+}
+
+/* First section should always be fully visible */
+.snap-page [data-snap-section]:first-of-type.snap-fade {
+  --section-progress: 1;
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+}
+
+/* Active state - fully visible */
+.snap-fade.is-active {
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Past sections - scrolled above viewport */
+.snap-fade.is-past {
+  opacity: 0.3;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Future sections - still below viewport, partially visible based on progress */
+.snap-fade.is-future {
+  pointer-events: none;
+}
+
+/* Entering state - section is partially revealed */
+.snap-fade.is-entering {
+  pointer-events: auto;
+}
 
 /* Lower modal/card slightly when opened so it visually centers lower on the screen */
 .modal-lowered {

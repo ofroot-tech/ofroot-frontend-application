@@ -18,11 +18,12 @@ async function getToken() {
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
-export default async function InvoiceDetailPage({ params }: { params: { id: string } }) {
+export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!Number.isFinite(id)) redirect('/dashboard/billing');
 
   const [res, tenantsRes, usersRes] = await Promise.all([

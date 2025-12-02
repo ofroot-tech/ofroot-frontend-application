@@ -9,10 +9,11 @@ async function getToken() {
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
-export default async function PrintInvoicePage({ params }: { params: { id: string } }) {
+export default async function PrintInvoicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const token = await getToken();
   if (!token) redirect('/auth/login');
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!Number.isFinite(id)) redirect('/dashboard/billing');
   const res = await api.adminGetInvoice(id, token).catch(() => null);
   const inv = res?.data;

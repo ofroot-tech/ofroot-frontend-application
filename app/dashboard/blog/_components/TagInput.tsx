@@ -50,7 +50,7 @@ export function TagInput({ value, onChange, label, placeholder = 'Add a tag and 
       {label ? (
         <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       ) : null}
-      <div className="rounded-md border bg-white px-2 py-2 text-sm">
+      <div className="rounded-md border bg-white px-2 py-2 text-sm focus-within:ring-2 focus-within:ring-[#20b2aa] focus-within:border-[#20b2aa]">
         <div className="flex flex-wrap items-center gap-1">
           {value.map((tag) => (
             <button

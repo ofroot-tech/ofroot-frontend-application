@@ -163,6 +163,90 @@ export type Contact = {
 };
 export type ContactInput = Omit<Contact, 'id' | 'created_at' | 'updated_at'>;
 
+// ---------- Employee & Payroll Supporting Types ----------
+export type EmployeeTaxProfile = {
+  id: number;
+  employee_id: number;
+  filing_status: 'single' | 'married' | 'married_separately' | 'head_of_household' | string;
+  allowances: number;
+  extra_withholding_cents: number;
+  state?: string | null;
+  locality?: string | null;
+  exempt_federal?: boolean;
+  exempt_state?: boolean;
+  metadata?: Record<string, any> | null;
+  updated_at?: string | null;
+};
+
+export type BenefitEnrollment = {
+  id: number;
+  benefit_plan_id: number;
+  employee_id: number;
+  status: 'pending' | 'active' | 'waived' | 'terminated';
+  effective_date?: string | null;
+  end_date?: string | null;
+  employee_contribution_cents?: number;
+  employer_contribution_cents?: number;
+  metadata?: Record<string, any> | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type BenefitPlan = {
+  id: number;
+  tenant_id: number;
+  name: string;
+  type: 'medical' | 'dental' | 'vision' | 'retirement' | 'stipend' | 'other' | string;
+  provider?: string | null;
+  description?: string | null;
+  pretax?: boolean;
+  default_employee_percent?: number | null;
+  default_employee_amount_cents?: number | null;
+  default_employer_percent?: number | null;
+  default_employer_amount_cents?: number | null;
+  active: boolean;
+  carrier_metadata?: Record<string, any> | null;
+  enrollments?: BenefitEnrollment[] | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type Employee = {
+  id: number;
+  tenant_id: number;
+  user_id?: number | null;
+  manager_id?: number | null;
+  first_name: string;
+  last_name: string;
+  preferred_name?: string | null;
+  email: string;
+  phone?: string | null;
+  job_title?: string | null;
+  department?: string | null;
+  employment_type: 'full_time' | 'part_time' | 'contractor';
+  compensation_type: 'salary' | 'hourly' | 'contract';
+  status: 'draft' | 'active' | 'on_leave' | 'terminated';
+  hire_date?: string | null;
+  termination_date?: string | null;
+  base_salary_cents?: number | null;
+  hourly_rate_cents?: number | null;
+  overtime_multiplier?: number | null;
+  address?: Record<string, any> | null;
+  metadata?: Record<string, any> | null;
+  avatar_url?: string | null;
+  location?: string | null;
+  tax_profile?: EmployeeTaxProfile | null;
+  benefit_enrollments?: BenefitEnrollment[] | null;
+  compensation_profile?: {
+    salary_type?: 'salary' | 'hourly' | 'contract';
+    amount_cents?: number | null;
+    pay_frequency?: string | null;
+    effective_date?: string | null;
+  } | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
 // ---------- User ----------
 export type User = {
   id: number;
@@ -359,6 +443,141 @@ export type Invoice = {
   payments?: Payment[];
   payments_count?: number;
   items_count?: number;
+};
+
+// ---------- Payroll & Time ----------
+export type PaySchedule = {
+  id: number;
+  tenant_id: number;
+  name: string;
+  frequency: 'weekly' | 'biweekly' | 'semimonthly' | 'monthly' | 'custom';
+  timezone: string;
+  period_anchor_day?: number | null;
+  period_anchor_date?: number | null;
+  pay_day_offset?: number | null;
+  next_run_on?: string | null;
+  last_run_ended_on?: string | null;
+  active: boolean;
+  settings?: Record<string, any> | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type PayrollRun = {
+  id: number;
+  tenant_id: number;
+  pay_schedule_id: number;
+  sequence: number;
+  period_start: string | null;
+  period_end: string | null;
+  check_date: string | null;
+  status: 'draft' | 'pending_approval' | 'approved' | 'processed' | string;
+  total_gross_cents: number;
+  total_net_cents: number;
+  total_employee_taxes_cents: number | null;
+  total_employer_taxes_cents: number | null;
+  total_deductions_cents: number | null;
+  summary?: Record<string, any> | null;
+  submitted_by?: number | null;
+  locked_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type PayrollRunEntry = {
+  id: number;
+  payroll_run_id: number;
+  employee_id: number;
+  hours_worked?: number | null;
+  gross_pay_cents?: number | null;
+  net_pay_cents?: number | null;
+  metadata?: Record<string, any> | null;
+};
+
+export type TimeEntry = {
+  id: number;
+  tenant_id: number;
+  employee_id: number;
+  started_at?: string | null;
+  ended_at?: string | null;
+  break_minutes?: number | null;
+  hours: number;
+  source?: 'manual' | 'web' | 'mobile' | 'kiosk' | null;
+  status: 'pending' | 'approved' | 'rejected';
+  notes?: string | null;
+  approved_by?: number | null;
+  approved_at?: string | null;
+  metadata?: Record<string, any> | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+export type TimeOffRequest = {
+  id: number;
+  tenant_id: number;
+  employee_id: number;
+  type: string;
+  start_date: string | null;
+  end_date: string | null;
+  hours: number;
+  status: 'pending' | 'approved' | 'denied' | 'cancelled';
+  reason?: string | null;
+  approver_id?: number | null;
+  decision_at?: string | null;
+  balance_snapshot_hours?: number | null;
+  metadata?: Record<string, any> | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
+type RosterAggregates = {
+  active?: number;
+  onboarding?: number;
+  contractors?: number;
+  terminated?: number;
+  salaries_total_cents?: number;
+  hourly_total_cents?: number;
+};
+
+export type TenantBrandSettings = {
+  tenant_id: number;
+  display_name?: string | null;
+  logo_url?: string | null;
+  primary_color?: string | null;
+  accent_color?: string | null;
+  font_family?: string | null;
+  options?: Record<string, any> | null;
+  updated_at?: string | null;
+};
+
+export type PayrollTrendPoint = {
+  label: string;
+  gross_cents: number;
+  net_cents: number;
+  deductions_cents?: number | null;
+};
+
+export type PayrollAnalytics = {
+  range: '7d' | '30d' | '90d';
+  cost_trend: PayrollTrendPoint[];
+  variance?: {
+    period: string;
+    delta_percent: number;
+    delta_cents?: number | null;
+    direction: 'up' | 'down' | 'flat';
+    drivers?: string[];
+  };
+  headcount?: {
+    total: number;
+    contractors: number;
+    new_hires: number;
+    terminations: number;
+  };
+  run_health?: {
+    drafts: number;
+    pending: number;
+    processed: number;
+  };
 };
 
 // ============================================================
@@ -641,6 +860,179 @@ export const api = {
   publicGetInvoiceByExternalId(externalId: string) {
     return http.get<{ data: Invoice }>(`/public/invoices/${encodeURIComponent(externalId)}`);
   },
+
+    // ---------- Payroll ----------
+    payrollListSchedules(token: string, opts: { tenant_id: number; page?: number; per_page?: number; active?: boolean }) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.page) params.set('page', String(opts.page));
+      if (opts.per_page) params.set('per_page', String(opts.per_page));
+      if (opts.active != null) params.set('active', String(opts.active ? 1 : 0));
+      const path = `/payroll/schedules?${params.toString()}`;
+      return http.get<{ data: PaySchedule[]; meta: Paginated<unknown>['meta'] }>(path, { token });
+    },
+    payrollCreateSchedule(
+      token: string,
+      input: {
+        tenant_id: number;
+        name: string;
+        frequency: PaySchedule['frequency'];
+        timezone: string;
+        period_anchor_day?: number | null;
+        period_anchor_date?: number | null;
+        pay_day_offset?: number | null;
+        next_run_on?: string | null;
+        last_run_ended_on?: string | null;
+        active?: boolean;
+        settings?: Record<string, any> | null;
+      }
+    ) {
+      return http.postJson<{ data: PaySchedule }>(`/payroll/schedules`, input, { token });
+    },
+    payrollCreateRun(
+      token: string,
+      input: {
+        tenant_id: number;
+        pay_schedule_id: number;
+        period_start: string;
+        period_end: string;
+        check_date?: string | null;
+        summary?: Record<string, any> | null;
+      }
+    ) {
+      return http.postJson<{ data: PayrollRun }>(`/payroll/runs`, input, { token });
+    },
+    payrollSubmitRun(id: number, token: string, tenantId: number) {
+      return http.postJson<{ data: PayrollRun }>(`/payroll/runs/${id}/submit`, { tenant_id: tenantId }, { token });
+    },
+    payrollApproveRun(id: number, token: string, tenantId: number) {
+      return http.postJson<{ data: PayrollRun }>(`/payroll/runs/${id}/approve`, { tenant_id: tenantId }, { token });
+    },
+    payrollGetRun(id: number, token: string, tenantId: number) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(tenantId));
+      const path = `/payroll/runs/${id}?${params.toString()}`;
+      return http.get<{ data: PayrollRun }>(path, { token });
+    },
+    payrollListTimeEntries(token: string, opts: { tenant_id: number; status?: TimeEntry['status']; page?: number; per_page?: number }) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.status) params.set('status', opts.status);
+      if (opts.page) params.set('page', String(opts.page));
+      if (opts.per_page) params.set('per_page', String(opts.per_page));
+      const path = `/payroll/time-entries?${params.toString()}`;
+      return http.get<{ data: TimeEntry[]; meta: Paginated<unknown>['meta'] }>(path, { token });
+    },
+    payrollApproveTimeEntry(id: number, token: string, tenantId: number) {
+      return http.postJson<{ data: TimeEntry }>(`/payroll/time-entries/${id}/approve`, { tenant_id: tenantId }, { token });
+    },
+    payrollRejectTimeEntry(id: number, token: string, tenantId: number, note?: string) {
+      const payload: Record<string, unknown> = { tenant_id: tenantId };
+      if (note) payload.note = note;
+      return http.postJson<{ data: TimeEntry }>(`/payroll/time-entries/${id}/reject`, payload, { token });
+    },
+    payrollListTimeOffRequests(token: string, opts: { tenant_id: number; status?: TimeOffRequest['status']; page?: number; per_page?: number }) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.status) params.set('status', opts.status);
+      if (opts.page) params.set('page', String(opts.page));
+      if (opts.per_page) params.set('per_page', String(opts.per_page));
+      const path = `/payroll/time-off-requests?${params.toString()}`;
+      return http.get<{ data: TimeOffRequest[]; meta: Paginated<unknown>['meta'] }>(path, { token });
+    },
+    payrollDecideTimeOffRequest(
+      id: number,
+      token: string,
+      input: { tenant_id: number; action: 'approve' | 'deny' | 'cancel'; note?: string; balance_snapshot_hours?: number | null }
+    ) {
+      return http.postJson<{ data: TimeOffRequest }>(`/payroll/time-off-requests/${id}/decide`, input, { token });
+    },
+    payrollListEmployees(
+      token: string,
+      opts: { tenant_id: number; page?: number; per_page?: number; status?: Employee['status']; q?: string; include?: Array<'tax_profile' | 'benefits' | 'compensation'> }
+    ) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.page) params.set('page', String(opts.page));
+      if (opts.per_page) params.set('per_page', String(opts.per_page));
+      if (opts.status) params.set('status', opts.status);
+      if (opts.q) params.set('q', opts.q);
+      if (opts.include?.length) params.set('include', opts.include.join(','));
+      const path = `/payroll/employees?${params.toString()}`;
+      return http.get<{ data: Employee[]; meta: Paginated<unknown>['meta'] & { aggregates?: RosterAggregates } }>(path, { token });
+    },
+    payrollCreateEmployee(
+      token: string,
+      input: {
+        tenant_id: number;
+        first_name: string;
+        last_name: string;
+        email: string;
+        job_title?: string | null;
+        department?: string | null;
+        employment_type: Employee['employment_type'];
+        compensation_type: Employee['compensation_type'];
+        base_salary_cents?: number | null;
+        hourly_rate_cents?: number | null;
+        hire_date?: string | null;
+        location?: string | null;
+        phone?: string | null;
+      }
+    ) {
+      return http.postJson<{ data: Employee }>(`/payroll/employees`, input, { token });
+    },
+    payrollBulkUpdateTaxProfiles(
+      token: string,
+      input: {
+        tenant_id: number;
+        employee_ids: number[];
+        filing_status?: EmployeeTaxProfile['filing_status'];
+        allowances?: number;
+        extra_withholding_cents?: number;
+        exempt_federal?: boolean;
+        exempt_state?: boolean;
+      }
+    ) {
+      return http.postJson<{ ok: true }>(`/payroll/employees/bulk-tax`, input, { token });
+    },
+    payrollListBenefitPlans(token: string, opts: { tenant_id: number; include?: Array<'enrollments'>; active?: boolean }) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.include?.length) params.set('include', opts.include.join(','));
+      if (opts.active != null) params.set('active', String(opts.active ? 1 : 0));
+      const path = `/payroll/benefit-plans?${params.toString()}`;
+      return http.get<{ data: BenefitPlan[] }>(path, { token });
+    },
+    payrollBulkEnrollBenefits(
+      token: string,
+      input: {
+        tenant_id: number;
+        benefit_plan_id: number;
+        employee_ids: number[];
+        status?: BenefitEnrollment['status'];
+        effective_date?: string | null;
+        employee_contribution_cents?: number | null;
+        employer_contribution_cents?: number | null;
+      }
+    ) {
+      return http.postJson<{ ok: true }>(`/payroll/benefits/bulk-enroll`, input, { token });
+    },
+    payrollAnalyticsOverview(token: string, opts: { tenant_id: number; range?: '7d' | '30d' | '90d' }) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(opts.tenant_id));
+      if (opts.range) params.set('range', opts.range);
+      const path = `/payroll/analytics/overview?${params.toString()}`;
+      return http.get<{ data: PayrollAnalytics }>(path, { token });
+    },
+    payrollGetBrandSettings(token: string, tenantId: number) {
+      const params = new URLSearchParams();
+      params.set('tenant_id', String(tenantId));
+      const path = `/payroll/branding?${params.toString()}`;
+      return http.get<{ data: TenantBrandSettings }>(path, { token });
+    },
+    payrollUpdateBrandSettings(token: string, input: TenantBrandSettings & { tenant_id: number }) {
+      return http.putJson<{ data: TenantBrandSettings }>(`/payroll/branding`, input, { token });
+    },
 };
 
 // ============================================================

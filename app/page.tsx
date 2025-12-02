@@ -335,14 +335,6 @@ export default function HomePage() {
             </div>
           </main>
         </div>
-        {/* Scroll chevron indicator */}
-        <div className="pointer-events-auto absolute inset-x-0 bottom-6 flex justify-center">
-          <a href="#services" className="scroll-indicator" aria-label="Scroll">
-            <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </a>
-        </div>
       </section>
 
       {/* Content area */}
@@ -617,11 +609,7 @@ export default function HomePage() {
                 <h3 className="font-semibold text-lg md:text-xl mb-3 md:mb-4 text-[#20b2aa]">Contact Information</h3>
                 <div className="space-y-3 text-left">
                   <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📝</span><a className="underline" href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer">Open contact form</a></p>
-                  <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📧</span><span>{CONTACT_EMAIL_PUBLIC}</span></p>
-                  <p className="flex items-center">
-                    <span className="text-[#20b2aa] mr-3">📞</span>
-                    <span>+1 (614) 500-2315</span>
-                  </p>
+                  <p className="flex items-center"><span className="text-[#20b2aa] mr-3">📧</span><a href={`mailto:${CONTACT_EMAIL_PUBLIC}`} className="underline">{CONTACT_EMAIL_PUBLIC}</a></p>
                 </div>
               </div>
 

@@ -7,12 +7,11 @@ import Toaster from "@/components/Toaster";
 import RevealObserver from "@/app/components/RevealObserver";
 import Footer from "@/app/components/Footer";
 import ExitIntentPrompt from "@/components/ExitIntentPrompt";
-import ChatWidget from "@/components/ChatWidget";
+// import ChatWidget from "@/components/ChatWidget"; // Temporarily disabled
 import { SITE } from './config/site';
 import AlphaTextReveal from "@/components/AlphaTextReveal";
 import SectionSnapperAll from "@/components/SectionSnapperAll";
 import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
-import SectionAutoChevron from "@/components/SectionAutoChevron";
 import LoadingOnClickManager from "@/components/LoadingOnClickManager";
 
 // Default site-wide metadata for SEO/SMO
@@ -111,8 +110,6 @@ export default function RootLayout({
             <SectionSnapperAll />
             {/* Smooth in-container anchor scrolling across the site */}
             <SmoothAnchorScroll />
-            {/* Auto-inject glowing chevrons for next-section navigation */}
-            <SectionAutoChevron />
             {/* Lightweight global loading state for CTA buttons */}
             <LoadingOnClickManager />
             <main className="relative z-10 flex-1">{children}</main>
@@ -120,7 +117,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </div>
-          <ChatWidget />
+          {/* <ChatWidget /> */}{/* Chat temporarily disabled */}
           {/* Organization + WebSite JSON-LD (SSR) */}
           <script
             type="application/ld+json"

@@ -88,8 +88,8 @@ export default async function ContactsPage({ searchParams }: { searchParams?: Pr
                   <td className="px-4 py-3">
                     {(c.segments && c.segments.length > 0) ? (
                       <div className="flex flex-wrap gap-1">
-                        {c.segments.map((s, i) => (
-                          <span key={i} className="text-xs rounded-full px-2 py-0.5 bg-gray-100 text-gray-700">{s}</span>
+                        {c.segments.map((s) => (
+                          <span key={s} className="text-xs rounded-full px-2 py-0.5 bg-gray-100 text-gray-700">{s}</span>
                         ))}
                       </div>
                     ) : '—'}

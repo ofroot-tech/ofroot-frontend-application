@@ -1,295 +1,489 @@
 'use client';
 
+/**
+ * Navbar Component - Vast.ai Inspired Design
+ * 
+ * A modern, dark navigation bar with:
+ * - Desktop: Horizontal nav with dropdowns, CTAs on right
+ * - Mobile: Logo + CTA + hamburger that opens full-screen dark drawer
+ * 
+ * Design inspired by vast.ai navigation patterns.
+ */
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { type MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { X, Cog, Star, PlayCircle, CheckCircle, BookOpen, ExternalLink, Mail, MessageCircle, Home } from 'lucide-react';
-import { useEffect as ReactUseEffect } from 'react';
-import { useLiquidOpen } from '@/app/lib/ui/useLiquidOpen';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { X, ChevronDown, ArrowRight } from 'lucide-react';
+
+/* ─────────────────────────────────────────────────────────────
+   Navigation Data Structure
+   ───────────────────────────────────────────────────────────── */
+type NavLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
 
 type NavItem = {
   label: string;
   href?: string;
   external?: boolean;
-  chat?: boolean;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  children?: NavLink[];
 };
 
+const navItems: NavItem[] = [
+  { label: 'Services', href: '/services' },
+  { label: 'Build', href: '/build' },
+  {
+    label: 'Products',
+    children: [
+      { label: 'OnTask', href: '/ontask' },
+      { label: 'Case Studies', href: '/case-studies' },
+    ],
+  },
+  { label: 'Blog', href: '/blog' },
+  {
+    label: 'Company',
+    children: [
+      { label: 'About', href: '/#services' },
+      { label: 'Substack', href: 'https://substack.com/@ofroot/posts', external: true },
+    ],
+  },
+];
+
+/* ─────────────────────────────────────────────────────────────
+   Desktop Dropdown Component
+   ───────────────────────────────────────────────────────────── */
+function DesktopDropdown({ item }: { item: NavItem }) {
+  const [open, setOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        type="button"
+        className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors text-sm font-medium"
+        aria-expanded={open}
+        aria-haspopup="true"
+      >
+        {item.label}
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Dropdown Panel */}
+      <div
+        className={`absolute top-full left-0 mt-2 min-w-[180px] rounded-lg bg-[#1a1a1a] border border-gray-800 shadow-xl py-2 transition-all duration-200 ${
+          open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+        }`}
+      >
+        {item.children?.map((child) => (
+          <Link
+            key={child.label}
+            href={child.href}
+            target={child.external ? '_blank' : undefined}
+            rel={child.external ? 'noopener noreferrer' : undefined}
+            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+            onClick={() => setOpen(false)}
+          >
+            {child.label}
+            {child.external && (
+              <span className="ml-1 text-gray-500">↗</span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile Dropdown Component
+   ───────────────────────────────────────────────────────────── */
+function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full text-white text-base font-medium py-2"
+        aria-expanded={open}
+      >
+        {item.label}
+        <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Expanded Children */}
+      <div
+        className={`overflow-hidden transition-all duration-200 ${
+          open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="pl-4 py-2 space-y-2">
+          {item.children?.map((child) => (
+            <Link
+              key={child.label}
+              href={child.href}
+              target={child.external ? '_blank' : undefined}
+              rel={child.external ? 'noopener noreferrer' : undefined}
+              className="block text-gray-400 hover:text-white text-sm py-1.5 transition-colors"
+              onClick={onNavigate}
+            >
+              {child.label}
+              {child.external && <span className="ml-1">↗</span>}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Arrow Button Component (Vast.ai style)
+   ───────────────────────────────────────────────────────────── */
+function ArrowButton({
+  href,
+  children,
+  variant = 'outline',
+  external = false,
+  className = '',
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  variant?: 'outline' | 'primary';
+  external?: boolean;
+  className?: string;
+  onClick?: () => void;
+}) {
+  const baseClasses = 'inline-flex items-center gap-2 text-sm font-medium transition-all duration-200';
+  const variantClasses =
+    variant === 'primary'
+      ? 'text-[#20b2aa] hover:text-[#3cc4bc]'
+      : 'text-white hover:text-gray-300';
+
+  const content = (
+    <>
+      {children}
+      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full border ${
+        variant === 'primary' ? 'border-[#20b2aa]' : 'border-current'
+      }`}>
+        <ArrowRight className="w-3.5 h-3.5" />
+      </span>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClasses} ${variantClasses} ${className}`}
+        onClick={onClick}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={`${baseClasses} ${variantClasses} ${className}`} onClick={onClick}>
+      {content}
+    </Link>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Main Navbar Component
+   ───────────────────────────────────────────────────────────── */
 export default function Navbar() {
-  const pathname = (usePathname() ?? '/') || '/';
+  const pathname = usePathname() ?? '/';
   const normalized = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
-  // Render navbar on all pages by default. Certain layouts (like /landing/*)
-  // intentionally omit the global navbar; detect and hide for those paths.
-  // Also hide on dashboard routes so the dashboard's internal sidebar/header isn't occluded.
+
+  // Hide navbar on landing pages and dashboard (they have their own nav)
   const shouldRenderNav = !normalized.startsWith('/landing') && !normalized.startsWith('/dashboard');
 
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [liveMessage, setLiveMessage] = useState('');
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
-  const overlayPanelRef = useLiquidOpen(visible, {
-    spring: { stiffness: 420, damping: 36 },
-    mode: open ? 'open' : 'close',
-    shape: 'roundedRect',
-    borderRadius: 24, // match md:rounded-3xl
-    // Let LiquidOpen compute center from bounds (slightly top-biased by default)
-  }) as unknown as React.RefObject<HTMLDivElement>;
 
-  const toggleMenu = (next = !open) => {
-    setOpen(next);
-    setLiveMessage(next ? 'Navigation opened' : 'Navigation closed');
+  const toggleMobileMenu = (next = !mobileMenuOpen) => {
+    setMobileMenuOpen(next);
+    setLiveMessage(next ? 'Navigation menu opened' : 'Navigation menu closed');
   };
 
-  // Keep overlay mounted briefly to play close animation
-  useEffect(() => {
-    if (open) {
-      setVisible(true);
-      return;
-    }
-    const t = setTimeout(() => setVisible(false), 220);
-    return () => clearTimeout(t);
-  }, [open]);
+  const closeMobileMenu = () => {
+    toggleMobileMenu(false);
+  };
 
-  // focus trap & body scroll lock
+  // Focus trap and body scroll lock for mobile menu
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return;
+      if (!mobileMenuOpen) return;
       if (e.key === 'Escape') {
         e.preventDefault();
-        toggleMenu(false);
+        toggleMobileMenu(false);
       }
       if (e.key === 'Tab') {
         const container = menuRef.current;
         if (!container) return;
         const focusable = Array.from(
-          container.querySelectorAll<HTMLElement>('button,a[href]')
+          container.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])')
         ).filter((el) => !el.hasAttribute('disabled'));
         if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-        if (e.shiftKey && active === first) {
+        if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
-        } else if (!e.shiftKey && active === last) {
+        } else if (!e.shiftKey && document.activeElement === last) {
           e.preventDefault();
           first.focus();
         }
       }
     };
 
-    if (open) {
+    if (mobileMenuOpen) {
       previouslyFocused.current = document.activeElement as HTMLElement | null;
       setTimeout(() => {
-        const container = menuRef.current;
-        if (!container) return;
-        const focusable = container.querySelectorAll<HTMLElement>('button,a[href]');
-        if (focusable.length) focusable[0]?.focus();
+        menuRef.current?.querySelector<HTMLElement>('button, a[href]')?.focus();
       }, 0);
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
-      document.body.classList.add('ofroot-nav-fading');
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
-      document.body.classList.remove('ofroot-nav-fading');
       previouslyFocused.current?.focus?.();
       previouslyFocused.current = null;
     };
-  }, [open]);
-
-  // Top-fixed header with high z-index so it sits above hero
-  // Slightly reduced z-index and tighter header for a less dominant global navbar
-  const headerClass = `fixed top-0 left-0 right-0 z-[9999] isolate pointer-events-auto nav-header-gradient border-transparent will-change-transform transform-gpu`;
-  // no-op: useLiquidOpen handles animation lifecycle
-
-  const navItems: NavItem[] = (() => {
-    const items: NavItem[] = [];
-    if (pathname !== '/') items.push({ label: 'Home', href: '/', icon: Home });
-    if (pathname === '/') {
-      items.push({ label: 'Services', href: '#services', icon: Cog });
-      items.push({ label: 'Featured', href: '#featured', icon: Star });
-      items.push({ label: 'How it works', href: '#how', icon: PlayCircle });
-    }
-  items.push({ label: 'Blog', href: '/blog', icon: BookOpen });
-  items.push({ label: 'Substack', href: 'https://substack.com/@ofroot/posts', external: true, icon: ExternalLink });
-  // Route contact to external JotForm per sales flow
-  items.push({ label: 'Contact', href: 'https://form.jotform.com/252643426225151', external: true, icon: Mail });
-    items.push({ label: 'Chat with OfRoot', chat: true, icon: MessageCircle });
-    return items;
-  })();
-
-  const handleNavClick = (item: NavItem) => {
-    if (item.chat) {
-      window.dispatchEvent(new CustomEvent('ofroot:chat-open'));
-      toggleMenu(false);
-      return;
-    }
-
-    if (item.external && item.href) {
-      window.open(item.href, '_blank', 'noopener,noreferrer');
-      toggleMenu(false);
-      return;
-    }
-
-    if (item.href?.startsWith('#')) {
-      toggleMenu(false);
-      if (pathname === '/') {
-        const target = document.querySelector(item.href);
-        if (target) {
-          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
-        }
-      } else {
-        router.push(`/${item.href}`);
-      }
-      return;
-    }
-
-    toggleMenu(false);
-    if (item.href) {
-      router.push(item.href);
-    }
-  };
-
-  const NavButton = ({ item, i, openState }: { item: NavItem; i: number; openState: boolean }) => {
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const frame = useRef<number | null>(null);
-
-    const animateScale = (scale: number) => {
-      if (!buttonRef.current) return;
-      buttonRef.current.style.setProperty('--press-scale', scale.toString());
-    };
-
-    const handleMove = (event: ReactMouseEvent<HTMLButtonElement>) => {
-      if (!buttonRef.current) return;
-      const rect = buttonRef.current.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-      const dist = Math.sqrt(x * x + y * y);
-      const scale = Math.max(0.9, 1 - dist * 0.12);
-  if (frame.current !== null) cancelAnimationFrame(frame.current);
-  frame.current = requestAnimationFrame(() => animateScale(scale));
-    };
-
-    const resetScale = () => {
-  if (frame.current !== null) cancelAnimationFrame(frame.current);
-  frame.current = null;
-      animateScale(1);
-    };
-
-    return (
-      <button
-        ref={buttonRef}
-        key={item.label}
-        type="button"
-        onClick={() => handleNavClick(item)}
-        onMouseMove={handleMove}
-        onMouseLeave={resetScale}
-        onBlur={resetScale}
-        onFocus={() => animateScale(0.95)}
-        aria-label={item.label}
-        className={`relative overflow-hidden rounded-2xl border border-gray-200 bg-white/80 backdrop-blur-sm px-4 py-2 sm:px-6 sm:py-3 text-base sm:text-lg font-semibold text-gray-900 shadow-lg ring-1 ring-black/5 transition-all duration-300 ease-out hover:bg-[#20b2aa] hover:text-white hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:ring-offset-2 flex items-center justify-center gap-2 ${openState ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'}`}
-        style={{ transform: 'scale(var(--press-scale, 1))', willChange: 'transform', transitionDelay: `${i * 50}ms` }}
-      >
-        <item.icon size={24} className="sm:w-6 sm:h-6 w-5 h-5" />
-        <span className="hidden sm:inline text-sm font-medium">{item.label}</span>
-      </button>
-    );
-  };
+  }, [mobileMenuOpen]);
 
   if (!shouldRenderNav) {
     return null;
   }
 
   return (
-    <header role="banner" className={`${headerClass} h-12 md:h-14 transition-all duration-300`}>
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-2">
-          <Link href="/" aria-label="OfRoot homepage">
-            <Image
-              src="/ofroot-logo.png"
-              alt="OfRoot logo"
-              width={48}
-              height={48}
-              priority
-              className="h-9 w-9 rounded-full object-cover transition-transform duration-120 ease-out hover:scale-102 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] md:h-12 md:w-12"
-            />
-          </Link>
+    <>
+      {/* ─────────────────────────────────────────────────────────
+          Desktop Navigation Bar
+          ───────────────────────────────────────────────────────── */}
+      <header
+        role="banner"
+        className="fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
+                <Image
+                  src="/ofroot-logo.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  priority
+                  className="h-9 w-9 rounded-full object-cover"
+                  aria-hidden="true"
+                />
+                <span className="text-white font-semibold text-lg tracking-tight">ofroot</span>
+              </Link>
+            </div>
+
+            {/* Desktop Nav Links */}
+            <nav className="hidden lg:flex items-center gap-8" aria-label="Primary navigation">
+              {navItems.map((item) =>
+                item.children ? (
+                  <DesktopDropdown key={item.label} item={item} />
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
+            </nav>
+
+            {/* Desktop CTAs */}
+            <div className="hidden lg:flex items-center gap-6">
+              <ArrowButton
+                href="https://form.jotform.com/252643426225151"
+                variant="primary"
+                external
+              >
+                Contact Sales
+              </ArrowButton>
+              <ArrowButton href="/dashboard" variant="outline">
+                Console
+              </ArrowButton>
+            </div>
+
+            {/* Mobile: CTA + Hamburger */}
+            <div className="flex lg:hidden items-center gap-4">
+              <ArrowButton href="/dashboard" variant="outline" className="text-sm">
+                Console
+              </ArrowButton>
+              <button
+                type="button"
+                onClick={() => toggleMobileMenu()}
+                className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-nav-drawer"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <div className="w-6 h-6 flex flex-col justify-center gap-1.5">
+                    <span className="block w-full h-0.5 bg-current" />
+                    <span className="block w-full h-0.5 bg-current" />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
+      </header>
 
-        <button
-          type="button"
-          onClick={() => toggleMenu()}
-          className={`relative z-[100000] h-9 w-9 rounded-full nav-hamburger bg-white/80 text-gray-900 shadow-sm ring-1 ring-black/5 transition hover:border-white/60 hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] ${open ? 'animate-[nav-rotate_600ms_ease-in-out_forwards] opacity-0 pointer-events-none' : ''}`}
-          aria-label={open ? 'Close navigation' : 'Open navigation'}
-          aria-expanded={open}
-          aria-controls="ofroot-nav-overlay"
-        >
-          <span className={`absolute inset-0 flex items-center justify-center transition-transform duration-500 ease-in-out ${open ? 'rotate-180' : 'rotate-0'}`}>
-            {open ? (
-              <X size={20} />
-            ) : (
-              <span className="grid grid-cols-2 grid-rows-2 gap-[3px]">
-                {Array.from({ length: 4 }).map((_, idx) => (
-                  <span
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={idx}
-                    className="h-2 w-2 rounded-full bg-gray-900 transition-transform duration-200"
-                  />
-                ))}
-              </span>
-            )}
-          </span>
-        </button>
-      </div>
-
+      {/* Screen reader announcement */}
       <div aria-live="polite" className="sr-only">
         {liveMessage}
       </div>
 
+      {/* ─────────────────────────────────────────────────────────
+          Mobile Navigation Drawer
+          ───────────────────────────────────────────────────────── */}
       <div
-        onClick={() => toggleMenu(false)}
-        role="presentation"
-        aria-hidden={!visible}
-        className={`fixed inset-0 nav-backdrop-teal transition-opacity duration-700 ease-in-out ${visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
-        style={{ willChange: 'opacity', transitionTimingFunction: 'cubic-bezier(.16,.84,.2,1)' }}
-      />
-
-      <div
-        id="ofroot-nav-overlay"
+        id="mobile-nav-drawer"
         ref={menuRef}
         role="dialog"
         aria-modal="true"
-        aria-hidden={!visible}
-  className={`fixed inset-0 z-[100001] flex items-center justify-center transition-opacity duration-300 ${visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        aria-label="Mobile navigation"
+        className={`fixed inset-0 z-[10000] lg:hidden transition-all duration-300 ${
+          mobileMenuOpen ? 'visible' : 'invisible'
+        }`}
       >
-        <div className={`absolute inset-0 bg-white/80 backdrop-blur-xl transition-transform duration-300 hidden md:block ${open ? 'translate-y-0' : 'translate-y-6'}`} />
+        {/* Backdrop */}
         <div
-          ref={overlayPanelRef}
-          className={`relative z-[100002] mx-auto flex w-full h-full md:h-auto md:min-h-[60vh] md:max-w-xl flex-col items-center justify-center gap-6 px-6 md:px-6 py-8 md:py-0 pt-safe text-center transition-all duration-300 ${open ? 'modal-lowered translate-y-0 opacity-100' : 'translate-y-6 opacity-0'} bg-white/85 backdrop-blur-xl md:bg-transparent md:backdrop-blur-0`}
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+            mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+
+        {/* Drawer Panel */}
+        <div
+          className={`absolute inset-0 bg-[#121212] transform transition-transform duration-300 ease-out ${
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         >
-          <div className="mx-auto w-full max-w-none md:max-w-sm rounded-none md:rounded-3xl md:border md:border-gray-100 md:bg-white/70 p-0 md:p-5 shadow-none md:shadow-2xl ring-0 md:ring-1 md:ring-black/5 backdrop-blur-0 md:backdrop-blur-xl">
-            <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
-              {navItems.map((item, idx) => (
-                <NavButton key={item.label} item={item} i={idx} openState={open} />
-              ))}
-            </div>
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
+            <Link href="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
+              <Image
+                src="/ofroot-logo.png"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover"
+                aria-hidden="true"
+              />
+              <span className="text-white font-semibold text-lg">ofroot</span>
+            </Link>
+            <button
+              type="button"
+              onClick={closeMobileMenu}
+              className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => toggleMenu(false)}
-            className="mx-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600 shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
-            aria-label="Close navigation"
-          >
-            <X size={20} />
-          </button>
+
+          {/* Drawer Content */}
+          <div className="px-6 py-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
+            {/* Primary CTAs */}
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center justify-between">
+                <span className="text-white text-base font-medium">Contact Sales</span>
+                <a
+                  href="https://form.jotform.com/252643426225151"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 hover:border-gray-500 transition-colors"
+                  onClick={closeMobileMenu}
+                  aria-label="Contact Sales"
+                >
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </a>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#20b2aa] text-base font-medium">Console</span>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                  onClick={closeMobileMenu}
+                  aria-label="Go to Console"
+                >
+                  <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gray-800 mb-6" />
+
+            {/* Navigation Links */}
+            <nav className="space-y-1" aria-label="Mobile navigation">
+              {navItems.map((item) =>
+                item.children ? (
+                  <MobileDropdown key={item.label} item={item} onNavigate={closeMobileMenu} />
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
+                    onClick={closeMobileMenu}
+                  >
+                    {item.label}
+                    {item.external && <span className="ml-1 text-gray-500">↗</span>}
+                  </Link>
+                )
+              )}
+            </nav>
+          </div>
         </div>
       </div>
-    </header>
+
+      {/* Spacer to prevent content from hiding under fixed navbar */}
+      <div className="h-16" aria-hidden="true" />
+    </>
   );
 }

@@ -3,8 +3,10 @@ import { api, type Invoice } from '@/app/lib/api';
 import AmountDisplay from '@/app/dashboard/billing/_components/AmountDisplay';
 import { notFound } from 'next/navigation';
 
-export default async function PublicInvoicePage({ params, searchParams }: { params: { externalId: string }, searchParams?: Record<string, string | string[] | undefined> }) {
-  const externalId = decodeURIComponent(params.externalId || '');
+export default async function PublicInvoicePage({ params, searchParams }: { params: Promise<{ externalId: string }>, searchParams?: Promise<Record<string, string | string[] | undefined>> }) {
+  const { externalId: externalIdParam } = await params;
+  const resolvedSearchParams = await searchParams;
+  const externalId = decodeURIComponent(externalIdParam || '');
   if (!externalId) notFound();
 
   let invoice: Invoice | undefined;
@@ -18,7 +20,7 @@ export default async function PublicInvoicePage({ params, searchParams }: { para
   if (!invoice) notFound();
 
   const meta: any = invoice.meta || {};
-  const status = typeof searchParams?.status === 'string' ? searchParams?.status : undefined;
+  const status = typeof resolvedSearchParams?.status === 'string' ? resolvedSearchParams?.status : undefined;
   const finalized: Array<{ description: string; quantity: number; unit_amount_cents: number }>|undefined = Array.isArray(meta.items_final) ? meta.items_final : undefined;
   const drafted: Array<{ description: string; quantity: number; unit_amount_cents: number }>|undefined = Array.isArray(meta.items_draft) ? meta.items_draft : undefined;
   const items = finalized?.length ? finalized : (drafted?.length ? drafted : (invoice.items || []).map((it) => ({ description: it.description, quantity: it.quantity, unit_amount_cents: it.unit_amount_cents })));

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -14,6 +14,7 @@ const baseNav = [
 	{ href: '/dashboard/tenants', label: 'Tenants', icon: Building2 },
 	{ href: '/dashboard/users', label: 'Users', icon: Users },
 	{ href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
+	{ href: '/dashboard/payroll', label: 'Payroll', icon: BadgeDollarSign },
 ];
 
 export default function DashboardShell({ children, authed = false }: Props) {
@@ -150,7 +151,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 						<input
 							aria-label="Global search"
 							placeholder="Search users, tenants, subscribers..."
-							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none"
+							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:border-[#20b2aa]"
 						/>
 						{displayName && (
 							<div className="text-xs sm:text-sm text-gray-600 text-right">
@@ -268,17 +269,24 @@ export default function DashboardShell({ children, authed = false }: Props) {
 }
 
 function ImpersonateSwitcher() {
-	const [role, setRole] = React.useState('member');
-	const [plan, setPlan] = React.useState('free');
+	const [role, setRole] = React.useState('employee');
+	const [plan, setPlan] = React.useState('any');
 	const [loading, setLoading] = React.useState(false);
 	const [error, setError] = React.useState<string | null>(null);
 
-	const roles = [
+	const roleOptions = [
+		{ value: 'any', label: 'Any role' },
 		{ value: 'member', label: 'Member' },
 		{ value: 'manager', label: 'Manager' },
+		{ value: 'employee', label: 'Employee' },
+		{ value: 'hr', label: 'HR' },
+		{ value: 'hr_manager', label: 'HR Manager' },
+		{ value: 'payroll', label: 'Payroll' },
+		{ value: 'payroll_manager', label: 'Payroll Manager' },
 		{ value: 'admin', label: 'Admin' },
 	];
-	const plans = [
+	const planOptions = [
+		{ value: 'any', label: 'Any plan' },
 		{ value: 'free', label: 'Free' },
 		{ value: 'pro', label: 'Pro' },
 		{ value: 'business', label: 'Business' },
@@ -288,10 +296,13 @@ function ImpersonateSwitcher() {
 		setLoading(true);
 		setError(null);
 		try {
+			const payload: { role?: string; plan?: string } = {};
+			if (role !== 'any') payload.role = role;
+			if (plan !== 'any') payload.plan = plan;
 			const res = await fetch('/api/admin/impersonate', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ role, plan }),
+				body: JSON.stringify(payload),
 			});
 			const json = await res.json().catch(() => ({}));
 			if (!res.ok || !json?.ok) {
@@ -306,34 +317,35 @@ function ImpersonateSwitcher() {
 	}
 
 	return (
-			<div className="flex flex-col gap-2">
-				<div className="flex gap-2 flex-wrap">
+		<div className="flex flex-col gap-2">
+			<div className="flex gap-2 flex-wrap">
 				<select
-						className="border rounded px-2 py-1 text-sm w-[120px]"
+					className="border rounded px-2 py-1 text-sm w-[140px]"
 					value={role}
-					onChange={event => setRole(event.target.value)}
+					onChange={(event) => setRole(event.target.value)}
 				>
-					{roles.map((r) => (
+					{roleOptions.map((r) => (
 						<option key={r.value} value={r.value}>{r.label}</option>
 					))}
 				</select>
 				<select
-							className="border rounded px-2 py-1 text-sm w-[120px]"
+					className="border rounded px-2 py-1 text-sm w-[140px]"
 					value={plan}
-					onChange={event => setPlan(event.target.value)}
+					onChange={(event) => setPlan(event.target.value)}
 				>
-					{plans.map((p) => (
+					{planOptions.map((p) => (
 						<option key={p.value} value={p.value}>{p.label}</option>
 					))}
 				</select>
-						<button
-							className="bg-blue-600 text-white rounded px-3 py-1 text-sm disabled:opacity-50 w-full sm:w-auto"
+				<button
+					className="bg-blue-600 text-white rounded px-3 py-1 text-sm disabled:opacity-50 w-full sm:w-auto"
 					onClick={handleImpersonate}
 					disabled={loading}
 				>
 					{loading ? 'Impersonating...' : 'Impersonate'}
 				</button>
 			</div>
+			<p className="text-[11px] text-gray-500">Personas are seeded for each role; choose "Any plan" when you only need the role.</p>
 			{error && <div className="text-xs text-red-600">{error}</div>}
 		</div>
 	);

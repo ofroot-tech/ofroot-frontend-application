@@ -26,11 +26,12 @@ function slugify(input: string) {
     .replace(/^-|-$/g, '');
 }
 
-export default async function EditBlogPostPage({ params }: { params: { id: string } }) {
+export default async function EditBlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!Number.isFinite(id)) redirect('/dashboard/blog');
 
   let post: BlogPost | null = null;

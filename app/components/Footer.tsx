@@ -32,11 +32,11 @@ export default function Footer() {
 
   return (
     <footer className="w-full p-0 bg-black text-white animate-fade-in shadow-2xl">
-      <div className="w-full h-1.5 bg-gradient-to-r from-[#20b2aa] via-[#1a8f85] to-[#20b2aa]" aria-hidden="true" />
+      <div className="w-full h-1.5 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-dark)] to-[var(--color-primary)]" aria-hidden="true" />
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between py-10 px-6 gap-8">
         <div className="flex flex-col items-center md:items-start">
           <div className="flex items-center gap-3 mb-4">
-            <Image src="/ofroot-logo.png" alt="OfRoot Logo" width={40} height={40} className="rounded-full shadow-lg" />
+            <Image src="/ofroot-logo.png" alt="" width={40} height={40} className="rounded-full shadow-lg" aria-hidden="true" />
             <span className="font-extrabold text-2xl tracking-tight">ofroot</span>
           </div>
           <ul className="flex flex-wrap gap-4 text-base font-medium">
@@ -71,7 +71,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="w-full h-2 bg-gradient-to-r from-[#ffe082] via-[#20b2aa] to-[#1a8f85] animate-gradient-move" />
+      <div className="w-full h-2 bg-gradient-to-r from-[var(--color-accent)] via-[var(--color-primary)] to-[var(--color-primary-dark)] animate-gradient-move" />
       <style jsx>{`
         .animate-fade-in {
           animation: fadeIn 1.2s ease;
