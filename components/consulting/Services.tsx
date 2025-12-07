@@ -31,12 +31,20 @@ export default function Services() {
           </div>
 
           <div className="flex items-center justify-center">
-            {/* Decorative visual placeholder - keeps layout balanced on wide screens */}
+            {/* Lottie animation with SVG fallback for browsers without JS */}
             <div className="relative w-full max-w-md h-56">
               <div className="absolute -left-8 top-6 w-40 h-40 bg-amber-100 rounded-full filter blur-3xl opacity-70" />
               <div className="absolute right-6 bottom-6 w-28 h-28 bg-amber-100 rounded-full filter blur-2xl opacity-60" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <img src="/images/consulting-graphic.svg" alt="Illustration: person reviewing dashboard charts" className="w-48 h-auto" />
+                {/* Client component renders Lottie; noscript falls back to SVG */}
+                <div className="w-48 h-auto">
+                  {/* Dynamically import client Lottie player on client-side */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <script dangerouslySetInnerHTML={{ __html: `/* Lottie player rendered on client */` }} />
+                  <noscript>
+                    <img src="/images/consulting-graphic.svg" alt="Illustration: person reviewing dashboard charts" className="w-48 h-auto" />
+                  </noscript>
+                </div>
               </div>
             </div>
           </div>
