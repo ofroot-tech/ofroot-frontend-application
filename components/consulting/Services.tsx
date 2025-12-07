@@ -6,9 +6,7 @@
  */
 
 import PrimaryCta from "@/components/ui/PrimaryCta";
-import dynamic from "next/dynamic";
-
-const LottiePlayer = dynamic(() => import("@/components/ui/LottiePlayer"), { ssr: false });
+import ConsultingVisual from "@/components/consulting/ConsultingVisual";
 
 export default function Services() {
   return (
@@ -41,11 +39,8 @@ export default function Services() {
               <div className="absolute inset-0 flex items-center justify-center">
                 {/* Client component renders Lottie; noscript falls back to SVG */}
                 <div className="w-48 h-auto">
-                  {/* Client-only Lottie player (fetches /animations/consulting.json) */}
-                  <LottiePlayer src="/animations/consulting.json" className="w-48 h-48 mx-auto" />
-                  <noscript>
-                    <img src="/images/consulting-graphic.svg" alt="Illustration: person reviewing dashboard charts" className="w-48 h-auto" />
-                  </noscript>
+                  {/* Client-only visual (Lottie) — ConsultingVisual is a client component */}
+                  <ConsultingVisual />
                 </div>
               </div>
             </div>
