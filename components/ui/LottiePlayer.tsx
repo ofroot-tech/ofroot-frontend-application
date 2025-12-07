@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { Player } from "lottie-react";
+import React, { useEffect, useState } from "react";
+import Player from "lottie-react";
 
 type LottiePlayerProps = {
-  src: string;
+  src: string; // URL under /public
   loop?: boolean;
   autoplay?: boolean;
   className?: string;
@@ -12,9 +12,33 @@ type LottiePlayerProps = {
 };
 
 export default function LottiePlayer({ src, loop = true, autoplay = true, className, style }: LottiePlayerProps) {
+  const [animationData, setAnimationData] = useState<any | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const res = await fetch(src);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted) setAnimationData(json);
+      } catch (e) {
+        // ignore — fallback handled by parent
+        console.warn("Failed to load lottie:", e);
+      }
+    }
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [src]);
+
+  if (!animationData) return null;
+
   return (
     <div className={className} style={style} aria-hidden={false}>
-      <Player src={src} loop={loop} autoplay={autoplay} />
+      <Player animationData={animationData} loop={loop} autoplay={autoplay} />
     </div>
   );
 }
