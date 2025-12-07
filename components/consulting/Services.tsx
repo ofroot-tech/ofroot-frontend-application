@@ -12,11 +12,11 @@ export default function Services() {
   return (
     <section className="py-20">
       <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="text-center">
             <h2 className="text-4xl sm:text-5xl font-extrabold">What I Do</h2>
 
-            <ul className="mt-6 space-y-4 text-lg text-gray-700">
+            <ul className="mt-6 space-y-4 text-lg text-gray-700 mx-auto max-w-md text-left">
               <li className="pl-1">A. Architecture</li>
               <li className="pl-1">B. Automation</li>
               <li className="pl-1">C. Code Delivery</li>
@@ -26,7 +26,7 @@ export default function Services() {
               <li className="pl-1">G. Stability</li>
             </ul>
 
-            <div className="mt-8">
+            <div className="mt-8 flex justify-center">
               <PrimaryCta href="/consulting/book">Book a Strategy Call</PrimaryCta>
             </div>
           </div>
