@@ -44,6 +44,15 @@ export default function Footer() {
               <a href="/" className="hover:underline hover:text-[#ffe082] transition">Home</a>
             </li>
             <li>
+              <a href="/consulting" className="hover:underline hover:text-[#ffe082] transition">Consulting</a>
+            </li>
+            <li>
+              <a href="/pricing" className="hover:underline hover:text-[#ffe082] transition">Pricing</a>
+            </li>
+            <li>
+              <a href="/consulting/book" className="hover:underline hover:text-[#ffe082] transition">Book a Call</a>
+            </li>
+            <li>
               <a href="/marketing" className="hover:underline hover:text-[#ffe082] transition">Marketing</a>
             </li>
             <li>

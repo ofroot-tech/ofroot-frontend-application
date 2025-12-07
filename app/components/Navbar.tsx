@@ -33,8 +33,10 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
+  { label: 'Consulting', href: '/consulting' },
   { label: 'Services', href: '/services' },
   { label: 'Build', href: '/build' },
+  { label: 'Pricing', href: '/pricing' },
   {
     label: 'Products',
     children: [
@@ -331,8 +333,14 @@ export default function Navbar() {
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-6">
               <ArrowButton
-                href="https://form.jotform.com/252643426225151"
+                href="/consulting/book"
                 variant="primary"
+              >
+                Book a Call
+              </ArrowButton>
+              <ArrowButton
+                href="https://form.jotform.com/252643426225151"
+                variant="outline"
                 external
               >
                 Contact Sales
@@ -433,6 +441,17 @@ export default function Navbar() {
           <div className="px-6 py-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
             {/* Primary CTAs */}
             <div className="space-y-4 mb-8">
+              <div className="flex items-center justify-between">
+                <span className="text-[#20b2aa] text-base font-medium">Book a Call</span>
+                <Link
+                  href="/consulting/book"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                  onClick={closeMobileMenu}
+                  aria-label="Book a discovery call"
+                >
+                  <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                </Link>
+              </div>
               <div className="flex items-center justify-between">
                 <span className="text-white text-base font-medium">Contact Sales</span>
                 <a
