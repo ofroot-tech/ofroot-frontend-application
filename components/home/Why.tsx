@@ -9,7 +9,7 @@
 export default function Why() {
   return (
     <section className="py-24 px-6 sm:px-8 bg-gray-50">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-8 text-gray-900">Why OfRoot Tech Exists</h2>
 
         <p className="text-lg sm:text-xl text-gray-700 mb-6 leading-relaxed">

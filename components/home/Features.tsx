@@ -11,7 +11,7 @@ import PrimaryCta from "@/components/ui/PrimaryCta";
 export default function Features() {
   return (
     <section className="py-24 px-6 sm:px-8 bg-white">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-12 text-gray-900">What You Get</h2>
 
         <ul className="space-y-4 text-lg text-gray-700 mb-10">
