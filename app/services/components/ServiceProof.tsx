@@ -14,9 +14,15 @@ export default function ServiceProof({ logos = [], quotes = [] }: Props) {
         <div className="mb-6">
           <div className="text-xs uppercase tracking-wider text-gray-500 mb-2">Trusted by</div>
           <div className="flex flex-wrap items-center gap-4 opacity-80">
-            {logos.map((src) => (
-              <img key={src} src={src} alt="logo" className="h-8 object-contain" />
-            ))}
+            {logos.map((src) => {
+              // Convert image path or slug into a human-friendly label
+              const raw = String(src).split('/').pop() || String(src);
+              const name = raw.replace(/\.(svg|png|jpg|jpeg)$/i, '').replace(/[-_]/g, ' ');
+              const label = name.replace(/\b\w/g, (c) => c.toUpperCase());
+              return (
+                <div key={src} className="text-sm text-gray-700">{label}</div>
+              );
+            })}
           </div>
         </div>
       )}
