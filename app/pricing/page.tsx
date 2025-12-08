@@ -51,16 +51,16 @@ export default function PricingPage() {
       <main className="flex flex-col w-full bg-white">
       {/* Hero */}
       <section className="py-32 px-6 sm:px-8 text-center bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight text-gray-900">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
             Simple, transparent pricing.
           </h1>
 
-          <p className="text-xl sm:text-2xl text-gray-600 mb-8">
+          <p className="text-xl sm:text-2xl text-gray-700 mb-8">
             Choose your path: self-serve SaaS or dedicated consulting retainer.
           </p>
 
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-700">
             Both options include hands-on support and a clear roadmap to success.
           </p>
         </div>
@@ -68,10 +68,10 @@ export default function PricingPage() {
 
       {/* OfRoot Tech SaaS Pricing */}
       <section className="py-24 px-6 sm:px-8 bg-white">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="mb-16 text-center">
             <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 text-gray-900">OfRoot Tech</h2>
-            <p className="text-xl text-gray-600">Self-serve SaaS for home services, consultants, and local trades.</p>
+            <p className="text-xl text-gray-700">Self-serve SaaS for home services, consultants, and local trades.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -195,7 +195,7 @@ export default function PricingPage() {
             </div>
           </div>
 
-          <p className="text-center text-gray-600 text-sm">
+          <p className="text-center text-gray-700 text-sm">
             All plans include a free 14-day trial. No credit card required.
           </p>
         </div>
@@ -203,10 +203,10 @@ export default function PricingPage() {
 
       {/* Consulting/Retainer Pricing */}
       <section className="py-24 px-6 sm:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="mb-16 text-center">
             <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 text-gray-900">Consulting & Retainers</h2>
-            <p className="text-xl text-gray-600">Dedicated engineering support for custom builds, architecture, and automation.</p>
+            <p className="text-xl text-gray-700">Dedicated engineering support for custom builds, architecture, and automation.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -380,7 +380,7 @@ export default function PricingPage() {
 
       {/* FAQ */}
       <section className="py-24 px-6 sm:px-8 bg-gray-50">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-12 text-center text-gray-900">Pricing FAQ</h2>
 
           <div className="space-y-8">
@@ -419,12 +419,12 @@ export default function PricingPage() {
 
       {/* Final CTA */}
       <section className="py-24 px-6 sm:px-8 bg-gradient-to-b from-white to-gray-50 text-center">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 text-gray-900">
             Ready to get started?
           </h2>
 
-          <p className="text-xl text-gray-600 mb-10">
+          <p className="text-xl text-gray-700 mb-10">
             Pick a plan or book a call with our team. We're here to help.
           </p>
 

@@ -15,12 +15,12 @@ import PrimaryCta from "@/components/ui/PrimaryCta";
 export default function Hero() {
   return (
     <section className="py-32 px-6 sm:px-8 text-center bg-white">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight text-gray-900">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
           Your website. Your marketing. Your clients. All managed in one place.
         </h1>
 
-        <p className="text-xl sm:text-2xl text-gray-600 mb-8 leading-relaxed">
+        <p className="text-xl sm:text-2xl text-gray-700 mb-8 leading-relaxed">
           OfRoot Tech replaces 5–7 tools with one simple system.
           Get a fast website, branded assets, automations, and reporting. Launch in 48 hours.
         </p>
@@ -30,7 +30,7 @@ export default function Hero() {
           <Link href="/pricing" className="inline-block rounded border border-gray-300 px-8 py-3 text-gray-900 font-semibold hover:border-gray-400 hover:bg-gray-50 transition">Compare plans</Link>
         </div>
 
-        <p className="text-sm text-gray-500">Trusted by home services teams, consultants, and local trades.</p>
+        <p className="text-sm text-gray-700">Trusted by home services teams, consultants, and local trades.</p>
       </div>
     </section>
   );
