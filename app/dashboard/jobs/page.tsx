@@ -133,55 +133,66 @@ export default async function JobsPage({ searchParams }: { searchParams?: Promis
         <CardBody>
           <DataTable
             columns={[
-              { label: 'Job #', key: 'job_number' },
-              { label: 'Title', key: 'title' },
-              { label: 'Customer', key: 'customer' },
-              { label: 'Status', key: 'status' },
-              { label: 'Priority', key: 'priority' },
-              { label: 'Scheduled', key: 'scheduled_start' },
-              { label: 'Amount', key: 'estimated_amount_cents', align: 'right' },
-              { label: 'Actions', key: 'actions', align: 'right' },
+              { title: 'Job #', key: 'job_number' },
+              { title: 'Title', key: 'title' },
+              { title: 'Customer', key: 'customer' },
+              { title: 'Status', key: 'status' },
+              { title: 'Priority', key: 'priority' },
+              { title: 'Scheduled', key: 'scheduled_start' },
+              { title: 'Amount', key: 'estimated_amount_cents', align: 'right' },
+              { title: 'Actions', key: 'actions', align: 'right' },
             ]}
-            rows={rows.map((job) => ({
-              job_number: (
-                <Link href={`/dashboard/jobs/${job.id}`} className="text-blue-600 hover:underline font-mono">
-                  {job.job_number}
-                </Link>
-              ),
-              title: <span className="font-medium">{job.title}</span>,
-              customer: job.contact ? `${job.contact.first_name} ${job.contact.last_name}` : '—',
-              status: <JobStatusBadge status={job.status} />,
-              priority: (
-                <span className={`text-xs px-2 py-1 rounded ${
-                  job.priority === 'urgent' ? 'bg-red-100 text-red-800' :
-                  job.priority === 'high' ? 'bg-orange-100 text-orange-800' :
-                  job.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {job.priority}
-                </span>
-              ),
-              scheduled_start: formatDate(job.scheduled_start),
-              estimated_amount_cents: formatCurrency(job.estimated_amount_cents),
-              actions: (
-                <Link
-                  href={`/dashboard/jobs/${job.id}`}
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  View
-                </Link>
-              ),
-            }))}
-            emptyMessage="No jobs found. Create your first job to get started."
-          />
+          >
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="px-4 py-6 text-center text-gray-600">
+                  No jobs found. Create your first job to get started.
+                </td>
+              </tr>
+            ) : (
+              rows.map((job) => (
+                <tr key={job.id} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3">
+                    <Link href={`/dashboard/jobs/${job.id}`} className="text-blue-600 hover:underline font-mono text-sm">
+                      {job.job_number}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 font-medium">{job.title}</td>
+                  <td className="px-4 py-3">
+                    {job.contact ? `${job.contact.first_name} ${job.contact.last_name}` : '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    <JobStatusBadge status={job.status} />
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      job.priority === 'urgent' ? 'bg-red-100 text-red-800' :
+                      job.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                      job.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {job.priority}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">{formatDate(job.scheduled_start)}</td>
+                  <td className="px-4 py-3 text-right">{formatCurrency(job.estimated_amount_cents)}</td>
+                  <td className="px-4 py-3 text-right">
+                    <Link href={`/dashboard/jobs/${job.id}`} className="text-sm text-blue-600 hover:underline">
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
+          </DataTable>
 
           {total > perPage && (
             <div className="mt-4">
               <Pagination
-                currentPage={currentPage}
-                lastPage={lastPage}
-                total={total}
-                perPage={perPage}
+                basePath="/dashboard/jobs"
+                current={currentPage}
+                last={lastPage}
+                extraParams={{ status, priority, q }}
               />
             </div>
           )}
