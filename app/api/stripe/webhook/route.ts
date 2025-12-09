@@ -157,7 +157,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
           status: 'completed',
           metadata: {
             amount_received: paymentIntent.amount_received,
-            charges: paymentIntent.charges.data.map((c) => c.id),
+            latest_charge: paymentIntent.latest_charge,
           },
         }),
       }
