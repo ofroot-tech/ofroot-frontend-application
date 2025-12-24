@@ -1,0 +1,189 @@
+/// # Telephony and dialer schema
+/// This Prisma schema captures the lean data model for the PhoneBurner-style
+/// dialer: campaigns, contacts, sessions, dispositions, voicemail assets,
+/// provider credentials, and compliance controls. Each model includes doc
+/// strings so the file doubles as reference material.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Campaigns orchestrate dialing behavior and link to scripts, voicemail assets,
+/// and throttling/quiet-hour policies.
+model Campaign {
+  id                 String   @id @default(cuid())
+  tenantId           String
+  name               String
+  dialingMode        String   // preview|progressive
+  fromStrategy       String   // static|local-presence
+  provider           String   // e.g., twilio
+  numberPoolId       String?
+  scriptId           String?
+  voicemailAssetId   String?
+  quietHours         Json?
+  throttlePerMinute  Int?     // optional safety cap
+  timezonePolicy     String?
+  defaultDisposition String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  callSessions CallSession[]
+  dispositions Disposition[]
+  messageSequences MessageSequence[]
+}
+
+/// Lists group contacts for import and dialing queues.
+model ContactList {
+  id        String    @id @default(cuid())
+  tenantId  String
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  contacts  Contact[]
+}
+
+/// Contacts are the targets of calls/SMS and retain the latest disposition.
+model Contact {
+  id              String      @id @default(cuid())
+  listId          String?
+  tenantId        String
+  name            String?
+  phone           String
+  timezone        String?
+  tags            String?
+  consentFlags    Json?
+  dncFlag         Boolean     @default(false)
+  lastDisposition String?
+  lastCallAt      DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  list ContactList? @relation(fields: [listId], references: [id])
+  callSessions CallSession[]
+}
+
+/// CallSession records each dialing attempt and its provider linkage.
+model CallSession {
+  id             String   @id @default(cuid())
+  campaignId     String
+  contactId      String
+  agentId        String?
+  provider       String
+  fromNumber     String?
+  toNumber       String
+  status         String
+  startedAt      DateTime  @default(now())
+  connectedAt    DateTime?
+  endedAt        DateTime?
+  durationSec    Int?
+  recordingId    String?
+  recordingUrl   String?
+  disposition    String?
+  notes          String?
+  webhookKey     String? @unique
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  contact  Contact  @relation(fields: [contactId], references: [id])
+
+  @@index([campaignId])
+  @@index([contactId])
+  @@index([status])
+}
+
+/// Dispositions define outcomes and optional automated follow-ups.
+model Disposition {
+  id         String   @id @default(cuid())
+  campaignId String
+  label      String
+  outcome    String   // success|callback|voicemail|bad-number
+  followUp   String?  // sms|email|callback
+  nextAt     DateTime?
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@index([campaignId])
+}
+
+/// Stored voicemail audio for drops and callbacks.
+model VoicemailAsset {
+  id         String   @id @default(cuid())
+  tenantId   String
+  provider   String
+  mediaUrl   String
+  transcription String?
+  durationSec Int?
+  createdAt  DateTime @default(now())
+}
+
+/// Provider credentials stored per tenant (encrypt at rest in application layer).
+model ProviderCredential {
+  id          String   @id @default(cuid())
+  tenantId    String
+  provider    String
+  encryptedConfig Json
+  capabilities   Json?
+  healthState    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([tenantId, provider])
+}
+
+/// Pool of purchased/linked numbers for local presence dialing.
+model NumberPool {
+  id        String   @id @default(cuid())
+  tenantId  String
+  provider  String
+  numbers   Json
+  locales   Json?
+  health    Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// SMS/email sequence definitions tied to campaigns.
+model MessageSequence {
+  id         String   @id @default(cuid())
+  campaignId String
+  step       Int
+  channel    String   // sms|email
+  templateId String
+  delayMinutes Int
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@index([campaignId])
+}
+
+/// Compliance rules and opt-out keywords per tenant.
+model ComplianceRule {
+  id             String   @id @default(cuid())
+  tenantId       String   @unique
+  quietHours     Json?
+  dncSources     Json?
+  recordingPolicy String?
+  consentRequired Boolean @default(false)
+  smsOptOutKeywords Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+/// Audit log to track actions across the dialer.
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  tenantId   String?
+  entityType String
+  entityId   String
+  action     String
+  payload    Json?
+  createdAt  DateTime @default(now())
+
+  @@index([tenantId, entityType])
+}

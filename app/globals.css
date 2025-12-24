@@ -795,23 +795,4 @@ body.ofroot-nav-fading .promo-banner {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Strip all styles from navbar on non-mobile views */
-@media (min-width: 768px) {
-  .navbar-header {
-    background: white !important;
-    color: black !important;
-    border-bottom: 1px solid #ccc !important;
-    padding: 1rem 0 !important;
-  }
-  .navbar-header * {
-    color: black !important;
-    background: transparent !important;
-    border: none !important;
-    font-family: sans-serif !important;
-    text-decoration: none !important;
-  }
-  .navbar-header a {
-    color: black !important;
-    text-decoration: underline !important;
-  }
-}
+
