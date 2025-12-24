@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { X, ChevronDown, ArrowRight } from 'lucide-react';
+import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 
 /* ─────────────────────────────────────────────────────────────
    Navigation Data Structure
@@ -53,64 +54,6 @@ const navItems: NavItem[] = [
     ],
   },
 ];
-
-/* ─────────────────────────────────────────────────────────────
-   Desktop Dropdown Component
-   ───────────────────────────────────────────────────────────── */
-function DesktopDropdown({ item }: { item: NavItem }) {
-  const [open, setOpen] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 150);
-  };
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <button
-        type="button"
-        className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors text-sm font-medium"
-        aria-expanded={open}
-        aria-haspopup="true"
-      >
-        {item.label}
-        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
-      </button>
-
-      {/* Dropdown Panel */}
-      <div
-        className={`absolute top-full left-0 mt-2 min-w-[180px] rounded-lg bg-[#1a1a1a] border border-gray-800 shadow-xl py-2 transition-all duration-200 ${
-          open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
-        }`}
-      >
-        {item.children?.map((child) => (
-          <Link
-            key={child.label}
-            href={child.href}
-            target={child.external ? '_blank' : undefined}
-            rel={child.external ? 'noopener noreferrer' : undefined}
-            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-            onClick={() => setOpen(false)}
-          >
-            {child.label}
-            {child.external && (
-              <span className="ml-1 text-gray-500">↗</span>
-            )}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ─────────────────────────────────────────────────────────────
    Mobile Dropdown Component
@@ -291,7 +234,7 @@ export default function Navbar() {
           ───────────────────────────────────────────────────────── */}
       <header
         role="banner"
-        className="fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
+        className="navbar-header fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -312,23 +255,50 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center gap-8" aria-label="Primary navigation">
-              {navItems.map((item) =>
-                item.children ? (
-                  <DesktopDropdown key={item.label} item={item} />
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href!}
-                    target={item.external ? '_blank' : undefined}
-                    rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                  >
-                    {item.label}
-                  </Link>
-                )
-              )}
-            </nav>
+            <NavigationMenu.Root className="relative hidden lg:flex items-center" aria-label="Primary navigation">
+              <NavigationMenu.List className="flex items-center gap-4 lg:gap-8">
+                {navItems.map((item) =>
+                  item.children ? (
+                    <NavigationMenu.Item key={item.label} className="relative">
+                      <NavigationMenu.Trigger className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors text-sm font-medium data-[state=open]:text-white">
+                        {item.label}
+                        <ChevronDown className="w-4 h-4 transition-transform duration-200 data-[state=open]:rotate-180" />
+                      </NavigationMenu.Trigger>
+                      {/* Drop aligns to its trigger; absolute positioning removes hover gaps. */}
+                      <NavigationMenu.Content className="absolute left-1/2 top-[calc(100%+6px)] z-20 -translate-x-1/2 min-w-[220px] rounded-xl bg-[#0f0f0f] border border-gray-800 shadow-2xl p-2 radix-state-open:animate-in radix-state-open:fade-in-0 radix-state-open:zoom-in-95 radix-state-closed:animate-out radix-state-closed:fade-out-0 radix-state-closed:zoom-out-95">
+                        {item.children.map((child) => (
+                          <NavigationMenu.Link key={child.label} asChild>
+                            <Link
+                              href={child.href}
+                              target={child.external ? '_blank' : undefined}
+                              rel={child.external ? 'noopener noreferrer' : undefined}
+                              className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                            >
+                              {child.label}
+                              {child.external && <span className="ml-1 text-gray-500">↗</span>}
+                            </Link>
+                          </NavigationMenu.Link>
+                        ))}
+                      </NavigationMenu.Content>
+                    </NavigationMenu.Item>
+                  ) : (
+                    <NavigationMenu.Item key={item.label}>
+                      <NavigationMenu.Link asChild>
+                        <Link
+                          href={item.href!}
+                          target={item.external ? '_blank' : undefined}
+                          rel={item.external ? 'noopener noreferrer' : undefined}
+                          className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                        >
+                          {item.label}
+                        </Link>
+                      </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                  )
+                )}
+              </NavigationMenu.List>
+              <NavigationMenu.Viewport className="absolute left-0 top-full mt-2 w-[260px] overflow-hidden rounded-xl border border-gray-800 bg-[#0f0f0f] shadow-2xl radix-state-open:animate-in radix-state-open:fade-in-0 radix-state-open:zoom-in-95 radix-state-closed:animate-out radix-state-closed:fade-out-0 radix-state-closed:zoom-out-95" />
+            </NavigationMenu.Root>
 
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-6">

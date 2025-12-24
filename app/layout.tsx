@@ -13,6 +13,7 @@ import AlphaTextReveal from "@/components/AlphaTextReveal";
 import SectionSnapperAll from "@/components/SectionSnapperAll";
 import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
 import LoadingOnClickManager from "@/components/LoadingOnClickManager";
+import { Theme } from '@radix-ui/themes';
 
 // Default site-wide metadata for SEO/SMO
 export const metadata: Metadata = {
@@ -87,7 +88,8 @@ export default function RootLayout({
         <meta name="robots" content="index,follow" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
+        <Theme>
+          <AuthProvider>
           <Toaster />
           <ExitIntentPrompt />
       <AlphaTextReveal />
@@ -149,6 +151,7 @@ export default function RootLayout({
             }}
           />
         </AuthProvider>
+        </Theme>
       </body>
     </html>
   );
