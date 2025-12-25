@@ -17,6 +17,18 @@ import { usePathname } from 'next/navigation';
 import { X, ChevronDown, ArrowRight } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────────
+   Constants
+   ───────────────────────────────────────────────────────────── */
+const COLORS = {
+  bg: '#121212',
+  bgSecondary: '#1a1a1a',
+  accent: '#20b2aa',
+  text: '#ffffff',
+  textSecondary: '#gray-400',
+  border: '#gray-800',
+} as const;
+
+/* ─────────────────────────────────────────────────────────────
    Navigation Data Structure
    ───────────────────────────────────────────────────────────── */
 type NavLink = {
@@ -53,6 +65,98 @@ const navItems: NavItem[] = [
     ],
   },
 ];
+
+/* ─────────────────────────────────────────────────────────────
+   Shared Nav Rendering Function
+   ───────────────────────────────────────────────────────────── */
+function renderNavItems(
+  items: NavItem[],
+  isDesktop: boolean,
+  onNavigate?: () => void
+) {
+  return items.map((item) =>
+    item.children ? (
+      isDesktop ? (
+        <DesktopDropdown key={item.label} item={item} />
+      ) : (
+        <MobileDropdown key={item.label} item={item} onNavigate={onNavigate!} />
+      )
+    ) : (
+      <Link
+        key={item.label}
+        href={item.href!}
+        target={item.external ? '_blank' : undefined}
+        rel={item.external ? 'noopener noreferrer' : undefined}
+        className={
+          isDesktop
+            ? 'text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md'
+            : 'block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors'
+        }
+        onClick={onNavigate}
+      >
+        {item.label}
+        {item.external && <span className={`ml-1 ${isDesktop ? 'text-gray-400' : 'text-gray-500'}`}>↗</span>}
+      </Link>
+    )
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Desktop Dropdown Component
+   ───────────────────────────────────────────────────────────── */
+function DesktopDropdown({ item }: { item: NavItem }) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md"
+        aria-expanded={open}
+        aria-haspopup="true"
+        aria-controls={`dropdown-${item.label}`}
+      >
+        {item.label}
+        <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      <div
+        id={`dropdown-${item.label}`}
+        role="menu"
+        className={`absolute top-full left-0 mt-2 bg-[#1a1a1a] border border-gray-700 rounded-lg py-2 min-w-48 shadow-lg transition-all duration-200 ${
+          open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+        }`}
+      >
+        {item.children?.map((child) => (
+          <Link
+            key={child.label}
+            href={child.href}
+            target={child.external ? '_blank' : undefined}
+            rel={child.external ? 'noopener noreferrer' : undefined}
+            className="block px-4 py-2 text-white hover:bg-gray-700 hover:text-[#20b2aa] transition-colors"
+            onClick={() => setOpen(false)}
+            role="menuitem"
+          >
+            {child.label}
+            {child.external && <span className="ml-1 text-gray-400">↗</span>}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────────────────────────
    Mobile Dropdown Component
@@ -161,7 +265,9 @@ export default function Navbar() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
-      previouslyFocused.current?.focus?.();
+      if (previouslyFocused.current) {
+        previouslyFocused.current.focus();
+      }
       previouslyFocused.current = null;
     };
   }, [mobileMenuOpen]);
@@ -197,12 +303,35 @@ export default function Navbar() {
               </Link>
             </div>
 
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-1" aria-label="Desktop navigation">
+              {renderNavItems(navItems, true)}
+            </nav>
+
+            {/* Desktop CTAs */}
+            <div className="hidden lg:flex items-center gap-4 ml-8">
+              <Link
+                href="/consulting/book"
+                className="text-[#20b2aa] hover:text-white transition-colors px-4 py-2 rounded-md font-medium"
+              >
+                Book a Call
+              </Link>
+              <a
+                href="https://form.jotform.com/252643426225151"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-[#20b2aa] transition-colors px-4 py-2 rounded-md font-medium"
+              >
+                Contact Sales
+              </a>
+            </div>
+
             {/* Mobile-first nav: single drawer used across all breakpoints for consistency */}
             <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => toggleMobileMenu()}
-                className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="lg:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
@@ -325,23 +454,7 @@ export default function Navbar() {
 
             {/* Navigation Links */}
             <nav className="space-y-1" aria-label="Mobile navigation">
-              {navItems.map((item) =>
-                item.children ? (
-                  <MobileDropdown key={item.label} item={item} onNavigate={closeMobileMenu} />
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href!}
-                    target={item.external ? '_blank' : undefined}
-                    rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
-                    onClick={closeMobileMenu}
-                  >
-                    {item.label}
-                    {item.external && <span className="ml-1 text-gray-500">↗</span>}
-                  </Link>
-                )
-              )}
+              {renderNavItems(navItems, false, closeMobileMenu)}
             </nav>
           </div>
         </div>

@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
+    "@rushstack/eslint-patch": "^1.15.0",
     "@sentry/cli": "^2.38.2",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
