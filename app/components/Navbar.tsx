@@ -15,7 +15,6 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { X, ChevronDown, ArrowRight } from 'lucide-react';
-import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 
 /* ─────────────────────────────────────────────────────────────
    Navigation Data Structure
@@ -66,7 +65,7 @@ function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () =>
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-white text-base font-medium py-3 px-2 hover:bg-white/5 rounded-lg transition-colors"
+        className="flex items-center justify-between w-full text-white text-base font-medium py-2"
         aria-expanded={open}
       >
         {item.label}
@@ -75,8 +74,9 @@ function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () =>
 
       {/* Expanded Children */}
       <div
-        className={`overflow-hidden transition-all duration-200 ${open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-          }`}
+        className={`overflow-hidden transition-all duration-200 ${
+          open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
       >
         <div className="pl-4 py-2 space-y-2">
           {item.children?.map((child) => (
@@ -85,7 +85,7 @@ function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () =>
               href={child.href}
               target={child.external ? '_blank' : undefined}
               rel={child.external ? 'noopener noreferrer' : undefined}
-              className="block text-gray-400 hover:text-white text-sm py-2.5 px-2 hover:bg-white/5 rounded-lg transition-colors"
+              className="block text-gray-400 hover:text-white text-sm py-1.5 transition-colors"
               onClick={onNavigate}
             >
               {child.label}
@@ -95,61 +95,6 @@ function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () =>
         </div>
       </div>
     </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Arrow Button Component (Vast.ai style)
-   ───────────────────────────────────────────────────────────── */
-function ArrowButton({
-  href,
-  children,
-  variant = 'outline',
-  external = false,
-  className = '',
-  onClick,
-}: {
-  href: string;
-  children: React.ReactNode;
-  variant?: 'outline' | 'primary';
-  external?: boolean;
-  className?: string;
-  onClick?: () => void;
-}) {
-  const baseClasses = 'inline-flex items-center gap-2 text-sm font-medium transition-all duration-200';
-  const variantClasses =
-    variant === 'primary'
-      ? 'text-[#20b2aa] hover:text-[#3cc4bc]'
-      : 'text-white hover:text-gray-300';
-
-  const content = (
-    <>
-      {children}
-      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full border ${variant === 'primary' ? 'border-[#20b2aa]' : 'border-current'
-        }`}>
-        <ArrowRight className="w-3.5 h-3.5" />
-      </span>
-    </>
-  );
-
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${baseClasses} ${variantClasses} ${className}`}
-        onClick={onClick}
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link href={href} className={`${baseClasses} ${variantClasses} ${className}`} onClick={onClick}>
-      {content}
-    </Link>
   );
 }
 
@@ -232,7 +177,7 @@ export default function Navbar() {
           ───────────────────────────────────────────────────────── */}
       <header
         role="banner"
-        className="navbar-header fixed top-0 left-0 right-0 z-[9999] bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 transition-all duration-300"
+        className="navbar-header fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -248,88 +193,16 @@ export default function Navbar() {
                   className="h-9 w-9 rounded-full object-cover"
                   aria-hidden="true"
                 />
-                <span className="text-white font-semibold text-lg tracking-tight">ofroot</span>
+                <span className="text-white font-semibold text-base md:text-lg tracking-tight">ofroot</span>
               </Link>
             </div>
 
-            {/* Desktop Nav Links */}
-            <NavigationMenu.Root className="relative hidden xl:flex items-center" aria-label="Primary navigation">
-              <NavigationMenu.List className="flex items-center gap-4 xl:gap-8">
-                {navItems.map((item) =>
-                  item.children ? (
-                    <NavigationMenu.Item key={item.label} className="relative">
-                      <NavigationMenu.Trigger className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors text-sm font-medium data-[state=open]:text-white group">
-                        {item.label}
-                        <ChevronDown className="w-4 h-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-                      </NavigationMenu.Trigger>
-                      {/* Drop aligns to its trigger; absolute positioning removes hover gaps. */}
-                      <NavigationMenu.Content className="absolute left-1/2 top-[calc(100%+6px)] z-20 -translate-x-1/2 min-w-[220px] rounded-xl bg-[#0f0f0f] border border-gray-800 shadow-2xl p-2 radix-state-open:animate-in radix-state-open:fade-in-0 radix-state-open:zoom-in-95 radix-state-closed:animate-out radix-state-closed:fade-out-0 radix-state-closed:zoom-out-95">
-                        {item.children.map((child) => (
-                          <NavigationMenu.Link key={child.label} asChild>
-                            <Link
-                              href={child.href}
-                              target={child.external ? '_blank' : undefined}
-                              rel={child.external ? 'noopener noreferrer' : undefined}
-                              className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                            >
-                              {child.label}
-                              {child.external && <span className="ml-1 text-gray-500">↗</span>}
-                            </Link>
-                          </NavigationMenu.Link>
-                        ))}
-                      </NavigationMenu.Content>
-                    </NavigationMenu.Item>
-                  ) : (
-                    <NavigationMenu.Item key={item.label}>
-                      <NavigationMenu.Link asChild>
-                        <Link
-                          href={item.href!}
-                          target={item.external ? '_blank' : undefined}
-                          rel={item.external ? 'noopener noreferrer' : undefined}
-                          className="text-gray-300 hover:text-white transition-colors text-sm font-medium hover:bg-white/5 px-3 py-2 rounded-md"
-                        >
-                          {item.label}
-                        </Link>
-                      </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-                  )
-                )}
-              </NavigationMenu.List>
-            </NavigationMenu.Root>
-
-            {/* Desktop CTAs */}
-            <div className="hidden xl:flex items-center gap-6">
-              <ArrowButton
-                href="/consulting/book"
-                variant="primary"
-              >
-                Book a Call
-              </ArrowButton>
-              <ArrowButton
-                href="https://form.jotform.com/252643426225151"
-                variant="outline"
-                external
-              >
-                Contact Sales
-              </ArrowButton>
-              {/* Console button temporarily hidden
-              <ArrowButton href="/dashboard" variant="outline">
-                Console
-              </ArrowButton>
-              */}
-            </div>
-
-            {/* Mobile: CTA + Hamburger */}
-            <div className="flex xl:hidden items-center gap-4">
-              {/* Console button temporarily hidden
-              <ArrowButton href="/dashboard" variant="outline" className="text-sm">
-                Console
-              </ArrowButton>
-              */}
+            {/* Mobile-first nav: single drawer used across all breakpoints for consistency */}
+            <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => toggleMobileMenu()}
-                className="text-white p-2.5 hover:bg-white/10 rounded-lg transition-colors"
+                className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
@@ -362,21 +235,24 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Mobile navigation"
-        className={`fixed inset-0 z-[10000] xl:hidden transition-all duration-300 ${mobileMenuOpen ? 'visible' : 'invisible'
-          }`}
+        className={`fixed inset-0 z-[10000] lg:hidden transition-all duration-300 ${
+          mobileMenuOpen ? 'visible' : 'invisible'
+        }`}
       >
         {/* Backdrop */}
         <div
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0'
-            }`}
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+            mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+          }`}
           onClick={closeMobileMenu}
           aria-hidden="true"
         />
 
         {/* Drawer Panel */}
         <div
-          className={`absolute inset-0 bg-[#121212] transform transition-transform duration-300 ease-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
+          className={`absolute inset-0 bg-[#121212] transform transition-transform duration-300 ease-out ${
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         >
           {/* Drawer Header */}
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
@@ -429,6 +305,19 @@ export default function Navbar() {
                   <ArrowRight className="w-5 h-5 text-white" />
                 </a>
               </div>
+              {/* Console button temporarily hidden
+              <div className="flex items-center justify-between">
+                <span className="text-[#20b2aa] text-base font-medium">Console</span>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                  onClick={closeMobileMenu}
+                  aria-label="Go to Console"
+                >
+                  <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                </Link>
+              </div>
+              */}
             </div>
 
             {/* Divider */}
@@ -445,7 +334,7 @@ export default function Navbar() {
                     href={item.href!}
                     target={item.external ? '_blank' : undefined}
                     rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="block text-white text-base font-medium py-3 px-2 hover:bg-white/5 rounded-lg hover:text-[#20b2aa] transition-colors"
+                    className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
                     onClick={closeMobileMenu}
                   >
                     {item.label}
