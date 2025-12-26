@@ -128,9 +128,7 @@ export default function Features() {
           ))}
         </div>
 
-        {/* <p className="mt-10 text-center text-xs text-gray-500">
-          Capture scroll depth on this section, click maps on each card and CTA, and rage-clicks on the grid to spot friction fast.
-        </p> */}
+      
       </div>
     </section>
   );
