@@ -1,23 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useState } from 'react';
 import ResourceHealth from './ResourceHealth';
 
 export default function Footer() {
   const isProd = process.env.NODE_ENV === 'production';
-  const [showHealth, setShowHealth] = useState<boolean>(() => !isProd);
-
-  useEffect(() => {
-    try {
-      const stored = typeof window !== 'undefined' ? localStorage.getItem('ofroot.showHealth') : null;
-      if (stored !== null) {
-        setShowHealth(stored === 'true');
-      }
-    } catch (e) {
-      // ignore storage errors
+  const [showHealth, setShowHealth] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('ofroot.showHealth');
+      if (stored !== null) return stored === 'true';
     }
-  }, []);
+    return !isProd;
+  });
 
   const toggleShowHealth = () => {
     try {
@@ -41,25 +37,25 @@ export default function Footer() {
           </div>
           <ul className="flex flex-wrap gap-4 text-base font-medium">
             <li>
-              <a href="/" className="hover:underline hover:text-[#ffe082] transition">Home</a>
+              <Link href="/" className="hover:underline hover:text-[#ffe082] transition">Home</Link>
             </li>
             <li>
-              <a href="/consulting" className="hover:underline hover:text-[#ffe082] transition">Consulting</a>
+              <Link href="/consulting" className="hover:underline hover:text-[#ffe082] transition">Consulting</Link>
             </li>
             <li>
-              <a href="/pricing" className="hover:underline hover:text-[#ffe082] transition">Pricing</a>
+              <Link href="/pricing" className="hover:underline hover:text-[#ffe082] transition">Pricing</Link>
             </li>
             <li>
-              <a href="/consulting/book" className="hover:underline hover:text-[#ffe082] transition">Book a Call</a>
+              <Link href="/consulting/book" className="hover:underline hover:text-[#ffe082] transition">Book a Call</Link>
             </li>
             <li>
-              <a href="/marketing" className="hover:underline hover:text-[#ffe082] transition">Marketing</a>
+              <Link href="/marketing" className="hover:underline hover:text-[#ffe082] transition">Marketing</Link>
             </li>
             <li>
               <a href="#" onClick={e => {e.preventDefault(); window.open('https://form.jotform.com/252643454932157', '_blank');}} className="hover:underline hover:text-[#ffe082] transition">Helpr</a>
             </li>
             <li>
-              <a href="/ontask" className="hover:underline hover:text-[#ffe082] transition">OnTask</a>
+              <Link href="/ontask" className="hover:underline hover:text-[#ffe082] transition">OnTask</Link>
             </li>
             <li>
               <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-[#ffe082] transition">Waitlist</a>

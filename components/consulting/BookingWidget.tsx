@@ -25,13 +25,12 @@ import Script from 'next/script';
 import * as Sentry from '@sentry/nextjs';
 
 export default function BookingWidget() {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [hasMounted] = useState(() => typeof window !== 'undefined');
   const [isMobile, setIsMobile] = useState(false);
   const calendlySrc = 'https://assets.calendly.com/assets/external/widget.js';
 
   useEffect(() => {
-    setHasMounted(true);
-
+    if (!hasMounted) return;
     // Detect mobile viewport
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -41,7 +40,7 @@ export default function BookingWidget() {
     window.addEventListener('resize', checkMobile);
 
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [hasMounted]);
 
   const handleCalendlyLoad = () => {
     Sentry.captureMessage('Calendly widget loaded', {

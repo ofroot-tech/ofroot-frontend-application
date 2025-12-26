@@ -290,7 +290,7 @@ export default function PricingPage() {
           </div>
 
           <div className="mt-12 p-8 rounded-lg bg-white border border-gray-200">
-            <h4 className="text-lg font-bold text-gray-900 mb-4">What's included in every retainer:</h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-4">What&apos;s included in every retainer:</h4>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
               <li className="flex items-start gap-3">
                 <span className="text-blue-600 font-bold">•</span> Full-stack development (frontend, backend, infra)
@@ -424,8 +424,8 @@ export default function PricingPage() {
             Ready to get started?
           </h2>
 
-          <p className="text-xl text-gray-700 mb-10">
-            Pick a plan or book a call with our team. We're here to help.
+            <p className="text-xl text-gray-700 mb-10">
+            Pick a plan or book a call with our team. We&apos;re here to help.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">

@@ -14,7 +14,8 @@ export default function AmountDisplay({
   className?: string;
   animate?: boolean;
 }) {
-  const v = animate ? useCountUp(Number(value) || 0, { durationMs: 700, resetOnChange: true }) : value;
+  const animatedValue = useCountUp(Number(value) || 0, { durationMs: 700, resetOnChange: true });
+  const v = animate ? animatedValue : value;
   const text = useMemo(() => {
     const n = Number.isFinite(v) ? v : 0;
     try {

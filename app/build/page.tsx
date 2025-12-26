@@ -179,7 +179,7 @@ export default function BuildLandingPage() {
               Why build with OfRoot?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We're not just developers — we're product partners who care about outcomes.
+              We&apos;re not just developers — we&apos;re product partners who care about outcomes.
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export default function BuildLandingPage() {
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">True partners</h3>
               <p className="text-gray-600 text-sm">
-                We're invested in your success. Strategy, design, and engineering — all under one roof.
+                We&apos;re invested in your success. Strategy, design, and engineering — all under one roof.
               </p>
             </div>
           </div>
@@ -230,7 +230,7 @@ export default function BuildLandingPage() {
       <section className="py-16 px-6 sm:px-12 lg:px-20 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
           <blockquote className="text-xl sm:text-2xl text-gray-700 font-medium italic mb-6">
-            "OfRoot took our messy spreadsheet workflow and turned it into a real product in under 8 weeks. The weekly demos kept us aligned and excited."
+            &ldquo;OfRoot took our messy spreadsheet workflow and turned it into a real product in under 8 weeks. The weekly demos kept us aligned and excited.&rdquo;
           </blockquote>
           <div className="text-gray-500 text-sm">
             — Founder, Home Services Startup
@@ -245,7 +245,7 @@ export default function BuildLandingPage() {
             Ready to turn your idea into reality?
           </h2>
           <p className="text-lg text-white/90 mb-8 max-w-xl mx-auto">
-            Let's talk about your project. We'll scope it together and show you exactly what's possible.
+            Let&apos;s talk about your project. We&apos;ll scope it together and show you exactly what&apos;s possible.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a

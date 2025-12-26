@@ -99,7 +99,7 @@ export default function PreCallBriefForm() {
         {/* Alternative Link */}
         <div className="mt-8 p-6 rounded-lg bg-blue-50 border border-blue-200">
           <p className="text-sm text-gray-700 mb-3">
-            <strong>Can't see the form?</strong> Open it directly:
+            <strong>Can&apos;t see the form?</strong> Open it directly:
           </p>
           <a
             href={jotformUrl}
