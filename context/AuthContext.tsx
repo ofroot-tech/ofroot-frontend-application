@@ -50,10 +50,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
   const supabase = getSupabaseBrowserClient();
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     let active = true;
     supabase.auth
       .getSession()
@@ -76,9 +80,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       active = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase]);
 
   const login = async (email: string, password: string) => {
+    if (!supabase) {
+      throw new Error('Auth not available');
+    }
     setLoading(true);
     try {
       const res = await fetch('/api/auth/login', {
@@ -110,6 +117,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
+    if (!supabase) {
+      router.push('/auth/login');
+      return;
+    }
     setLoading(true);
     try {
       await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
