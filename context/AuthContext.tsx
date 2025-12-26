@@ -11,7 +11,7 @@
  */
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/lib/supabase";
+import { getSupabaseBrowserClient } from "@/app/lib/supabase";
 
 export type AuthUser = {
   id: string; // Supabase UUID
@@ -50,6 +50,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const supabase = getSupabaseBrowserClient();
 
   useEffect(() => {
     let active = true;

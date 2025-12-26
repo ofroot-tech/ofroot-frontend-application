@@ -1,7 +1,7 @@
 // app/api/auth/register/route.ts
 
 import { NextRequest } from 'next/server';
-import { supabaseAdmin } from '@/app/lib/supabase-server';
+import { getSupabaseAdmin } from '@/app/lib/supabase-server';
 import { setAuthCookie } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { created, fail } from '@/app/lib/response';
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     // Create user in Supabase Auth
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
       email,
