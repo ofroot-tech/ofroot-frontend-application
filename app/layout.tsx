@@ -6,6 +6,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import Toaster from "@/components/Toaster";
 import RevealObserver from "@/app/components/RevealObserver";
 import Footer from "@/app/components/Footer";
+import Hotjar from "@/app/components/Hotjar";
+import Script from "next/script";
 import ExitIntentPrompt from "@/components/ExitIntentPrompt";
 // import ChatWidget from "@/components/ChatWidget"; // Temporarily disabled
 import { SITE } from './config/site';
@@ -81,76 +83,81 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="robots" content="index,follow" />
+        <Script
+          strategy="beforeInteractive"
+          src="https://t.contentsquare.net/uxa/39fb61661526f.js"
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Hotjar />
         <Theme>
           <AuthProvider>
-            <Toaster />
-            <ExitIntentPrompt />
-            <AlphaTextReveal />
-            {/* Render Navbar at the top-level (outside overflow/transform wrappers)
+          <Toaster />
+          <ExitIntentPrompt />
+      <AlphaTextReveal />
+          {/* Render Navbar at the top-level (outside overflow/transform wrappers)
               so it stays fixed relative to the viewport and above effects */}
-            <Navbar />
-            <div className="relative flex min-h-screen flex-col overflow-hidden bg-white">
-              <div className="floating-circles pointer-events-none" aria-hidden="true">
-                <span className="c1" />
-                <span className="c2" />
-                <span className="c3" />
-                <span className="c4" />
-                <span className="c5" />
-                <span className="c6" />
-                <span className="c7" />
-                <span className="c8" />
-              </div>
-              <RevealObserver />
-              {/* Auto-enable snap/fade behavior wherever a page opts into .snap-page */}
-              <SectionSnapperAll />
-              {/* Smooth in-container anchor scrolling across the site */}
-              <SmoothAnchorScroll />
-              {/* Lightweight global loading state for CTA buttons */}
-              <LoadingOnClickManager />
-              <main className="relative z-10 flex-1">{children}</main>
-              <div className="relative z-10">
-                <Footer />
-              </div>
+          <Navbar />
+          <div className="relative flex min-h-screen flex-col overflow-hidden bg-white">
+            <div className="floating-circles pointer-events-none" aria-hidden="true">
+              <span className="c1" />
+              <span className="c2" />
+              <span className="c3" />
+              <span className="c4" />
+              <span className="c5" />
+              <span className="c6" />
+              <span className="c7" />
+              <span className="c8" />
             </div>
-            {/* <ChatWidget /> */}{/* Chat temporarily disabled */}
-            {/* Organization + WebSite JSON-LD (SSR) */}
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'Organization',
-                  name: SITE.name,
-                  url: SITE.url,
-                  logo: SITE.logo,
-                  sameAs: SITE.socials,
-                }),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'WebSite',
-                  name: SITE.name,
-                  url: SITE.url,
-                  potentialAction: {
-                    '@type': 'SearchAction',
-                    target: `${SITE.url}/search?q={search_term_string}`,
-                    'query-input': 'required name=search_term_string',
-                  },
-                }),
-              }}
-            />
-          </AuthProvider>
+            <RevealObserver />
+            {/* Auto-enable snap/fade behavior wherever a page opts into .snap-page */}
+            <SectionSnapperAll />
+            {/* Smooth in-container anchor scrolling across the site */}
+            <SmoothAnchorScroll />
+            {/* Lightweight global loading state for CTA buttons */}
+            <LoadingOnClickManager />
+            <main className="relative z-10 flex-1" data-hotjar-surface="site-shell">{children}</main>
+            <div className="relative z-10">
+              <Footer />
+            </div>
+          </div>
+          {/* <ChatWidget /> */}{/* Chat temporarily disabled */}
+          {/* Organization + WebSite JSON-LD (SSR) */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: SITE.name,
+                url: SITE.url,
+                logo: SITE.logo,
+                sameAs: SITE.socials,
+              }),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: SITE.name,
+                url: SITE.url,
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: `${SITE.url}/search?q={search_term_string}`,
+                  'query-input': 'required name=search_term_string',
+                },
+              }),
+            }}
+          />
+        </AuthProvider>
         </Theme>
       </body>
     </html>

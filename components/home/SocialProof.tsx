@@ -7,7 +7,7 @@
 
 export default function SocialProof() {
   return (
-    <section className="py-24 px-6 sm:px-8 bg-white">
+    <section className="py-24 px-6 sm:px-8 bg-white text-center">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-8 text-gray-900">Proof It Works</h2>
 
