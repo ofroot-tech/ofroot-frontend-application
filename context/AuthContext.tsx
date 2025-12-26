@@ -2,10 +2,10 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import api from "@/app/utils/api";
+import { supabase } from "@/app/lib/supabase";
 
 export type AuthUser = {
-  id: number;
+  id: string; // Supabase uses string UUID
   name: string;
   email: string;
   plan?: string | null;
@@ -28,31 +28,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    api
-      .get('/auth/me')
-      .then((res) => {
-        if (res.data?.ok) setUser(res.data.data);
-        else setUser(null);
-      })
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || '',
+          email: session.user.email || '',
+          plan: null, // TODO: fetch from profiles table
+          billing_cycle: null,
+          has_blog_addon: false,
+        });
+      }
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          setUser({
+            id: session.user.id,
+            name: session.user.user_metadata?.name || '',
+            email: session.user.email || '',
+            plan: null,
+            billing_cycle: null,
+            has_blog_addon: false,
+          });
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await api.post('/auth/login', new URLSearchParams({ email, password }), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
-    if (!res.data?.ok) {
-      throw new Error(res.data?.error?.message || 'Login failed');
-    }
-    const me = await api.get('/auth/me');
-    if (me.data?.ok) setUser(me.data.data);
+    if (error) throw new Error(error.message);
     router.push('/dashboard');
   };
 
   const logout = async () => {
-    const res = await api.post('/auth/logout');
-    if (res.data?.ok) setUser(null);
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
     router.push('/auth/login');
   };
 

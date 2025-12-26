@@ -187,3 +187,20 @@ model AuditLog {
 
   @@index([tenantId, entityType])
 }
+
+/// User model for authentication and profiles.
+model User {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  emailVerifiedAt   DateTime?
+  tenantId          Int?
+  plan              String?
+  billingCycle      String?
+  isAdmin           Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([email])
+  @@index([tenantId])
+}

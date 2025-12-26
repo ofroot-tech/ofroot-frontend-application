@@ -1,7 +1,7 @@
 // app/api/auth/register/route.ts
 
 import { NextRequest } from 'next/server';
-import { api } from '@/app/lib/api';
+import { supabaseAdmin } from '@/app/lib/supabase-server';
 import { setAuthCookie } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { created, fail } from '@/app/lib/response';
@@ -9,26 +9,17 @@ import { registerSchema } from '@/types/auth';
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
-  let name = '', email = '', password = '', plan: 'free' | 'pro' | 'business' | undefined = undefined, billingCycle: 'monthly' | 'yearly' | undefined = undefined, coupon: string | undefined = undefined;
+  let name = '', email = '', password = '';
   if (contentType.includes('application/json')) {
     const body = await req.json().catch(() => ({} as any));
     name = String(body.name || '');
     email = String(body.email || '');
     password = String(body.password || '');
-    if (body.plan) plan = String(body.plan) as any;
-    if (body.billingCycle) billingCycle = String(body.billingCycle) as any;
-    if (body.coupon) coupon = String(body.coupon);
   } else {
     const form = await req.formData();
     name = String(form.get('name') ?? '');
     email = String(form.get('email') ?? '');
     password = String(form.get('password') ?? '');
-    const p = form.get('plan');
-    const b = form.get('billingCycle');
-    const c = form.get('coupon');
-    if (p) plan = String(p) as any;
-    if (b) billingCycle = String(b) as any;
-    if (c) coupon = String(c);
   }
 
   const parse = registerSchema.safeParse({ name, email, password });
@@ -38,13 +29,31 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { token } = await api.register(name, email, password, { plan, billingCycle, coupon });
+    // Create user in Supabase Auth
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      user_metadata: { name },
+      email_confirm: true, // Auto-confirm for simplicity
+    });
+    if (error) throw error;
+
+    // Insert into User table
+    const { error: dbError } = await supabaseAdmin
+      .from('User')
+      .insert({
+        id: data.user.id,
+        name,
+        email,
+      });
+    if (dbError) throw dbError;
+
     const res = created({});
-    setAuthCookie(res, token);
-    logger.info('auth.register.success', { email, plan, billingCycle });
+    // For Supabase, we can't set session cookie server-side easily, so return success
+    logger.info('auth.register.success', { email });
     return res;
   } catch (err: any) {
-    logger.warn('auth.register.failed', { email, err: err?.message, status: err?.status });
-    return fail(err?.body?.message || 'Registration failed', err?.status ?? 500);
+    logger.warn('auth.register.failed', { email, err: err?.message });
+    return fail(err?.message || 'Registration failed', 500);
   }
 }
