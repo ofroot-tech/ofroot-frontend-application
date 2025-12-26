@@ -1,7 +1,6 @@
 // app/api/auth/logout/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { api } from '@/app/lib/api';
 import { clearAuthCookie, getAuthTokenFromRequest } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { ok } from '@/app/lib/response';
@@ -9,11 +8,7 @@ import { ok } from '@/app/lib/response';
 export async function POST(req: NextRequest) {
   const token = await getAuthTokenFromRequest();
   if (token) {
-    try {
-      await api.logout(token);
-    } catch (err: any) {
-      logger.warn('auth.logout.backend_failed', { status: err?.status, message: err?.message });
-    }
+    logger.info('auth.logout.token_found');
   }
 
   // If this is a browser form submit (document navigation), redirect to login

@@ -12,7 +12,7 @@
 // =============================================================
 
 import "dotenv/config";
-import { createClient, type User as SupabaseAuthUser } from "@supabase/supabase-js";
+import { createClient, type User as SupabaseAuthUser, type SupabaseClient } from "@supabase/supabase-js";
 
 function required(name: string): string {
   const value = process.env[name];
@@ -51,7 +51,7 @@ async function main() {
 }
 
 async function getOrCreateAuthUser(
-  admin: ReturnType<typeof createClient>,
+  admin: SupabaseClient,
   email: string,
   password: string,
   name: string
