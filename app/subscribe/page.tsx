@@ -105,14 +105,14 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
           <ClientViewPing />
           <header className="mb-8 md:mb-12">
             <h1 className="text-balance text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-              <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your $1 trial'}</span>
+              <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your subscription'}</span>
             </h1>
             {productConfig?.heroSubtitle ? (
               <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{productConfig.heroSubtitle}</p>
             ) : (
-              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Normally {anchorPrice}/month — try it for $1 for 14 days. Cancel anytime.</p>
+              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Start on the full plan today. No trial gimmicks—just the complete product from day one.</p>
             )}
-            <p className="mt-1 text-sm text-gray-500">After your trial, continue on the plan you choose. You’ll confirm billing details after signup.</p>
+            <p className="mt-1 text-sm text-gray-500">Secure Stripe checkout. Billing renews on your chosen cadence with easy cancellation before renewal.</p>
             <p className="mt-3 text-sm font-medium text-gray-700">Trusted by local pros.</p>
           </header>
         </div>

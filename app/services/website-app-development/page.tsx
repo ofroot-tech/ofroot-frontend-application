@@ -17,7 +17,7 @@ export default function WebsiteAppDevelopmentPage() {
         title="Website & App Development"
         subtitle="Full‑stack product engineering for speed: MVPs, SaaS, mobile, and migrations — with observability and performance baked in."
         ctaHref="/subscribe?product=website-app-development"
-        ctaLabel="Start $1 trial"
+        ctaLabel="Start subscription"
         analyticsServiceId="website-app-development"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
         />

@@ -8,6 +8,7 @@
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { getSupabaseAdmin } from '@/app/lib/supabase-server';
 
 // ------------------------------------------------------------
 // Initialize Stripe with secret key (lazily to avoid build-time errors)
@@ -143,6 +144,11 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     } else {
       console.log('[Webhook] Payment recorded successfully');
     }
+
+    await markPaymentVerified({
+      metadata: session.metadata,
+      email: session.customer_email || session.customer_details?.email,
+    });
   } catch (error) {
     console.error('[Webhook] Error calling backend API:', error);
   }
@@ -177,6 +183,11 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
     );
 
     console.log('[Webhook] Payment status updated');
+
+    await markPaymentVerified({
+      metadata: paymentIntent.metadata,
+      email: paymentIntent.receipt_email,
+    });
   } catch (error) {
     console.error('[Webhook] Error updating payment status:', error);
   }
@@ -278,4 +289,72 @@ async function logWebhookEvent(event: Stripe.Event) {
   } catch (error) {
     console.error('[Webhook] Failed to log event:', error);
   }
+}
+
+// ------------------------------------------------------------
+// Utility: markPaymentVerified
+// Purpose: Flip Supabase Auth metadata to verified and mirror plan data into
+// the User table so login gating can trust payment state.
+// ------------------------------------------------------------
+async function markPaymentVerified(payload: { metadata?: Stripe.Metadata | null; email?: string | null | undefined }) {
+  try {
+    const admin = getSupabaseAdmin();
+    const meta = payload?.metadata || {};
+    const explicitId = (meta as any)?.supabase_user_id as string | undefined;
+    const plan = (meta as any)?.plan as string | undefined;
+    const billing_cycle = (meta as any)?.billing_cycle as string | undefined;
+    const name = (meta as any)?.user_name as string | undefined;
+    const claimedEmail = ((meta as any)?.user_email || payload?.email || '') as string;
+
+    const userId = explicitId || (await findUserIdByEmail(admin, claimedEmail));
+    const email = claimedEmail || (await findEmailById(admin, userId));
+
+    if (!userId || !email) {
+      console.warn('[Webhook] markPaymentVerified skipped (missing user)', { explicitId, claimedEmail });
+      return;
+    }
+
+    const current = await admin.auth.admin.getUserById(userId).catch(() => null);
+    const existingMeta = current?.data?.user?.user_metadata || {};
+    const mergedMeta = {
+      ...existingMeta,
+      payment_status: 'verified',
+      payment_verified: true,
+      ...(plan ? { plan } : {}),
+      ...(billing_cycle ? { billing_cycle } : {}),
+    } as Record<string, any>;
+
+    await admin.auth.admin.updateUserById(userId, { user_metadata: mergedMeta });
+
+    const now = new Date().toISOString();
+    await admin
+      .from('User')
+      .upsert({
+        id: userId,
+        email,
+        name: name || (existingMeta as any)?.name || email,
+        plan: plan || (existingMeta as any)?.plan || null,
+        billingCycle: billing_cycle || (existingMeta as any)?.billing_cycle || null,
+        updatedAt: now,
+        createdAt: now,
+      }, { onConflict: 'id' });
+
+    console.log('[Webhook] markPaymentVerified applied', { userId, email, plan, billing_cycle });
+  } catch (error) {
+    console.error('[Webhook] markPaymentVerified failed', error);
+  }
+}
+
+async function findUserIdByEmail(admin: ReturnType<typeof getSupabaseAdmin>, email?: string | null) {
+  if (!email) return undefined;
+  const { data, error } = await admin.auth.admin.listUsers();
+  if (error) throw error;
+  const match = data.users.find((u) => u.email?.toLowerCase() === email.toLowerCase());
+  return match?.id;
+}
+
+async function findEmailById(admin: ReturnType<typeof getSupabaseAdmin>, id?: string | null) {
+  if (!id) return undefined;
+  const res = await admin.auth.admin.getUserById(id).catch(() => null);
+  return res?.data?.user?.email ?? undefined;
 }

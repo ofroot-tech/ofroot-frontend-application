@@ -16,7 +16,7 @@ export default function MarketingAutomationPage() {
         title="Marketing Automation"
         subtitle="Capture more demand with landing pages, follow‑up automations, and measurement. Less manual work, more revenue."
         ctaHref="/subscribe?product=marketing-automation"
-        ctaLabel="Start $1 trial"
+        ctaLabel="Start subscription"
         analyticsServiceId="marketing-automation"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
       />

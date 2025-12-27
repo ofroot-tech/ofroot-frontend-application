@@ -5,7 +5,7 @@ import SectionSnapper from '@/components/SectionSnapper';
 export const metadata = {
   title: 'OnTask — Simple Scheduling, Estimates, Invoices, and Payments for HVAC, Cleaning, and Plumbing',
   description:
-    'Run your service business without the chaos. One calendar, fast estimates→invoices, and Stripe payments. Built for 1–10 person teams. $1 trial • Starter $25/mo.',
+    'Run your service business without the chaos. One calendar, fast estimates→invoices, and Stripe payments. Built for 1–10 person teams. Pay upfront • Starter $25/mo.',
   alternates: { canonical: '/ontask' },
 };
 
@@ -22,7 +22,7 @@ export default function OnTaskLanding() {
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Run your day without the chaos</h1>
           <p className="mt-3 text-lg text-gray-700">One clean calendar. Fast estimates → invoices. Stripe payments your customers trust. Built for 1–10 person HVAC, cleaning, and plumbing teams.</p>
           <div className="mt-5 flex items-center justify-center gap-3">
-            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
             <a href="#features" className="underline text-gray-800">See features</a>
           </div>
           <p className="mt-3 text-sm text-gray-600">Starter $25/month • Cancel anytime • No long setup</p>
@@ -48,7 +48,7 @@ export default function OnTaskLanding() {
           <p className="mt-2 text-xs text-gray-500">*Based on internal time‑tracking and team feedback; results may vary.</p>
         </blockquote>
         <div className="mt-4">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your $1 trial</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your subscription</Link>
         </div>
       </section>
 
@@ -75,7 +75,7 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-6">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your $1 trial</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your subscription</Link>
         </div>
       </section>
 
@@ -125,7 +125,7 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
         </div>
       </section>
 
@@ -146,13 +146,13 @@ export default function OnTaskLanding() {
             </ul>
             <div className="mt-4 flex gap-3">
               <a href="#features" className="underline text-gray-800">Browse features</a>
-              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Start $1 trial</Link>
+              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Start subscription</Link>
             </div>
           </div>
           {/* Try */}
           <div id="try" className="rounded-xl border p-6 bg-white/90 backdrop-blur shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">2) Try</h3>
-            <p className="mt-2 text-gray-700">Start the $1 trial. Add a customer and one job. Send an estimate, convert it, and take a payment. Feel the difference in a day.</p>
+            <p className="mt-2 text-gray-700">Start your subscription. Add a customer and one job. Send an estimate, convert it, and take a payment. Feel the difference in a day.</p>
             <ul className="mt-3 space-y-1 text-sm text-gray-700">
               <li>• Drag‑and‑drop a job onto the calendar</li>
               <li>• Send a branded estimate; convert to invoice in one click</li>
@@ -187,7 +187,7 @@ export default function OnTaskLanding() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 grid-gap-modern smart-flow">
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">Fast setup, zero hassle</h3>
-            <p className="mt-1 text-gray-700">Start the $1 trial, add a customer, and book your first job in minutes.</p>
+            <p className="mt-1 text-gray-700">Start your subscription, add a customer, and book your first job in minutes.</p>
           </div>
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">Built for the field</h3>
@@ -199,7 +199,7 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
           <Link href="/marketing" className="ml-4 underline text-gray-900">See how we help teams grow</Link>
         </div>
       </section>
@@ -218,7 +218,7 @@ export default function OnTaskLanding() {
             <li>• Reporting</li>
           </ul>
           <div className="mt-5 flex items-center justify-center gap-3">
-            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
             <Link href="/helpr" className="underline text-gray-800">Get help setting up</Link>
           </div>
         </div>
@@ -246,12 +246,12 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
         </div>
       </section>
 
   <section data-snap-section className="section-full snap-fade text-center reveal-in fade-only">
-        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full">Start your $1 trial</Link>
+        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
     <p className="mt-2 text-sm text-gray-600">Made for crews of 1–10. Save hours each week and never forget a follow‑up. Starter $25/month — try it for $1, cancel anytime.</p>
       </section>
 
@@ -259,7 +259,7 @@ export default function OnTaskLanding() {
 
       {/* sticky CTA for small screens */}
       <div className="fixed inset-x-0 bottom-3 mx-auto w-full max-w-md px-4 sm:hidden z-40">
-        <Link href="/subscribe?product=ontask" className="block text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg">Start $1 trial</Link>
+        <Link href="/subscribe?product=ontask" className="block text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg">Start subscription</Link>
       </div>
 
       {/* JSON-LD: SoftwareApplication */}

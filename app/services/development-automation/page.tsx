@@ -17,7 +17,7 @@ export default function DevelopmentAutomationPage() {
         title="Development Automation"
         subtitle="Ship features faster with pipelines, scaffolds, and repeatable integrations. Reduce regressions, increase velocity."
         ctaHref="/subscribe?product=development-automation"
-        ctaLabel="Start $1 trial"
+        ctaLabel="Start subscription"
   analyticsServiceId="development-automation"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
         />

@@ -108,9 +108,19 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
         if (p) product = p.toLowerCase();
       } catch {}
 
-      await api.post('/auth/register', { name: data.name, email: data.email, password: data.password, plan, billingCycle, coupon: data.coupon, product });
-      toast({ type: 'success', title: 'Welcome!', message: `Your ${plan} plan account has been created.` });
-      router.push('/dashboard/overview');
+      const res = await fetch('/api/subscribe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: data.name, email: data.email, password: data.password, plan, billingCycle, coupon: data.coupon, product }),
+      });
+
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body?.url) {
+        throw new Error(body?.error?.message || 'Unable to start checkout');
+      }
+
+      toast({ type: 'success', title: 'Checkout', message: 'Redirecting to secure payment…' });
+      window.location.href = body.url as string;
     } catch (err: any) {
       const msg = err?.response?.data?.error?.message || err?.response?.data?.message || err?.message || 'Subscription failed';
       setError(msg);
@@ -125,7 +135,7 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
     if (announceRef.current) announceRef.current.textContent = text;
   }
 
-  const cta = 'Start $1 trial (14 days)';
+  const cta = 'Start subscription';
 
   // Consistent form input styling
   const baseInput = 'w-full rounded-lg border border-gray-300 px-3 py-2.5 text-[15px] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-colors disabled:opacity-60 disabled:cursor-not-allowed';
@@ -312,14 +322,10 @@ export default function SubscribeForm({ productConfig }: { productConfig?: Produ
         >
           {loading ? 'Creating account…' : cta}
         </button>
-        <p className="text-[11px] text-gray-500">Trusted by 300+ contractors. Limited early-access offer.</p>
+        <p className="text-[11px] text-gray-500">Trusted by 300+ contractors. Secure Stripe checkout.</p>
         {/* Honest fine print */}
         <p className="text-xs text-gray-500">
-          $1 today for a 14-day trial. Cancel anytime. After the trial, continue on {plan} at {
-            billingCycle === 'monthly'
-              ? (plan === 'pro' ? `${PLANS.find(x => x.id === 'pro')?.priceMonthly || '$49'}/mo` : `${PLANS.find(x => x.id === 'business')?.priceMonthly || '$99'}/mo`)
-              : (plan === 'pro' ? `${PLANS.find(x => x.id === 'pro')?.priceYearly || '$490'}/yr` : `${PLANS.find(x => x.id === 'business')?.priceYearly || '$990'}/yr`)
-          } unless you cancel.
+          Pay the first period today. Future renewals follow your {billingCycle} cadence. Cancel anytime before the next renewal.
         </p>
       </form>
     </div>

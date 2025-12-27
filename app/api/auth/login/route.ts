@@ -11,6 +11,14 @@ import { setAuthCookie } from '@/app/lib/cookies';
 
 export const dynamic = 'force-dynamic';
 
+// ---------------------------------------------------------------------------
+// POST /api/auth/login — Paid-only sign-in with one exception
+//
+// Narrative: authenticate against Supabase, but only allow access when the
+// customer has a verified payment on file. The lone bypass is the seeded
+// operator account `dimitri.mcdaniel@gmail.com` for emergencies. We rely on
+// Supabase Auth user_metadata flags set by the checkout webhook.
+// ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
   // Support both form-encoded and JSON payloads
   let email = '';
@@ -48,6 +56,19 @@ export async function POST(req: NextRequest) {
     if (error) {
       logger.warn('auth.login.supabase_failed', { email, code: error.code, message: error.message });
       return fail(error.message || 'Login failed', 401);
+    }
+
+    // Paid-gated login: allow only if metadata indicates verified payment,
+    // except for the explicit operator email.
+    const bypass = email.toLowerCase() === 'dimitri.mcdaniel@gmail.com';
+    const paid = Boolean(
+      (data.user?.user_metadata as any)?.payment_status === 'verified' ||
+      (data.user?.user_metadata as any)?.payment_verified === true
+    );
+    if (!paid && !bypass) {
+      await supabase.auth.signOut();
+      logger.warn('auth.login.payment_required', { email });
+      return fail('Payment required. Please complete your subscription.', 402);
     }
 
     const res = ok({

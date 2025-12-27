@@ -17,7 +17,7 @@ export default function AIDevelopmentIntegrationsPage() {
         title="AI Development & Integrations"
         subtitle="From assistants and retrieval to end‑to‑end orchestration: ship AI that actually helps people work faster."
         ctaHref="/subscribe?product=ai-development-integrations"
-        ctaLabel="Start $1 trial"
+        ctaLabel="Start subscription"
   analyticsServiceId="ai-development-integrations"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
         />
