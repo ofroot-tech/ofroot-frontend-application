@@ -1,0 +1,47 @@
+name: Delete Obsolete Branches
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-branches:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete adding-database branch
+        run: |
+          branch="adding-database"
+          if git ls-remote --heads origin "$branch" \
+            | grep "$branch"; then
+            git push origin --delete "$branch"
+            echo "✓ Deleted branch: $branch"
+          else
+            echo "Branch $branch does not exist"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete feat/recurring-invoices-and-service-pages branch
+        run: |
+          branch="feat/recurring-invoices-and-service-pages"
+          if git ls-remote --heads origin "$branch" \
+            | grep "$branch"; then
+            git push origin --delete "$branch"
+            echo "✓ Deleted branch: $branch"
+          else
+            echo "Branch $branch does not exist"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List remaining branches
+        run: |
+          echo "Remaining branches:"
+          git ls-remote --heads origin
