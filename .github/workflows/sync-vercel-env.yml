@@ -1,0 +1,85 @@
+name: Sync Vercel Environment Variables
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target Vercel environment (production|preview|development)"
+        required: true
+        default: "production"
+
+jobs:
+  sync-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Push environment variables to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          TARGET: ${{ github.event.inputs.environment }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          STRIPE_API_VERSION: ${{ secrets.STRIPE_API_VERSION }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VERCEL_TOKEN}" ]; then
+            echo "VERCEL_TOKEN is required"; exit 1;
+          fi
+          if [ -z "${VERCEL_PROJECT_ID}" ]; then
+            echo "VERCEL_PROJECT_ID is required"; exit 1;
+          fi
+          if [ -z "${TARGET}" ]; then
+            echo "Target environment is required"; exit 1;
+          fi
+
+          declare -A vars=([
+            NEXT_PUBLIC_SUPABASE_URL]="${NEXT_PUBLIC_SUPABASE_URL}" [
+            NEXT_PUBLIC_SUPABASE_ANON_KEY]="${NEXT_PUBLIC_SUPABASE_ANON_KEY}" [
+            SUPABASE_SERVICE_ROLE_KEY]="${SUPABASE_SERVICE_ROLE_KEY}" [
+            SUPABASE_DB_PASSWORD]="${SUPABASE_DB_PASSWORD}" [
+            NEXTAUTH_URL]="${NEXTAUTH_URL}" [
+            NEXTAUTH_SECRET]="${NEXTAUTH_SECRET}" [
+            NEXT_PUBLIC_API_BASE_URL]="${NEXT_PUBLIC_API_BASE_URL}" [
+            STRIPE_SECRET_KEY]="${STRIPE_SECRET_KEY}" [
+            NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY]="${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}" [
+            STRIPE_WEBHOOK_SECRET]="${STRIPE_WEBHOOK_SECRET}" [
+            STRIPE_API_VERSION]="${STRIPE_API_VERSION}"
+          ])
+
+          for key in "${!vars[@]}"; do
+            value="${vars[$key]}"
+            if [ -z "${value}" ]; then
+              echo "Skipping ${key} (empty)";
+              continue;
+            fi
+            echo "Syncing ${key} to ${TARGET}"
+            printf "%s" "${value}" | vercel env add "${key}" "${TARGET}" --token "${VERCEL_TOKEN}" --project "${VERCEL_PROJECT_ID}" >/dev/null 2>&1 || true
+          done
+
+      - name: Trigger production deploy (optional)
+        if: github.event.inputs.environment == 'production'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          vercel --prod --token "${VERCEL_TOKEN}" --project "${VERCEL_PROJECT_ID}" --confirm

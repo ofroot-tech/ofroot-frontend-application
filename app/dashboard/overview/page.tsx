@@ -3,36 +3,60 @@
 
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { api, type User } from '@/app/lib/api';
+import { createClient } from '@supabase/supabase-js';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { PageHeader, Card, CardBody, RangeSelect } from '@/app/dashboard/_components/UI';
+import { getSupabaseAdmin } from '@/app/lib/supabase-server';
 
+// Helper to get auth token from cookies
 async function getToken() {
   const store = await cookies();
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
 }
 
+// Main overview page
 export default async function OverviewPage({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null as User | null);
-  if (!me) redirect('/auth/login');
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseAnonKey) redirect('/auth/login');
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  const { data: authData, error: authError } = await supabase.auth.getUser(token);
+  if (authError || !authData?.user) redirect('/auth/login');
+  const me = {
+    id: authData.user.id,
+    name: authData.user.user_metadata?.name ?? authData.user.user_metadata?.full_name ?? '',
+    email: authData.user.email ?? '',
+  };
 
   const sp = (await searchParams) || {};
   const rangeParam = Array.isArray(sp.range) ? sp.range[0] : sp.range;
   const range = (rangeParam === '30d' || rangeParam === '90d') ? rangeParam : '7d';
 
-  // Pull admin metrics (real values or zero states from backend)
+  // Pull admin metrics from Supabase view `admin_metrics`
   let tenants = 0, users = 0, subscribers = 0, mrr = 0, hoursSavedWeek = 0;
   try {
-    const res = await api.adminMetrics(token, { range });
-    tenants = res.data?.tenants ?? 0;
-    users = res.data?.users ?? 0;
-    subscribers = res.data?.subscribers ?? 0;
-    mrr = res.data?.mrr ?? 0;
-    hoursSavedWeek = (res.data as any)?.hours_saved_week ?? 0;
-  } catch { /* ignore, stay zeros */ }
+    const admin = getSupabaseAdmin();
+    const { data: metrics, error: metricsError } = await admin
+      .from('admin_metrics')
+      .select('*')
+      .single();
+    if (!metricsError && metrics) {
+      tenants = Number(metrics.tenants ?? 0);
+      users = Number(metrics.users ?? 0);
+      subscribers = Number(metrics.subscribers ?? 0);
+      mrr = Math.round(Number(metrics.mrr_cents ?? 0) / 100);
+      hoursSavedWeek = Number(metrics.hours_saved_week ?? 0);
+    }
+  } catch {
+    // If metrics fail, keep graceful zeros
+  }
 
   const kpis = [
     { title: 'Tenants', value: String(tenants) },
