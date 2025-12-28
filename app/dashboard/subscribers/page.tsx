@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { api, type Subscriber } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardHeader, CardBody, Pagination, DataTable, ToolbarButton } from '@/app/dashboard/_components/UI';
 
 async function getToken() {
@@ -17,7 +18,7 @@ export default async function SubscribersPage({ searchParams }: { searchParams?:
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};

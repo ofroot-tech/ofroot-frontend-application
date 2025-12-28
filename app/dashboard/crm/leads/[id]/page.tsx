@@ -19,7 +19,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const lead = await api.adminGetLead(leadId, token).then(r => r.data).catch(() => null);

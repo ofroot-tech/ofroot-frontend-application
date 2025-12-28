@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { api, type User } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { CheckCircle, Clock3, PhoneCall, PhoneOff, Voicemail } from 'lucide-react';
 
 async function getToken() {
@@ -32,7 +33,7 @@ export default async function DialerPage() {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null as User | null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   return (

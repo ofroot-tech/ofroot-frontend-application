@@ -61,7 +61,7 @@ export default async function PayrollPage({ searchParams }: { searchParams?: Sea
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) ?? {};

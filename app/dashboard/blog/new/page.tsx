@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { api, type BlogPostInput } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardBody, CardHeader, Breadcrumbs } from '@/app/dashboard/_components/UI';
 import { PostForm } from '@/app/dashboard/blog/_components/PostForm';
 import { SuccessToastFromQuery } from '@/components/SuccessToastFromQuery';
@@ -75,9 +76,8 @@ export default async function NewBlogPostPage() {
     // c) if b) is true then d)
     // d) publish blog to ofroot.technology/blog/:dir
     try {
-      // Resolve current user to check super admin status
-      const me = await api.me(token).catch(() => null);
-      const email = (me as any)?.email ?? (me as any)?.data?.email ?? null;
+      const me = await fetchSupabaseUserByToken(token);
+      const email = me?.email ?? null;
       const allow = String(process.env.ADMIN_EMAILS || '')
         .split(',')
         .map((s) => s.trim().toLowerCase())

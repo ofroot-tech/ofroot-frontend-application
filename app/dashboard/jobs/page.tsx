@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { api, type Job } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardBody, DataTable, Pagination } from '@/app/dashboard/_components/UI';
 import { JobStatusBadge } from './_components/JobStatusBadge';
 
@@ -30,7 +31,7 @@ export default async function JobsPage({ searchParams }: { searchParams?: Promis
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};

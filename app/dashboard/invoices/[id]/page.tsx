@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { api, type Invoice } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardHeader, CardBody, ToolbarButton } from '@/app/dashboard/_components/UI';
 
 async function getToken() {
@@ -27,7 +28,8 @@ function formatMoney(cents?: number | null, currency?: string) {
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const token = await getToken();
   if (!token) redirect('/auth/login');
-  await api.me(token).catch(() => redirect('/auth/login'));
+  const me = await fetchSupabaseUserByToken(token);
+  if (!me) redirect('/auth/login');
 
   const id = Number((await params).id);
   if (!Number.isFinite(id)) redirect('/dashboard/invoices');

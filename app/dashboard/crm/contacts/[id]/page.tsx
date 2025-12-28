@@ -19,7 +19,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const contact = await api.adminGetContact(contactId, token).then(r => r.data).catch(() => null);
