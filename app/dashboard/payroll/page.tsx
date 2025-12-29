@@ -11,6 +11,7 @@ import {
   type TenantBrandSettings,
 } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardHeader, CardBody, DataTable, KpiCard, EmptyState } from '@/app/dashboard/_components/UI';
 import { TenantScopePicker } from './_components/TenantScopePicker';
 import {
