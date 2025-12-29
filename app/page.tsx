@@ -20,12 +20,12 @@ import SocialProof from "@/components/home/SocialProof";
 import Faq from "@/components/home/Faq";
 
 export const metadata: Metadata = {
-  title: 'OfRoot — Engineering, Automation & AI',
-  description: 'On-demand engineering, automation, and AI by subscription. Ship faster with focused sprints and transparent pricing.',
-  keywords: ['engineering', 'automation', 'AI', 'development', 'SaaS', 'consulting'],
+  title: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
+  description: 'We design, build, and run production AI workflows for operators who need revenue this quarter. Clear scope, senior ownership, and weekly shipping.',
+  keywords: ['AI systems', 'automation', 'production AI', 'operators', 'revenue'],
   openGraph: {
-    title: 'OfRoot — Engineering, Automation & AI',
-    description: 'Ship faster with focused sprints. Start for $1.',
+    title: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
+    description: 'Production AI workflows, built and run by senior engineers. Scope a 30-day build.',
     url: 'https://ofroot.technology',
     type: 'website',
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         url: 'https://ofroot.technology/og.jpg',
         width: 1200,
         height: 630,
-        alt: 'OfRoot - Ship faster with AI & automation',
+        alt: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
       },
     ],
   },

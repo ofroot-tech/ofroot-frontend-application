@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { X, ArrowRight } from 'lucide-react';
+import { useCallback } from 'react';
 
 export default function PublicNavbar() {
   const pathname = usePathname();
@@ -20,10 +21,13 @@ export default function PublicNavbar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  const toggleMenu = (next = !open) => {
-    setOpen(next);
-    setLiveMessage(next ? 'Mobile menu opened' : 'Mobile menu closed');
-  };
+  const toggleMenu = useCallback((next?: boolean) => {
+    setOpen((prev) => {
+      const resolved = typeof next === 'boolean' ? next : !prev;
+      setLiveMessage(resolved ? 'Navigation menu opened' : 'Navigation menu closed');
+      return resolved;
+    });
+  }, []);
 
   const closeMenu = () => toggleMenu(false);
 
@@ -68,7 +72,7 @@ export default function PublicNavbar() {
       previouslyFocused.current?.focus?.();
       previouslyFocused.current = null;
     };
-  }, [open]);
+  }, [open, toggleMenu]);
 
   const isActive = (href: string) => pathname === href;
 

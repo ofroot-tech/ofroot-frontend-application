@@ -5,7 +5,7 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 function log(level: LogLevel, message: string, meta?: Record<string, unknown>) {
   const entry = { t: new Date().toISOString(), level, message, ...meta };
-  // eslint-disable-next-line no-console
+   
   console[level === 'debug' ? 'log' : level](JSON.stringify(entry));
 }
 

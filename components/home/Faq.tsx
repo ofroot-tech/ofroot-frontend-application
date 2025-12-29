@@ -14,8 +14,8 @@ import { CheckCircle2, Clock3, ShieldCheck } from "lucide-react";
 const faqs = [
   {
     q: "Who is this for?",
-    a: "Founders and operators running service businesses who want a single place for web, brand, CRM, and automations without hiring an in-house team.",
-    badge: "Service teams & consultants",
+    a: "Operators and founders who need revenue-grade AI workflows this quarter without hiring an in-house team.",
+    badge: "Revenue-first operators",
   },
   {
     q: "How fast is setup?",
@@ -94,7 +94,7 @@ export default function Faq() {
         </div>
 
         <ScrollReveal delay={200} className="mt-12 flex flex-col items-center gap-3" data-hotjar-cta="faq-cta">
-          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Start for $1</PrimaryCta>
+          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Scope a 30-day build</PrimaryCta>
           <p className="text-xs sm:text-sm text-gray-500 text-center">
             Hotjar collects scroll depth, click maps on each question, and rage-clicks so we can tighten answers quickly.
           </p>

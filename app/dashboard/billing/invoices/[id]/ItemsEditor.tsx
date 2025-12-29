@@ -151,7 +151,7 @@ function AnimatedRow({
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), delayMs);
     return () => clearTimeout(t);
-  }, []);
+  }, [delayMs]);
   const line = (row.quantity || 0) * (row.unit_amount_cents || 0);
   const style: React.CSSProperties = {
     transition: 'opacity 180ms ease, transform 180ms ease',

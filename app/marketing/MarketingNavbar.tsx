@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { Newspaper } from 'lucide-react';
 
 /**
@@ -24,10 +24,13 @@ export default function MarketingNavbar() {
   const [blogOpen, setBlogOpen] = useState(false);
   const blogMenuRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleMenu = (next = !open) => {
-    setOpen(next);
-    setLiveMessage(next ? 'Mobile menu opened' : 'Mobile menu closed');
-  };
+  const toggleMenu = useCallback((next?: boolean) => {
+    setOpen((prev) => {
+      const resolved = typeof next === 'boolean' ? next : !prev;
+      setLiveMessage(resolved ? 'Mobile menu opened' : 'Mobile menu closed');
+      return resolved;
+    });
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -77,7 +80,7 @@ export default function MarketingNavbar() {
         previouslyFocused.current = null;
       }
     };
-  }, [open]);
+  }, [open, toggleMenu]);
 
   // Close blog dropdown on outside click or Escape
   useEffect(() => {
@@ -115,7 +118,7 @@ export default function MarketingNavbar() {
           </Link>
         </div>
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
-          <a href="/" className="text-gray-700 hover:text-[#20b2aa]">Development</a>
+          <Link href="/" className="text-gray-700 hover:text-[#20b2aa]">Development</Link>
           <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#20b2aa]">Waitlist</a>
           {/* Blog dropdown */}
           <div className="relative" ref={blogMenuRef}>
@@ -137,7 +140,7 @@ export default function MarketingNavbar() {
               aria-label="Blog menu"
               className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#1a8f85] bg-[#20b2aa] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
             >
-              <a
+              <Link
                 href="/blog"
                 role="menuitem"
                 data-analytics="nav_blog_internal"
@@ -145,7 +148,7 @@ export default function MarketingNavbar() {
                 onClick={() => setBlogOpen(false)}
               >
                 Internal blog
-              </a>
+              </Link>
               <a
                 href="https://substack.com/@ofroot/posts"
                 target="_blank"
@@ -198,12 +201,12 @@ export default function MarketingNavbar() {
         }
       >
         <div className="flex flex-col p-3 gap-3 max-w-6xl mx-auto">
-          <a href="/marketing" onClick={() => toggleMenu(false)} className="text-gray-700">Home</a>
+          <Link href="/marketing" onClick={() => toggleMenu(false)} className="text-gray-700">Home</Link>
           <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" onClick={() => toggleMenu(false)} className="text-gray-700">Waitlist</a>
           {/* Blog group in mobile */}
           <div className="pt-1">
             <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Blog</div>
-            <a href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700 block py-1">Internal blog</a>
+            <Link href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700 block py-1">Internal blog</Link>
             <a href="https://substack.com/@ofroot/posts" target="_blank" rel="noopener noreferrer" onClick={()=> toggleMenu(false)} className="text-gray-700 block py-1">Substack</a>
           </div>
           <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>

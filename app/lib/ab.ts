@@ -47,7 +47,7 @@ export function track(event: AbEvent) {
     // ignored — we will log below as a fallback
   }
   // Fallback to console for local insight
-  // eslint-disable-next-line no-console
+   
   console.log('[ab.track]', event);
 }
 

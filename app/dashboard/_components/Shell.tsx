@@ -118,11 +118,11 @@ export default function DashboardShell({ children, authed = false }: Props) {
 			}
 		};
 		document.addEventListener('keydown', onKeydown);
+		const focusTarget = toolsBtnRef.current || lastActiveRef.current;
 		return () => {
 			document.removeEventListener('keydown', onKeydown);
-			const toFocus = toolsBtnRef.current || lastActiveRef.current;
 			try {
-				toFocus?.focus();
+				focusTarget?.focus();
 			} catch {}
 		};
 	}, [toolsOpen]);

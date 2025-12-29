@@ -2,8 +2,9 @@
  * Hero
  *
  * Purpose:
- *  - Communicate the primary value prop quickly and present a clear CTA.
- *  - Uses ScrollReveal for modern entrance animations.
+ *  - State the ICP, promise, and proof in under 5 seconds for tired operators.
+ *  - Spotlight a live case study to anchor credibility.
+ *  - Keep motion subtle via ScrollReveal so copy stays the hero.
  */
 
 import Link from "next/link";
@@ -21,21 +22,21 @@ export default function Hero() {
 
       <div className="relative max-w-5xl mx-auto z-10">
         <ScrollReveal as="h1" className="text-5xl sm:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight text-gray-900 text-balance">
-          Your website. Your marketing. Your clients. <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600">All managed in one place.</span>
+          AI systems for operators who need revenue this quarter.
         </ScrollReveal>
 
         <ScrollReveal delay={200} as="p" className="text-xl sm:text-2xl text-gray-600 mb-10 leading-relaxed text-balance max-w-3xl mx-auto">
-          OfRoot Tech replaces 5–7 tools with one simple system.
-          Get a fast website, branded assets, automations, and reporting. Launch in 48 hours.
+          We design, build, and run production AI workflows—grounded in your stack—to move top-line and cut manual ops in 30 days.
         </ScrollReveal>
 
         <ScrollReveal delay={400} className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-          <PrimaryCta href="/pricing" className="h-12 px-8 text-lg">See Plans — Launch in 48 Hours</PrimaryCta>
-          <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-8 py-3 text-gray-900 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 h-12 text-lg shadow-sm">Compare plans</Link>
+          <PrimaryCta href="/pricing" className="h-12 px-8 text-lg">Scope a 30-day build</PrimaryCta>
+          <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-8 py-3 text-gray-900 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 h-12 text-lg shadow-sm">Review your stack</Link>
         </ScrollReveal>
 
-        <ScrollReveal delay={600} as="p" className="text-sm font-medium text-gray-500 uppercase tracking-wider">
-          Trusted by home services teams, consultants, and local trades
+        <ScrollReveal delay={600} as="div" className="flex flex-col sm:flex-row items-center justify-center gap-3 text-sm font-medium text-gray-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-gray-800 border border-gray-200">Operator-led · senior engineers</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-emerald-800 border border-emerald-100">MetroAreaRemovalServices: AI intake + scheduling → weekly bookings</span>
         </ScrollReveal>
       </div>
     </section>

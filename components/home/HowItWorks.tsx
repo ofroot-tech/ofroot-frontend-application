@@ -2,35 +2,35 @@
  * HowItWorks
  *
  * Narrative:
- *  - Mirrors the proof-driven styling of the Features section so the page feels cohesive.
- *  - Adds Hotjar-friendly attributes (section, grid, per-step, CTA) to capture click maps and scroll depth.
- *  - Keeps the 3-step story but wraps it in tactile cards, gradients, and inline metrics to set expectations.
+ *  - Three-step story tuned for operator attention spans: review, build, run.
+ *  - Hotjar hooks stay for scroll/click clarity.
+ *  - Inline metrics set expectations for the 30-day build.
  */
 
 import PrimaryCta from "@/components/ui/PrimaryCta";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { ArrowRight, Clock3, Sparkles } from "lucide-react";
+import { ArrowRight, Clock3, Rocket } from "lucide-react";
 
 const steps = [
   {
     id: "01",
-    title: "Pick your plan",
-    body: "Choose the subscription that fits your pipeline. We bias for clarity: fixed scope, transparent pricing.",
-    metric: "5 min",
+    title: "Review your stack",
+    body: "30-minute call: current stack, constraints, and the revenue or ops outcome you need this quarter.",
+    metric: "Day 0",
     accent: "from-brand-100/70 via-white to-white",
   },
   {
     id: "02",
-    title: "We set everything up",
-    body: "Brand kit, CRM, automations, and your site shipped in 48 hours. You stay in one Slack thread, we handle the busywork.",
-    metric: "48h",
+    title: "Build the system",
+    body: "We ship the AI workflow, routing, and guardrails in a 30-day sprint with weekly milestones and demos.",
+    metric: "Days 1–30",
     accent: "from-sky-100/70 via-white to-white",
   },
   {
     id: "03",
-    title: "You operate with less friction",
-    body: "Run campaigns, track leads, and see weekly reporting without juggling tools. When you need a change, it is one request away.",
-    metric: "Weekly",
+    title: "Run and extend",
+    body: "We operate the system, add surfaces, and tune prompts/guardrails as you scale. You stay on one thread; we ship weekly.",
+    metric: "Week by week",
     accent: "from-amber-100/70 via-white to-white",
   },
 ];
@@ -47,12 +47,12 @@ export default function HowItWorks() {
       <div className="relative mx-auto max-w-6xl text-left">
         <ScrollReveal as="div" className="flex flex-col items-start gap-3 md:items-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white/90 px-3 py-1 text-xs font-semibold text-brand-800 shadow-sm">
-            <Sparkles className="h-4 w-4" aria-hidden />
-            Setup without the drag
+            <Rocket className="h-4 w-4" aria-hidden />
+            Build to live traffic fast
           </span>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">How it works</h2>
           <p className="max-w-3xl text-base sm:text-lg text-gray-600 leading-relaxed text-balance">
-            Three beats, zero fluff. Each card tracks engagement so we can watch where visitors pause, click, or rage-click.
+            Three beats, zero fluff: review, build, run. Cards stay wired to Hotjar so we can see what visitors care about.
           </p>
         </ScrollReveal>
 
@@ -93,7 +93,7 @@ export default function HowItWorks() {
         </div>
 
         <ScrollReveal delay={200} className="mt-12 flex flex-col items-center gap-3" data-hotjar-cta="how-it-works-cta">
-          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Choose a plan</PrimaryCta>
+          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Scope a 30-day build</PrimaryCta>
           <p className="text-xs sm:text-sm text-gray-500 text-center">
             Scroll depth and click maps on every step and CTA help us remove friction fast.
           </p>

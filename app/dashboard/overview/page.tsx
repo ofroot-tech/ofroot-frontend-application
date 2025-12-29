@@ -1,6 +1,7 @@
 // app/dashboard/overview/page.tsx
 // The balcony view: core KPIs and recent activity (no dummy data).
 
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
@@ -123,19 +124,19 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
             <ul className="mt-3 text-sm space-y-2">
               <li className="flex items-center justify-between">
                 <span>Brand your workspace</span>
-                <a className="underline text-gray-700" href="/settings/branding">Open</a>
+                <Link className="underline text-gray-700" href="/settings/branding">Open</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Publish your landing page</span>
-                <a className="underline text-gray-700" href="/landing/new">Start</a>
+                <Link className="underline text-gray-700" href="/landing/new">Start</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Add a lead capture form</span>
-                <a className="underline text-gray-700" href="/docs#lead-form">How to</a>
+                <Link className="underline text-gray-700" href="/docs#lead-form">How to</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Install tracking</span>
-                <a className="underline text-gray-700" href="/docs#tracking">Guide</a>
+                <Link className="underline text-gray-700" href="/docs#tracking">Guide</Link>
               </li>
             </ul>
           </CardBody>

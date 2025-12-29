@@ -1,11 +1,12 @@
 // app/ontask/page.tsx
+import Image from 'next/image';
 import Link from 'next/link';
 import SectionSnapper from '@/components/SectionSnapper';
 
 export const metadata = {
-  title: 'OnTask — Simple Scheduling, Estimates, Invoices, and Payments for HVAC, Cleaning, and Plumbing',
+  title: 'OnTask — Simple scheduling, estimates, invoices, and payments for home services',
   description:
-    'Run your service business without the chaos. One calendar, fast estimates→invoices, and Stripe payments. Built for 1–10 person teams. Pay upfront • Starter $25/mo.',
+    'One clean calendar, fast estimates → invoices, and Stripe payments your customers trust. Built for 1–10 person HVAC, cleaning, and plumbing teams. Starter $29/mo, Plus $299/mo. Add a 30-day AI intake/routing pilot when ready.',
   alternates: { canonical: '/ontask' },
 };
 
@@ -16,16 +17,67 @@ export default function OnTaskLanding() {
       <SectionSnapper containerId="ontask-snap" />
 
       <div id="ontask-snap" className="snap-page">
-      {/* Hero: full viewport height */}
+      {/* Hero: single promise and one clear CTA */}
       <section id="hero" data-snap-section className="section-full snap-fade relative flex items-center">
-        <div className="w-full text-center max-w-3xl mx-auto reveal-in fade-only">
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Run your day without the chaos</h1>
-          <p className="mt-3 text-lg text-gray-700">One clean calendar. Fast estimates → invoices. Stripe payments your customers trust. Built for 1–10 person HVAC, cleaning, and plumbing teams.</p>
-          <div className="mt-5 flex items-center justify-center gap-3">
-            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
-            <a href="#features" className="underline text-gray-800">See features</a>
+        <div className="w-full text-center max-w-3xl mx-auto reveal-in fade-only space-y-4">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Run your crew from one screen.</h1>
+          <p className="text-lg text-gray-700">OnTask keeps home service teams in sync: one calendar, fast estimates → invoices, Stripe payments customers trust, and a clear ladder to AI intake.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
+            <a href="#features" className="underline text-gray-800">See what’s included</a>
           </div>
-          <p className="mt-3 text-sm text-gray-600">Starter $25/month • Cancel anytime • No long setup</p>
+          <p className="text-sm text-gray-600">Starter $29/month · Plus $299/month for integrations and higher volume · Annual saves ~2 months</p>
+        </div>
+      </section>
+
+      {/* Pilot banner to bridge to the AI build */}
+      <section data-snap-section className="section-full snap-fade reveal-in">
+        <div className="rounded-2xl border bg-gray-900 text-white p-6 sm:p-7 shadow-card flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-emerald-200">Optional 30-day pilot</p>
+            <h2 className="text-2xl font-bold">Add AI intake + routing on top of OnTask</h2>
+            <p className="text-sm text-gray-100">We’ll build AI-assisted intake, qualification, and scheduling for your OnTask stack in 30 days. Priced for home services pilots.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/pricing#pilot" className="inline-flex items-center bg-white text-gray-900 hover:bg-gray-100 font-semibold py-2.5 px-4 rounded-full">See the pilot plan</Link>
+            <Link href="/consulting/book" className="inline-flex items-center border border-white/40 text-white hover:bg-white/10 font-semibold py-2.5 px-4 rounded-full">Scope your pilot</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing ladder: Starter → Plus → 30-day pilot */}
+      <section id="pricing-ladder" data-snap-section className="section-full snap-fade reveal-in">
+        <div className="rounded-2xl border bg-white/90 backdrop-blur p-6 sm:p-7 shadow-card">
+          <h2 className="text-3xl font-semibold text-gray-900 text-center">A clear pricing ladder</h2>
+          <p className="mt-2 text-gray-700 text-center">Start on Starter, move to Plus when you need integrations and higher volume, then graduate to a 30-day AI intake pilot.</p>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-xl border p-5 bg-white shadow-sm text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Starter</p>
+              <h3 className="text-2xl font-bold text-gray-900">$29/mo</h3>
+              <p className="mt-1 text-sm text-gray-700">Calendar, estimates → invoices, Stripe payments, basic automations. Annual: ~2 months free.</p>
+              <div className="mt-3 flex gap-3">
+                <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-2 px-4 rounded-full">Start</Link>
+              </div>
+            </div>
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">OnTask Plus</p>
+              <h3 className="text-2xl font-bold text-gray-900">$299/mo</h3>
+              <p className="mt-1 text-sm text-gray-800">Integrations, higher volume, priority chat. Annual: ~2 months free. Best for crews ready to automate more.</p>
+              <div className="mt-3 flex gap-3">
+                <Link href="/subscribe?product=ontask" className="bg-gray-900 text-white hover:bg-black font-semibold py-2 px-4 rounded-full">Upgrade</Link>
+                <Link href="/consulting/book" className="underline text-gray-900">Talk to sales</Link>
+              </div>
+            </div>
+            <div className="rounded-xl border p-5 bg-white shadow-sm text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">30-day pilot</p>
+              <h3 className="text-2xl font-bold text-gray-900">From $12K</h3>
+              <p className="mt-1 text-sm text-gray-700">AI intake + routing on top of OnTask. Weekly demos, guardrails, and conversion reporting.</p>
+              <div className="mt-3 flex gap-3">
+                <Link href="/pricing#pilot" className="bg-black text-white hover:bg-gray-900 font-semibold py-2 px-4 rounded-full">View pilot</Link>
+                <Link href="/consulting/book" className="underline text-gray-900">Scope it</Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -37,9 +89,9 @@ export default function OnTaskLanding() {
             <p className="mt-2 text-gray-700">Simple, reliable tools that get out of your way and help you get paid faster.</p>
           </div>
           <div className="flex items-center justify-center gap-4 opacity-80">
-            <img src="/logos/stripe.svg" alt="Stripe" className="h-6" />
-            <img src="/logos/nextjs.svg" alt="Next.js" className="h-6" />
-            <img src="/logos/react.svg" alt="React" className="h-6" />
+            <Image src="/logos/stripe.svg" alt="Stripe" width={80} height={24} className="h-6 w-auto" />
+            <Image src="/logos/nextjs.svg" alt="Next.js" width={80} height={24} className="h-6 w-auto" />
+            <Image src="/logos/react.svg" alt="React" width={80} height={24} className="h-6 w-auto" />
           </div>
         </div>
         <blockquote className="mt-6 rounded-xl border bg-white/90 backdrop-blur p-6 shadow-sm responsive-card">
@@ -48,7 +100,7 @@ export default function OnTaskLanding() {
           <p className="mt-2 text-xs text-gray-500">*Based on internal time‑tracking and team feedback; results may vary.</p>
         </blockquote>
         <div className="mt-4">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your subscription</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start OnTask</Link>
         </div>
       </section>
 
@@ -75,7 +127,7 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-6">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start your subscription</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-2.5 px-5 rounded-full">Start OnTask</Link>
         </div>
       </section>
 
@@ -125,7 +177,7 @@ export default function OnTaskLanding() {
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
         </div>
       </section>
 
@@ -146,7 +198,7 @@ export default function OnTaskLanding() {
             </ul>
             <div className="mt-4 flex gap-3">
               <a href="#features" className="underline text-gray-800">Browse features</a>
-              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Start subscription</Link>
+              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Start OnTask</Link>
             </div>
           </div>
           {/* Try */}
@@ -159,7 +211,7 @@ export default function OnTaskLanding() {
               <li>• Watch automations send a review request and gentle reminders</li>
             </ul>
             <div className="mt-4 flex gap-3">
-              <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-2 px-4 rounded-full">Start trial</Link>
+              <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-2 px-4 rounded-full">Start OnTask</Link>
               <a href="#pricing" className="underline text-gray-800">See pricing</a>
             </div>
           </div>
@@ -173,7 +225,7 @@ export default function OnTaskLanding() {
               <li>• Typical teams save 3–5 hrs/week on admin</li>
             </ul>
             <div className="mt-4 flex gap-3">
-              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Bring your team</Link>
+              <Link href="/subscribe?product=ontask" className="text-[#20b2aa] hover:underline">Bring your team on OnTask</Link>
               <a href="#features" className="underline text-gray-800">What’s included</a>
             </div>
           </div>
@@ -194,12 +246,12 @@ export default function OnTaskLanding() {
             <p className="mt-1 text-gray-700">A modern, mobile‑friendly <strong>field service management app</strong> your techs will actually use.</p>
           </div>
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
-            <h3 className="text-lg font-semibold text-gray-900">Clear value at $25/month</h3>
-            <p className="mt-1 text-gray-700">No per‑technician fees. Cancel anytime. Keep your data if you leave.</p>
+            <h3 className="text-lg font-semibold text-gray-900">Clear value at $29/month</h3>
+            <p className="mt-1 text-gray-700">No per‑technician fees. Annual saves ~2 months. Keep your data if you leave.</p>
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
           <Link href="/marketing" className="ml-4 underline text-gray-900">See how we help teams grow</Link>
         </div>
       </section>
@@ -207,7 +259,7 @@ export default function OnTaskLanding() {
       {/* Pricing */}
       <section id="pricing" data-snap-section className="section-full snap-fade reveal-in text-center">
         <h2 className="text-3xl font-semibold text-gray-900">Simple, transparent pricing</h2>
-        <p className="mt-2 text-gray-700">Starter plan <span className="font-semibold text-gray-900">$25/month</span>. Cancel anytime.</p>
+        <p className="mt-2 text-gray-700">Starter <span className="font-semibold text-gray-900">$29/month</span> · Plus <span className="font-semibold text-gray-900">$299/month</span>. Annual saves ~2 months.</p>
         <div className="mt-6 mx-auto max-w-2xl rounded-2xl border bg-white/90 backdrop-blur p-8 shadow-sm responsive-card">
           <ul className="text-gray-700 space-y-2 text-left max-w-sm mx-auto">
             <li>• Scheduling & dispatch</li>
@@ -216,10 +268,11 @@ export default function OnTaskLanding() {
             <li>• Simple CRM</li>
             <li>• Automations & reminders</li>
             <li>• Reporting</li>
+            <li>• Plus: integrations, higher volumes, priority chat</li>
           </ul>
           <div className="mt-5 flex items-center justify-center gap-3">
-            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
-            <Link href="/helpr" className="underline text-gray-800">Get help setting up</Link>
+            <Link href="/subscribe?product=ontask" className="bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
+            <Link href="/consulting/book" className="underline text-gray-800">Talk about Plus or pilot</Link>
           </div>
         </div>
       </section>
@@ -229,12 +282,12 @@ export default function OnTaskLanding() {
         <h2 className="text-3xl font-semibold text-gray-900 text-center">FAQs</h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 grid-gap-modern smart-flow">
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
-            <h3 className="text-lg font-semibold text-gray-900">Is there a free trial?</h3>
-            <p className="mt-1 text-gray-700">Yes—start for $1. If it saves you an hour a day, it pays for itself.</p>
+            <h3 className="text-lg font-semibold text-gray-900">Is there a trial?</h3>
+            <p className="mt-1 text-gray-700">Start on Starter. Upgrade to Plus when you need integrations. Keep your data if you cancel.</p>
           </div>
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">Do you charge per technician?</h3>
-            <p className="mt-1 text-gray-700">No. The Starter plan is $25/month for small teams.</p>
+            <p className="mt-1 text-gray-700">No. The Starter plan is $29/month for the whole crew. Plus adds integrations and higher volume.</p>
           </div>
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">Is it good for HVAC, cleaning, and plumbing?</h3>
@@ -242,24 +295,24 @@ export default function OnTaskLanding() {
           </div>
           <div className="rounded-xl border p-6 bg-white/90 shadow-sm responsive-card">
             <h3 className="text-lg font-semibold text-gray-900">Can I cancel anytime?</h3>
-            <p className="mt-1 text-gray-700">Yes. You can export your data and cancel whenever you like.</p>
+            <p className="mt-1 text-gray-700">Yes. Export your data and cancel anytime. Annual options are available if you prefer predictable billing.</p>
           </div>
         </div>
         <div className="mt-8 text-center">
-          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
+          <Link href="/subscribe?product=ontask" className="inline-flex bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
         </div>
       </section>
 
   <section data-snap-section className="section-full snap-fade text-center reveal-in fade-only">
-        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full">Start your subscription</Link>
-    <p className="mt-2 text-sm text-gray-600">Made for crews of 1–10. Save hours each week and never forget a follow‑up. Starter $25/month — try it for $1, cancel anytime.</p>
+        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
+    <p className="mt-2 text-sm text-gray-600">Made for crews of 1–10. Save hours each week and never forget a follow‑up. Starter $29/month; Plus $299/month for integrations. Annual saves ~2 months.</p>
       </section>
 
       </div>
 
       {/* sticky CTA for small screens */}
       <div className="fixed inset-x-0 bottom-3 mx-auto w-full max-w-md px-4 sm:hidden z-40">
-        <Link href="/subscribe?product=ontask" className="block text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg">Start subscription</Link>
+        <Link href="/subscribe?product=ontask" className="block text-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg">Start OnTask</Link>
       </div>
 
       {/* JSON-LD: SoftwareApplication */}
@@ -271,10 +324,10 @@ export default function OnTaskLanding() {
             '@type': 'SoftwareApplication',
             name: 'OnTask',
             applicationCategory: 'BusinessApplication',
-            offers: { '@type': 'Offer', price: '25', priceCurrency: 'USD' },
+            offers: { '@type': 'Offer', price: '29', priceCurrency: 'USD' },
             provider: { '@type': 'Organization', name: 'OfRoot' },
             description:
-              'OnTask helps HVAC, plumbing, and other local pros schedule jobs, send estimates & invoices, take payments (Stripe), and automate reviews & reminders — simple to set up, mobile‑friendly, and affordable (Starter $25/month).',
+              'OnTask helps HVAC, plumbing, and other local pros schedule jobs, send estimates & invoices, take payments (Stripe), and automate reviews & reminders — simple to set up, mobile‑friendly, and affordable (Starter $29/month; Plus for integrations).',
           }),
         }}
       />

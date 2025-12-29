@@ -15,6 +15,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import SubscribeForm from '@/components/SubscribeForm';
 // PublicNavbar removed — global Navbar renders in app/layout
@@ -44,6 +45,7 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
     productParam = Array.isArray(maybe) ? maybe[0] : maybe;
   }
   const productSlug = (productParam || '').toString().toLowerCase();
+  const isOnTask = productSlug === 'ontask';
   // Try to fetch product details from backend; fallback to static catalog
   let productConfig: ProductConfig | undefined = productSlug ? PRODUCT_CATALOG[productSlug] : undefined;
   if (productSlug) {
@@ -81,7 +83,7 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
     }
   }
   // Anchor price derived from catalog (fallback to $49)
-  const anchorPrice = productConfig?.anchorPrice || '$49';
+  const anchorPrice = productConfig?.anchorPrice || (isOnTask ? '$29' : '$49');
   // Precompute a single end date label so banners match exactly
   const end = new Date();
   end.setDate(end.getDate() + 5);
@@ -105,15 +107,15 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
           <ClientViewPing />
           <header className="mb-8 md:mb-12">
             <h1 className="text-balance text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-              <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || 'Start your subscription'}</span>
+              <span className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{productConfig?.heroTitle || (isOnTask ? 'OnTask for home services' : 'Start your subscription')}</span>
             </h1>
             {productConfig?.heroSubtitle ? (
               <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{productConfig.heroSubtitle}</p>
             ) : (
-              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">Start on the full plan today. No trial gimmicks—just the complete product from day one.</p>
+              <p className="mt-3 text-base sm:text-lg text-gray-700 max-w-2xl">{isOnTask ? 'OnTask keeps home services steady: one calendar, estimates → invoices, Stripe payments, and a ladder to Plus and the 30-day pilot.' : 'Start on the full plan today. No trial gimmicks—just the complete product from day one.'}</p>
             )}
             <p className="mt-1 text-sm text-gray-500">Secure Stripe checkout. Billing renews on your chosen cadence with easy cancellation before renewal.</p>
-            <p className="mt-3 text-sm font-medium text-gray-700">Trusted by local pros.</p>
+            <p className="mt-3 text-sm font-medium text-gray-700">{isOnTask ? 'Starter $29/month · Plus $299/month · Annual saves ~2 months · 30-day pilot from $12K.' : 'Trusted by local pros.'}</p>
           </header>
         </div>
       </section>
@@ -137,16 +139,45 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
               <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">
                 <div className="font-medium">What’s included</div>
                 <ul className="mt-2 space-y-2 text-gray-600">
-                  {(productConfig?.includes || [
-                    'Secure authentication and role-based access',
-                    'Admin dashboard with metrics and user management',
-                    'Tenants and subscribers pages',
-                    'Observability with Sentry',
-                  ]).map((inc) => (
+                  {(productConfig?.includes || (isOnTask
+                    ? [
+                      'One calendar for jobs, crews, and follow-ups',
+                      'Estimates → invoices → Stripe payments',
+                      'Team messaging and reminders',
+                      'Exports and customer history you own',
+                    ]
+                    : [
+                      'Secure authentication and role-based access',
+                      'Admin dashboard with metrics and user management',
+                      'Tenants and subscribers pages',
+                      'Observability with Sentry',
+                    ])).map((inc) => (
                     <li key={inc} className="flex items-start gap-2"><span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400" /> <span>{inc}</span></li>
                   ))}
                 </ul>
               </div>
+              {isOnTask && (
+                <div className="rounded-xl border p-5 bg-emerald-50 backdrop-blur shadow-sm space-y-2">
+                  <div className="text-sm font-semibold text-emerald-800">Add AI intake + routing</div>
+                  <p className="text-sm text-gray-800">Keep OnTask for scheduling, estimates, and payments. When you’re ready, add the 30-day operator-led pilot for AI intake + routing.</p>
+                  <p className="text-sm font-medium text-gray-900">Pilot: from $12K · 30 days · weekly demos</p>
+                  <div className="flex flex-col sm:flex-row gap-2 text-sm font-semibold">
+                    <Link href="/pricing#pilot" className="inline-flex items-center justify-center rounded-lg bg-gray-900 text-white px-4 py-2">See pilot pricing</Link>
+                    <Link href="/consulting/book" className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-900 px-4 py-2 hover:bg-gray-50">Scope a pilot</Link>
+                  </div>
+                </div>
+              )}
+              {isOnTask && (
+                <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm space-y-2">
+                  <div className="text-sm font-semibold text-gray-900">Pricing progression</div>
+                  <p className="text-sm text-gray-700">Starter $29/month for calendar, estimates → invoices, Stripe, and basic automations. Plus $299/month unlocks integrations, higher volume, and priority chat. Annual saves ~2 months.</p>
+                  <p className="text-sm text-gray-700">When volume or integrations grow, step into the 30-day pilot (from $12K) and then a quarterly retainer.</p>
+                  <div className="flex flex-col sm:flex-row gap-2 text-sm font-semibold">
+                    <Link href="/subscribe?product=ontask" className="inline-flex items-center justify-center rounded-lg bg-black text-white px-4 py-2 hover:bg-gray-900">Start Starter</Link>
+                    <Link href="/subscribe?product=ontask" className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-900 px-4 py-2 hover:bg-gray-50">Upgrade to Plus</Link>
+                  </div>
+                </div>
+              )}
               {productConfig?.comparison && (
                 <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm space-y-3">
                   <div className="font-medium">How we stack up to {productConfig.comparison.competitor}</div>
@@ -180,7 +211,7 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
                 <p className="mt-1 text-gray-600">No‑cost review of your site and ad accounts. Get quick wins and a prioritized action list within 48 hours.</p>
                 <p className="mt-2 text-gray-600">Ready to implement? Upgrade to the monthly plan and we’ll execute the recommendations for you.</p>
                 {/* Inline client-only audit request button */}
-                {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+                { }
                 <AuditRequestButton />
               </div>
               <div className="rounded-xl border p-5 bg-white/80 backdrop-blur shadow-sm">

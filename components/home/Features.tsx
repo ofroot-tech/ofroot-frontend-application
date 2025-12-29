@@ -2,56 +2,35 @@
  * Features
  *
  * Narrative:
- *  - This section is the proof wall for the offer: concise, tactile cards that read well on mobile and desktop.
- *  - Motion and gradients are subtle to keep attention on the benefit text, not the chrome.
- *  - Hotjar-friendly data attributes are placed on the section, grid, and CTAs to make click maps actionable without extra plumbing.
+ *  - Proof wall for the offer: three outcome-led builds operators can ship in 30 days.
+ *  - Cards stay tactile but copy-first, tuned for quick scanning on mobile.
+ *  - Hotjar-friendly attributes remain so we can see what resonates.
  */
 
 import PrimaryCta from "@/components/ui/PrimaryCta";
-import { BarChart3, FileText, Globe, Palette, Sparkles, Users, Zap } from "lucide-react";
+import { Activity, CheckSquare, Shield, Sparkles, Workflow } from "lucide-react";
 
 const features = [
   {
     id: "A",
-    title: "Automated branding tools",
-    body: "Instant brand kits, typography, and palettes so launches do not stall on design decisions.",
-    icon: Palette,
+    title: "Revenue systems",
+    body: "AI intake, qualification, and follow-up tied to your CRM. MetroAreaRemovalServices: intake + scheduling now drives weekly bookings.",
+    icon: Activity,
     accent: "from-brand-50 via-white to-white",
   },
   {
     id: "B",
-    title: "Client management and simple CRM",
-    body: "Pipeline, reminders, and shared notes—lightweight enough for founders, strong enough to hand off.",
-    icon: Users,
-    accent: "from-sky-50 via-white to-white",
-  },
-  {
-    id: "C",
-    title: "Done-for-you website",
-    body: "Ship a high-converting site with analytics, forms, and SEO baked in from day one.",
-    icon: Globe,
-    accent: "from-purple-50 via-white to-white",
-  },
-  {
-    id: "D",
-    title: "Follow-up automation",
-    body: "Sequences for demos, trials, and invoices that respect brand voice and timing.",
-    icon: Zap,
+    title: "Ops automation",
+    body: "Scheduling, dispatch, and status updates with human-in-loop controls. Crews start on time; customers stay informed without manual chasing.",
+    icon: Workflow,
     accent: "from-amber-50 via-white to-white",
   },
   {
-    id: "E",
-    title: "Lead tracking dashboard",
-    body: "Unified view of traffic, source, and deal progress so decisions are evidence-backed.",
-    icon: BarChart3,
-    accent: "from-emerald-50 via-white to-white",
-  },
-  {
-    id: "F",
-    title: "Weekly reporting",
-    body: "Clear rollups with blockers, shipped items, and next bets—no fishing through Slack threads.",
-    icon: FileText,
-    accent: "from-indigo-50 via-white to-white",
+    id: "C",
+    title: "Data & quality guardrails",
+    body: "Policy-backed prompts, retrieval, and redaction so outputs stay safe. We run HIPAA-adjacent flows internally and give you the same rigor.",
+    icon: Shield,
+    accent: "from-sky-50 via-white to-white",
   },
 ];
 
@@ -67,23 +46,23 @@ export default function Features() {
       <div className="relative mx-auto max-w-6xl">
         <div className="flex flex-col gap-6 text-left md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50/70 px-3 py-1 text-xs font-semibold text-brand-800">Proof-led delivery</div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50/70 px-3 py-1 text-xs font-semibold text-brand-800">Operator-led builds</div>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
-              What you get
+              What we build in 30 days
             </h2>
             <p className="mt-3 max-w-2xl text-base sm:text-lg text-gray-600">
-              Six tangible outcomes teams adopt in week one—each card links to a measurable interaction you can track in Hotjar.
+              Three outcome-led systems, each owned by senior engineers and measured weekly. We keep Hotjar hooks to see where prospects pause.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3" data-hotjar-cta="features-actions">
-            <PrimaryCta href="/pricing">Start for $1</PrimaryCta>
+            <PrimaryCta href="/pricing">Scope a 30-day build</PrimaryCta>
             <a
               className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-brand-200 hover:bg-brand-50/70 focus:outline-none focus:ring-2 focus:ring-brand-500"
               href="/case-studies"
             >
               <Sparkles className="h-4 w-4 text-brand-600" />
-              View example build
+              View the case study
             </a>
           </div>
         </div>
@@ -121,14 +100,14 @@ export default function Features() {
                 </div>
 
                 <div className="flex items-center text-xs text-gray-500">
-                  <span>Ready in <strong className="font-semibold text-gray-800">48h</strong></span>
+                  <span>Shipped with <strong className="font-semibold text-gray-800">weekly milestones</strong></span>
                 </div>
               </div>
             </article>
           ))}
         </div>
 
-      
+
       </div>
     </section>
   );

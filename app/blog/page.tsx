@@ -10,6 +10,33 @@ import { api } from '@/app/lib/api';
 // ------------------------------------------------------------
 export const dynamic = 'force-dynamic';
 
+const fallbackPosts = [
+  {
+    id: 1,
+    title: 'The operator-led 30-day AI build',
+    slug: 'operator-led-30-day-ai-build',
+    excerpt: 'How we scope, build, and ship a revenue-grade AI workflow in 30 days with weekly demos.',
+    body: `# The operator-led 30-day AI build\n\nWe keep the promise narrow and the delivery visible. Week 1 is intake and routing design, Week 2 is integration and guardrails, Week 3 is QA with fixtures, Week 4 is rollout with a rollback plan. Every Friday ships with diffs and a short loom.`,
+    published_at: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    title: 'Pricing ladder for home services and OnTask',
+    slug: 'pricing-ladder-home-services',
+    excerpt: 'Starter $29/mo, Plus $299/mo, and a $12K 30-day pilot—why the ladder matches workload and risk.',
+    body: `# Pricing ladder for home services and OnTask\n\nStarter covers calendar, estimates → invoices, payments, and light automations. Plus unlocks integrations, higher volume, and priority chat. The 30-day pilot adds AI intake + routing with weekly demos and guardrails. Overages auto-upgrade and annual saves ~2 months.`,
+    published_at: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    title: 'OnTask Starter + Plus launch notes',
+    slug: 'ontask-starter-plus-launch',
+    excerpt: 'What ships in Starter, what unlocks in Plus, and how to move into the AI intake pilot.',
+    body: `# OnTask Starter + Plus launch notes\n\nStarter gives crews of 1–10 one calendar, fast paperwork, and Stripe payments. Plus adds integrations, higher throughput, and priority support. When the team is ready for AI intake, we scope a 30-day pilot and then move to a quarterly retainer.`,
+    published_at: new Date().toISOString(),
+  },
+] as const;
+
 function formatDate(input?: string | null) {
   if (!input) return '';
   try {
@@ -29,6 +56,17 @@ export default async function BlogPage() {
   } catch (err) {
     // Log error but don't crash - show empty state instead
     console.error('[BlogPage] Failed to fetch posts:', err);
+  }
+
+  if (!items.length) {
+    items = fallbackPosts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      slug: p.slug,
+      excerpt: p.excerpt,
+      published_at: p.published_at,
+      created_at: p.published_at,
+    } as any));
   }
 
   const listLd = {

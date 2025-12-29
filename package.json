@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
+    "lint": "next lint",
     "test": "jest",
     "test:ui": "playwright test",
     "test:ui:headed": "playwright test --headed --project=chromium",
