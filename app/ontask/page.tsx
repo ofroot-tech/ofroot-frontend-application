@@ -304,7 +304,7 @@ export default function OnTaskLanding() {
       </section>
 
   <section data-snap-section className="section-full snap-fade text-center reveal-in fade-only">
-        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#20b2aa] text-white hover:bg-[#1a8f85] font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
+        <Link href="/subscribe?product=ontask" className="inline-flex items-center bg-[#0f766e] text-white hover:bg-[#115e59] font-semibold py-3 px-6 rounded-full">Start OnTask</Link>
     <p className="mt-2 text-sm text-gray-600">Made for crews of 1–10. Save hours each week and never forget a follow‑up. Starter $29/month; Plus $299/month for integrations. Annual saves ~2 months.</p>
       </section>
 

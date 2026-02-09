@@ -11,9 +11,9 @@ export default function PricingAnchor() {
   return (
     <section className="py-24 px-6 sm:px-8 bg-blue-50 text-center">
       <div className="max-w-5xl mx-auto">
-        <p className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8">30 days to a revenue-grade AI workflow. Weekly demos, zero mystery.</p>
+        <p className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8">From lead capture to booked meeting: integration workflows with weekly shipping and clear ownership.</p>
 
-        <PrimaryCta href="/pricing">View pricing & plan your build</PrimaryCta>
+        <PrimaryCta href="/pricing">View pricing and book your strategy call</PrimaryCta>
       </div>
     </section>
   );

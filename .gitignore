@@ -31,8 +31,14 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# local artifacts
+/tmp/lh-*.json
+/.codex/
+work context/
+
 # env files (can opt-in for committing if needed)
 .env*
+!.env*.example
 
 # vercel
 .vercel

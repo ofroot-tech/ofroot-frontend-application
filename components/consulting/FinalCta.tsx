@@ -11,7 +11,7 @@ export default function FinalCta() {
   return (
     <section className="py-20 text-center">
       <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        <h2 className="text-3xl sm:text-4xl font-extrabold">Let’s build something that moves your business forward.</h2>
+        <h2 className="text-3xl sm:text-4xl font-extrabold">Keep momentum: ship reliably, automate ops, and scale with confidence.</h2>
 
         <div className="mt-6">
           <PrimaryCta href="/consulting/book">Book a Strategy Call</PrimaryCta>

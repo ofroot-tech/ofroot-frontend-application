@@ -30,7 +30,7 @@ export default function CaseStudyHomeServicesMVP() {
             <span className="inline-flex items-center rounded-full border border-gray-200 bg-white px-3 py-1 font-medium text-gray-800">Stripe payments + guardrails</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/consulting/book" className="inline-flex items-center justify-center rounded-lg bg-[#20b2aa] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#1a8f85] transition-colors">Scope your 30-day build</Link>
+            <Link href="/consulting/book" className="inline-flex items-center justify-center rounded-lg bg-[#0f766e] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#115e59] transition-colors">Book an integration call</Link>
             <Link href="/pricing#pilot" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors">See pricing</Link>
           </div>
         </header>

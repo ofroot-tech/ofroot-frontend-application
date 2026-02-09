@@ -128,7 +128,7 @@ export default function MarketingNavbar() {
               aria-haspopup="menu"
               aria-expanded={blogOpen}
               aria-controls="mk-blog-menu"
-              className="group inline-flex items-center gap-2 bg-[#20b2aa] text-white hover:bg:white hover:text-black border border-transparent hover:border-black py-2 px-4 rounded-full shadow-sm hover:shadow-lg transform-gpu will-change-transform transition-all duration-200 motion-reduce:transition-none hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+              className="group inline-flex items-center gap-2 bg-[#0f766e] text-white hover:bg-white hover:text-black border border-transparent hover:border-black py-2 px-4 rounded-full shadow-sm hover:shadow-lg transform-gpu will-change-transform transition-all duration-200 motion-reduce:transition-none hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#0f766e]"
             >
               <Newspaper size={16} aria-hidden className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black" />
               <span className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black">Blog</span>
@@ -138,7 +138,7 @@ export default function MarketingNavbar() {
               id="mk-blog-menu"
               role="menu"
               aria-label="Blog menu"
-              className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#1a8f85] bg-[#20b2aa] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+              className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#115e59] bg-[#0f766e] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
             >
               <Link
                 href="/blog"
@@ -162,7 +162,7 @@ export default function MarketingNavbar() {
               </a>
             </div>
           </div>
-          <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="bg-[#20b2aa] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#1a8f85] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#20b2aa]">
+          <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="bg-[#0f766e] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#115e59] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#0f766e]">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
               <path d="M7 10h10M7 14h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.6" />

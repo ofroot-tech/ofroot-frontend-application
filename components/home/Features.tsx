@@ -13,22 +13,22 @@ import { Activity, CheckSquare, Shield, Sparkles, Workflow } from "lucide-react"
 const features = [
   {
     id: "A",
-    title: "Revenue systems",
-    body: "AI intake, qualification, and follow-up tied to your CRM. MetroAreaRemovalServices: intake + scheduling now drives weekly bookings.",
+    title: "HubSpot lead orchestration",
+    body: "Inbound leads from forms, ads, chat, and social land in HubSpot with the right owner, lifecycle stage, and SLA rules from day one.",
     icon: Activity,
     accent: "from-brand-50 via-white to-white",
   },
   {
     id: "B",
-    title: "Ops automation",
-    body: "Scheduling, dispatch, and status updates with human-in-loop controls. Crews start on time; customers stay informed without manual chasing.",
+    title: "Meta API integrations",
+    body: "We wire Meta Conversions API and related event flows so campaign data, qualified leads, and attribution are reliable across systems.",
     icon: Workflow,
     accent: "from-amber-50 via-white to-white",
   },
   {
     id: "C",
-    title: "Data & quality guardrails",
-    body: "Policy-backed prompts, retrieval, and redaction so outputs stay safe. We run HIPAA-adjacent flows internally and give you the same rigor.",
+    title: "Booking workflows",
+    body: "Follow-up sequences, routing, and scheduler handoffs convert more qualified leads into meetings without manual copy/paste ops.",
     icon: Shield,
     accent: "from-sky-50 via-white to-white",
   },
@@ -46,23 +46,30 @@ export default function Features() {
       <div className="relative mx-auto max-w-6xl">
         <div className="flex flex-col gap-6 text-left md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50/70 px-3 py-1 text-xs font-semibold text-brand-800">Operator-led builds</div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50/70 px-3 py-1 text-xs font-semibold text-brand-800">Integration-first systems</div>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
-              What we build in 30 days
+              What we build for revenue teams
             </h2>
             <p className="mt-3 max-w-2xl text-base sm:text-lg text-gray-600">
-              Three outcome-led systems, each owned by senior engineers and measured weekly. We keep Hotjar hooks to see where prospects pause.
+              Three workflow blocks that remove lead and sync failures, improve attribution quality, and drive more booked meetings.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3" data-hotjar-cta="features-actions">
-            <PrimaryCta href="/pricing">Scope a 30-day build</PrimaryCta>
+            <PrimaryCta href="/pricing">Book an integration call</PrimaryCta>
             <a
               className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-brand-200 hover:bg-brand-50/70 focus:outline-none focus:ring-2 focus:ring-brand-500"
-              href="/case-studies"
+              href="/services/integration"
             >
               <Sparkles className="h-4 w-4 text-brand-600" />
-              View the case study
+              See integration details
+            </a>
+            <a
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:border-brand-200 hover:bg-brand-50/70 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              href="/automations"
+            >
+              <CheckSquare className="h-4 w-4 text-brand-600" />
+              Browse automations
             </a>
           </div>
         </div>
@@ -100,7 +107,7 @@ export default function Features() {
                 </div>
 
                 <div className="flex items-center text-xs text-gray-500">
-                  <span>Shipped with <strong className="font-semibold text-gray-800">weekly milestones</strong></span>
+                  <span>Built with <strong className="font-semibold text-gray-800">meeting-booking KPIs</strong></span>
                 </div>
               </div>
             </article>

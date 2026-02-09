@@ -4,8 +4,8 @@ import ServiceFAQ from '../components/ServiceFAQ';
 import ServiceProof from '../components/ServiceProof';
 
 export const metadata = {
-  title: 'Development Automation | OfRoot',
-  description: 'Ship features faster with pipelines, scaffolds, and integrations. Reduce regressions and increase velocity.',
+  title: 'Pipelines + Delivery Automation | OfRoot',
+  description: 'Build delivery pipelines, integration test harnesses, and release automation so integration work ships safely and predictably.',
   alternates: { canonical: '/services/development-automation' },
 };
 
@@ -14,10 +14,10 @@ export default function DevelopmentAutomationPage() {
     <div className="snap-page" style={{ ['--chevron-bottom-offset' as any]: '14px', ['--chevron-top-offset' as any]: '14px', ['--chevron-glow-opacity' as any]: 0.9 }}>
       <section data-snap-section className="section-full snap-fade">
         <ServiceHero
-        title="Development Automation"
-        subtitle="Ship features faster with pipelines, scaffolds, and repeatable integrations. Reduce regressions, increase velocity."
-        ctaHref="/subscribe?product=development-automation"
-        ctaLabel="Start subscription"
+        title="Pipelines + Delivery Automation"
+        subtitle="Ship integration work safely with pipelines, checks, and release automation. Reduce regressions and keep data sane in production."
+        ctaHref="/consulting/book"
+        ctaLabel="Book a pipeline automation call"
   analyticsServiceId="development-automation"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
         />

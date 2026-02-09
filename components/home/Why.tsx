@@ -13,11 +13,11 @@ export default function Why() {
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-8 text-gray-900">Why operators hire OfRoot</h2>
 
         <p className="text-lg sm:text-xl text-gray-700 mb-6 leading-relaxed">
-          Revenue leaks when intake, follow-up, and scheduling are split across tools and teams. Leads wait, crews stall, and your week disappears to glue work.
+          Pipeline leaks when HubSpot, Meta ads, forms, and calendars are disconnected. Leads get delayed, ownership gets fuzzy, and qualified prospects never reach a meeting.
         </p>
 
         <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
-          We build and run the AI workflows that close that gap: faster first response, automated routing, and guardrailed outputs you can trust.
+          We close that gap with integration-first workflows: clean lead sync, automated routing, and meeting-booking systems your team can trust.
         </p>
       </div>
     </section>

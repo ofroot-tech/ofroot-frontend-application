@@ -25,6 +25,7 @@ import Exposure from '@/app/landing/components/Exposure';
 import CtaLink from '@/app/landing/components/CtaLink';
 import SafeEmbed from '@/app/landing/components/SafeEmbed';
 import LeadCapture from '@/app/landing/components/LeadCapture';
+import { SITE } from '@/app/config/site';
 
 /** Compute the active variant key using cookies and manifest defaults. */
 async function resolveVariantKey(opts: {
@@ -75,7 +76,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
               '@type': 'WebPage',
               name: page.seo.title,
               description: page.seo.description || undefined,
-              url: `https://ofroot.com/landing/${slug}`,
+              url: `${SITE.url}/landing/${slug}`,
             }),
           }}
         />

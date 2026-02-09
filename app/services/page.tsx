@@ -5,39 +5,44 @@ import { SITE } from '@/app/config/site';
 
 export const metadata = {
   title: 'Services | OfRoot',
-  description: 'Explore OfRoot services: development automation, marketing automation, and AI audits.',
+  description: 'Integration services for pipelines, lead routing, data sanity, and agent integration. HubSpot, Meta API, Make, and Zapier.',
 };
 
 const cards = [
   {
-    href: '/services/development-automation',
-    title: 'Development Automation',
-    desc: 'Ship faster with pipelines, scaffolds, and integrations. Reduce toil and regressions.',
+    href: '/services/integration',
+    title: 'HubSpot + Meta Integrations',
+    desc: 'Lead capture, sync, attribution, and booking workflows built to run reliably in production.',
   },
   {
-    href: '/services/website-app-development',
-    title: 'Website & App Development',
-    desc: 'Full‑stack product engineering: MVPs, SaaS, mobile, and migrations.',
+    href: '/automations',
+    title: 'Automation Services',
+    desc: 'Make.com and Zapier builds, plus direct API integrations when you need reliability and control.',
+  },
+  {
+    href: '/services/automation',
+    title: 'Workflow Automation',
+    desc: 'Routing, follow-up, scheduling handoffs, and monitoring so leads never drop silently.',
   },
   {
     href: '/services/marketing-automation',
-    title: 'Marketing Automation',
-    desc: 'Capture demand with landing pages, follow‑ups, and measurement. Less manual, more ROI.',
+    title: 'HubSpot Workflows',
+    desc: 'Lifecycle stages, assignment rules, follow-ups, and booking KPIs that increase qualified meetings.',
   },
   {
     href: '/services/ai-development-integrations',
-    title: 'AI Development & Integrations',
-    desc: 'Assistants, retrieval, and orchestration that measurably improve speed and quality.',
+    title: 'Agents and LLM Integrations',
+    desc: 'Agent orchestration, retrieval, and tool integrations that operate on your data safely.',
   },
   {
-    href: '/services/ai-audit',
-    title: 'AI Website & Ads Audit',
-    desc: 'A free audit for quick wins across your site and ad accounts — in 48 hours.',
+    href: '/services/stability',
+    title: 'Reliability and Data Sanity',
+    desc: 'Observability, retries, validation, and runbooks for pipelines and integrations.',
   },
   {
     href: '/services/add-ons',
     title: 'Add‑ons',
-    desc: 'Add features, marketing, development, or automation to your plan as you grow.',
+    desc: 'Add integration surfaces, reporting, and new workflows as your system grows.',
   },
 ];
 
@@ -69,7 +74,7 @@ export default function ServicesIndexPage() {
       />
       <header className="mb-10 text-center">
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Services</h1>
-        <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">Outcome‑oriented engagements for shipping product, automating operations, and integrating AI.</p>
+        <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">Integration-first delivery: pipelines, lead routing, data sanity, and agents that drive booked-meeting outcomes.</p>
         <p className="mt-2 text-sm text-gray-600">Add modules anytime as you grow — <a href="/services/add-ons" className="underline">see add‑ons</a>.</p>
       </header>
 

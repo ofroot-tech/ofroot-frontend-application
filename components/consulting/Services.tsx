@@ -24,31 +24,31 @@ export default function Services() {
   const services = [
     {
       title: "Architecture",
-      desc: "Design scalable, maintainable platform architectures that align with business goals.",
+      desc: "Lower long-term cost with scalable software architecture that stays maintainable as your product and team grow.",
     },
     {
       title: "Automation",
-      desc: "Remove manual bottlenecks with reliable automation for deploys, testing and ops.",
+      desc: "Remove manual work with workflow automation and AI automation that eliminates bottlenecks and increases speed without chaos.",
     },
     {
       title: "Code Delivery",
-      desc: "Improve velocity and safety with CI/CD, code ownership and delivery workflows.",
+      desc: "Ship production-grade software delivery with clean ownership, CI/CD guardrails, and velocity without regressions.",
     },
     {
       title: "Data & Reporting",
-      desc: "Turn event data into clear reports and actionable insights for growth and ops.",
+      desc: "Get operational analytics and reporting automation that turns activity into clear decisions — without technical dashboards.",
     },
     {
       title: "Growth Systems",
-      desc: "Build measurement-backed systems to acquire, engage, and retain customers.",
+      desc: "Build scalable growth systems that support acquisition, activation, and retention with measurement you can trust.",
     },
     {
       title: "Integration",
-      desc: "Connect services and tools securely to streamline product and engineering workflows.",
+      desc: "Deliver stable system integrations across CRMs, internal tools, and third-party services — without breaking production.",
     },
     {
       title: "Stability",
-      desc: "Reduce risk with observability, testing, and incident response improvements.",
+      desc: "Increase system reliability with observability and practical safeguards that reduce risk, incidents, and downtime.",
     },
   ];
 
@@ -56,12 +56,10 @@ export default function Services() {
     <section className="py-20">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col items-center text-center">
-          <h2 className="text-4xl sm:text-5xl font-extrabold">What I Do</h2>
+          <h2 className="text-4xl sm:text-5xl font-extrabold">How I Help Teams Scale</h2>
           <p className="mt-3 text-sm text-gray-500 max-w-2xl">
-            I help companies scale engineering and product delivery — from
-            platform architecture to automated delivery and data-driven growth
-            systems. Below are core areas I commonly lead with cross-functional
-            teams.
+            I lead automation, architecture, and delivery so teams can move faster with fewer surprises.
+            These are the core areas I most often drive for operator-led companies.
           </p>
 
           <div className="mt-10 w-full">
@@ -97,12 +95,6 @@ export default function Services() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
             <PrimaryCta href="/consulting/book">Book a Strategy Call</PrimaryCta>
-            <a
-              href="/case-studies"
-              className="text-sm text-gray-700 hover:text-gray-900"
-            >
-              See case studies →
-            </a>
           </div>
         </div>
       </div>

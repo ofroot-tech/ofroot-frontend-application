@@ -38,7 +38,7 @@ export default function LeadForm() {
         <input name="zip" placeholder="ZIP*" className="border p-3 rounded-md" required />
         <input name="source" placeholder="Source (e.g., landing-page)" className="border p-3 rounded-md" />
       </div>
-      <button disabled={status==='submitting'} className="bg-[#20b2aa] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#1a8f85] disabled:opacity-50">
+      <button disabled={status==='submitting'} className="bg-[#0f766e] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#115e59] disabled:opacity-50">
         {status==='submitting' ? 'Submitting…' : 'Submit Lead'}
       </button>
       {status==='success' && <p className="text-green-700">Lead submitted successfully.</p>}

@@ -215,11 +215,11 @@ export default function PublicNavbar() {
               <span className="text-[#20b2aa] text-base font-medium">Console</span>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
                 onClick={closeMenu}
                 aria-label="Go to Console"
               >
-                <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                <ArrowRight className="w-5 h-5 text-[#0f766e]" />
               </Link>
             </div>
 

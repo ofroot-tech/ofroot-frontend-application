@@ -22,21 +22,21 @@ export default function Hero() {
 
       <div className="relative max-w-5xl mx-auto z-10">
         <ScrollReveal as="h1" className="text-5xl sm:text-7xl font-extrabold mb-8 leading-[1.1] tracking-tight text-gray-900 text-balance">
-          AI systems for operators who need revenue this quarter.
+          HubSpot + Meta integrations that turn leads into booked meetings.
         </ScrollReveal>
 
         <ScrollReveal delay={200} as="p" className="text-xl sm:text-2xl text-gray-600 mb-10 leading-relaxed text-balance max-w-3xl mx-auto">
-          We design, build, and run production AI workflows—grounded in your stack—to move top-line and cut manual ops in 30 days.
+          We build and run workflow systems for lead capture, routing, follow-up, and scheduling so sales teams stop losing qualified demand.
         </ScrollReveal>
 
         <ScrollReveal delay={400} className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-          <PrimaryCta href="/pricing" className="h-12 px-8 text-lg">Scope a 30-day build</PrimaryCta>
-          <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-8 py-3 text-gray-900 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 h-12 text-lg shadow-sm">Review your stack</Link>
+          <PrimaryCta href="/consulting/book" className="h-12 px-8 text-lg">Book an integration strategy call</PrimaryCta>
+          <Link href="/automations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-8 py-3 text-gray-900 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 h-12 text-lg shadow-sm">Explore automations</Link>
         </ScrollReveal>
 
         <ScrollReveal delay={600} as="div" className="flex flex-col sm:flex-row items-center justify-center gap-3 text-sm font-medium text-gray-700">
-          <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-gray-800 border border-gray-200">Operator-led · senior engineers</span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-emerald-800 border border-emerald-100">MetroAreaRemovalServices: AI intake + scheduling → weekly bookings</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-gray-800 border border-gray-200">Integration-led delivery with senior engineers</span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-emerald-800 border border-emerald-100">HubSpot leads + Meta events + booking flows synced end to end</span>
         </ScrollReveal>
       </div>
     </section>

@@ -7,7 +7,8 @@
   --foreground: #171717;
 
   /* Brand color tokens */
-  --color-primary: #20b2aa;          /* Teal - primary brand color */
+  /* Primary brand color tuned for WCAG contrast with white text. */
+  --color-primary: #0f766e;          /* Teal - primary brand color */
   --color-primary-dark: #1a8f85;     /* Darker teal for hover/active states */
   --color-primary-light: #3cc4bc;    /* Lighter teal for accents */
   --color-accent: #ffe082;           /* Gold/amber accent */
@@ -794,4 +795,3 @@ body.ofroot-nav-fading .promo-banner {
   animation: spin 900ms linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-

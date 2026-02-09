@@ -197,7 +197,7 @@ export default async function SubscribePage({ searchParams }: { searchParams?: U
                     <ul className="mt-1 space-y-2 text-gray-600">
                       {productConfig.comparison.differentiators.map((item) => (
                         <li key={item} className="flex items-start gap-2">
-                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#20b2aa]" />
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#0f766e]" />
                           <span>{item}</span>
                         </li>
                       ))}

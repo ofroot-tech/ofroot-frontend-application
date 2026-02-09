@@ -12,17 +12,23 @@ export default function HeroConsulting() {
   return (
     <section className="py-24 text-center">
       <div className="max-w-5xl mx-auto px-6 sm:px-8">
-        <h1 className="text-4xl sm:text-5xl font-extrabold">Build faster. Scale smarter. Work with a Senior Architect who delivers.</h1>
+        <h1 className="text-4xl sm:text-5xl font-extrabold">
+          <span className="block">Build Smarter. Scale Faster.</span>
+          <span className="block">Senior Software Architect Consulting.</span>
+        </h1>
 
         <p className="mt-4 text-lg sm:text-xl text-gray-700">
-          I help growing companies modernize systems, ship faster, stabilize infra, and cut engineering cost through clean architecture and automation.
+          For operators, founders, and technical leaders: I build scalable systems, remove bottlenecks with workflow optimization and AI automation,
+          and improve system reliability so you can grow without breaking delivery.
         </p>
 
         <div className="mt-6">
           <PrimaryCta href="/consulting/book">Book a Strategy Call</PrimaryCta>
         </div>
 
-        <p className="mt-3 text-sm text-gray-500">8+ years building platforms for high-growth companies in healthcare, energy, and SaaS.</p>
+        <p className="mt-3 text-sm text-gray-500">
+          8+ years building and stabilizing platforms for high-growth teams across healthcare systems, energy, and SaaS.
+        </p>
       </div>
     </section>
   );

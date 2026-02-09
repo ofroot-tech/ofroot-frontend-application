@@ -93,7 +93,7 @@ export default async function BlogPage() {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-8 text-left">Blog</h1>
           <div className="flex flex-wrap gap-3 mb-8">
-            <button className="bg-[#20b2aa] text-white px-4 py-2 rounded-full font-semibold shadow">All Posts</button>
+            <button className="bg-[#0f766e] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#115e59]">All Posts</button>
             <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold shadow">AI</button>
             <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold shadow">Industry</button>
           </div>
@@ -113,7 +113,7 @@ export default async function BlogPage() {
                     role="img"
                     aria-label={`Decorative background for ${post.title}`}
                   >
-                    <div className={`w-full h-full ${i % 2 === 0 ? 'bg-black' : 'bg-[#20b2aa]'}`} />
+                    <div className={`w-full h-full ${i % 2 === 0 ? 'bg-black' : 'bg-[#0f766e]'}`} />
                   </div>
                   <div className="flex-1 p-6 flex flex-col justify-between">
                     <div>

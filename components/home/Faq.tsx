@@ -14,28 +14,28 @@ import { CheckCircle2, Clock3, ShieldCheck } from "lucide-react";
 const faqs = [
   {
     q: "Who is this for?",
-    a: "Operators and founders who need revenue-grade AI workflows this quarter without hiring an in-house team.",
-    badge: "Revenue-first operators",
+    a: "Teams that rely on HubSpot and Meta campaigns and need reliable lead sync plus more booked meetings from existing demand.",
+    badge: "Revenue and ops teams",
   },
   {
-    q: "How fast is setup?",
-    a: "We deliver your site, brand kit, CRM, and automations in 48 hours. Most customers see leads flowing the same week.",
-    badge: "Launch in 48h",
+    q: "What do you implement first?",
+    a: "We start with lead capture and routing reliability, then wire follow-up workflows and meeting-booking handoffs so qualified leads move fast.",
+    badge: "Lead flow first",
   },
   {
-    q: "Who owns the assets?",
-    a: "You do. We ship source files, credentials, and analytics access. If you ever pause, you keep everything we built.",
+    q: "Can you fix broken lead sync?",
+    a: "Yes. We diagnose duplicate, dropped, and delayed lead events across Meta, forms, and HubSpot, then add retries, validation, and monitoring.",
+    badge: "Sync reliability",
+  },
+  {
+    q: "Do you support meeting-booking workflows?",
+    a: "Yes. We design routing rules, follow-up sequences, and scheduler integrations so reps spend time in qualified meetings, not manual triage.",
+    badge: "Booking workflows",
+  },
+  {
+    q: "Who owns the integrations?",
+    a: "You do. Your team keeps access, documentation, and workflow logic. If you pause service, the system remains in your accounts.",
     badge: "You keep the keys",
-  },
-  {
-    q: "Do I need technical skills?",
-    a: "No. You approve copy and creative; we handle implementation, hosting, and maintenance end-to-end.",
-    badge: "White-glove",
-  },
-  {
-    q: "What support do I get?",
-    a: "Daily Slack access, weekly reporting, and on-demand changes. We prioritize tickets within one business day.",
-    badge: "Fast responses",
   },
 ];
 
@@ -53,11 +53,11 @@ export default function Faq() {
           <div className="max-w-3xl space-y-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white/90 px-3 py-1 text-xs font-semibold text-brand-800 shadow-sm">
               <ShieldCheck className="h-4 w-4" aria-hidden />
-              Answers without the spin
+              Integration answers without the spin
             </span>
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">FAQ</h2>
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-balance">
-              These are the questions that usually stall signups. We publish them plainly and track engagement in Hotjar to spot new objections fast.
+              These are the key objections around lead routing, API sync, and booking workflows. We answer them clearly so buying decisions move faster.
             </p>
           </div>
 
@@ -94,7 +94,7 @@ export default function Faq() {
         </div>
 
         <ScrollReveal delay={200} className="mt-12 flex flex-col items-center gap-3" data-hotjar-cta="faq-cta">
-          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Scope a 30-day build</PrimaryCta>
+          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Book an integration strategy call</PrimaryCta>
           <p className="text-xs sm:text-sm text-gray-500 text-center">
             Hotjar collects scroll depth, click maps on each question, and rage-clicks so we can tighten answers quickly.
           </p>

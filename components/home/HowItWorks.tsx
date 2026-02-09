@@ -14,22 +14,22 @@ import { ArrowRight, Clock3, Rocket } from "lucide-react";
 const steps = [
   {
     id: "01",
-    title: "Review your stack",
-    body: "30-minute call: current stack, constraints, and the revenue or ops outcome you need this quarter.",
+    title: "Map lead flow",
+    body: "We audit forms, Meta lead sources, HubSpot pipelines, and calendar handoffs to identify where meetings are being lost.",
     metric: "Day 0",
     accent: "from-brand-100/70 via-white to-white",
   },
   {
     id: "02",
-    title: "Build the system",
-    body: "We ship the AI workflow, routing, and guardrails in a 30-day sprint with weekly milestones and demos.",
+    title: "Ship integrations",
+    body: "We implement HubSpot automations, Meta API event pipelines, lead routing, and fallback logic with weekly demos.",
     metric: "Days 1–30",
     accent: "from-sky-100/70 via-white to-white",
   },
   {
     id: "03",
-    title: "Run and extend",
-    body: "We operate the system, add surfaces, and tune prompts/guardrails as you scale. You stay on one thread; we ship weekly.",
+    title: "Optimize bookings",
+    body: "We run the workflows, monitor sync health, and tune follow-up sequences so more qualified leads become scheduled meetings.",
     metric: "Week by week",
     accent: "from-amber-100/70 via-white to-white",
   },
@@ -48,11 +48,11 @@ export default function HowItWorks() {
         <ScrollReveal as="div" className="flex flex-col items-start gap-3 md:items-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white/90 px-3 py-1 text-xs font-semibold text-brand-800 shadow-sm">
             <Rocket className="h-4 w-4" aria-hidden />
-            Build to live traffic fast
+            Integration delivery with measurable outcomes
           </span>
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">How it works</h2>
           <p className="max-w-3xl text-base sm:text-lg text-gray-600 leading-relaxed text-balance">
-            Three beats, zero fluff: review, build, run. Cards stay wired to Hotjar so we can see what visitors care about.
+            We focus on lead reliability and booking velocity: map the flow, ship integrations, and optimize conversion to meetings.
           </p>
         </ScrollReveal>
 
@@ -93,9 +93,9 @@ export default function HowItWorks() {
         </div>
 
         <ScrollReveal delay={200} className="mt-12 flex flex-col items-center gap-3" data-hotjar-cta="how-it-works-cta">
-          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Scope a 30-day build</PrimaryCta>
+          <PrimaryCta href="/pricing" className="h-12 px-7 text-base sm:text-lg">Book an integration strategy call</PrimaryCta>
           <p className="text-xs sm:text-sm text-gray-500 text-center">
-            Scroll depth and click maps on every step and CTA help us remove friction fast.
+            We track workflow reliability and booking conversion at each step so improvements are obvious.
           </p>
         </ScrollReveal>
       </div>

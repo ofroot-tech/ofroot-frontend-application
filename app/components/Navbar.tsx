@@ -46,16 +46,19 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   // { label: 'Consulting', href: '/consulting' },
-  { label: 'Services', href: '/services' },
-  { label: 'Build', href: '/build' },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Integrations', href: '/services/integration' },
+  { label: 'Automations', href: '/automations' },
   {
-    label: 'Products',
+    label: 'Solutions',
     children: [
-      { label: 'OnTask', href: '/ontask' },
-      { label: 'Case Studies', href: '/case-studies' },
+      { label: 'HubSpot Integration', href: '/hubspot-integration' },
+      { label: 'Meta Conversions API', href: '/meta-conversions-api' },
+      { label: 'Make + Zapier Automation', href: '/make-zapier-automation' },
+      { label: 'Agent Integrations', href: '/agent-integrations' },
     ],
   },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Case Studies', href: '/case-studies' },
   { label: 'Blog', href: '/blog' },
   {
     label: 'Company',
@@ -317,7 +320,7 @@ export default function Navbar() {
                 href="/consulting/book"
                 className="text-[#20b2aa] hover:text-white transition-colors px-4 py-2 rounded-md font-medium"
               >
-                Book a Call
+                Book an integration call
               </Link>
               <a
                 href="https://form.jotform.com/252643426225151"
@@ -325,7 +328,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="text-white hover:text-[#20b2aa] transition-colors px-4 py-2 rounded-md font-medium"
               >
-                Contact Sales
+                Talk to an engineer
               </a>
             </div>
 
@@ -414,14 +417,14 @@ export default function Navbar() {
             {/* Primary CTAs */}
             <div className="space-y-4 mb-8">
               <div className="flex items-center justify-between">
-                <span className="text-[#20b2aa] text-base font-medium">Book a Call</span>
+                <span className="text-[#20b2aa] text-base font-medium">Book an integration call</span>
                 <Link
                   href="/consulting/book"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
                   onClick={closeMobileMenu}
                   aria-label="Book a discovery call"
                 >
-                  <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                  <ArrowRight className="w-5 h-5 text-[#0f766e]" />
                 </Link>
               </div>
               <div className="flex items-center justify-between">
@@ -442,11 +445,11 @@ export default function Navbar() {
                 <span className="text-[#20b2aa] text-base font-medium">Console</span>
                 <Link
                   href="/dashboard"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#20b2aa] hover:bg-[#20b2aa]/10 transition-colors"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
                   onClick={closeMobileMenu}
                   aria-label="Go to Console"
                 >
-                  <ArrowRight className="w-5 h-5 text-[#20b2aa]" />
+                  <ArrowRight className="w-5 h-5 text-[#0f766e]" />
                 </Link>
               </div>
               */}

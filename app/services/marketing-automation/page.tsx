@@ -4,8 +4,8 @@ import ServiceFAQ from '../components/ServiceFAQ';
 import ServiceProof from '../components/ServiceProof';
 
 export const metadata = {
-  title: 'Marketing Automation | OfRoot',
-  description: 'Capture more demand with landing pages, follow‑up automations, and measurement.',
+  title: 'HubSpot Marketing Integrations | OfRoot',
+  description: 'Implement HubSpot lead routing, lifecycle workflows, and follow-up automations that increase booked meetings.',
   alternates: { canonical: '/services/marketing-automation' },
 };
 
@@ -13,10 +13,10 @@ export default function MarketingAutomationPage() {
   return (
   <div className="reveal-in fade-only">
       <ServiceHero
-        title="Marketing Automation"
-        subtitle="Capture more demand with landing pages, follow‑up automations, and measurement. Less manual work, more revenue."
-        ctaHref="/subscribe?product=marketing-automation"
-        ctaLabel="Start subscription"
+        title="HubSpot Marketing Integrations"
+        subtitle="Capture, route, and work leads with confidence using HubSpot workflows built for meeting conversion."
+        ctaHref="/consulting/book"
+        ctaLabel="Book a HubSpot integration call"
         analyticsServiceId="marketing-automation"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
       />
@@ -25,17 +25,18 @@ export default function MarketingAutomationPage() {
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">Outcomes</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
-            <li>• Increase qualified leads</li>
-            <li>• Faster follow‑ups and reviews</li>
-            <li>• Clear attribution and ROI</li>
+            <li>• Faster lead response and ownership</li>
+            <li>• Higher qualified-meeting rate</li>
+            <li>• Fewer dropped or unworked leads</li>
           </ul>
         </div>
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">What’s included</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
-            <li>• SEO landing pages and content</li>
-            <li>• Email/SMS automations</li>
-            <li>• Analytics & reporting</li>
+            <li>• HubSpot lifecycle and assignment workflows</li>
+            <li>• Lead source normalization and sync rules</li>
+            <li>• Email/SMS follow-up orchestration</li>
+            <li>• Meeting-booking pipeline instrumentation</li>
             <li>• <span className="font-medium text-blue-700">AI safety & authentication review:</span> We audit your code and database for authentication errors and unsafe production code—especially important for AI-driven sites.</li>
           </ul>
         </div>
@@ -43,13 +44,13 @@ export default function MarketingAutomationPage() {
 
       <ServiceProof
         logos={["/logos/logo-acme.svg", "/logos/logo-zen.svg"]}
-        quotes={[{ quote: 'Leads increased within weeks after automation.', author: 'Owner', role: 'Local Contractor' }]}
+        quotes={[{ quote: 'Lead handoff became predictable and we booked more meetings from the same spend.', author: 'Revenue Lead', role: 'Growth Team' }]}
       />
 
       <ServiceFAQ
         items={[
-          { q: 'Can you integrate my CRM?', a: 'Yes. We support common CRMs and can build custom connectors.' },
-          { q: 'How soon to see results?', a: 'Typically within 2–4 weeks as pages rank and automations engage.' },
+          { q: 'Can you work inside our existing HubSpot setup?', a: 'Yes. We audit current pipelines and implement changes without breaking existing team workflows.' },
+          { q: 'Do you also handle Meta lead and event sync?', a: 'Yes. We can connect Meta lead events into HubSpot and validate mapping, deduplication, and attribution data.' },
         ]}
       />
       {/* FAQ JSON-LD */}
@@ -62,13 +63,13 @@ export default function MarketingAutomationPage() {
             mainEntity: [
               {
                 '@type': 'Question',
-                name: 'Can you integrate my CRM?',
-                acceptedAnswer: { '@type': 'Answer', text: 'Yes. We support common CRMs and can build custom connectors.' },
+                name: 'Can you work inside our existing HubSpot setup?',
+                acceptedAnswer: { '@type': 'Answer', text: 'Yes. We audit current pipelines and implement changes without breaking existing team workflows.' },
               },
               {
                 '@type': 'Question',
-                name: 'How soon to see results?',
-                acceptedAnswer: { '@type': 'Answer', text: 'Typically within 2–4 weeks as pages rank and automations engage.' },
+                name: 'Do you also handle Meta lead and event sync?',
+                acceptedAnswer: { '@type': 'Answer', text: 'Yes. We can connect Meta lead events into HubSpot and validate mapping, deduplication, and attribution data.' },
               },
             ],
           }),
@@ -82,11 +83,21 @@ export default function MarketingAutomationPage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Service',
-            name: 'Marketing Automation',
+            name: 'HubSpot Marketing Integrations',
             provider: { '@type': 'Organization', name: 'OfRoot' },
             areaServed: 'US',
             description:
-              'Capture more demand with landing pages, follow‑up automations, and measurement.',
+              'Implement HubSpot lead routing, lifecycle workflows, and follow-up automations that increase booked meetings. Works with Make.com, Zapier, and Meta integrations as needed.',
+            serviceType: [
+              'HubSpot integration',
+              'HubSpot workflow automation',
+              'Make.com automation',
+              'Zapier automation',
+              'Lead routing and follow-up workflows',
+              'Meeting booking workflows',
+              'Meta API integration',
+              'Meta Conversions API (CAPI)',
+            ],
             offers: {
               '@type': 'Offer',
               price: '49',

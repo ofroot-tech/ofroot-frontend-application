@@ -4,8 +4,8 @@ import ServiceFAQ from '../components/ServiceFAQ';
 import ServiceProof from '../components/ServiceProof';
 
 export const metadata = {
-  title: 'AI Development & Integrations | OfRoot',
-  description: 'Custom AI models, LLM integrations, and automation of knowledge work to enhance decision‑making and customer experience.',
+  title: 'Agent + LLM Integrations | OfRoot',
+  description: 'Agent orchestration, LLM integrations, and tool-connected workflows that operate on your data with safety, evaluation, and observability.',
   alternates: { canonical: '/services/ai-development-integrations' },
 };
 
@@ -14,10 +14,10 @@ export default function AIDevelopmentIntegrationsPage() {
     <div className="snap-page" style={{ ['--chevron-bottom-offset' as any]: '14px', ['--chevron-top-offset' as any]: '14px', ['--chevron-glow-opacity' as any]: 0.9 }}>
       <section data-snap-section className="section-full snap-fade">
         <ServiceHero
-        title="AI Development & Integrations"
-        subtitle="From assistants and retrieval to end‑to‑end orchestration: ship AI that actually helps people work faster."
-        ctaHref="/subscribe?product=ai-development-integrations"
-        ctaLabel="Start subscription"
+        title="Agent + LLM Integrations"
+        subtitle="Ship agents that can safely use your tools and data: retrieval, orchestration, evaluations, and monitoring in production."
+        ctaHref="/consulting/book"
+        ctaLabel="Book an agent integration call"
   analyticsServiceId="ai-development-integrations"
   secondaryCtaHref="https://form.jotform.com/252643426225151"
         />
@@ -27,17 +27,17 @@ export default function AIDevelopmentIntegrationsPage() {
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">Outcomes</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
-            <li>• Faster support and operations</li>
-            <li>• Better decisions via retrieval and analytics</li>
-            <li>• Measurable ROI from automation</li>
+            <li>• Agents that reliably complete real work</li>
+            <li>• Fewer manual handoffs and queue time</li>
+            <li>• Safer outputs with evaluations and guardrails</li>
           </ul>
         </div>
         <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
           <h3 className="text-xl font-semibold mb-2">What’s included</h3>
           <ul className="space-y-2 text-gray-700 text-sm">
-            <li>• Assistants & workflows</li>
+            <li>• Agent orchestration and tool integrations</li>
             <li>• RAG, embeddings, and data pipelines</li>
-            <li>• Integrations with CRMs and back‑office systems</li>
+            <li>• Evaluations, monitoring, and safe fallbacks</li>
             <li>• <span className="font-medium text-blue-700">AI safety & authentication review:</span> We audit your code and database for authentication errors and unsafe production code—especially important for AI-driven sites.</li>
           </ul>
         </div>
@@ -51,8 +51,8 @@ export default function AIDevelopmentIntegrationsPage() {
       <section data-snap-section className="section-full snap-fade py-12 px-6">
         <ServiceFAQ
         items={[
-          { q: 'Do you build custom models?', a: 'When appropriate. Often we start with LLMs and focus on UX, data, and orchestration.' },
-          { q: 'Can you integrate our tools?', a: 'Yes — we connect CRMs, messaging, analytics, and internal systems.' },
+          { q: 'Do you build agents or just chatbots?', a: 'Agents. We connect tools, add retrieval, and ship evaluations and monitoring so behavior stays stable in production.' },
+          { q: 'Can you integrate our tools and data?', a: 'Yes. We connect CRMs, messaging, analytics, and internal systems with least-privilege access and auditability.' },
         ]}
         />
       </section>
@@ -67,13 +67,13 @@ export default function AIDevelopmentIntegrationsPage() {
             mainEntity: [
               {
                 '@type': 'Question',
-                name: 'Do you build custom models?',
-                acceptedAnswer: { '@type': 'Answer', text: 'When appropriate. Often we start with LLMs and focus on UX, data, and orchestration.' },
+                name: 'Do you build agents or just chatbots?',
+                acceptedAnswer: { '@type': 'Answer', text: 'Agents. We connect tools, add retrieval, and ship evaluations and monitoring so behavior stays stable in production.' },
               },
               {
                 '@type': 'Question',
-                name: 'Can you integrate our tools?',
-                acceptedAnswer: { '@type': 'Answer', text: 'Yes — we connect CRMs, messaging, analytics, and internal systems.' },
+                name: 'Can you integrate our tools and data?',
+                acceptedAnswer: { '@type': 'Answer', text: 'Yes. We connect CRMs, messaging, analytics, and internal systems with least-privilege access and auditability.' },
               },
             ],
           }),
@@ -87,11 +87,11 @@ export default function AIDevelopmentIntegrationsPage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Service',
-            name: 'AI Development & Integrations',
+            name: 'Agent + LLM Integrations',
             provider: { '@type': 'Organization', name: 'OfRoot' },
             areaServed: 'US',
             description:
-              'Custom AI models, LLM integrations, and automation of knowledge work to enhance decision‑making and customer experience.',
+              'Agent orchestration, LLM integrations, and tool-connected workflows that operate on your data with safety, evaluation, and observability.',
             offers: {
               '@type': 'Offer',
               price: '149',

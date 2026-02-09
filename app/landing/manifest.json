@@ -2,7 +2,7 @@
   "pages": {
     "ofroot-demo": {
       "seo": {
-        "title": "Ofroot Landing — Demo",
+        "title": "OfRoot Landing - Demo",
         "description": "A simple demo landing page powered by a static manifest."
       },
       "theme": {
@@ -30,12 +30,77 @@
       "embed": {
         "html": "<div style=\"border:1px solid #e5e7eb;padding:16px;border-radius:12px\"><h3 style=\"margin:0 0 8px 0;color:#20b2aa\">Calendly (example)</h3><div class=\"calendly-inline-widget\" data-url=\"https://calendly.com/dimitri-mcdaniel-9oh/new-meeting\" style=\"min-width:320px;height:640px\"></div><script src=\"https://assets.calendly.com/assets/external/widget.js\" async></script></div>"
       }
-    }
-    ,
+    },
+    "social-comment-dm-automation": {
+      "seo": {
+        "title": "Social Comment + DM Automation - Book More Meetings | OfRoot",
+        "description": "Automate comment and DM responses, send links, capture lead details, and sync to your CRM so more conversations become booked meetings."
+      },
+      "theme": {
+        "primary": "#20b2aa",
+        "secondary": "#0ea5e9"
+      },
+      "hero": {
+        "headline": "Turn comments and DMs into booked meetings.",
+        "subheadline": "We build automation that responds to social engagement, sends the right link, captures lead data, and stores it in your CRM with full visibility."
+      },
+      "cta": {
+        "label": "Book an automation strategy call",
+        "href": "https://form.jotform.com/252643426225151"
+      },
+      "features": [
+        {
+          "emoji": "💬",
+          "title": "Auto-reply that feels human",
+          "text": "Respond to comments and DMs with approved templates, routing rules, and safe fallbacks."
+        },
+        {
+          "emoji": "🔗",
+          "title": "Send links and qualify intent",
+          "text": "Deliver lead magnets, booking links, or next-step questions based on message intent."
+        },
+        {
+          "emoji": "🧾",
+          "title": "Capture and store lead data",
+          "text": "Collect name, email, phone, and context and store it reliably with dedupe and validation."
+        },
+        {
+          "emoji": "🔁",
+          "title": "Sync to CRM",
+          "text": "Create or update contacts, set lifecycle stage, assign owners, and trigger follow-up workflows."
+        },
+        {
+          "emoji": "🧩",
+          "title": "Make and Zapier optional",
+          "text": "Use Make/Zapier when it fits, or ship direct API integrations for reliability and control."
+        },
+        {
+          "emoji": "📈",
+          "title": "Track outcomes",
+          "text": "Measure response time, capture rate, qualified lead rate, and meeting conversion."
+        },
+        {
+          "emoji": "🛡️",
+          "title": "Reliability guardrails",
+          "text": "Retries, webhook validation, and monitoring so leads do not drop silently."
+        }
+      ],
+      "variants": {
+        "default": "A",
+        "A": { "ctaLabel": "Book an automation strategy call" },
+        "B": { "ctaLabel": "See an example workflow" }
+      }
+    },
     "plumbers": {
-      "seo": { "title": "BluePro for Plumbers — Book More Jobs", "description": "Scheduling, invoices, and reviews that drive repeat work." },
+      "seo": {
+        "title": "BluePro for Plumbers - Book More Jobs",
+        "description": "Scheduling, invoices, and reviews that drive repeat work."
+      },
       "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
-      "hero": { "headline": "Get More Plumbing Jobs with BluePro", "subheadline": "Scheduling, invoices, and reviews that drive repeat work." },
+      "hero": {
+        "headline": "Get More Plumbing Jobs with BluePro",
+        "subheadline": "Scheduling, invoices, and reviews that drive repeat work."
+      },
       "cta": { "label": "Start $149 plan", "href": "/subscribe/bluepro-plumber" },
       "features": [
         { "emoji": "🗓️", "title": "Scheduling & Dispatch", "text": "Calendar views and reminders" },
@@ -44,7 +109,10 @@
       ]
     },
     "hvac": {
-      "seo": { "title": "BluePro for HVAC — Convert More Calls", "description": "Estimates, scheduling, and financing integrations." },
+      "seo": {
+        "title": "BluePro for HVAC - Convert More Calls",
+        "description": "Estimates, scheduling, and financing integrations."
+      },
       "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
       "hero": { "headline": "HVAC Pros: Convert Calls into Revenue", "subheadline": "Estimates, scheduling, and financing integrations." },
       "cta": { "label": "Start $199 plan", "href": "/subscribe/bluepro-hvac" },
@@ -55,16 +123,22 @@
       ]
     },
     "roofers": {
-      "seo": { "title": "BluePro for Roofers — Close Bigger Jobs", "description": "Lead capture, estimates, and CRM basics." },
+      "seo": {
+        "title": "BluePro for Roofers - Close Bigger Jobs",
+        "description": "Lead capture, estimates, and CRM basics."
+      },
       "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
       "hero": { "headline": "Roofing Teams Win with BluePro", "subheadline": "Lead capture, estimates, and CRM basics." },
       "cta": { "label": "Start $179 plan", "href": "/subscribe/bluepro-roofer" }
     },
-  "cto": {
-      "seo": { "title": "Fractional CTO for Service Businesses", "description": "Roadmaps, architecture, hiring, and hands-on delivery." },
+    "cto": {
+      "seo": {
+        "title": "Fractional CTO for Service Businesses",
+        "description": "Roadmaps, architecture, hiring, and hands-on delivery."
+      },
       "theme": { "primary": "#20b2aa", "secondary": "#007bff" },
       "hero": { "headline": "Fractional CTO: Strategy + Execution", "subheadline": "Roadmaps, architecture, hiring, and hands-on delivery." },
-  "cta": { "label": "Talk to sales", "href": "https://form.jotform.com/252643426225151" },
+      "cta": { "label": "Talk to sales", "href": "https://form.jotform.com/252643426225151" },
       "features": [
         { "emoji": "🧭", "title": "Technical Strategy", "text": "Architect systems aligned to business goals" },
         { "emoji": "🚀", "title": "Delivery", "text": "Sprints, demos, outcomes" },

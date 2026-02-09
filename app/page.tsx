@@ -14,18 +14,19 @@ import { Metadata } from 'next';
 import Hero from "@/components/home/Hero";
 import Why from "@/components/home/Why";
 import Features from "@/components/home/Features";
+import PickIntegration from "@/components/home/PickIntegration";
 import HowItWorks from "@/components/home/HowItWorks";
 import PricingAnchor from "@/components/home/PricingAnchor";
 import SocialProof from "@/components/home/SocialProof";
 import Faq from "@/components/home/Faq";
 
 export const metadata: Metadata = {
-  title: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
-  description: 'We design, build, and run production AI workflows for operators who need revenue this quarter. Clear scope, senior ownership, and weekly shipping.',
-  keywords: ['AI systems', 'automation', 'production AI', 'operators', 'revenue'],
+  title: 'OfRoot - HubSpot + Meta integrations that book meetings',
+  description: 'We design, build, and run HubSpot and Meta API workflows that capture leads, route follow-up, and convert demand into booked meetings.',
+  keywords: ['HubSpot integrations', 'Meta API integration', 'lead routing', 'meeting booking workflows', 'marketing automation'],
   openGraph: {
-    title: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
-    description: 'Production AI workflows, built and run by senior engineers. Scope a 30-day build.',
+    title: 'OfRoot - HubSpot + Meta integrations that book meetings',
+    description: 'Lead capture, sync, and booking workflows built by senior engineers.',
     url: 'https://ofroot.technology',
     type: 'website',
     images: [
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
         url: 'https://ofroot.technology/og.jpg',
         width: 1200,
         height: 630,
-        alt: 'OfRoot — Operator-led AI systems that ship revenue in 30 days',
+        alt: 'OfRoot - HubSpot + Meta integrations that book meetings',
       },
     ],
   },
@@ -50,6 +51,7 @@ export default function HomePage() {
       <Hero />
       <Why />
       <Features />
+      <PickIntegration />
       <HowItWorks />
       <PricingAnchor />
       <SocialProof />

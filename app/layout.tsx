@@ -21,10 +21,25 @@ import { Theme } from '@radix-ui/themes';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'),
   title: {
-    default: `${SITE.name} · Engineering, Automation, and AI`,
+    default: `${SITE.name} · Integrations that turn leads into meetings`,
     template: `%s · ${SITE.name}`,
   },
-  description: 'On‑demand engineering, automation, and AI — by subscription. Ship faster with focused sprints and transparent pricing.',
+  description: 'HubSpot, Meta API, data sanity, and agent integrations. We build reliable pipelines and workflows that convert demand into booked meetings.',
+  keywords: [
+    'automation',
+    'workflow automation',
+    'Make.com automation',
+    'Zapier automation',
+    'HubSpot integration',
+    'Meta API integration',
+    'Meta Conversions API',
+    'data pipelines',
+    'data sanity checks',
+    'LLM integration',
+    'AI agent integration',
+    'lead routing',
+    'meeting booking workflows',
+  ],
   alternates: {
     canonical: '/',
   },
@@ -32,8 +47,8 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} · Engineering, Automation, and AI`,
-    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    title: `${SITE.name} · Integrations that turn leads into meetings`,
+    description: 'HubSpot, Meta API, data sanity, and agent integrations built for booked-meeting outcomes.',
     images: [
       {
         url: `${SITE.url}/og.jpg`,
@@ -47,8 +62,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ofroot_tech',
     creator: '@ofroot_tech',
-    title: `${SITE.name} · Engineering, Automation, and AI`,
-    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    title: `${SITE.name} · Integrations that turn leads into meetings`,
+    description: 'HubSpot, Meta API, data sanity, and agent integrations built for booked-meeting outcomes.',
     images: [`${SITE.url}/og.jpg`],
   },
   robots: {
@@ -89,7 +104,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="robots" content="index,follow" />
         <Script
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           src="https://t.contentsquare.net/uxa/39fb61661526f.js"
         />
       </head>
@@ -149,11 +164,6 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 name: SITE.name,
                 url: SITE.url,
-                potentialAction: {
-                  '@type': 'SearchAction',
-                  target: `${SITE.url}/search?q={search_term_string}`,
-                  'query-input': 'required name=search_term_string',
-                },
               }),
             }}
           />
