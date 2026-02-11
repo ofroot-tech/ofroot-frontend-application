@@ -93,7 +93,7 @@ function renderNavItems(
         rel={item.external ? 'noopener noreferrer' : undefined}
         className={
           isDesktop
-            ? 'text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md'
+            ? 'whitespace-nowrap text-sm font-medium text-white hover:text-[#20b2aa] transition-colors px-2.5 py-2 rounded-md'
             : 'block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors'
         }
         onClick={onNavigate}
@@ -127,7 +127,7 @@ function DesktopDropdown({ item }: { item: NavItem }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex items-center text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md"
+        className="flex items-center whitespace-nowrap text-sm font-medium text-white hover:text-[#20b2aa] transition-colors px-2.5 py-2 rounded-md"
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls={`dropdown-${item.label}`}
@@ -149,7 +149,7 @@ function DesktopDropdown({ item }: { item: NavItem }) {
             href={child.href}
             target={child.external ? '_blank' : undefined}
             rel={child.external ? 'noopener noreferrer' : undefined}
-            className="block px-4 py-2 text-white hover:bg-gray-700 hover:text-[#20b2aa] transition-colors"
+            className="block whitespace-nowrap px-4 py-2 text-white hover:bg-gray-700 hover:text-[#20b2aa] transition-colors"
             onClick={() => setOpen(false)}
             role="menuitem"
           >
@@ -292,7 +292,7 @@ export default function Navbar() {
         role="banner"
         className="navbar-header fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
@@ -306,20 +306,20 @@ export default function Navbar() {
                   className="h-9 w-9 rounded-full object-cover"
                   aria-hidden="true"
                 />
-                <span className="text-white font-semibold text-base md:text-lg tracking-tight">ofroot</span>
+                <span className="text-white font-semibold text-base md:text-lg tracking-tight">OfRoot</span>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1" aria-label="Desktop navigation">
+            <nav className="hidden xl:flex items-center gap-0.5" aria-label="Desktop navigation">
               {renderNavItems(navItems, true)}
             </nav>
 
             {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-4 ml-8">
+            <div className="hidden xl:flex items-center gap-2.5 ml-6">
               <Link
                 href="/consulting/book"
-                className="text-[#20b2aa] hover:text-white transition-colors px-4 py-2 rounded-md font-medium"
+                className="whitespace-nowrap text-sm font-semibold text-[#20b2aa] hover:text-white transition-colors px-3 py-2 rounded-md border border-[#20b2aa]/30 hover:border-[#20b2aa]"
               >
                 Book an integration call
               </Link>
@@ -327,9 +327,9 @@ export default function Navbar() {
                 href="https://form.jotform.com/252643426225151"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-[#20b2aa] transition-colors px-4 py-2 rounded-md font-medium"
+                className="whitespace-nowrap text-sm font-semibold text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md border border-white/20 hover:border-[#20b2aa]/40"
               >
-                Talk to an engineer
+                Talk to engineer
               </a>
             </div>
 
@@ -338,7 +338,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => toggleMobileMenu()}
-                className="lg:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="xl:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
@@ -371,7 +371,7 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Mobile navigation"
-        className={`fixed inset-0 z-[10000] lg:hidden transition-all duration-300 ${
+        className={`fixed inset-0 z-[10000] xl:hidden transition-all duration-300 ${
           mobileMenuOpen ? 'visible' : 'invisible'
         }`}
       >
