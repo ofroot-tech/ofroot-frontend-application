@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/meta-conversions-api',
     '/make-zapier-automation',
     '/agent-integrations',
+    '/gpu-llm-training',
     '/services',
     '/services/automation',
     '/services/integration',

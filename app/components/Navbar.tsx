@@ -55,6 +55,7 @@ const navItems: NavItem[] = [
       { label: 'Meta Conversions API', href: '/meta-conversions-api' },
       { label: 'Make + Zapier Automation', href: '/make-zapier-automation' },
       { label: 'Agent Integrations', href: '/agent-integrations' },
+      { label: 'GPU + LLM Training', href: '/gpu-llm-training' },
     ],
   },
   { label: 'Pricing', href: '/pricing' },

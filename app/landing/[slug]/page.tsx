@@ -25,6 +25,7 @@ import Exposure from '@/app/landing/components/Exposure';
 import CtaLink from '@/app/landing/components/CtaLink';
 import SafeEmbed from '@/app/landing/components/SafeEmbed';
 import LeadCapture from '@/app/landing/components/LeadCapture';
+import SocialAutomationIntakeForm from '@/app/landing/components/SocialAutomationIntakeForm';
 import { SITE } from '@/app/config/site';
 
 /** Compute the active variant key using cookies and manifest defaults. */
@@ -130,6 +131,14 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
   <section data-snap-section className="section-full snap-fade py-8 px-6 sm:px-12 reveal-in fade-only">
           <div className="max-w-3xl mx-auto">
             <LeadCapture service={slug} />
+          </div>
+        </section>
+      )}
+
+      {slug === 'social-comment-dm-automation' && (
+  <section data-snap-section className="section-full snap-fade py-12 px-6 sm:px-12 reveal-in">
+          <div className="max-w-5xl mx-auto">
+            <SocialAutomationIntakeForm />
           </div>
         </section>
       )}

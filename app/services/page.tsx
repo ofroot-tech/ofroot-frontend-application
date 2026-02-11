@@ -35,6 +35,11 @@ const cards = [
     desc: 'Agent orchestration, retrieval, and tool integrations that operate on your data safely.',
   },
   {
+    href: '/gpu-llm-training',
+    title: 'GPU + LLM Training',
+    desc: 'GPU capacity plus data cleaning, pipelines, and training-run reliability for custom model work.',
+  },
+  {
     href: '/services/stability',
     title: 'Reliability and Data Sanity',
     desc: 'Observability, retries, validation, and runbooks for pipelines and integrations.',

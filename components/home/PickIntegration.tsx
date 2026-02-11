@@ -25,6 +25,12 @@ const picks = [
     href: '/agent-integrations',
     badge: 'Agents',
   },
+  {
+    title: 'GPU + LLM training',
+    desc: 'GPU capacity plus data cleaning and reproducible training pipelines.',
+    href: '/gpu-llm-training',
+    badge: 'Compute',
+  },
 ];
 
 export default function PickIntegration() {
@@ -73,4 +79,3 @@ export default function PickIntegration() {
     </section>
   );
 }
-

@@ -37,7 +37,7 @@
         "description": "Automate comment and DM responses, send links, capture lead details, and sync to your CRM so more conversations become booked meetings."
       },
       "theme": {
-        "primary": "#20b2aa",
+        "primary": "#0f766e",
         "secondary": "#0ea5e9"
       },
       "hero": {
@@ -89,6 +89,61 @@
         "default": "A",
         "A": { "ctaLabel": "Book an automation strategy call" },
         "B": { "ctaLabel": "See an example workflow" }
+      }
+    },
+    "gpu-llm-training": {
+      "seo": {
+        "title": "GPU Rental + Custom LLM Training | OfRoot",
+        "description": "Rent GPU capacity for labs and teams training custom LLMs. We also clean, structure, and validate your data pipelines so training runs are reliable."
+      },
+      "theme": {
+        "primary": "#0f766e",
+        "secondary": "#111827"
+      },
+      "hero": {
+        "headline": "Rent GPU capacity for custom LLM training.",
+        "subheadline": "We provide GPU compute plus the engineering layer: data cleaning, dataset QA, pipelines, and training run reliability."
+      },
+      "cta": {
+        "label": "Book a GPU training call",
+        "href": "https://form.jotform.com/252643426225151"
+      },
+      "features": [
+        {
+          "emoji": "🧠",
+          "title": "Custom LLM training support",
+          "text": "From dataset prep to training runs, we support the workflows your team needs to ship models safely."
+        },
+        {
+          "emoji": "🧹",
+          "title": "Data cleaning + sanity checks",
+          "text": "Deduplication, normalization, labeling QA, leakage checks, and reproducible dataset builds."
+        },
+        {
+          "emoji": "🧬",
+          "title": "Pipelines and reproducibility",
+          "text": "Versioned datasets, configs, and runbooks so results are explainable and repeatable."
+        },
+        {
+          "emoji": "🖥️",
+          "title": "GPU capacity (rental)",
+          "text": "Provision GPU capacity for teams and labs so training does not stall on hardware constraints."
+        },
+        {
+          "emoji": "📈",
+          "title": "Training run reliability",
+          "text": "Monitoring, alerting, checkpoints, and failure recovery so long runs do not end in surprises."
+        },
+        {
+          "emoji": "🔒",
+          "title": "Security and access controls",
+          "text": "Least-privilege access, audit logs, and safe handling for sensitive datasets."
+        }
+      ],
+      "variants": {
+        "default": "A",
+        "A": { "ctaLabel": "Book a GPU training call" },
+        "B": { "ctaLabel": "Talk to an engineer" }
       }
     },
     "plumbers": {
