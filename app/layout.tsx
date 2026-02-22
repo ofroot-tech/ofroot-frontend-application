@@ -13,6 +13,7 @@ import AlphaTextReveal from "@/components/AlphaTextReveal";
 import SectionSnapperAll from "@/components/SectionSnapperAll";
 import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
 import LoadingOnClickManager from "@/components/LoadingOnClickManager";
+import { Analytics } from "@vercel/analytics/react";
 
 // Default site-wide metadata for SEO/SMO
 export const metadata: Metadata = {
@@ -148,6 +149,7 @@ export default function RootLayout({
               }),
             }}
           />
+          <Analytics />
         </AuthProvider>
       </body>
     </html>
