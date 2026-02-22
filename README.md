@@ -273,3 +273,21 @@ Render (Laravel API):
 Security hygiene:
 - Keep this repo public if you want GitHub activity — just ensure secrets live in Vercel/Render envs, not in git.
 - Rotate keys immediately if a secret ever lands in commit history.
+
+## Intro letters outreach (password-gated)
+
+The hidden route `/intro-letters` provides a password-gated workspace for composing and sending intro letters to company leaders.
+
+Environment variables:
+- `INTRO_LETTERS_GATE_USER` — gate username. Default fallback: `dimitri.mcdaniel@gmail.com`.
+- `INTRO_LETTERS_GATE_PASSWORD` — gate password. Default fallback: `1734`.
+- `INTRO_LETTERS_GATE_SECRET` — HMAC signing secret for the gate session cookie. Required in production.
+- `INTRO_LETTERS_REPLY_TO` — optional reply-to email for outgoing intro letters. Defaults to gate user.
+- `RESEND_API_KEY` — required to send intro letters.
+- `RESEND_FROM` — sender address (must be verified in Resend).
+- `RESEND_FROM_NAME` — sender display name.
+
+Security behavior:
+- Session cookie name: `ofroot_intro_letters_session` (httpOnly, sameSite=lax, secure in production).
+- Session duration: 12 hours.
+- Route is marked `noindex, nofollow` and disallowed in `robots.txt`.
