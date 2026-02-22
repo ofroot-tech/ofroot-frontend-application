@@ -6,8 +6,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import Toaster from "@/components/Toaster";
 import RevealObserver from "@/app/components/RevealObserver";
 import Footer from "@/app/components/Footer";
-import Hotjar from "@/app/components/Hotjar";
-import Script from "next/script";
 import ExitIntentPrompt from "@/components/ExitIntentPrompt";
 // import ChatWidget from "@/components/ChatWidget"; // Temporarily disabled
 import { SITE } from './config/site';
@@ -15,31 +13,16 @@ import AlphaTextReveal from "@/components/AlphaTextReveal";
 import SectionSnapperAll from "@/components/SectionSnapperAll";
 import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
 import LoadingOnClickManager from "@/components/LoadingOnClickManager";
-import { Theme } from '@radix-ui/themes';
+import { Analytics } from "@vercel/analytics/react";
 
 // Default site-wide metadata for SEO/SMO
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'),
   title: {
-    default: `${SITE.name} · Integrations that turn leads into meetings`,
+    default: `${SITE.name} · Engineering, Automation, and AI`,
     template: `%s · ${SITE.name}`,
   },
-  description: 'HubSpot, Meta API, data sanity, and agent integrations. We build reliable pipelines and workflows that convert demand into booked meetings.',
-  keywords: [
-    'automation',
-    'workflow automation',
-    'Make.com automation',
-    'Zapier automation',
-    'HubSpot integration',
-    'Meta API integration',
-    'Meta Conversions API',
-    'data pipelines',
-    'data sanity checks',
-    'LLM integration',
-    'AI agent integration',
-    'lead routing',
-    'meeting booking workflows',
-  ],
+  description: 'On‑demand engineering, automation, and AI — by subscription. Ship faster with focused sprints and transparent pricing.',
   alternates: {
     canonical: '/',
   },
@@ -47,8 +30,8 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} · Integrations that turn leads into meetings`,
-    description: 'HubSpot, Meta API, data sanity, and agent integrations built for booked-meeting outcomes.',
+    title: `${SITE.name} · Engineering, Automation, and AI`,
+    description: 'On‑demand engineering, automation, and AI — by subscription.',
     images: [
       {
         url: `${SITE.url}/og.jpg`,
@@ -62,8 +45,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ofroot_tech',
     creator: '@ofroot_tech',
-    title: `${SITE.name} · Integrations that turn leads into meetings`,
-    description: 'HubSpot, Meta API, data sanity, and agent integrations built for booked-meeting outcomes.',
+    title: `${SITE.name} · Engineering, Automation, and AI`,
+    description: 'On‑demand engineering, automation, and AI — by subscription.',
     images: [`${SITE.url}/og.jpg`],
   },
   robots: {
@@ -103,15 +86,9 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="robots" content="index,follow" />
-        <Script
-          strategy="afterInteractive"
-          src="https://t.contentsquare.net/uxa/39fb61661526f.js"
-        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Hotjar />
-        <Theme>
-          <AuthProvider>
+        <AuthProvider>
           <Toaster />
           <ExitIntentPrompt />
       <AlphaTextReveal />
@@ -136,7 +113,7 @@ export default function RootLayout({
             <SmoothAnchorScroll />
             {/* Lightweight global loading state for CTA buttons */}
             <LoadingOnClickManager />
-            <main className="relative z-10 flex-1" data-hotjar-surface="site-shell">{children}</main>
+            <main className="relative z-10 flex-1">{children}</main>
             <div className="relative z-10">
               <Footer />
             </div>
@@ -164,11 +141,16 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 name: SITE.name,
                 url: SITE.url,
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: `${SITE.url}/search?q={search_term_string}`,
+                  'query-input': 'required name=search_term_string',
+                },
               }),
             }}
           />
+          <Analytics />
         </AuthProvider>
-        </Theme>
       </body>
     </html>
   );

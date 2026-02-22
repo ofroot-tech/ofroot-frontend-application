@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from '@/components/Toaster';
-import ExitIntentSnakeGame from '@/components/ExitIntentSnakeGame';
+import ExitIntentSnakeGame from './ExitIntentSnakeGame';
 
 /**
  * ExitIntentPrompt
