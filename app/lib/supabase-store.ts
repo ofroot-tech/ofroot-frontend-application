@@ -1,0 +1,557 @@
+import { randomBytes } from 'crypto';
+import bcrypt from 'bcryptjs';
+import { Pool } from 'pg';
+import type { CreateLeadInput, Lead, User } from '@/app/lib/api';
+
+const SESSION_TTL_DAYS = 30;
+
+type DbUserRow = {
+  id: number | string;
+  name: string;
+  email: string;
+  tenant_id: number | string | null;
+  plan: string | null;
+  billing_cycle: 'monthly' | 'yearly' | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type DbLeadRow = {
+  id: number | string;
+  tenant_id: number | string | null;
+  name: string | null;
+  email: string | null;
+  phone: string;
+  service: string;
+  zip: string;
+  source: string | null;
+  status: string | null;
+  meta: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type DbAutomationAbandonmentRow = {
+  id: number | string;
+  email: string;
+  full_name: string | null;
+  company_name: string | null;
+  stage: string;
+  reason: string | null;
+  payload: Record<string, unknown> | null;
+  first_seen_at: string;
+  last_seen_at: string;
+  notified_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+function toNum(value: number | string | null | undefined): number {
+  if (typeof value === 'number') return value;
+  if (!value) return 0;
+  return Number.parseInt(String(value), 10) || 0;
+}
+
+function mapUser(row: DbUserRow): User {
+  return {
+    id: toNum(row.id),
+    name: row.name,
+    email: row.email,
+    tenant_id: row.tenant_id == null ? null : toNum(row.tenant_id),
+    plan: row.plan,
+    billing_cycle: row.billing_cycle,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
+function mapLead(row: DbLeadRow): Lead {
+  return {
+    id: toNum(row.id),
+    tenant_id: row.tenant_id == null ? null : toNum(row.tenant_id),
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    service: row.service,
+    zip: row.zip,
+    source: row.source,
+    status: row.status || 'new',
+    meta: row.meta || {},
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
+function normalizeEmail(email: string): string {
+  return String(email || '').trim().toLowerCase();
+}
+
+function dbUrl(): string {
+  return process.env.DATABASE_URL || process.env.DIRECT_URL || '';
+}
+
+export function isSupabaseStoreConfigured(): boolean {
+  return Boolean(dbUrl());
+}
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __ofrootDbPool: Pool | undefined;
+  // eslint-disable-next-line no-var
+  var __ofrootDbReadyPromise: Promise<void> | undefined;
+}
+
+function getPool(): Pool {
+  const url = dbUrl();
+  if (!url) {
+    throw Object.assign(new Error('DATABASE_URL is not configured'), { status: 503 });
+  }
+
+  if (!global.__ofrootDbPool) {
+    global.__ofrootDbPool = new Pool({
+      connectionString: url,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      max: 10,
+    });
+  }
+  return global.__ofrootDbPool;
+}
+
+async function ensureSchema(): Promise<void> {
+  if (!global.__ofrootDbReadyPromise) {
+    global.__ofrootDbReadyPromise = (async () => {
+      const pool = getPool();
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_auth_users (
+          id BIGSERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL UNIQUE,
+          password_hash TEXT NOT NULL,
+          tenant_id BIGINT NULL,
+          plan TEXT NULL DEFAULT 'free',
+          billing_cycle TEXT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_auth_sessions (
+          id BIGSERIAL PRIMARY KEY,
+          token TEXT NOT NULL UNIQUE,
+          user_id BIGINT NOT NULL REFERENCES ofroot_auth_users(id) ON DELETE CASCADE,
+          expires_at TIMESTAMPTZ NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_auth_sessions_user_id ON ofroot_auth_sessions(user_id);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_auth_sessions_expires_at ON ofroot_auth_sessions(expires_at);
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_leads (
+          id BIGSERIAL PRIMARY KEY,
+          tenant_id BIGINT NULL,
+          name TEXT NULL,
+          email TEXT NULL,
+          phone TEXT NOT NULL,
+          service TEXT NOT NULL,
+          zip TEXT NOT NULL,
+          source TEXT NULL,
+          status TEXT NOT NULL DEFAULT 'new',
+          meta JSONB NOT NULL DEFAULT '{}'::jsonb,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_leads_email ON ofroot_leads(email);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_leads_source ON ofroot_leads(source);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_leads_status ON ofroot_leads(status);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_leads_created_at ON ofroot_leads(created_at DESC);
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_automation_abandonments (
+          id BIGSERIAL PRIMARY KEY,
+          email TEXT NOT NULL,
+          full_name TEXT NULL,
+          company_name TEXT NULL,
+          stage TEXT NOT NULL,
+          reason TEXT NULL,
+          payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+          first_seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          last_seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          notified_at TIMESTAMPTZ NULL,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          UNIQUE (email, stage)
+        );
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_automation_abandonments_email
+        ON ofroot_automation_abandonments(email);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_automation_abandonments_stage
+        ON ofroot_automation_abandonments(stage);
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_auth_users ADD COLUMN IF NOT EXISTS tenant_id BIGINT NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_auth_users ADD COLUMN IF NOT EXISTS plan TEXT NULL DEFAULT 'free';
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_auth_users ADD COLUMN IF NOT EXISTS billing_cycle TEXT NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_leads ADD COLUMN IF NOT EXISTS tenant_id BIGINT NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_leads ADD COLUMN IF NOT EXISTS source TEXT NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_leads ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'new';
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_leads ADD COLUMN IF NOT EXISTS meta JSONB NOT NULL DEFAULT '{}'::jsonb;
+      `);
+
+      await pool.query(`
+        UPDATE ofroot_auth_users SET email = LOWER(email) WHERE email <> LOWER(email);
+      `);
+
+      await pool.query(`
+        UPDATE ofroot_leads SET email = LOWER(email) WHERE email IS NOT NULL AND email <> LOWER(email);
+      `);
+
+      await pool.query(`
+        UPDATE ofroot_automation_abandonments
+        SET email = LOWER(email)
+        WHERE email <> LOWER(email);
+      `);
+    })();
+  }
+
+  await global.__ofrootDbReadyPromise;
+}
+
+export async function registerUser(params: {
+  name: string;
+  email: string;
+  password: string;
+  plan?: 'free' | 'pro' | 'business';
+  billingCycle?: 'monthly' | 'yearly';
+}): Promise<User> {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(params.email);
+  const passwordHash = await bcrypt.hash(params.password, 10);
+
+  const inserted = await pool.query<DbUserRow>(
+    `
+      INSERT INTO ofroot_auth_users (name, email, password_hash, plan, billing_cycle)
+      VALUES ($1, $2, $3, $4, $5)
+      ON CONFLICT (email) DO NOTHING
+      RETURNING id, name, email, tenant_id, plan, billing_cycle, created_at, updated_at
+    `,
+    [params.name.trim(), email, passwordHash, params.plan || 'free', params.billingCycle || null]
+  );
+
+  const row = inserted.rows[0];
+  if (!row) {
+    throw Object.assign(new Error('An account with this email already exists'), { status: 409 });
+  }
+
+  return mapUser(row);
+}
+
+export async function authenticateUser(emailInput: string, password: string): Promise<User | null> {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(emailInput);
+
+  const found = await pool.query<DbUserRow & { password_hash: string }>(
+    `
+      SELECT id, name, email, password_hash, tenant_id, plan, billing_cycle, created_at, updated_at
+      FROM ofroot_auth_users
+      WHERE email = $1
+      LIMIT 1
+    `,
+    [email]
+  );
+
+  const row = found.rows[0];
+  if (!row) return null;
+
+  const ok = await bcrypt.compare(password, row.password_hash);
+  if (!ok) return null;
+
+  return mapUser(row);
+}
+
+export async function createSessionForUser(userId: number): Promise<string> {
+  await ensureSchema();
+  const pool = getPool();
+  const token = randomBytes(32).toString('base64url');
+  const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
+
+  await pool.query(
+    `
+      INSERT INTO ofroot_auth_sessions (token, user_id, expires_at)
+      VALUES ($1, $2, $3)
+    `,
+    [token, userId, expiresAt.toISOString()]
+  );
+
+  return token;
+}
+
+export async function getUserFromSessionToken(token: string): Promise<User | null> {
+  await ensureSchema();
+  const pool = getPool();
+
+  const result = await pool.query<DbUserRow>(
+    `
+      SELECT u.id, u.name, u.email, u.tenant_id, u.plan, u.billing_cycle, u.created_at, u.updated_at
+      FROM ofroot_auth_sessions s
+      JOIN ofroot_auth_users u ON u.id = s.user_id
+      WHERE s.token = $1
+        AND s.expires_at > NOW()
+      LIMIT 1
+    `,
+    [token]
+  );
+
+  const row = result.rows[0];
+  if (!row) return null;
+  return mapUser(row);
+}
+
+export async function deleteSessionToken(token: string): Promise<void> {
+  await ensureSchema();
+  const pool = getPool();
+  await pool.query('DELETE FROM ofroot_auth_sessions WHERE token = $1', [token]);
+}
+
+export async function createLeadRecord(input: CreateLeadInput): Promise<Lead> {
+  await ensureSchema();
+  const pool = getPool();
+
+  const res = await pool.query<DbLeadRow>(
+    `
+      INSERT INTO ofroot_leads (
+        tenant_id,
+        name,
+        email,
+        phone,
+        service,
+        zip,
+        source,
+        status,
+        meta
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)
+      RETURNING id, tenant_id, name, email, phone, service, zip, source, status, meta, created_at, updated_at
+    `,
+    [
+      input.tenant_id ?? null,
+      input.name?.trim() || null,
+      input.email ? normalizeEmail(input.email) : null,
+      input.phone,
+      input.service,
+      input.zip,
+      input.source || null,
+      input.status || 'new',
+      JSON.stringify(input.meta || {}),
+    ]
+  );
+
+  return mapLead(res.rows[0]);
+}
+
+export async function listLeadsPaginated(params: {
+  page?: number;
+  per_page?: number;
+  q?: string;
+  status?: string;
+  zip?: string;
+  tenant_id?: number | null;
+}) {
+  await ensureSchema();
+  const pool = getPool();
+
+  const page = Math.max(1, Math.floor(params.page || 1));
+  const perPage = Math.max(1, Math.min(500, Math.floor(params.per_page || 25)));
+  const offset = (page - 1) * perPage;
+
+  const where: string[] = [];
+  const args: unknown[] = [];
+
+  if (params.q?.trim()) {
+    const q = `%${params.q.trim().toLowerCase()}%`;
+    args.push(q);
+    where.push(`(
+      LOWER(COALESCE(name, '')) LIKE $${args.length}
+      OR LOWER(COALESCE(email, '')) LIKE $${args.length}
+      OR LOWER(COALESCE(phone, '')) LIKE $${args.length}
+      OR LOWER(COALESCE(service, '')) LIKE $${args.length}
+    )`);
+  }
+
+  if (params.status?.trim()) {
+    args.push(params.status.trim().toLowerCase());
+    where.push(`LOWER(COALESCE(status, '')) = $${args.length}`);
+  }
+
+  if (params.zip?.trim()) {
+    args.push(params.zip.trim());
+    where.push(`zip = $${args.length}`);
+  }
+
+  if (params.tenant_id != null) {
+    args.push(params.tenant_id);
+    where.push(`tenant_id = $${args.length}`);
+  }
+
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+
+  const countSql = `SELECT COUNT(*)::int AS total FROM ofroot_leads ${whereSql}`;
+  const countRes = await pool.query<{ total: number }>(countSql, args);
+  const total = Number(countRes.rows[0]?.total || 0);
+
+  const selectSql = `
+    SELECT id, tenant_id, name, email, phone, service, zip, source, status, meta, created_at, updated_at
+    FROM ofroot_leads
+    ${whereSql}
+    ORDER BY created_at DESC, id DESC
+    LIMIT $${args.length + 1}
+    OFFSET $${args.length + 2}
+  `;
+
+  const rowsRes = await pool.query<DbLeadRow>(selectSql, [...args, perPage, offset]);
+  const data = rowsRes.rows.map(mapLead);
+
+  return {
+    data,
+    meta: {
+      total,
+      current_page: page,
+      per_page: perPage,
+      last_page: Math.max(1, Math.ceil(total / perPage)),
+    },
+  };
+}
+
+export async function findLatestAutomationLeadByEmail(emailInput: string): Promise<Lead | null> {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(emailInput);
+
+  const result = await pool.query<DbLeadRow>(
+    `
+      SELECT id, tenant_id, name, email, phone, service, zip, source, status, meta, created_at, updated_at
+      FROM ofroot_leads
+      WHERE LOWER(COALESCE(email, '')) = $1
+        AND source = 'automation-onboarding'
+      ORDER BY created_at DESC, id DESC
+      LIMIT 1
+    `,
+    [email]
+  );
+
+  const row = result.rows[0];
+  if (!row) return null;
+  return mapLead(row);
+}
+
+export async function upsertAutomationAbandonment(input: {
+  email: string;
+  stage: 'start' | 'services';
+  full_name?: string;
+  company_name?: string;
+  reason?: string;
+  payload?: Record<string, unknown>;
+}) {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(input.email);
+
+  const result = await pool.query<DbAutomationAbandonmentRow>(
+    `
+      INSERT INTO ofroot_automation_abandonments (
+        email,
+        full_name,
+        company_name,
+        stage,
+        reason,
+        payload
+      )
+      VALUES ($1, NULLIF($2, ''), NULLIF($3, ''), $4, NULLIF($5, ''), $6::jsonb)
+      ON CONFLICT (email, stage)
+      DO UPDATE SET
+        full_name = COALESCE(NULLIF(EXCLUDED.full_name, ''), ofroot_automation_abandonments.full_name),
+        company_name = COALESCE(NULLIF(EXCLUDED.company_name, ''), ofroot_automation_abandonments.company_name),
+        reason = COALESCE(NULLIF(EXCLUDED.reason, ''), ofroot_automation_abandonments.reason),
+        payload = COALESCE(ofroot_automation_abandonments.payload, '{}'::jsonb) || COALESCE(EXCLUDED.payload, '{}'::jsonb),
+        last_seen_at = NOW(),
+        updated_at = NOW()
+      RETURNING
+        id, email, full_name, company_name, stage, reason, payload,
+        first_seen_at, last_seen_at, notified_at, created_at, updated_at
+    `,
+    [
+      email,
+      (input.full_name || '').trim(),
+      (input.company_name || '').trim(),
+      input.stage,
+      (input.reason || '').trim(),
+      JSON.stringify(input.payload || {}),
+    ]
+  );
+
+  return result.rows[0];
+}
+
+export async function markAutomationAbandonmentNotified(input: {
+  email: string;
+  stage: 'start' | 'services';
+}) {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(input.email);
+
+  await pool.query(
+    `
+      UPDATE ofroot_automation_abandonments
+      SET notified_at = NOW(), updated_at = NOW()
+      WHERE email = $1 AND stage = $2
+    `,
+    [email, input.stage]
+  );
+}
