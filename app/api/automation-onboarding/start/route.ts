@@ -9,6 +9,7 @@ import {
   zodIssuesToFieldErrors,
 } from '@/app/lib/automation-onboarding';
 import { upsertAutomationAbandonment } from '@/app/lib/supabase-store';
+import { logger } from '@/app/lib/logger';
 
 const SERVICES_PATH = '/onboarding/automations/services';
 
@@ -51,13 +52,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err: any) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: { message: err?.message || 'Failed to initialize onboarding session' },
-      },
-      { status: err?.status ?? 500 }
-    );
+    logger.warn('automation.onboarding.start.persist_failed', { message: err?.message, status: err?.status });
   }
 
   const res = NextResponse.json({

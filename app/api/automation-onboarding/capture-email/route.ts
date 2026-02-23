@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
     captured_at: new Date().toISOString(),
   } satisfies Record<string, unknown>;
 
+  let persisted = true;
   try {
     await upsertAutomationAbandonment({
       email,
@@ -101,11 +102,8 @@ export async function POST(req: NextRequest) {
       payload,
     });
   } catch (err: any) {
+    persisted = false;
     console.warn('Failed to persist abandoned onboarding capture:', err?.message || err);
-    return NextResponse.json(
-      { ok: false, error: { message: 'Failed to persist abandoned onboarding capture' } },
-      { status: 500 }
-    );
   }
 
   console.info('[automation-onboarding.capture-email]', {
@@ -130,7 +128,7 @@ export async function POST(req: NextRequest) {
   });
 
   if (!RESEND_KEY) {
-    return NextResponse.json({ ok: true, data: { persisted: true, notified: false } });
+    return NextResponse.json({ ok: true, data: { persisted, notified: false } });
   }
 
   const subjectStage = stage === 'services' ? 'Services Step' : 'Start Step';
@@ -223,11 +221,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  try {
-    await markAutomationAbandonmentNotified({ email, stage });
-  } catch (err: any) {
-    console.warn('Failed to mark abandoned onboarding capture as notified:', err?.message || err);
+  if (persisted) {
+    try {
+      await markAutomationAbandonmentNotified({ email, stage });
+    } catch (err: any) {
+      console.warn('Failed to mark abandoned onboarding capture as notified:', err?.message || err);
+    }
   }
 
-  return NextResponse.json({ ok: true, data: { persisted: true, notified: true } });
+  return NextResponse.json({ ok: true, data: { persisted, notified: true } });
 }
