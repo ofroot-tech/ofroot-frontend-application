@@ -46,6 +46,45 @@ type DbAutomationAbandonmentRow = {
   updated_at: string;
 };
 
+type DbAutomationAbandonmentWithLeadRow = DbAutomationAbandonmentRow & {
+  lead_id: number | string | null;
+  lead_created_at: string | null;
+};
+
+type DbAutomationFunnelSummaryRow = {
+  total_signups: number | string;
+  signups_30d: number | string;
+  total_abandons: number | string;
+  abandons_30d: number | string;
+  abandons_converted: number | string;
+};
+
+export type AutomationAbandonmentRecord = {
+  id: number;
+  email: string;
+  full_name: string | null;
+  company_name: string | null;
+  stage: string;
+  reason: string | null;
+  payload: Record<string, unknown> | null;
+  first_seen_at: string;
+  last_seen_at: string;
+  notified_at: string | null;
+  created_at: string;
+  updated_at: string;
+  converted: boolean;
+  lead_id: number | null;
+  lead_created_at: string | null;
+};
+
+export type AutomationFunnelSummary = {
+  total_signups: number;
+  signups_30d: number;
+  total_abandons: number;
+  abandons_30d: number;
+  abandons_converted: number;
+};
+
 function toNum(value: number | string | null | undefined): number {
   if (typeof value === 'number') return value;
   if (!value) return 0;
@@ -79,6 +118,27 @@ function mapLead(row: DbLeadRow): Lead {
     meta: row.meta || {},
     created_at: row.created_at,
     updated_at: row.updated_at,
+  };
+}
+
+function mapAutomationAbandonment(row: DbAutomationAbandonmentWithLeadRow): AutomationAbandonmentRecord {
+  const leadId = row.lead_id == null ? null : toNum(row.lead_id);
+  return {
+    id: toNum(row.id),
+    email: row.email,
+    full_name: row.full_name,
+    company_name: row.company_name,
+    stage: row.stage,
+    reason: row.reason,
+    payload: row.payload || {},
+    first_seen_at: row.first_seen_at,
+    last_seen_at: row.last_seen_at,
+    notified_at: row.notified_at,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    converted: leadId != null && leadId > 0,
+    lead_id: leadId,
+    lead_created_at: row.lead_created_at,
   };
 }
 
@@ -488,6 +548,106 @@ export async function findLatestAutomationLeadByEmail(emailInput: string): Promi
   const row = result.rows[0];
   if (!row) return null;
   return mapLead(row);
+}
+
+export async function listRecentAutomationOnboardingLeads(params?: { limit?: number }): Promise<Lead[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const limit = Math.max(1, Math.min(500, Math.floor(params?.limit || 100)));
+
+  const result = await pool.query<DbLeadRow>(
+    `
+      SELECT id, tenant_id, name, email, phone, service, zip, source, status, meta, created_at, updated_at
+      FROM ofroot_leads
+      WHERE source = 'automation-onboarding'
+      ORDER BY created_at DESC, id DESC
+      LIMIT $1
+    `,
+    [limit]
+  );
+
+  return result.rows.map(mapLead);
+}
+
+export async function listRecentAutomationAbandonments(params?: { limit?: number }): Promise<AutomationAbandonmentRecord[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const limit = Math.max(1, Math.min(500, Math.floor(params?.limit || 100)));
+
+  const result = await pool.query<DbAutomationAbandonmentWithLeadRow>(
+    `
+      SELECT
+        a.id,
+        a.email,
+        a.full_name,
+        a.company_name,
+        a.stage,
+        a.reason,
+        a.payload,
+        a.first_seen_at,
+        a.last_seen_at,
+        a.notified_at,
+        a.created_at,
+        a.updated_at,
+        l.id AS lead_id,
+        l.created_at AS lead_created_at
+      FROM ofroot_automation_abandonments a
+      LEFT JOIN LATERAL (
+        SELECT id, created_at
+        FROM ofroot_leads l
+        WHERE LOWER(COALESCE(l.email, '')) = a.email
+          AND l.source = 'automation-onboarding'
+        ORDER BY l.created_at DESC, l.id DESC
+        LIMIT 1
+      ) l ON TRUE
+      ORDER BY a.last_seen_at DESC, a.id DESC
+      LIMIT $1
+    `,
+    [limit]
+  );
+
+  return result.rows.map(mapAutomationAbandonment);
+}
+
+export async function getAutomationFunnelSummary(): Promise<AutomationFunnelSummary> {
+  await ensureSchema();
+  const pool = getPool();
+
+  const result = await pool.query<DbAutomationFunnelSummaryRow>(
+    `
+      SELECT
+        (SELECT COUNT(*) FROM ofroot_leads WHERE source = 'automation-onboarding') AS total_signups,
+        (SELECT COUNT(*) FROM ofroot_leads WHERE source = 'automation-onboarding' AND created_at >= NOW() - INTERVAL '30 days') AS signups_30d,
+        (SELECT COUNT(*) FROM ofroot_automation_abandonments) AS total_abandons,
+        (SELECT COUNT(*) FROM ofroot_automation_abandonments WHERE last_seen_at >= NOW() - INTERVAL '30 days') AS abandons_30d,
+        (
+          SELECT COUNT(*)
+          FROM ofroot_automation_abandonments a
+          WHERE EXISTS (
+            SELECT 1
+            FROM ofroot_leads l
+            WHERE LOWER(COALESCE(l.email, '')) = a.email
+              AND l.source = 'automation-onboarding'
+          )
+        ) AS abandons_converted
+    `
+  );
+
+  const row = result.rows[0] || {
+    total_signups: 0,
+    signups_30d: 0,
+    total_abandons: 0,
+    abandons_30d: 0,
+    abandons_converted: 0,
+  };
+
+  return {
+    total_signups: toNum(row.total_signups),
+    signups_30d: toNum(row.signups_30d),
+    total_abandons: toNum(row.total_abandons),
+    abandons_30d: toNum(row.abandons_30d),
+    abandons_converted: toNum(row.abandons_converted),
+  };
 }
 
 export async function upsertAutomationAbandonment(input: {

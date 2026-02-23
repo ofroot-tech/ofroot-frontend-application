@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
 type Props = { children: React.ReactNode; authed?: boolean };
 const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
+	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
 	{ href: '/dashboard/subscribers', label: 'Subscribers', icon: UserCog },
 	{ href: '/dashboard/tenants', label: 'Tenants', icon: Building2 },
@@ -24,10 +25,11 @@ export default function DashboardShell({ children, authed = false }: Props) {
 	const toolsBtnRef = useRef<HTMLButtonElement | null>(null);
 	const modalRef = useRef<HTMLDivElement | null>(null);
 	const lastActiveRef = useRef<HTMLElement | null>(null);
-	const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 	const [hasBlogAddon, setHasBlogAddon] = useState(false);
   const [accountName, setAccountName] = useState<string | null>(null);
   const [accountPlan, setAccountPlan] = useState<string | null>(null);
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
   const { user } = useAuth();
 
 	useEffect(() => {
@@ -39,6 +41,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 				if (alive && res.ok && json?.ok) {
 					setIsSuperAdmin(Boolean(json.data?.isSuperAdmin));
 					setHasBlogAddon(Boolean(json.data?.hasBlogAddon));
+          setAccountEmail(json.data?.email ?? null);
 					setAccountName(json.data?.name ?? null);
 					setAccountPlan(json.data?.plan ?? null);
 				}
@@ -50,20 +53,25 @@ export default function DashboardShell({ children, authed = false }: Props) {
 	}, []);
 
 	const canImpersonate = isSuperAdmin || hasBlogAddon;
+  const ownerEmail = 'dimitri.mcdaniel@gmail.com';
+  const canViewOwnerFunnel = isSuperAdmin || String(accountEmail || '').toLowerCase() === ownerEmail;
 
 	const nav = authed
 		? [
 			...baseNav,
 			{ href: '/dashboard/crm/leads', label: 'Leads', icon: ClipboardList },
 			{ href: '/dashboard/crm/contacts', label: 'Contacts', icon: Users },
+			{ href: '/dashboard/crm/workflows', label: 'Workflows', icon: Workflow },
 			{ href: '/dashboard/releases', label: 'Releases', icon: Tag },
 			...((hasBlogAddon || isSuperAdmin) ? ([{ href: '/dashboard/blog', label: 'Blog', icon: NotebookPen }] as const) : ([] as const)),
 			...(isSuperAdmin ? ([{ href: '/dashboard/docs', label: 'Docs', icon: Book }] as const) : ([] as const)),
+      ...(canViewOwnerFunnel ? ([{ href: '/dashboard/owner/funnel', label: 'Owner Funnel', icon: ClipboardList }] as const) : ([] as const)),
 		]
 		: baseNav;
 	const quickActions = useMemo(() => {
 		const items = [
 			{ href: '/dashboard/overview', label: 'View metrics', description: 'Check key system health and KPIs.' },
+			{ href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow onboarding and implementation stages.' },
 			{ href: '/dashboard/tenants', label: 'Manage tenants', description: 'Review organizations and plans.' },
 			{ href: '/dashboard/subscribers', label: 'Manage subscribers', description: 'Track active subscribers.' },
 			{ href: '/dashboard/users', label: 'Manage users', description: 'Invite teammates and adjust roles.' },
@@ -77,8 +85,11 @@ export default function DashboardShell({ children, authed = false }: Props) {
 		if (canImpersonate) {
 			items.push({ href: '#impersonate', label: 'Switch roles', description: 'Test dashboards using preset personas.' });
 		}
+    if (canViewOwnerFunnel) {
+      items.push({ href: '/dashboard/owner/funnel', label: 'View owner funnel', description: 'Track signups and abandoned onboarding attempts.' });
+    }
 		return items;
-	}, [hasBlogAddon, isSuperAdmin, canImpersonate]);
+	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel]);
 
 	useEffect(() => {
 		if (!toolsOpen) return;
@@ -151,7 +162,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 						<input
 							aria-label="Global search"
 							placeholder="Search users, tenants, subscribers..."
-							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:border-[#20b2aa]"
+							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF9312] focus:border-[#FF9312]"
 						/>
 						{displayName && (
 							<div className="text-xs sm:text-sm text-gray-600 text-right">
@@ -244,7 +255,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 											key={action.href}
 											href={action.href}
 											onClick={() => setToolsOpen(false)}
-											className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20b2aa]"
+											className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9312]"
 										>
 											<div className="font-medium text-gray-900">{action.label}</div>
 											<div className="text-xs text-gray-600">{action.description}</div>
@@ -252,7 +263,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 									))}
 									<button
 										type="button"
-										className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20b2aa]"
+										className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9312]"
 										onClick={() => setToolsOpen(false)}
 									>
 										Close menu
