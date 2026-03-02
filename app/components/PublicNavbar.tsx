@@ -7,7 +7,6 @@
  * Dark theme matching the main navbar for visual consistency.
  */
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -83,17 +82,19 @@ export default function PublicNavbar() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
-                <Image
-                  src="/ofroot-logo.png"
-                  alt=""
-                  width={36}
-                  height={36}
-                  priority
-                  className="h-9 w-9 rounded-full object-cover"
+              <Link href="/" aria-label="OFROOT homepage" className="flex items-center gap-2">
+                <svg
+                  width="36"
+                  height="36"
+                  viewBox="0 0 36 36"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-9 w-9"
                   aria-hidden="true"
-                />
-                <span className="text-white font-semibold text-lg tracking-tight">ofroot</span>
+                >
+                  <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
+                </svg>
+                <span className="text-white font-semibold text-lg tracking-tight">OFROOT</span>
               </Link>
             </div>
 
@@ -188,15 +189,18 @@ export default function PublicNavbar() {
           {/* Drawer Header */}
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
             <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
-              <Image
-                src="/ofroot-logo.png"
-                alt=""
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover"
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 36 36"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
                 aria-hidden="true"
-              />
-              <span className="text-white font-semibold text-lg">ofroot</span>
+              >
+                <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
+              </svg>
+              <span className="text-white font-semibold text-lg">OFROOT</span>
             </Link>
             <button
               type="button"

@@ -28,7 +28,7 @@ export default function HomePage() {
           <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#FFC46B]">
             Revenue automation systems
           </p>
-          <h1 className="max-w-4xl text-4xl font-black leading-tight sm:text-6xl">
+          <h1 className="max-w-4xl text-4xl font-black leading-tight sm:text-6xl text-white" style={{color: '#FFFFFF', textShadow: '0 2px 8px rgba(0,0,0,0.5)'}}>
             Book more qualified meetings from the traffic you already have.
           </h1>
           <p className="mt-5 max-w-3xl text-base text-slate-200 sm:text-xl">
@@ -78,7 +78,7 @@ export default function HomePage() {
               Trusted stack coverage: HubSpot, Meta Ads + CAPI, Make, Zapier, webhooks, and internal APIs.
             </p>
             <p className="mt-2 text-sm text-slate-600">
-              "OfRoot helped us stop dropped leads and speed up follow-up in week one."
+              &quot;OfRoot helped us stop dropped leads and speed up follow-up in week one.&quot;
             </p>
           </div>
 

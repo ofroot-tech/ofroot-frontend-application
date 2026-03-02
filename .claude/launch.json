@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js Frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    }
+  ],
+  "notes": {
+    "backend": "This project communicates with a separate Laravel backend (http://127.0.0.1:8000/api). Set NEXT_PUBLIC_API_BASE_URL in .env.local to point to your backend.",
+    "testing": "Run tests with 'npm test' (Jest) or 'npm run test:ui' (Playwright E2E)",
+    "build": "Production build: 'npm run build' followed by 'npm start'"
+  }
+}
