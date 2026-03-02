@@ -21,6 +21,19 @@ interface Question {
 const QUESTIONS: Question[] = [
   // Business Info
   {
+    id: "businessFormationStatus",
+    label: "Do You Have a Registered Business Entity?",
+    description: "Are you operating as an LLC, Corporation, or other registered entity?",
+    helperText: "We recommend having a registered business entity for legal protection and professional credibility.",
+    fieldType: "radio",
+    required: true,
+    options: [
+      { label: "Yes, I have an LLC or other entity", value: "HasEntity" },
+      { label: "No, I do not have an LLC yet", value: "NoEntity" },
+      { label: "I am a sole proprietor", value: "SoleProprietor" },
+    ],
+  },
+  {
     id: "legalBusinessName",
     label: "Legal Business Name",
     description: "Your official registered business name",
@@ -536,6 +549,14 @@ export default function SteppedAutomationForm() {
   }
 
   function handleNext() {
+    // Skip legal business name if user doesn't have an LLC yet
+    if (question.id === "legalBusinessName" && formData.businessFormationStatus === "NoEntity") {
+      if (currentStep < totalSteps - 1) {
+        setCurrentStep(currentStep + 1);
+      }
+      return;
+    }
+
     if (question.required && !currentValue.trim()) {
       toast({ type: "error", title: "Required field", message: `${question.label} is required.` });
       return;
@@ -689,6 +710,50 @@ export default function SteppedAutomationForm() {
                 </div>
               ) : null}
             </div>
+
+            {/* LLC Formation Offer - Show when user selects "No LLC yet" */}
+            {question.id === "businessFormationStatus" && formData.businessFormationStatus === "NoEntity" && (
+              <div className="mb-8 p-6 bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-900 mb-2">We Can Help You Form Your LLC</h3>
+                    <p className="text-sm text-gray-700 mb-4">
+                      Registering an LLC is one of the best investments for your business. Here are the key benefits:
+                    </p>
+                    <ul className="space-y-2 text-sm text-gray-700 mb-4">
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-orange-600 rounded-full" />
+                        <span><strong>Legal Protection:</strong> Separate your personal assets from business liability</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-orange-600 rounded-full" />
+                        <span><strong>Tax Benefits:</strong> Potential deductions and pass-through taxation</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-orange-600 rounded-full" />
+                        <span><strong>Professional Credibility:</strong> Increases customer trust and confidence</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-orange-600 rounded-full" />
+                        <span><strong>Client Contracts:</strong> Required for many corporate partnerships</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-orange-600 rounded-full" />
+                        <span><strong>Brand Building:</strong> Reflects commitment to your business</span>
+                      </li>
+                    </ul>
+                    <p className="text-xs text-gray-600 italic">
+                      You can still proceed with automation setup, and we recommend forming your LLC before launch for full legal protection.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Helper Button */}
             <button
