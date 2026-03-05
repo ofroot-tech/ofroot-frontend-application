@@ -3,8 +3,10 @@ import { cookies } from 'next/headers';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import {
+  listRecentFeatureRequests,
   getAutomationFunnelSummary,
   getUserFromSessionToken,
+  listRecentLlcUpsellOpportunities,
   listRecentAutomationAbandonments,
   listRecentAutomationOnboardingLeads,
 } from '@/app/lib/supabase-store';
@@ -64,10 +66,12 @@ export default async function OwnerFunnelPage() {
     redirect('/dashboard/overview');
   }
 
-  const [summary, leads, abandonments] = await Promise.all([
+  const [summary, leads, abandonments, llcUpsells, featureRequests] = await Promise.all([
     getAutomationFunnelSummary(),
     listRecentAutomationOnboardingLeads({ limit: 100 }),
     listRecentAutomationAbandonments({ limit: 100 }),
+    listRecentLlcUpsellOpportunities({ limit: 100 }),
+    listRecentFeatureRequests({ limit: 100 }),
   ]);
 
   return (
@@ -83,6 +87,87 @@ export default async function OwnerFunnelPage() {
         <Card><CardBody><p className="text-xs uppercase text-gray-500">Abandons (all)</p><p className="mt-1 text-2xl font-semibold">{summary.total_abandons}</p></CardBody></Card>
         <Card><CardBody><p className="text-xs uppercase text-gray-500">Abandons converted</p><p className="mt-1 text-2xl font-semibold">{summary.abandons_converted}</p></CardBody></Card>
       </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <Card>
+          <CardBody>
+            <p className="text-xs uppercase text-gray-500">LLC upsell opportunities</p>
+            <p className="mt-1 text-2xl font-semibold">{llcUpsells.length}</p>
+          </CardBody>
+        </Card>
+      </div>
+
+      <Card>
+        <CardBody className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-900">LLC upsell opportunities (latest 100)</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-50 text-left">
+                <tr>
+                  <th className="px-3 py-2">Name</th>
+                  <th className="px-3 py-2">Email</th>
+                  <th className="px-3 py-2">Business name</th>
+                  <th className="px-3 py-2">Formation status</th>
+                  <th className="px-3 py-2">Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {llcUpsells.length === 0 ? (
+                  <tr><td className="px-3 py-3 text-gray-500" colSpan={5}>No LLC upsell opportunities captured yet.</td></tr>
+                ) : (
+                  llcUpsells.map((item) => (
+                    <tr key={item.id} className="border-t">
+                      <td className="px-3 py-2">{item.name || '-'}</td>
+                      <td className="px-3 py-2">{item.email || '-'}</td>
+                      <td className="px-3 py-2">{item.business_name || '-'}</td>
+                      <td className="px-3 py-2">{item.business_formation_status || '-'}</td>
+                      <td className="px-3 py-2">{formatDateTime(item.created_at)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardBody className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-900">Feature add-on enrollments (7-day trial, then manual review)</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-gray-50 text-left">
+                <tr>
+                  <th className="px-3 py-2">Email</th>
+                  <th className="px-3 py-2">Feature</th>
+                  <th className="px-3 py-2">Status</th>
+                  <th className="px-3 py-2">Price</th>
+                  <th className="px-3 py-2">Trial ends</th>
+                  <th className="px-3 py-2">Review</th>
+                  <th className="px-3 py-2">Requested</th>
+                </tr>
+              </thead>
+              <tbody>
+                {featureRequests.length === 0 ? (
+                  <tr><td className="px-3 py-3 text-gray-500" colSpan={7}>No feature add-on enrollments yet.</td></tr>
+                ) : (
+                  featureRequests.map((item) => (
+                    <tr key={item.id} className="border-t">
+                      <td className="px-3 py-2">{item.email}</td>
+                      <td className="px-3 py-2">{item.feature_key}</td>
+                      <td className="px-3 py-2">{item.status}</td>
+                      <td className="px-3 py-2">${(item.add_on_price_cents / 100).toFixed(2)}/mo</td>
+                      <td className="px-3 py-2">{formatDateTime(item.trial_ends_at)}</td>
+                      <td className="px-3 py-2">{item.review_status || 'pending_manual_review'}</td>
+                      <td className="px-3 py-2">{formatDateTime(item.created_at)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardBody>
+      </Card>
 
       <Card>
         <CardBody className="space-y-3">
@@ -166,4 +251,3 @@ export default async function OwnerFunnelPage() {
     </div>
   );
 }
-

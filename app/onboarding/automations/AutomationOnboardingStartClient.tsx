@@ -218,7 +218,14 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
 
       trackingStoppedRef.current = true;
       clearInactivityTimer();
-      toast({ type: 'success', title: 'Onboarding started', message: 'Continue by signing in to finish setup.' });
+      const needsAccount = Boolean(body?.data?.requiresAccountCreation);
+      toast({
+        type: 'success',
+        title: 'Onboarding started',
+        message: needsAccount
+          ? 'Create your account to finish your automation setup.'
+          : 'Sign in to finish your automation setup.',
+      });
       const nextUrl = body?.data?.next || `/auth/login?next=${encodeURIComponent(SERVICES_PATH)}`;
       router.push(nextUrl);
     } catch {
@@ -246,10 +253,12 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
       <form onSubmit={onSubmit} className="mt-8 space-y-5 rounded-xl border bg-white p-6 shadow-sm">
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="full_name">Full name</label>
+          <p className="mb-1 text-xs text-slate-500">Use the primary contact person for this automation project.</p>
           <input
             id="full_name"
             value={form.full_name}
             onChange={(e) => setForm((prev) => ({ ...prev, full_name: e.target.value }))}
+            placeholder="e.g., Jane Smith"
             className="w-full rounded-md border px-3 py-2"
           />
           {errors.full_name ? <p className="mt-1 text-sm text-red-600">{errors.full_name}</p> : null}
@@ -257,11 +266,13 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="business_email">Business email</label>
+          <p className="mb-1 text-xs text-slate-500">We use this for login setup and onboarding follow-up.</p>
           <input
             id="business_email"
             type="email"
             value={form.business_email}
             onChange={(e) => setForm((prev) => ({ ...prev, business_email: e.target.value }))}
+            placeholder="name@company.com"
             className="w-full rounded-md border px-3 py-2"
           />
           {errors.business_email ? <p className="mt-1 text-sm text-red-600">{errors.business_email}</p> : null}
@@ -269,10 +280,12 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="company_name">Company name</label>
+          <p className="mb-1 text-xs text-slate-500">The brand or legal business name we should reference.</p>
           <input
             id="company_name"
             value={form.company_name}
             onChange={(e) => setForm((prev) => ({ ...prev, company_name: e.target.value }))}
+            placeholder="e.g., Acme Home Services"
             className="w-full rounded-md border px-3 py-2"
           />
           {errors.company_name ? <p className="mt-1 text-sm text-red-600">{errors.company_name}</p> : null}
@@ -280,6 +293,7 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
 
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700" htmlFor="primary_channel">Primary channel</label>
+          <p className="mb-1 text-xs text-slate-500">Pick where most leads currently come from.</p>
           <select
             id="primary_channel"
             value={form.primary_channel}
@@ -299,7 +313,7 @@ export default function AutomationOnboardingStartClient({ expired = false }: { e
             onChange={(e) => setForm((prev) => ({ ...prev, consent: e.target.checked }))}
             className="mt-1"
           />
-          <span>I agree to share this information so OfRoot can set up my automation onboarding.</span>
+          <span>I agree to share this information so OfRoot can start automation planning and contact me about setup.</span>
         </label>
         {errors.consent ? <p className="text-sm text-red-600">{errors.consent}</p> : null}
 

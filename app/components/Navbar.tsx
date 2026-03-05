@@ -10,22 +10,11 @@
  * Design inspired by vast.ai navigation patterns.
  */
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { X, ChevronDown, ArrowRight } from 'lucide-react';
-
-/* ─────────────────────────────────────────────────────────────
-   Constants
-   ───────────────────────────────────────────────────────────── */
-const COLORS = {
-  bg: '#121212',
-  bgSecondary: '#1a1a1a',
-  accent: '#20b2aa',
-  text: '#ffffff',
-  textSecondary: '#gray-400',
-  border: '#gray-800',
-} as const;
 
 /* ─────────────────────────────────────────────────────────────
    Navigation Data Structure
@@ -44,101 +33,62 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  // { label: 'Consulting', href: '/consulting' },
-  { label: 'Integrations', href: '/services/integration' },
   { label: 'Automations', href: '/automations' },
-  {
-    label: 'Solutions',
-    children: [
-      { label: 'HubSpot Integration', href: '/hubspot-integration' },
-      { label: 'Meta Conversions API', href: '/meta-conversions-api' },
-      { label: 'Make + Zapier Automation', href: '/make-zapier-automation' },
-      { label: 'Agent Integrations', href: '/agent-integrations' },
-      { label: 'GPU + LLM Training', href: '/gpu-llm-training' },
-    ],
-  },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Blog', href: '/blog' },
   {
-    label: 'Company',
+    label: 'Integrations',
     children: [
-      { label: 'About', href: '/#services' },
-      { label: 'Substack', href: 'https://substack.com/@ofroot/posts', external: true },
+      { label: 'HubSpot + Meta', href: '/services/hubspot-meta-integrations' },
+      { label: 'Workflow Automation', href: '/services/workflow-automation' },
+      { label: 'Data Pipeline Sanity', href: '/services/data-pipeline-sanity' },
+      { label: 'LLM + Agent Integrations', href: '/services/llm-agent-integrations' },
     ],
   },
+  { label: 'Services', href: '/services' },
+  {
+    label: 'Proof',
+    children: [
+      { label: 'Case Studies', href: '/case-studies' },
+    ],
+  },
+  { label: 'Blog', href: '/blog' },
 ];
-
-/* ─────────────────────────────────────────────────────────────
-   Shared Nav Rendering Function
-   ───────────────────────────────────────────────────────────── */
-function renderNavItems(
-  items: NavItem[],
-  isDesktop: boolean,
-  onNavigate?: () => void
-) {
-  return items.map((item) =>
-    item.children ? (
-      isDesktop ? (
-        <DesktopDropdown key={item.label} item={item} />
-      ) : (
-        <MobileDropdown key={item.label} item={item} onNavigate={onNavigate!} />
-      )
-    ) : (
-      <Link
-        key={item.label}
-        href={item.href!}
-        target={item.external ? '_blank' : undefined}
-        rel={item.external ? 'noopener noreferrer' : undefined}
-        className={
-          isDesktop
-            ? 'whitespace-nowrap text-sm font-medium text-white hover:text-[#20b2aa] transition-colors px-2.5 py-2 rounded-md'
-            : 'block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors'
-        }
-        onClick={onNavigate}
-      >
-        {item.label}
-        {item.external && <span className={`ml-1 ${isDesktop ? 'text-gray-400' : 'text-gray-500'}`}>↗</span>}
-      </Link>
-    )
-  );
-}
 
 /* ─────────────────────────────────────────────────────────────
    Desktop Dropdown Component
    ───────────────────────────────────────────────────────────── */
 function DesktopDropdown({ item }: { item: NavItem }) {
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 150);
+  };
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center whitespace-nowrap text-sm font-medium text-white hover:text-[#20b2aa] transition-colors px-2.5 py-2 rounded-md"
+        className="flex items-center gap-1 whitespace-nowrap text-gray-300 hover:text-white transition-colors text-sm font-medium"
         aria-expanded={open}
         aria-haspopup="true"
-        aria-controls={`dropdown-${item.label}`}
       >
         {item.label}
-        <ChevronDown className={`ml-1 w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
+      {/* Dropdown Panel */}
       <div
-        id={`dropdown-${item.label}`}
-        role="menu"
-        className={`absolute top-full left-0 mt-2 bg-[#1a1a1a] border border-gray-700 rounded-lg py-2 min-w-48 shadow-lg transition-all duration-200 ${
+        className={`absolute top-full left-0 mt-2 min-w-[180px] rounded-lg bg-[#1a1a1a] border border-gray-800 shadow-xl py-2 transition-all duration-200 ${
           open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
         }`}
       >
@@ -148,12 +98,13 @@ function DesktopDropdown({ item }: { item: NavItem }) {
             href={child.href}
             target={child.external ? '_blank' : undefined}
             rel={child.external ? 'noopener noreferrer' : undefined}
-            className="block whitespace-nowrap px-4 py-2 text-white hover:bg-gray-700 hover:text-[#20b2aa] transition-colors"
+            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
             onClick={() => setOpen(false)}
-            role="menuitem"
           >
             {child.label}
-            {child.external && <span className="ml-1 text-gray-400">↗</span>}
+            {child.external && (
+              <span className="ml-1 text-gray-500">↗</span>
+            )}
           </Link>
         ))}
       </div>
@@ -206,6 +157,62 @@ function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () =>
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Arrow Button Component (Vast.ai style)
+   ───────────────────────────────────────────────────────────── */
+function ArrowButton({
+  href,
+  children,
+  variant = 'outline',
+  external = false,
+  className = '',
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  variant?: 'outline' | 'primary';
+  external?: boolean;
+  className?: string;
+  onClick?: () => void;
+}) {
+  const baseClasses = 'inline-flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200';
+  const variantClasses =
+    variant === 'primary'
+      ? 'text-[#FF9312] hover:text-[#FFB14A]'
+      : 'text-white hover:text-gray-300';
+
+  const content = (
+    <>
+      {children}
+      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full border ${
+        variant === 'primary' ? 'border-[#FF9312]' : 'border-current'
+      }`}>
+        <ArrowRight className="w-3.5 h-3.5" />
+      </span>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClasses} ${variantClasses} ${className}`}
+        onClick={onClick}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={`${baseClasses} ${variantClasses} ${className}`} onClick={onClick}>
+      {content}
+    </Link>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
    Main Navbar Component
    ───────────────────────────────────────────────────────────── */
 export default function Navbar() {
@@ -220,13 +227,10 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  const toggleMobileMenu = useCallback((next?: boolean) => {
-    setMobileMenuOpen((prev) => {
-      const resolved = typeof next === 'boolean' ? next : !prev;
-      setLiveMessage(resolved ? 'Navigation menu opened' : 'Navigation menu closed');
-      return resolved;
-    });
-  }, []);
+  const toggleMobileMenu = (next = !mobileMenuOpen) => {
+    setMobileMenuOpen(next);
+    setLiveMessage(next ? 'Navigation menu opened' : 'Navigation menu closed');
+  };
 
   const closeMobileMenu = () => {
     toggleMobileMenu(false);
@@ -271,12 +275,10 @@ export default function Navbar() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
-      if (previouslyFocused.current) {
-        previouslyFocused.current.focus();
-      }
+      previouslyFocused.current?.focus?.();
       previouslyFocused.current = null;
     };
-  }, [mobileMenuOpen, toggleMobileMenu]);
+  }, [mobileMenuOpen]);
 
   if (!shouldRenderNav) {
     return null;
@@ -289,57 +291,81 @@ export default function Navbar() {
           ───────────────────────────────────────────────────────── */}
       <header
         role="banner"
-        className="navbar-header fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
+        className="fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
       >
-        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+        <div className="mx-auto max-w-[92rem] px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <Link href="/" aria-label="OFROOT homepage" className="flex items-center gap-2">
-                <svg
-                  width="36"
-                  height="36"
-                  viewBox="0 0 36 36"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-9 w-9"
+            <div className="shrink-0 flex items-center gap-3">
+              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
+                <Image
+                  src="/ofroot-logo.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  priority
+                  className="h-9 w-9 rounded-full object-cover"
                   aria-hidden="true"
-                >
-                  <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
-                </svg>
-                <span className="text-white font-semibold text-base md:text-lg tracking-tight">OFROOT</span>
+                />
+                <span className="text-lg font-semibold tracking-tight leading-none">
+                  <span className="text-white">Of</span>
+                  <span className="text-[#FF9312]">Root</span>
+                </span>
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-0.5" aria-label="Desktop navigation">
-              {renderNavItems(navItems, true)}
+            {/* Desktop Nav Links */}
+            <nav className="hidden xl:flex flex-1 items-center justify-center gap-7 px-10" aria-label="Primary navigation">
+              {navItems.map((item) =>
+                item.children ? (
+                  <DesktopDropdown key={item.label} item={item} />
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    className="whitespace-nowrap text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </nav>
 
             {/* Desktop CTAs */}
-            <div className="hidden xl:flex items-center gap-2.5 ml-6">
-              <Link
+            <div className="hidden xl:flex shrink-0 items-center gap-5">
+              <ArrowButton
                 href="/consulting/book"
-                className="whitespace-nowrap text-sm font-semibold text-[#20b2aa] hover:text-white transition-colors px-3 py-2 rounded-md border border-[#20b2aa]/30 hover:border-[#20b2aa]"
+                variant="primary"
               >
-                Book an integration call
-              </Link>
-              <a
+                Book an Integration Call
+              </ArrowButton>
+              <ArrowButton
                 href="https://form.jotform.com/252643426225151"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap text-sm font-semibold text-white hover:text-[#20b2aa] transition-colors px-3 py-2 rounded-md border border-white/20 hover:border-[#20b2aa]/40"
+                variant="outline"
+                external
               >
-                Talk to engineer
-              </a>
+                Talk to an Engineer
+              </ArrowButton>
+              {/* Console button temporarily hidden
+              <ArrowButton href="/dashboard" variant="outline">
+                Console
+              </ArrowButton>
+              */}
             </div>
 
-            {/* Mobile-first nav: single drawer used across all breakpoints for consistency */}
-            <div className="flex items-center gap-4">
+            {/* Mobile: CTA + Hamburger */}
+            <div className="flex xl:hidden items-center gap-4 ml-auto">
+              {/* Console button temporarily hidden
+              <ArrowButton href="/dashboard" variant="outline" className="text-sm">
+                Console
+              </ArrowButton>
+              */}
               <button
                 type="button"
                 onClick={() => toggleMobileMenu()}
-                className="xl:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
                 aria-controls="mobile-nav-drawer"
@@ -394,18 +420,18 @@ export default function Navbar() {
           {/* Drawer Header */}
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
             <Link href="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 36 36"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+              <Image
+                src="/ofroot-logo.png"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover"
                 aria-hidden="true"
-              >
-                <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
-              </svg>
-              <span className="text-white font-semibold text-lg">OFROOT</span>
+              />
+              <span className="text-lg font-semibold tracking-tight leading-none">
+                <span className="text-white">Of</span>
+                <span className="text-[#FF9312]">Root</span>
+              </span>
             </Link>
             <button
               type="button"
@@ -422,39 +448,39 @@ export default function Navbar() {
             {/* Primary CTAs */}
             <div className="space-y-4 mb-8">
               <div className="flex items-center justify-between">
-                <span className="text-[#20b2aa] text-base font-medium">Book an integration call</span>
+                <span className="text-[#FF9312] text-base font-medium">Book an Integration Call</span>
                 <Link
                   href="/consulting/book"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#FF9312] hover:bg-[#FF9312]/10 transition-colors"
                   onClick={closeMobileMenu}
-                  aria-label="Book a discovery call"
+                  aria-label="Book an integration call"
                 >
-                  <ArrowRight className="w-5 h-5 text-[#0f766e]" />
+                  <ArrowRight className="w-5 h-5 text-[#FF9312]" />
                 </Link>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white text-base font-medium">Contact Sales</span>
+                <span className="text-white text-base font-medium">Talk to an Engineer</span>
                 <a
                   href="https://form.jotform.com/252643426225151"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 hover:border-gray-500 transition-colors"
                   onClick={closeMobileMenu}
-                  aria-label="Contact Sales"
+                  aria-label="Talk to an engineer"
                 >
                   <ArrowRight className="w-5 h-5 text-white" />
                 </a>
               </div>
               {/* Console button temporarily hidden
               <div className="flex items-center justify-between">
-                <span className="text-[#20b2aa] text-base font-medium">Console</span>
+                <span className="text-[#FF9312] text-base font-medium">Console</span>
                 <Link
                   href="/dashboard"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
+                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#FF9312] hover:bg-[#FF9312]/10 transition-colors"
                   onClick={closeMobileMenu}
                   aria-label="Go to Console"
                 >
-                  <ArrowRight className="w-5 h-5 text-[#0f766e]" />
+                  <ArrowRight className="w-5 h-5 text-[#FF9312]" />
                 </Link>
               </div>
               */}
@@ -465,7 +491,23 @@ export default function Navbar() {
 
             {/* Navigation Links */}
             <nav className="space-y-1" aria-label="Mobile navigation">
-              {renderNavItems(navItems, false, closeMobileMenu)}
+              {navItems.map((item) =>
+                item.children ? (
+                  <MobileDropdown key={item.label} item={item} onNavigate={closeMobileMenu} />
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
+                    onClick={closeMobileMenu}
+                  >
+                    {item.label}
+                    {item.external && <span className="ml-1 text-gray-500">↗</span>}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
         </div>

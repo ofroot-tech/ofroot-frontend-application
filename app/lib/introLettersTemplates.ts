@@ -25,7 +25,7 @@ Best,
 {{senderName}}`,
   },
   landing_pages: {
-    subjectTemplate: '{{companyName}} + OfRoot | Intro for {{serviceName}}',
+    subjectTemplate: '{{leaderName}} at {{companyName}} + OfRoot | Intro for {{serviceName}}',
     bodyTemplate: `Hi {{leaderName}},
 
 I work with companies like {{companyName}} to build high-converting {{serviceName}} aligned to real acquisition goals.

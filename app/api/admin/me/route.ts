@@ -12,8 +12,8 @@
 
 import { NextRequest } from 'next/server';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';
-import { api } from '@/app/lib/api';
 import { ok } from '@/app/lib/response';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 
 function isSuperAdmin(email: string | undefined | null) {
   const allow = (process.env.ADMIN_EMAILS || '')
@@ -29,13 +29,14 @@ export async function GET(_req: NextRequest) {
     return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
   }
   try {
-    const raw = await api.me(token);
-    const user = (raw as any)?.data ?? raw;
+    const user = await getUserFromSessionToken(token);
+    if (!user) {
+      return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
+    }
     const email = user?.email ?? null;
-    const hasBlogAddon = Boolean(user?.has_blog_addon ?? user?.hasBlogAddon ?? false);
     const name = user?.name ?? null;
     const plan = user?.plan ?? null;
-    return ok({ email, name, plan, isSuperAdmin: isSuperAdmin(email), hasBlogAddon });
+    return ok({ email, name, plan, isSuperAdmin: isSuperAdmin(email), hasBlogAddon: false });
   } catch {
     return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
   }

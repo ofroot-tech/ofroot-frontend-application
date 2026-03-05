@@ -18,8 +18,14 @@ interface RegisterInputs {
   password: string;
 }
 
-export default function RegisterForm() {
-  const { register, handleSubmit } = useForm<RegisterInputs>();
+export default function RegisterForm({ nextPath, prefillEmail }: { nextPath?: string; prefillEmail?: string }) {
+  const { register, handleSubmit } = useForm<RegisterInputs>({
+    defaultValues: {
+      name: '',
+      email: prefillEmail || '',
+      password: '',
+    },
+  });
   const [error, setError] = useState("");
   const [open, setOpen] = useState<boolean | null>(null);
   const router = useRouter();
@@ -30,7 +36,7 @@ export default function RegisterForm() {
       try {
         const res = await fetch('/api/auth/register-status', { cache: 'no-store' });
         const j = await res.json().catch(() => ({}));
-        if (!cancelled) setOpen(!!j?.open);
+        if (!cancelled) setOpen(!!(j?.data?.open ?? j?.open));
       } catch {
         if (!cancelled) setOpen(false);
       }
@@ -45,7 +51,7 @@ export default function RegisterForm() {
     }
     try {
       await api.post('/auth/register', data);
-      router.push('/auth/login?flash=registered');
+      router.push(nextPath || '/dashboard');
     } catch (err: any) {
       const msg = err?.response?.data?.error?.message || err?.response?.data?.message || 'Registration failed';
       setError(msg);

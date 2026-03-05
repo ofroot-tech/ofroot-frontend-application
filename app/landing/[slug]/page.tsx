@@ -50,7 +50,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
   // Theme (optional)
   const theme = page.theme || {};
-  const primary = theme.primary || '#20b2aa';
+  const primary = theme.primary || '#FF9312';
   const secondary = theme.secondary || '#007bff';
 
   // Variant (sticky via cookie set by middleware)
@@ -90,7 +90,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
 
       {/* Hero */}
       {page.hero && (
-  <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 bg-gradient-to-r from-[#20b2aa]/10 to-[#007bff]/10 reveal-in fade-only">
+  <section data-snap-section className="section-full snap-fade py-16 px-6 sm:px-12 bg-gradient-to-r from-[#FF9312]/10 to-[#007bff]/10 reveal-in fade-only">
           <div className="max-w-5xl mx-auto text-center">
             <h1 className="text-4xl sm:text-6xl font-extrabold mb-4">{page.hero.headline}</h1>
             {page.hero.subheadline && <p className="text-lg text-gray-700 max-w-3xl mx-auto">{page.hero.subheadline}</p>}

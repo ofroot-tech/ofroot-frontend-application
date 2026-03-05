@@ -8,7 +8,7 @@ import {
   sanitizeNextPath,
   zodIssuesToFieldErrors,
 } from '@/app/lib/automation-onboarding';
-import { upsertAutomationAbandonment } from '@/app/lib/supabase-store';
+import { findUserByEmail, upsertAutomationAbandonment } from '@/app/lib/supabase-store';
 import { logger } from '@/app/lib/logger';
 
 const SERVICES_PATH = '/onboarding/automations/services';
@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
   const nextPath = sanitizeNextPath(payload?.next || SERVICES_PATH) || SERVICES_PATH;
   const started_at = new Date().toISOString();
   const encoded = encodeAutomationOnboardingSession({ ...parsed.data, started_at });
+  let accountExists = false;
 
   try {
     await upsertAutomationAbandonment({
@@ -55,10 +56,21 @@ export async function POST(req: NextRequest) {
     logger.warn('automation.onboarding.start.persist_failed', { message: err?.message, status: err?.status });
   }
 
+  try {
+    accountExists = Boolean(await findUserByEmail(parsed.data.business_email));
+  } catch (err: any) {
+    logger.warn('automation.onboarding.start.account_lookup_failed', { message: err?.message, status: err?.status });
+  }
+
+  const authNext = accountExists
+    ? `/auth/login?next=${encodeURIComponent(nextPath)}`
+    : `/auth/register?next=${encodeURIComponent(nextPath)}&email=${encodeURIComponent(parsed.data.business_email)}`;
+
   const res = NextResponse.json({
     ok: true,
     data: {
-      next: `/auth/login?next=${encodeURIComponent(nextPath)}`,
+      next: authNext,
+      requiresAccountCreation: !accountExists,
     },
   });
 

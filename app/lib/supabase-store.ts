@@ -59,6 +59,58 @@ type DbAutomationFunnelSummaryRow = {
   abandons_converted: number | string;
 };
 
+type DbSalesInquiryRow = {
+  id: number | string;
+  name: string;
+  email: string;
+  business_name: string | null;
+  business_formation_status: string | null;
+  llc_upsell_opportunity: boolean;
+  payload: Record<string, unknown> | null;
+  created_at: string;
+};
+
+type DbFeatureRequestRow = {
+  id: number | string;
+  user_id: number | string;
+  email: string;
+  feature_key: string;
+  status: string;
+  add_on_price_cents: number;
+  auto_enrolled: boolean;
+  enrollment_started_at: string | null;
+  trial_ends_at: string | null;
+  review_status: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SalesInquiryRecord = {
+  id: number;
+  name: string;
+  email: string;
+  business_name: string | null;
+  business_formation_status: string | null;
+  llc_upsell_opportunity: boolean;
+  payload: Record<string, unknown>;
+  created_at: string;
+};
+
+export type FeatureRequestRecord = {
+  id: number;
+  user_id: number;
+  email: string;
+  feature_key: string;
+  status: string;
+  add_on_price_cents: number;
+  auto_enrolled: boolean;
+  enrollment_started_at: string | null;
+  trial_ends_at: string | null;
+  review_status: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type AutomationAbandonmentRecord = {
   id: number;
   email: string;
@@ -142,8 +194,61 @@ function mapAutomationAbandonment(row: DbAutomationAbandonmentWithLeadRow): Auto
   };
 }
 
+function mapSalesInquiry(row: DbSalesInquiryRow): SalesInquiryRecord {
+  return {
+    id: toNum(row.id),
+    name: row.name,
+    email: row.email,
+    business_name: row.business_name,
+    business_formation_status: row.business_formation_status,
+    llc_upsell_opportunity: Boolean(row.llc_upsell_opportunity),
+    payload: row.payload || {},
+    created_at: row.created_at,
+  };
+}
+
+function mapFeatureRequest(row: DbFeatureRequestRow): FeatureRequestRecord {
+  return {
+    id: toNum(row.id),
+    user_id: toNum(row.user_id),
+    email: row.email,
+    feature_key: row.feature_key,
+    status: row.status,
+    add_on_price_cents: Number(row.add_on_price_cents || 0),
+    auto_enrolled: Boolean(row.auto_enrolled),
+    enrollment_started_at: row.enrollment_started_at,
+    trial_ends_at: row.trial_ends_at,
+    review_status: row.review_status || 'pending_manual_review',
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
 function normalizeEmail(email: string): string {
   return String(email || '').trim().toLowerCase();
+}
+
+async function listRoleSlugsForUser(userId: number): Promise<string[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const result = await pool.query<{ slug: string }>(
+    `
+      SELECT r.slug
+      FROM ofroot_user_roles ur
+      JOIN ofroot_roles r ON r.id = ur.role_id
+      WHERE ur.user_id = $1
+      ORDER BY r.slug ASC
+    `,
+    [userId]
+  );
+  return result.rows.map((row) => String(row.slug || '').trim()).filter(Boolean);
+}
+
+function deriveTopRole(roleSlugs: string[]): string {
+  if (roleSlugs.includes('owner')) return 'owner';
+  if (roleSlugs.includes('admin')) return 'admin';
+  if (roleSlugs.includes('client')) return 'client';
+  return 'client';
 }
 
 function dbUrl(): string {
@@ -202,6 +307,23 @@ async function ensureSchema(): Promise<void> {
           user_id BIGINT NOT NULL REFERENCES ofroot_auth_users(id) ON DELETE CASCADE,
           expires_at TIMESTAMPTZ NOT NULL,
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_roles (
+          id BIGSERIAL PRIMARY KEY,
+          slug TEXT NOT NULL UNIQUE,
+          name TEXT NOT NULL
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_user_roles (
+          user_id BIGINT NOT NULL REFERENCES ofroot_auth_users(id) ON DELETE CASCADE,
+          role_id BIGINT NOT NULL REFERENCES ofroot_roles(id) ON DELETE CASCADE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          PRIMARY KEY (user_id, role_id)
         );
       `);
 
@@ -265,6 +387,72 @@ async function ensureSchema(): Promise<void> {
       `);
 
       await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_sales_inquiries (
+          id BIGSERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          business_name TEXT NULL,
+          business_formation_status TEXT NULL,
+          llc_upsell_opportunity BOOLEAN NOT NULL DEFAULT FALSE,
+          payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_feature_requests (
+          id BIGSERIAL PRIMARY KEY,
+          user_id BIGINT NOT NULL REFERENCES ofroot_auth_users(id) ON DELETE CASCADE,
+          email TEXT NOT NULL,
+          feature_key TEXT NOT NULL,
+          status TEXT NOT NULL DEFAULT 'requested',
+          add_on_price_cents INT NOT NULL DEFAULT 500,
+          auto_enrolled BOOLEAN NOT NULL DEFAULT FALSE,
+          enrollment_started_at TIMESTAMPTZ NULL,
+          trial_ends_at TIMESTAMPTZ NULL,
+          review_status TEXT NOT NULL DEFAULT 'pending_manual_review',
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          UNIQUE (user_id, feature_key)
+        );
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_feature_requests
+        ADD COLUMN IF NOT EXISTS auto_enrolled BOOLEAN NOT NULL DEFAULT FALSE;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_feature_requests
+        ADD COLUMN IF NOT EXISTS enrollment_started_at TIMESTAMPTZ NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_feature_requests
+        ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMPTZ NULL;
+      `);
+
+      await pool.query(`
+        ALTER TABLE ofroot_feature_requests
+        ADD COLUMN IF NOT EXISTS review_status TEXT NOT NULL DEFAULT 'pending_manual_review';
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_sales_inquiries_email
+        ON ofroot_sales_inquiries(email);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_sales_inquiries_llc_upsell
+        ON ofroot_sales_inquiries(llc_upsell_opportunity, created_at DESC);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_ofroot_feature_requests_user_id
+        ON ofroot_feature_requests(user_id, created_at DESC);
+      `);
+
+      await pool.query(`
         CREATE INDEX IF NOT EXISTS idx_ofroot_automation_abandonments_email
         ON ofroot_automation_abandonments(email);
       `);
@@ -315,10 +503,40 @@ async function ensureSchema(): Promise<void> {
         SET email = LOWER(email)
         WHERE email <> LOWER(email);
       `);
+
+      await pool.query(`
+        UPDATE ofroot_sales_inquiries
+        SET email = LOWER(email)
+        WHERE email <> LOWER(email);
+      `);
+
+      await pool.query(`
+        INSERT INTO ofroot_roles (slug, name)
+        VALUES
+          ('owner', 'Owner'),
+          ('admin', 'Admin'),
+          ('client', 'Client')
+        ON CONFLICT (slug) DO NOTHING;
+      `);
     })();
   }
 
   await global.__ofrootDbReadyPromise;
+}
+
+export async function assignRoleToUser(userId: number, roleSlug: 'owner' | 'admin' | 'client') {
+  await ensureSchema();
+  const pool = getPool();
+  await pool.query(
+    `
+      INSERT INTO ofroot_user_roles (user_id, role_id)
+      SELECT $1, r.id
+      FROM ofroot_roles r
+      WHERE r.slug = $2
+      ON CONFLICT (user_id, role_id) DO NOTHING
+    `,
+    [userId, roleSlug]
+  );
 }
 
 export async function registerUser(params: {
@@ -327,6 +545,7 @@ export async function registerUser(params: {
   password: string;
   plan?: 'free' | 'pro' | 'business';
   billingCycle?: 'monthly' | 'yearly';
+  roleSlug?: 'owner' | 'admin' | 'client';
 }): Promise<User> {
   await ensureSchema();
   const pool = getPool();
@@ -348,7 +567,40 @@ export async function registerUser(params: {
     throw Object.assign(new Error('An account with this email already exists'), { status: 409 });
   }
 
-  return mapUser(row);
+  const user = mapUser(row);
+  await assignRoleToUser(user.id, params.roleSlug || 'client');
+  const roles = await listRoleSlugsForUser(user.id);
+  return {
+    ...user,
+    roles,
+    top_role: deriveTopRole(roles),
+  } as User;
+}
+
+export async function findUserByEmail(emailInput: string): Promise<User | null> {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(emailInput);
+
+  const found = await pool.query<DbUserRow>(
+    `
+      SELECT id, name, email, tenant_id, plan, billing_cycle, created_at, updated_at
+      FROM ofroot_auth_users
+      WHERE email = $1
+      LIMIT 1
+    `,
+    [email]
+  );
+
+  const row = found.rows[0];
+  if (!row) return null;
+  const user = mapUser(row);
+  const roles = await listRoleSlugsForUser(user.id);
+  return {
+    ...user,
+    roles,
+    top_role: deriveTopRole(roles),
+  } as User;
 }
 
 export async function authenticateUser(emailInput: string, password: string): Promise<User | null> {
@@ -372,7 +624,13 @@ export async function authenticateUser(emailInput: string, password: string): Pr
   const ok = await bcrypt.compare(password, row.password_hash);
   if (!ok) return null;
 
-  return mapUser(row);
+  const user = mapUser(row);
+  const roles = await listRoleSlugsForUser(user.id);
+  return {
+    ...user,
+    roles,
+    top_role: deriveTopRole(roles),
+  } as User;
 }
 
 export async function createSessionForUser(userId: number): Promise<string> {
@@ -410,7 +668,13 @@ export async function getUserFromSessionToken(token: string): Promise<User | nul
 
   const row = result.rows[0];
   if (!row) return null;
-  return mapUser(row);
+  const user = mapUser(row);
+  const roles = await listRoleSlugsForUser(user.id);
+  return {
+    ...user,
+    roles,
+    top_role: deriveTopRole(roles),
+  } as User;
 }
 
 export async function deleteSessionToken(token: string): Promise<void> {
@@ -714,4 +978,120 @@ export async function markAutomationAbandonmentNotified(input: {
     `,
     [email, input.stage]
   );
+}
+
+export async function createSalesInquiryRecord(input: {
+  name: string;
+  email: string;
+  business_name?: string | null;
+  business_formation_status?: string | null;
+  llc_upsell_opportunity?: boolean;
+  payload?: Record<string, unknown>;
+}): Promise<SalesInquiryRecord> {
+  await ensureSchema();
+  const pool = getPool();
+
+  const result = await pool.query<DbSalesInquiryRow>(
+    `
+      INSERT INTO ofroot_sales_inquiries (
+        name,
+        email,
+        business_name,
+        business_formation_status,
+        llc_upsell_opportunity,
+        payload
+      )
+      VALUES ($1, $2, NULLIF($3, ''), NULLIF($4, ''), $5, $6::jsonb)
+      RETURNING id, name, email, business_name, business_formation_status, llc_upsell_opportunity, payload, created_at
+    `,
+    [
+      input.name.trim(),
+      normalizeEmail(input.email),
+      String(input.business_name || '').trim(),
+      String(input.business_formation_status || '').trim(),
+      Boolean(input.llc_upsell_opportunity),
+      JSON.stringify(input.payload || {}),
+    ]
+  );
+
+  return mapSalesInquiry(result.rows[0]);
+}
+
+export async function listRecentLlcUpsellOpportunities(params?: { limit?: number }): Promise<SalesInquiryRecord[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const limit = Math.max(1, Math.min(500, Math.floor(params?.limit || 100)));
+
+  const result = await pool.query<DbSalesInquiryRow>(
+    `
+      SELECT id, name, email, business_name, business_formation_status, llc_upsell_opportunity, payload, created_at
+      FROM ofroot_sales_inquiries
+      WHERE llc_upsell_opportunity = TRUE
+      ORDER BY created_at DESC, id DESC
+      LIMIT $1
+    `,
+    [limit]
+  );
+
+  return result.rows.map(mapSalesInquiry);
+}
+
+export async function createFeatureRequest(input: {
+  user_id: number;
+  email: string;
+  feature_key: string;
+  add_on_price_cents?: number;
+}): Promise<FeatureRequestRecord> {
+  await ensureSchema();
+  const pool = getPool();
+  const trialDays = 7;
+  const result = await pool.query<DbFeatureRequestRow>(
+    `
+      INSERT INTO ofroot_feature_requests (
+        user_id,
+        email,
+        feature_key,
+        add_on_price_cents,
+        status,
+        auto_enrolled,
+        enrollment_started_at,
+        trial_ends_at,
+        review_status
+      )
+      VALUES ($1, $2, $3, $4, 'trial_active', TRUE, NOW(), NOW() + ($5::text || ' days')::interval, 'pending_manual_review')
+      ON CONFLICT (user_id, feature_key)
+      DO UPDATE SET
+        status = 'trial_active',
+        auto_enrolled = TRUE,
+        enrollment_started_at = COALESCE(ofroot_feature_requests.enrollment_started_at, NOW()),
+        trial_ends_at = COALESCE(ofroot_feature_requests.trial_ends_at, NOW() + ($5::text || ' days')::interval),
+        review_status = 'pending_manual_review',
+        updated_at = NOW()
+      RETURNING id, user_id, email, feature_key, status, add_on_price_cents, auto_enrolled, enrollment_started_at, trial_ends_at, review_status, created_at, updated_at
+    `,
+    [
+      input.user_id,
+      normalizeEmail(input.email),
+      String(input.feature_key || '').trim(),
+      Number.isFinite(input.add_on_price_cents as number) ? Number(input.add_on_price_cents) : 500,
+      trialDays,
+    ]
+  );
+  return mapFeatureRequest(result.rows[0]);
+}
+
+export async function listRecentFeatureRequests(params?: { limit?: number }): Promise<FeatureRequestRecord[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const limit = Math.max(1, Math.min(500, Math.floor(params?.limit || 100)));
+  const result = await pool.query<DbFeatureRequestRow>(
+    `
+      SELECT id, user_id, email, feature_key, status, add_on_price_cents, auto_enrolled, enrollment_started_at, trial_ends_at, review_status, created_at, updated_at
+      FROM ofroot_feature_requests
+      ORDER BY created_at DESC, id DESC
+      LIMIT $1
+    `,
+    [limit]
+  );
+  return result.rows.map(mapFeatureRequest);
 }

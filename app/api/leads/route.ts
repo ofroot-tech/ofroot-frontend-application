@@ -2,10 +2,10 @@
 // Proxy to backend /leads using axios-style expectations
 
 import { NextRequest } from 'next/server';
-import { api } from '@/app/lib/api';
 import { created, fail } from '@/app/lib/response';
 import { logger } from '@/app/lib/logger';
 import { captureRouteException } from '@/app/api/_helpers/sentry';
+import { createLeadRecord } from '@/app/lib/supabase-store';
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const lead = await api.createLead(payload);
+    const lead = await createLeadRecord(payload);
     return created(lead);
   } catch (err: any) {
     captureRouteException(err, { route: 'leads' });

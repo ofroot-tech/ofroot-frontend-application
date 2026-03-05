@@ -4,11 +4,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { clearAuthCookie, getAuthTokenFromRequest } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { ok } from '@/app/lib/response';
+import { deleteSessionToken } from '@/app/lib/supabase-store';
 
 export async function POST(req: NextRequest) {
   const token = await getAuthTokenFromRequest();
   if (token) {
-    logger.info('auth.logout.token_found');
+    try {
+      await deleteSessionToken(token);
+    } catch (err: any) {
+      logger.warn('auth.logout.backend_failed', { status: err?.status, message: err?.message });
+    }
   }
 
   // If this is a browser form submit (document navigation), redirect to login

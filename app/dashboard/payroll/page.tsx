@@ -11,7 +11,7 @@ import {
   type TenantBrandSettings,
 } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
-import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardHeader, CardBody, DataTable, KpiCard, EmptyState } from '@/app/dashboard/_components/UI';
 import { TenantScopePicker } from './_components/TenantScopePicker';
 import {
@@ -62,7 +62,7 @@ export default async function PayrollPage({ searchParams }: { searchParams?: Sea
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await fetchSupabaseUserByToken(token);
+  const me = await getUserFromSessionToken(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) ?? {};

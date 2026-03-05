@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 
-export default function MarketingRedirectPage() {
+export default function MarketingPage() {
   redirect('/automations');
 }
-

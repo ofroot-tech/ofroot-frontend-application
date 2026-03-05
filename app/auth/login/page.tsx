@@ -8,6 +8,12 @@
 import LoginForm from '@/components/LoginForm';
 import Link from 'next/link';
 import FlashToast from '@/components/FlashToast';
+import { cookies } from 'next/headers';
+import {
+  AUTOMATION_ONBOARDING_COOKIE,
+  decodeAutomationOnboardingSession,
+  sanitizeNextPath,
+} from '@/app/lib/automation-onboarding';
 // PublicNavbar removed — global Navbar renders in app/layout
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -15,6 +21,16 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 export default async function LoginPage({ searchParams }: { searchParams?: SearchParams }) {
   const sp = (await searchParams) || {};
   const flash = typeof sp.flash === 'string' ? sp.flash : undefined;
+  const nextParamRaw = typeof sp.next === 'string' ? sp.next : undefined;
+  const nextPath = sanitizeNextPath(nextParamRaw);
+  const store = await cookies();
+  const onboardingRaw = store.get(AUTOMATION_ONBOARDING_COOKIE)?.value;
+  const onboarding = decodeAutomationOnboardingSession(onboardingRaw);
+  const onboardingEmail = onboarding?.business_email;
+  const registerHrefBase = nextPath ? `/auth/register?next=${encodeURIComponent(nextPath)}` : '/auth/register';
+  const registerHref = onboardingEmail
+    ? `${registerHrefBase}${registerHrefBase.includes('?') ? '&' : '?'}email=${encodeURIComponent(onboardingEmail)}`
+    : registerHrefBase;
 
   return (
     <div className="relative">
@@ -33,9 +49,12 @@ export default async function LoginPage({ searchParams }: { searchParams?: Searc
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
           <section className="rounded-xl border bg-white/80 backdrop-blur p-5 sm:p-6 shadow-sm">
-            <LoginForm />
+            <LoginForm nextPath={nextPath} defaultEmail={onboardingEmail} />
             <p className="mt-5 text-sm text-gray-600">
-              No account? <Link href="/subscribe" className="underline">Create one</Link>
+              No account?{' '}
+              <Link href={registerHref} className="underline">
+                Create one
+              </Link>
             </p>
           </section>
 

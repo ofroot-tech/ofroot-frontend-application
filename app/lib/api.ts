@@ -256,6 +256,8 @@ export type User = {
   tenant_id?: number | null;
   plan?: string | null;
   billing_cycle?: 'monthly' | 'yearly' | null;
+  roles?: string[];
+  top_role?: string;
   created_at?: string;
   updated_at?: string;
 };

@@ -9,12 +9,80 @@ import {
 } from '@/app/lib/automation-catalog';
 
 type TriggerType = 'comments' | 'inbound_dm' | 'keyword' | 'form_submit';
+type OutcomePreset = 'csv_capture' | 'dm_auto_response' | 'csv_and_dm' | 'qualification_routing' | 'custom';
 
 const triggerOptions: Array<{ value: TriggerType; label: string }> = [
   { value: 'comments', label: 'Comments' },
   { value: 'inbound_dm', label: 'Inbound DM' },
   { value: 'keyword', label: 'Keyword' },
   { value: 'form_submit', label: 'Form submit' },
+];
+
+const outcomePresetOptions: Array<{ value: OutcomePreset; label: string; outcome: string; helper: string }> = [
+  {
+    value: 'csv_capture',
+    label: 'CSV lead capture only',
+    outcome: 'CSV lead capture setup',
+    helper: 'Capture inbound leads and export them to CSV for sales follow-up.',
+  },
+  {
+    value: 'dm_auto_response',
+    label: 'DM auto-response only',
+    outcome: 'DM auto-response setup',
+    helper: 'Auto-reply to inbound messages with a defined response flow.',
+  },
+  {
+    value: 'csv_and_dm',
+    label: 'CSV capture + DM auto-response',
+    outcome: 'CSV lead capture and DM auto-response setup',
+    helper: 'Collect leads and respond instantly in one workflow.',
+  },
+  {
+    value: 'qualification_routing',
+    label: 'Qualification + team routing',
+    outcome: 'Lead qualification and escalation routing setup',
+    helper: 'Ask qualifying questions and route high-intent leads to your team.',
+  },
+  {
+    value: 'custom',
+    label: 'Custom outcome',
+    outcome: '',
+    helper: 'Use your own wording if your workflow needs something specific.',
+  },
+];
+
+const dmTemplatePresets: Array<{ label: string; value: string }> = [
+  {
+    label: 'Fast first reply',
+    value: 'Thanks for reaching out to {{company_name}}. What service are you interested in today?',
+  },
+  {
+    label: 'Booking prompt',
+    value: 'Thanks for your message. Share your best email and we will send available call times.',
+  },
+  {
+    label: 'Lead capture prompt',
+    value: 'Great question. To get started, please share your name, email, and your main goal.',
+  },
+];
+
+const qualificationQuestionPresets: Array<{ label: string; lines: string[] }> = [
+  {
+    label: 'Basic fit',
+    lines: [
+      'What service are you looking for?',
+      'What timeline are you targeting?',
+      'What budget range are you planning for this project?',
+    ],
+  },
+  {
+    label: 'Automation focused',
+    lines: [
+      'Which channel is most important right now (Instagram, Facebook, both)?',
+      'How many leads do you receive weekly?',
+      'Do you already have a CRM where we should send leads?',
+    ],
+  },
 ];
 
 type Props = {
@@ -49,8 +117,16 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
   const [csvCaptureEnabled, setCsvCaptureEnabled] = useState(true);
   const [selectedTriggers, setSelectedTriggers] = useState<TriggerType[]>([]);
   const [selectedAutomations, setSelectedAutomations] = useState<AutomationCatalogId[]>(defaultAutomationSelection);
+  const [outcomePreset, setOutcomePreset] = useState<OutcomePreset>('csv_and_dm');
+  const [customOutcome, setCustomOutcome] = useState('');
+  const [dmTemplate, setDmTemplate] = useState('');
+  const [qualificationQuestionsText, setQualificationQuestionsText] = useState('');
 
   const triggerSet = useMemo(() => new Set(selectedTriggers), [selectedTriggers]);
+  const resolvedTargetServiceOutcome = useMemo(() => {
+    if (outcomePreset === 'custom') return customOutcome.trim();
+    return outcomePresetOptions.find((option) => option.value === outcomePreset)?.outcome ?? '';
+  }, [outcomePreset, customOutcome]);
 
   function getSentKeys(): string[] {
     if (typeof window === 'undefined') return [];
@@ -207,6 +283,26 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
     });
   }
 
+  function applyDmTemplatePreset(value: string) {
+    setDmTemplate((current) => {
+      const trimmed = current.trim();
+      if (!trimmed) return value;
+      if (trimmed.includes(value)) return current;
+      return `${current}\n\n${value}`;
+    });
+  }
+
+  function applyQualificationPreset(lines: string[]) {
+    setQualificationQuestionsText((current) => {
+      const existing = current
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const merged = Array.from(new Set([...existing, ...lines]));
+      return merged.join('\n');
+    });
+  }
+
   function validate(formData: FormData) {
     const next: Record<string, string> = {};
     if (!String(formData.get('phone') || '').trim()) next.phone = 'Phone is required';
@@ -304,30 +400,61 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="phone" className="mb-1 block text-sm font-medium text-slate-700">Phone</label>
-          <input id="phone" name="phone" className="w-full rounded-md border px-3 py-2" />
+          <p className="mb-1 text-xs text-slate-500">Primary number for implementation updates and QA questions.</p>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="e.g., (555) 555-5555"
+            className="w-full rounded-md border px-3 py-2"
+          />
           {errors.phone ? <p className="mt-1 text-sm text-red-600">{errors.phone}</p> : null}
         </div>
 
         <div>
           <label htmlFor="zip" className="mb-1 block text-sm font-medium text-slate-700">ZIP</label>
-          <input id="zip" name="zip" className="w-full rounded-md border px-3 py-2" />
+          <p className="mb-1 text-xs text-slate-500">Used for local market context and lead routing.</p>
+          <input id="zip" name="zip" placeholder="e.g., 90210" className="w-full rounded-md border px-3 py-2" />
           {errors.zip ? <p className="mt-1 text-sm text-red-600">{errors.zip}</p> : null}
         </div>
       </div>
 
-      <div>
-        <label htmlFor="target_service_outcome" className="mb-1 block text-sm font-medium text-slate-700">Target service outcome</label>
-        <input
-          id="target_service_outcome"
-          name="target_service_outcome"
-          placeholder="e.g., csv lead capture + dm auto-response setup"
+      <div className="space-y-3">
+        <label htmlFor="target_service_outcome_preset" className="mb-1 block text-sm font-medium text-slate-700">Target service outcome</label>
+        <p className="text-xs text-slate-500">Choose the closest goal. Use custom if your case is unique.</p>
+        <select
+          id="target_service_outcome_preset"
+          value={outcomePreset}
+          onChange={(e) => setOutcomePreset(e.target.value as OutcomePreset)}
           className="w-full rounded-md border px-3 py-2"
-        />
+        >
+          {outcomePresetOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <p className="text-xs text-slate-500">
+          {outcomePresetOptions.find((option) => option.value === outcomePreset)?.helper}
+        </p>
+        {outcomePreset === 'custom' ? (
+          <input
+            id="target_service_outcome_custom"
+            value={customOutcome}
+            onChange={(e) => setCustomOutcome(e.target.value)}
+            placeholder="Describe your desired outcome"
+            className="w-full rounded-md border px-3 py-2"
+          />
+        ) : null}
+        <input type="hidden" id="target_service_outcome" name="target_service_outcome" value={resolvedTargetServiceOutcome} />
         {errors.target_service_outcome ? <p className="mt-1 text-sm text-red-600">{errors.target_service_outcome}</p> : null}
       </div>
 
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium text-slate-700">Automation package (choose at least one)</legend>
+        <p className="text-xs text-slate-500">
+          Start with what you need now. You can add more automations after launch.
+        </p>
         <div className="grid gap-3 sm:grid-cols-2">
           {AUTOMATION_CATALOG.map((automation) => (
             <label
@@ -352,10 +479,12 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor="instagram_handle" className="mb-1 block text-sm font-medium text-slate-700">Instagram handle (optional)</label>
+          <p className="mb-1 text-xs text-slate-500">Include the @handle you want us to configure.</p>
           <input id="instagram_handle" name="instagram_handle" className="w-full rounded-md border px-3 py-2" />
         </div>
         <div>
           <label htmlFor="facebook_page" className="mb-1 block text-sm font-medium text-slate-700">Facebook page (optional)</label>
+          <p className="mb-1 text-xs text-slate-500">Page name or URL is fine.</p>
           <input id="facebook_page" name="facebook_page" className="w-full rounded-md border px-3 py-2" />
         </div>
       </div>
@@ -377,10 +506,16 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
           />
           Enable DM auto-response configuration
         </label>
+        <p className="text-xs text-slate-500">
+          If enabled, provide trigger types and a DM template below.
+        </p>
       </div>
 
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium text-slate-700">Trigger types</legend>
+        <p className="text-xs text-slate-500">
+          Choose what should fire your automation. Select all that apply.
+        </p>
         <div className="grid gap-2 sm:grid-cols-2">
           {triggerOptions.map((option) => (
             <label key={option.value} className="flex items-center gap-2 text-sm text-slate-700">
@@ -398,11 +533,28 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
 
       <div>
         <label htmlFor="dm_template" className="mb-1 block text-sm font-medium text-slate-700">DM template</label>
+        <p className="mb-2 text-xs text-slate-500">
+          Write the message prospects should receive first. Use quick picks if you want a starting point.
+        </p>
+        <div className="mb-2 flex flex-wrap gap-2">
+          {dmTemplatePresets.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => applyDmTemplatePreset(preset.value)}
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-700 hover:border-slate-400"
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
         <textarea
           id="dm_template"
           name="dm_template"
           rows={4}
           placeholder="Thanks for reaching out. Here are the next steps..."
+          value={dmTemplate}
+          onChange={(e) => setDmTemplate(e.target.value)}
           className="w-full rounded-md border px-3 py-2"
         />
         {errors.dm_template ? <p className="mt-1 text-sm text-red-600">{errors.dm_template}</p> : null}
@@ -410,16 +562,36 @@ export default function AutomationServicesForm({ businessEmail, fullName, compan
 
       <div>
         <label htmlFor="qualification_questions" className="mb-1 block text-sm font-medium text-slate-700">Qualification questions (optional, one per line)</label>
+        <p className="mb-2 text-xs text-slate-500">
+          Add questions to qualify lead quality before handoff.
+        </p>
+        <div className="mb-2 flex flex-wrap gap-2">
+          {qualificationQuestionPresets.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => applyQualificationPreset(preset.lines)}
+              className="rounded-full border border-slate-300 px-3 py-1 text-xs font-medium text-slate-700 hover:border-slate-400"
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
         <textarea
           id="qualification_questions"
           name="qualification_questions"
           rows={4}
+          value={qualificationQuestionsText}
+          onChange={(e) => setQualificationQuestionsText(e.target.value)}
           className="w-full rounded-md border px-3 py-2"
         />
       </div>
 
       <div>
         <label htmlFor="escalation_destination" className="mb-1 block text-sm font-medium text-slate-700">Escalation destination</label>
+        <p className="mb-1 text-xs text-slate-500">
+          Where high-intent conversations should be routed if automation can&apos;t fully resolve them.
+        </p>
         <select id="escalation_destination" name="escalation_destination" defaultValue="manual_follow_up" className="w-full rounded-md border px-3 py-2">
           <option value="email">Email</option>
           <option value="slack">Slack</option>
