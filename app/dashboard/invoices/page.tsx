@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { api, type Invoice } from '@/app/lib/api';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { PageHeader, Card, CardHeader, CardBody, DataTable, Pagination, ToolbarButton } from '@/app/dashboard/_components/UI';
 
@@ -29,7 +30,8 @@ export default async function InvoicesPage({ searchParams }: { searchParams?: Pr
   if (!token) redirect('/auth/login');
 
   // Ensure the token is valid; if not, bounce to login
-  await api.me(token).catch(() => redirect('/auth/login'));
+  const me = await fetchSupabaseUserByToken(token);
+  if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};
   const perPage = 25;

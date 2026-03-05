@@ -15,6 +15,8 @@
  *  - If a landing needs a bespoke header/footer, prefer doing it in the page file
  *    rather than adding conditionals here. The layout should remain predictable.
  */
+import Link from 'next/link';
+
 export default function LandingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -22,7 +24,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
         {children}
       </div>
       <footer className="py-10 text-center text-sm text-gray-500">
-        <a href="/" className="hover:underline">← Back to Home</a>
+        <Link href="/" className="hover:underline">← Back to Home</Link>
       </footer>
     </div>
   );

@@ -52,7 +52,7 @@ export default function ConsultingBookPage() {
       <section className="py-24 px-6 sm:px-8 text-center bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight text-gray-900">
-            Let's talk about your project.
+            Let&apos;s talk about your project.
           </h1>
 
           <p className="text-xl sm:text-2xl text-gray-600 mb-4">
@@ -60,7 +60,7 @@ export default function ConsultingBookPage() {
           </p>
 
           <p className="text-lg text-gray-600">
-            No sales pitch. Just an honest conversation about what's possible.
+            No sales pitch. Just an honest conversation about what&apos;s possible.
           </p>
         </div>
       </section>
@@ -76,7 +76,7 @@ export default function ConsultingBookPage() {
               {/* What We'll Cover */}
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">📋</span> What We'll Cover
+                  <span className="text-2xl">📋</span> What We&apos;ll Cover
                 </h3>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
@@ -106,7 +106,7 @@ export default function ConsultingBookPage() {
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
                     <span className="text-green-600 font-bold mt-1">✓</span>
-                    <span>A problem you're trying to solve or a feature you want to build</span>
+                    <span>A problem you&apos;re trying to solve or a feature you want to build</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-green-600 font-bold mt-1">✓</span>
@@ -125,7 +125,7 @@ export default function ConsultingBookPage() {
                   <span className="text-2xl">📧</span> After the Call
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  Within 2 days, you'll receive:
+                  Within 2 days, you&apos;ll receive:
                 </p>
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
@@ -145,7 +145,7 @@ export default function ConsultingBookPage() {
 
               {/* Who You'll Talk To */}
               <div className="p-6 rounded-lg bg-gray-50 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Who You'll Talk To</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Who You&apos;ll Talk To</h3>
                 <p className="text-gray-700">
                   <span className="font-semibold">Dimitri</span> — 8+ years building platforms for high-growth companies. Senior architect, not a salesperson.
                 </p>
@@ -168,24 +168,24 @@ export default function ConsultingBookPage() {
           <div className="space-y-8">
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">How much does a discovery call cost?</h3>
-              <p className="text-gray-700">It's free. No credit card required. We just want to understand your project.</p>
+              <p className="text-gray-700">It&apos;s free. No credit card required. We just want to understand your project.</p>
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">What if I'm not ready to commit to a retainer?</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">What if I&apos;m not ready to commit to a retainer?</h3>
               <p className="text-gray-700">
-                That's fine. We can discuss options: hourly consulting, a smaller project, or just architectural advice. The call is about finding the best fit.
+                That&apos;s fine. We can discuss options: hourly consulting, a smaller project, or just architectural advice. The call is about finding the best fit.
               </p>
             </div>
 
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Do you work with non-technical founders?</h3>
-              <p className="text-gray-700">Yes. We've worked with founders, PMs, and non-technical co-founders. We'll translate technical concepts and be clear about tradeoffs.</p>
+              <p className="text-gray-700">Yes. We&apos;ve worked with founders, PMs, and non-technical co-founders. We&apos;ll translate technical concepts and be clear about tradeoffs.</p>
             </div>
 
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">How long until we can start?</h3>
-              <p className="text-gray-700">After the call, typically 1–2 weeks. We'll align on the statement of work, then begin onboarding and project scoping.</p>
+              <p className="text-gray-700">After the call, typically 1–2 weeks. We&apos;ll align on the statement of work, then begin onboarding and project scoping.</p>
             </div>
 
             <div>
@@ -196,7 +196,7 @@ export default function ConsultingBookPage() {
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Can I send a project brief before the call?</h3>
               <p className="text-gray-700">
-                Absolutely. After you book, you'll get a confirmation with a form to share context. The more you tell us, the better we can prepare.
+                Absolutely. After you book, you&apos;ll get a confirmation with a form to share context. The more you tell us, the better we can prepare.
               </p>
             </div>
           </div>

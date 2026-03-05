@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react';
 
 type PromoBannerProps = { spaced?: boolean; anchorPrice?: string; endStr?: string };
 export default function PromoBanner({ spaced = false, anchorPrice = '$49', endStr }: PromoBannerProps) {
-  const [hidden, setHidden] = useState(true);
-  const [nearBottom, setNearBottom] = useState(false);
-  useEffect(() => {
+  const [hidden, setHidden] = useState(() => {
     try {
-      const key = 'promo_subscribe_dismissed_v1';
-      const dismissed = localStorage.getItem(key) === '1';
-      if (!dismissed) setHidden(false);
-    } catch {}
-  }, []);
+      return localStorage.getItem('promo_subscribe_dismissed_v1') === '1';
+    } catch {
+      return true;
+    }
+  });
+  const [nearBottom, setNearBottom] = useState(false);
 
   useEffect(() => {
     function onScroll() {

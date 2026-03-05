@@ -28,7 +28,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'product',
     name: 'OnTask',
     anchorPrice: '$19',
-    heroTitle: 'Start your $1 trial of OnTask',
+    heroTitle: 'Start your subscription to OnTask',
     heroSubtitle: 'Lightweight task automation for local pros — forms to follow‑ups, done for you.',
     planPrices: {
       pro: { monthly: '$19', yearly: '$190' },
@@ -64,7 +64,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'product',
     name: 'Helpr',
     anchorPrice: '$19',
-    heroTitle: 'Start your $1 trial of Helpr',
+    heroTitle: 'Start your subscription to Helpr',
     heroSubtitle: 'Inbound lead capture with fast follow‑ups and reviews — ship in days, not weeks.',
     planPrices: {
       pro: { monthly: '$19', yearly: '$190' },
@@ -86,7 +86,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'service',
     name: 'Website & App Development',
     anchorPrice: '$99',
-    heroTitle: 'Start your $1 trial — Website & App Development',
+    heroTitle: 'Start your subscription — Website & App Development',
     heroSubtitle: 'Full‑stack product engineering: MVPs, SaaS, mobile, and migrations — with performance and observability baked in.',
     planPrices: {
       pro: { monthly: '$99', yearly: '$990' },
@@ -103,7 +103,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'service',
     name: 'Development Automation',
     anchorPrice: '$49',
-    heroTitle: 'Start your $1 trial — Development Automation',
+    heroTitle: 'Start your subscription — Development Automation',
     heroSubtitle: 'Ship features faster with pipelines, scaffolds, and repeatable integrations.',
     planPrices: {
       pro: { monthly: '$49', yearly: '$490' },
@@ -120,7 +120,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'service',
     name: 'Marketing Automation',
     anchorPrice: '$49',
-    heroTitle: 'Start your $1 trial — Marketing Automation',
+    heroTitle: 'Start your subscription — Marketing Automation',
     heroSubtitle: 'Capture more demand with landing pages, follow‑ups, and measurement.',
     planPrices: {
       pro: { monthly: '$49', yearly: '$490' },
@@ -138,7 +138,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'service',
     name: 'AI Development & Integrations',
     anchorPrice: '$149',
-    heroTitle: 'Start your $1 trial — AI Development & Integrations',
+    heroTitle: 'Start your subscription — AI Development & Integrations',
     heroSubtitle: 'Assistants, retrieval, and orchestration that measurably improve speed and quality.',
     planPrices: {
       pro: { monthly: '$149', yearly: '$1490' },
@@ -155,7 +155,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     kind: 'service',
     name: 'AI Development & Integrations',
     anchorPrice: '$149',
-    heroTitle: 'Start your $1 trial — AI Development & Integrations',
+    heroTitle: 'Start your subscription — AI Development & Integrations',
     heroSubtitle: 'Assistants, retrieval, and orchestration that measurably improve speed and quality.',
     planPrices: {
       pro: { monthly: '$149', yearly: '$1490' },

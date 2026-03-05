@@ -123,7 +123,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={disabled}
-        className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold ${disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#20b2aa] text-white hover:bg-[#1a8f85]'} focus:outline-none focus:ring-2 focus:ring-[#20b2aa]`}
+        className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold ${disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#0f766e] text-white hover:bg-[#115e59]'} focus:outline-none focus:ring-2 focus:ring-[#0f766e]`}
       >
         {disabled ? (useMagic ? 'Sending link…' : 'Signing in…') : (useMagic ? 'Send magic link' : 'Sign in')}
       </button>

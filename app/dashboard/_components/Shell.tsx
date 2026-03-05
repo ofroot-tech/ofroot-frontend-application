@@ -129,11 +129,11 @@ export default function DashboardShell({ children, authed = false }: Props) {
 			}
 		};
 		document.addEventListener('keydown', onKeydown);
+		const focusTarget = toolsBtnRef.current || lastActiveRef.current;
 		return () => {
 			document.removeEventListener('keydown', onKeydown);
-			const toFocus = toolsBtnRef.current || lastActiveRef.current;
 			try {
-				toFocus?.focus();
+				focusTarget?.focus();
 			} catch {}
 		};
 	}, [toolsOpen]);
@@ -356,7 +356,7 @@ function ImpersonateSwitcher() {
 					{loading ? 'Impersonating...' : 'Impersonate'}
 				</button>
 			</div>
-			<p className="text-[11px] text-gray-500">Personas are seeded for each role; choose "Any plan" when you only need the role.</p>
+			<p className="text-[11px] text-gray-500">Personas are seeded for each role; choose &quot;Any plan&quot; when you only need the role.</p>
 			{error && <div className="text-xs text-red-600">{error}</div>}
 		</div>
 	);

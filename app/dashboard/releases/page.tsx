@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { api } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -18,7 +19,7 @@ export default async function ReleasesPage() {
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const filePath = path.join(process.cwd(), 'docs', 'RELEASE.md');

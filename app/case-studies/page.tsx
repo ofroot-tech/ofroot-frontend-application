@@ -3,16 +3,28 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Case Studies | OfRoot',
-  description: 'Real outcomes we helped teams achieve with development and marketing automation.',
+  description: 'Outcome-focused case studies across AI automation, healthcare systems, and stable integrations.',
   alternates: { canonical: '/case-studies' },
 };
 
 const studies = [
   {
     href: '/case-studies/home-services-mvp',
-    title: 'MVP shipped 2x faster',
-    summary: 'Home services SaaS accelerated delivery with scaffolds and CI/CD pipelines.',
-    tag: 'Development Automation',
+    title: 'Home services MVP live in 30 days',
+    summary: 'Operator-led build shipped intake → scheduling → invoicing → payments with guardrails and CI/CD.',
+    tag: 'Growth Platform',
+  },
+  {
+    href: '/case-studies/healthcare-ai-automation',
+    title: 'Healthcare systems + AI automation',
+    summary: 'Improved response paths and system reliability with workflow optimization, observability, and AI automation.',
+    tag: 'Healthcare Systems',
+  },
+  {
+    href: '/case-studies/crm-erp-sync',
+    title: 'CRM + ERP sync automation',
+    summary: 'Stable system integrations with retries, auditability, and reporting automation — fewer ops escalations.',
+    tag: 'System Integrations',
   },
 ];
 

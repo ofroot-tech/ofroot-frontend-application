@@ -8,10 +8,10 @@ export const metadata = {
 };
 
 const cards = [
-  { href: '/subscribe?product=website-app-development', title: 'Add features', desc: 'Product sprints to ship new capabilities.', cta: 'Start $1 trial' },
-  { href: '/subscribe?product=marketing-automation', title: 'Add marketing', desc: 'Landing pages, content, and campaigns.', cta: 'Start $1 trial' },
-  { href: '/subscribe?product=development-automation', title: 'Add development', desc: 'Extra engineering capacity for your backlog.', cta: 'Start $1 trial' },
-  { href: '/subscribe?product=ai-development-integrations', title: 'Add automation', desc: 'Workflow and AI assistants that save time.', cta: 'Start $1 trial' },
+  { href: '/subscribe?product=website-app-development', title: 'Add features', desc: 'Product sprints to ship new capabilities.', cta: 'Start subscription' },
+  { href: '/subscribe?product=marketing-automation', title: 'Add marketing', desc: 'Landing pages, content, and campaigns.', cta: 'Start subscription' },
+  { href: '/subscribe?product=development-automation', title: 'Add development', desc: 'Extra engineering capacity for your backlog.', cta: 'Start subscription' },
+  { href: '/subscribe?product=ai-development-integrations', title: 'Add automation', desc: 'Workflow and AI assistants that save time.', cta: 'Start subscription' },
 ];
 
 export default function AddOnsPage() {

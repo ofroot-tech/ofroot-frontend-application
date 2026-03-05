@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { api, type BlogPost, type BlogPostInput } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardBody, CardHeader, Breadcrumbs, ToolbarButton } from '@/app/dashboard/_components/UI';
 import { ConfirmActionForm } from '@/app/dashboard/blog/_components/ConfirmActionForm';
 import { PostForm } from '@/app/dashboard/blog/_components/PostForm';
@@ -85,8 +86,8 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
 
     // For super admins, ensure saves target the main OfRoot tenant when publishing
     try {
-      const me = await api.me(token).catch(() => null);
-      const email = (me as any)?.email ?? (me as any)?.data?.email ?? null;
+      const me = await fetchSupabaseUserByToken(token);
+      const email = me?.email ?? null;
       const allow = String(process.env.ADMIN_EMAILS || '')
         .split(',')
         .map((s) => s.trim().toLowerCase())
@@ -121,8 +122,8 @@ export default async function EditBlogPostPage({ params }: { params: Promise<{ i
             // Set main tenant on publish if super admin
             let payload: Partial<BlogPostInput> = { status: 'published', published_at: new Date().toISOString() };
             try {
-              const me = await api.me(token).catch(() => null);
-              const email = (me as any)?.email ?? (me as any)?.data?.email ?? null;
+              const me = await fetchSupabaseUserByToken(token);
+              const email = me?.email ?? null;
               const allow = String(process.env.ADMIN_EMAILS || '')
                 .split(',')
                 .map((s) => s.trim().toLowerCase())

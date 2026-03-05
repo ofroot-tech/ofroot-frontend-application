@@ -2,14 +2,23 @@
 // Server action route to call backend login and set httpOnly cookie
 
 import { NextRequest, NextResponse } from 'next/server';
-export const dynamic = 'force-dynamic';
-import { api } from '@/app/lib/api';
-import { setAuthCookie } from '@/app/lib/cookies';
+import { createClient } from '@supabase/supabase-js';
 import { logger } from '@/app/lib/logger';
 import { fail, ok } from '@/app/lib/response';
 import { loginSchema } from '@/types/auth';
 import { captureRouteException } from '@/app/api/_helpers/sentry';
+import { setAuthCookie } from '@/app/lib/cookies';
 
+export const dynamic = 'force-dynamic';
+
+// ---------------------------------------------------------------------------
+// POST /api/auth/login — Paid-only sign-in with one exception
+//
+// Narrative: authenticate against Supabase, but only allow access when the
+// customer has a verified payment on file. The lone bypass is the seeded
+// operator account `dimitri.mcdaniel@gmail.com` for emergencies. We rely on
+// Supabase Auth user_metadata flags set by the checkout webhook.
+// ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
   // Support both form-encoded and JSON payloads
   let email = '';
@@ -32,14 +41,51 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { token } = await api.login(email, password, 'next-web');
-    const res = ok({});
-    setAuthCookie(res, token);
-    logger.info('auth.login.success', { email });
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      logger.error('auth.login.missing_supabase_env');
+      return fail('Auth not configured', 500);
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      logger.warn('auth.login.supabase_failed', { email, code: error.code, message: error.message });
+      return fail(error.message || 'Login failed', 401);
+    }
+
+    // Paid-gated login: allow only if metadata indicates verified payment,
+    // except for the explicit operator email.
+    const bypass = email.toLowerCase() === 'dimitri.mcdaniel@gmail.com';
+    const paid = Boolean(
+      (data.user?.user_metadata as any)?.payment_status === 'verified' ||
+      (data.user?.user_metadata as any)?.payment_verified === true
+    );
+    if (!paid && !bypass) {
+      await supabase.auth.signOut();
+      logger.warn('auth.login.payment_required', { email });
+      return fail('Payment required. Please complete your subscription.', 402);
+    }
+
+    const res = ok({
+      user: data.user,
+      access_token: data.session?.access_token,
+      refresh_token: data.session?.refresh_token,
+    });
+
+    if (data.session?.access_token) {
+      setAuthCookie(res as NextResponse, data.session.access_token, { maxAge: 60 * 60 }); // 1h to match Supabase default
+    }
+
+    logger.info('auth.login.supabase_success', { email });
     return res;
   } catch (err: any) {
     captureRouteException(err, { route: 'auth/login' });
-    logger.warn('auth.login.failed', { email, err: err?.message, status: err?.status });
-    return fail(err?.body?.message || 'Login failed', err?.status ?? 500);
+    logger.warn('auth.login.failed', { email, err: err?.message });
+    return fail(err?.message || 'Login failed', 500);
   }
 }

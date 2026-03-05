@@ -52,7 +52,7 @@ export default function CalendarClient() {
       setEvents(mapOccurrences(items));
     } catch (err) {
       // Best-effort: ignore for now, could toast later
-      // eslint-disable-next-line no-console
+       
       console.error('Failed to load events', err);
     } finally {
       setLoading(false);
@@ -143,7 +143,7 @@ export default function CalendarClient() {
       await updateAppointmentTimes(event.id, start, end);
       if (currentRange) await loadEvents(currentRange);
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('Failed to update appointment', err);
     }
   };

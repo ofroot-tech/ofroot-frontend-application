@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 import { toast } from '@/components/Toaster';
 import { useRouter } from 'next/navigation';
 
@@ -16,7 +16,7 @@ export default function EditDocPage({ params }: { params: Promise<{ slug: string
   const [saving, setSaving] = useState(false);
   const router = useRouter();
 
-  async function load() {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/admin/docs/${encodeURIComponent(slug)}`);
@@ -29,9 +29,9 @@ export default function EditDocPage({ params }: { params: Promise<{ slug: string
     } finally {
       setLoading(false);
     }
-  }
+  }, [slug]);
 
-  useEffect(() => { load(); }, [slug]);
+  useEffect(() => { load(); }, [load]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

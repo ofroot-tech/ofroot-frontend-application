@@ -418,6 +418,19 @@ export type Payment = {
   status: 'succeeded' | 'pending' | 'failed' | 'refunded';
   provider?: string | null;
   provider_payment_id?: string | null;
+  
+  // Stripe fields
+  stripe_session_id?: string | null;
+  stripe_charge_id?: string | null;
+  stripe_refund_id?: string | null;
+  payment_method_type?: string | null;
+  payment_method_last4?: string | null;
+  payment_method_brand?: string | null;
+  stripe_fee_cents?: number | null;
+  net_amount_cents?: number | null;
+  refunded_at?: string | null;
+  refund_reason?: string | null;
+  
   created_at?: string;
   updated_at?: string;
 };
@@ -578,6 +591,357 @@ export type PayrollAnalytics = {
     pending: number;
     processed: number;
   };
+};
+
+// ---------- Job Management ----------
+export type JobStatus = 
+  | 'draft' 
+  | 'scheduled' 
+  | 'in_progress' 
+  | 'completed' 
+  | 'invoiced' 
+  | 'paid' 
+  | 'cancelled';
+
+export type JobPriority = 'low' | 'medium' | 'high' | 'urgent';
+
+export type Job = {
+  id: number;
+  tenant_id: number;
+  contact_id?: number | null;
+  lead_id?: number | null;
+  quote_id?: number | null;
+  assigned_to?: number | null;
+  
+  job_number: string;
+  title: string;
+  description?: string | null;
+  
+  status: JobStatus;
+  priority: JobPriority;
+  
+  scheduled_start?: string | null;
+  scheduled_end?: string | null;
+  actual_start?: string | null;
+  actual_end?: string | null;
+  
+  service_address_line1?: string | null;
+  service_address_line2?: string | null;
+  service_city?: string | null;
+  service_state?: string | null;
+  service_zip?: string | null;
+  
+  estimated_amount_cents?: number | null;
+  actual_amount_cents?: number | null;
+  
+  tags?: string[] | null;
+  meta?: Record<string, any> | null;
+  
+  created_by?: number | null;
+  updated_by?: number | null;
+  completed_at?: string | null;
+  cancelled_at?: string | null;
+  cancellation_reason?: string | null;
+  
+  created_at?: string;
+  updated_at?: string;
+  
+  contact?: Contact;
+  lead?: Lead;
+  quote?: Quote;
+  assigned_user?: Employee;
+  notes?: JobNote[];
+  attachments?: JobAttachment[];
+  activities?: JobActivity[];
+  invoice?: Invoice;
+};
+
+export type JobNote = {
+  id: number;
+  job_id: number;
+  user_id: number;
+  note: string;
+  is_internal: boolean;
+  created_at?: string;
+  updated_at?: string;
+  user?: { id: number; name: string; email: string };
+};
+
+export type JobAttachment = {
+  id: number;
+  job_id: number;
+  user_id: number;
+  filename: string;
+  file_path: string;
+  file_size_bytes?: number | null;
+  mime_type?: string | null;
+  type: 'photo' | 'document' | 'receipt' | 'other';
+  description?: string | null;
+  created_at?: string;
+};
+
+export type JobActivity = {
+  id: number;
+  job_id: number;
+  user_id?: number | null;
+  action: string;
+  description?: string | null;
+  old_value?: string | null;
+  new_value?: string | null;
+  metadata?: Record<string, any> | null;
+  created_at?: string;
+  user?: { id: number; name: string };
+};
+
+export type JobInput = {
+  contact_id?: number | null;
+  lead_id?: number | null;
+  assigned_to?: number | null;
+  title: string;
+  description?: string | null;
+  status?: JobStatus;
+  priority?: JobPriority;
+  scheduled_start?: string | null;
+  scheduled_end?: string | null;
+  service_address_line1?: string | null;
+  service_address_line2?: string | null;
+  service_city?: string | null;
+  service_state?: string | null;
+  service_zip?: string | null;
+  estimated_amount_cents?: number | null;
+  tags?: string[];
+  meta?: Record<string, any>;
+};
+
+export type JobListFilters = {
+  page?: number;
+  per_page?: number;
+  status?: JobStatus | JobStatus[];
+  priority?: JobPriority;
+  assigned_to?: number;
+  contact_id?: number;
+  q?: string;
+  scheduled_from?: string;
+  scheduled_to?: string;
+};
+
+// ---------- Quote System ----------
+export type QuoteStatus = 
+  | 'draft' 
+  | 'sent' 
+  | 'viewed' 
+  | 'approved' 
+  | 'declined' 
+  | 'expired' 
+  | 'converted';
+
+export type Quote = {
+  id: number;
+  tenant_id: number;
+  contact_id?: number | null;
+  lead_id?: number | null;
+  job_id?: number | null;
+  
+  quote_number: string;
+  title: string;
+  description?: string | null;
+  external_id: string;
+  
+  status: QuoteStatus;
+  
+  subtotal_cents: number;
+  tax_rate?: number | null;
+  tax_amount_cents: number;
+  discount_cents: number;
+  total_cents: number;
+  currency: string;
+  
+  valid_until?: string | null;
+  
+  terms?: string | null;
+  notes?: string | null;
+  customer_notes?: string | null;
+  tags?: string[] | null;
+  meta?: Record<string, any> | null;
+  
+  approved_at?: string | null;
+  approved_by_name?: string | null;
+  approved_by_email?: string | null;
+  approval_ip?: string | null;
+  approval_signature?: string | null;
+  declined_at?: string | null;
+  declined_reason?: string | null;
+  
+  created_by?: number | null;
+  updated_by?: number | null;
+  sent_at?: string | null;
+  viewed_at?: string | null;
+  
+  created_at?: string;
+  updated_at?: string;
+  
+  items?: QuoteItem[];
+  contact?: Contact;
+  lead?: Lead;
+  job?: Job;
+  activities?: QuoteActivity[];
+};
+
+export type QuoteItem = {
+  id?: number;
+  quote_id?: number;
+  description: string;
+  quantity: number;
+  unit_amount_cents: number;
+  total_cents: number;
+  category?: string | null;
+  sku?: string | null;
+  sort_order?: number;
+};
+
+export type QuoteActivity = {
+  id: number;
+  quote_id: number;
+  user_id?: number | null;
+  action: string;
+  description?: string | null;
+  metadata?: Record<string, any> | null;
+  ip_address?: string | null;
+  created_at?: string;
+};
+
+export type QuoteInput = {
+  contact_id?: number | null;
+  lead_id?: number | null;
+  title: string;
+  description?: string | null;
+  valid_until?: string | null;
+  tax_rate?: number | null;
+  discount_cents?: number;
+  terms?: string | null;
+  notes?: string | null;
+  customer_notes?: string | null;
+  tags?: string[];
+  items: QuoteItem[];
+};
+
+export type QuoteApprovalInput = {
+  approved_by_name: string;
+  approved_by_email?: string;
+  signature?: string;
+  create_job?: boolean;
+};
+
+export type QuoteListFilters = {
+  page?: number;
+  per_page?: number;
+  status?: QuoteStatus | QuoteStatus[];
+  contact_id?: number;
+  lead_id?: number;
+  q?: string;
+  valid_from?: string;
+  valid_to?: string;
+};
+
+// ---------- Stripe Integration ----------
+export type StripeCheckoutSession = {
+  id: string;
+  url: string;
+  expires_at: number;
+};
+
+export type RefundInput = {
+  payment_id: number;
+  amount_cents?: number;
+  reason?: 'duplicate' | 'fraudulent' | 'requested_by_customer';
+  notes?: string;
+};
+
+export type StripeWebhookEvent = {
+  id: number;
+  stripe_event_id: string;
+  event_type: string;
+  payload: Record<string, any>;
+  processed: boolean;
+  processed_at?: string | null;
+  error_message?: string | null;
+  attempts: number;
+  created_at?: string;
+};
+
+// ---------- Analytics & Reporting ----------
+export type RevenueMetrics = {
+  period: 'day' | 'week' | 'month' | 'quarter' | 'year';
+  start_date: string;
+  end_date: string;
+  
+  jobs_created: number;
+  jobs_completed: number;
+  jobs_invoiced: number;
+  jobs_paid: number;
+  
+  revenue_cents: number;
+  payments_cents: number;
+  outstanding_cents: number;
+  
+  labor_cost_cents: number;
+  gross_profit_cents: number;
+  gross_profit_margin_percent: number;
+  
+  avg_job_value_cents: number;
+  avg_completion_time_hours: number;
+};
+
+export type JobAnalytics = {
+  id: number;
+  tenant_id: number;
+  job_number: string;
+  title: string;
+  status: JobStatus;
+  priority: JobPriority;
+  
+  customer_name: string;
+  customer_company?: string | null;
+  technician_name: string;
+  
+  scheduled_start?: string | null;
+  scheduled_end?: string | null;
+  actual_start?: string | null;
+  actual_end?: string | null;
+  
+  estimated_amount_cents: number;
+  actual_amount_cents: number;
+  invoiced_amount_cents: number;
+  paid_amount_cents: number;
+  outstanding_amount_cents: number;
+  
+  labor_cost_cents: number;
+  profit_cents: number;
+  profit_margin_percent: number;
+  
+  scheduled_duration_hours: number;
+  actual_duration_hours: number;
+  
+  created_at: string;
+  completed_at?: string | null;
+};
+
+export type AnalyticsFilters = {
+  start_date?: string;
+  end_date?: string;
+  status?: JobStatus[];
+  assigned_to?: number;
+  contact_id?: number;
+  priority?: JobPriority;
+};
+
+export type ExportFormat = 'csv' | 'xlsx' | 'pdf';
+
+export type ExportRequest = {
+  entity: 'jobs' | 'invoices' | 'quotes' | 'payments' | 'contacts';
+  filters?: AnalyticsFilters;
+  format?: ExportFormat;
+  columns?: string[];
 };
 
 // ============================================================
@@ -1032,6 +1396,226 @@ export const api = {
     },
     payrollUpdateBrandSettings(token: string, input: TenantBrandSettings & { tenant_id: number }) {
       return http.putJson<{ data: TenantBrandSettings }>(`/payroll/branding`, input, { token });
+    },
+    
+    // ===== JOB MANAGEMENT =====
+    adminListJobs(token: string, filters: JobListFilters = {}) {
+      const params = new URLSearchParams();
+      if (filters.page) params.set('page', String(filters.page));
+      if (filters.per_page) params.set('per_page', String(filters.per_page));
+      if (filters.status) {
+        if (Array.isArray(filters.status)) {
+          filters.status.forEach(s => params.append('status[]', s));
+        } else {
+          params.set('status', filters.status);
+        }
+      }
+      if (filters.priority) params.set('priority', filters.priority);
+      if (filters.assigned_to) params.set('assigned_to', String(filters.assigned_to));
+      if (filters.contact_id) params.set('contact_id', String(filters.contact_id));
+      if (filters.q) params.set('q', filters.q);
+      if (filters.scheduled_from) params.set('scheduled_from', filters.scheduled_from);
+      if (filters.scheduled_to) params.set('scheduled_to', filters.scheduled_to);
+      
+      const path = `/admin/jobs${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<Paginated<Job>>(path, { token });
+    },
+    
+    adminGetJob(token: string, id: number, includes?: string[]) {
+      const params = new URLSearchParams();
+      if (includes?.length) params.set('include', includes.join(','));
+      const path = `/admin/jobs/${id}${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<{ data: Job }>(path, { token });
+    },
+    
+    adminCreateJob(token: string, input: JobInput) {
+      return http.postJson<{ data: Job }>('/admin/jobs', input, { token });
+    },
+    
+    adminUpdateJob(token: string, id: number, input: Partial<JobInput>) {
+      return http.putJson<{ data: Job }>(`/admin/jobs/${id}`, input, { token });
+    },
+    
+    adminUpdateJobStatus(token: string, id: number, status: JobStatus, note?: string) {
+      return http.postJson<{ data: Job }>(`/admin/jobs/${id}/status`, { status, note }, { token });
+    },
+    
+    adminDeleteJob(token: string, id: number) {
+      return http.del<{ message: string }>(`/admin/jobs/${id}`, { token });
+    },
+    
+    adminConvertLeadToJob(token: string, leadId: number, input: Partial<JobInput>) {
+      return http.postJson<{ data: Job }>(`/admin/leads/${leadId}/convert-to-job`, input, { token });
+    },
+    
+    adminAddJobNote(token: string, jobId: number, note: string, isInternal: boolean = true) {
+      return http.postJson<{ data: JobNote }>(`/admin/jobs/${jobId}/notes`, { note, is_internal: isInternal }, { token });
+    },
+    
+    adminGetJobActivities(token: string, jobId: number) {
+      return http.get<{ data: JobActivity[] }>(`/admin/jobs/${jobId}/activities`, { token });
+    },
+    
+    // ===== QUOTE MANAGEMENT =====
+    adminListQuotes(token: string, filters: QuoteListFilters = {}) {
+      const params = new URLSearchParams();
+      if (filters.page) params.set('page', String(filters.page));
+      if (filters.per_page) params.set('per_page', String(filters.per_page));
+      if (filters.status) {
+        if (Array.isArray(filters.status)) {
+          filters.status.forEach(s => params.append('status[]', s));
+        } else {
+          params.set('status', filters.status);
+        }
+      }
+      if (filters.contact_id) params.set('contact_id', String(filters.contact_id));
+      if (filters.lead_id) params.set('lead_id', String(filters.lead_id));
+      if (filters.q) params.set('q', filters.q);
+      
+      const path = `/admin/quotes${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<Paginated<Quote>>(path, { token });
+    },
+    
+    adminGetQuote(token: string, id: number, includes?: string[]) {
+      const params = new URLSearchParams();
+      if (includes?.length) params.set('include', includes.join(','));
+      const path = `/admin/quotes/${id}${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<{ data: Quote }>(path, { token });
+    },
+    
+    adminCreateQuote(token: string, input: QuoteInput) {
+      return http.postJson<{ data: Quote }>('/admin/quotes', input, { token });
+    },
+    
+    adminUpdateQuote(token: string, id: number, input: Partial<QuoteInput>) {
+      return http.putJson<{ data: Quote }>(`/admin/quotes/${id}`, input, { token });
+    },
+    
+    adminSendQuote(token: string, id: number, email?: string) {
+      return http.postJson<{ data: Quote; message: string }>(`/admin/quotes/${id}/send`, { email }, { token });
+    },
+    
+    adminConvertQuoteToInvoice(token: string, id: number) {
+      return http.postJson<{ data: Invoice }>(`/admin/quotes/${id}/convert-to-invoice`, {}, { token });
+    },
+    
+    adminConvertQuoteToJob(token: string, id: number, jobData?: Partial<JobInput>) {
+      return http.postJson<{ data: Job }>(`/admin/quotes/${id}/convert-to-job`, jobData || {}, { token });
+    },
+    
+    adminDeleteQuote(token: string, id: number) {
+      return http.del<{ message: string }>(`/admin/quotes/${id}`, { token });
+    },
+    
+    getPublicQuote(externalId: string) {
+      return http.get<{ data: Quote }>(`/quotes/${externalId}`);
+    },
+    
+    approveQuote(externalId: string, input: QuoteApprovalInput) {
+      return http.postJson<{ data: Quote; message: string }>(`/quotes/${externalId}/approve`, input);
+    },
+    
+    declineQuote(externalId: string, reason?: string) {
+      return http.postJson<{ data: Quote; message: string }>(`/quotes/${externalId}/decline`, { reason });
+    },
+    
+    // ===== STRIPE PAYMENTS =====
+    createInvoiceCheckoutSession(token: string, invoiceId: number, options?: { success_url?: string; cancel_url?: string }) {
+      return http.postJson<{ data: StripeCheckoutSession }>(`/admin/invoices/${invoiceId}/checkout`, options || {}, { token });
+    },
+    
+    createQuoteCheckoutSession(token: string, quoteId: number, options?: { success_url?: string; cancel_url?: string; create_job?: boolean }) {
+      return http.postJson<{ data: StripeCheckoutSession }>(`/admin/quotes/${quoteId}/checkout`, options || {}, { token });
+    },
+    
+    createPublicInvoiceCheckout(externalId: string) {
+      return http.postJson<{ data: StripeCheckoutSession }>(`/invoices/${externalId}/checkout`, {});
+    },
+    
+    createPublicQuoteCheckout(externalId: string) {
+      return http.postJson<{ data: StripeCheckoutSession }>(`/quotes/${externalId}/checkout`, {});
+    },
+    
+    adminRefundPayment(token: string, input: RefundInput) {
+      return http.postJson<{ data: Payment; message: string }>(`/admin/payments/${input.payment_id}/refund`, input, { token });
+    },
+    
+    adminGetPayment(token: string, id: number) {
+      return http.get<{ data: Payment }>(`/admin/payments/${id}`, { token });
+    },
+    
+    adminListPayments(token: string, filters?: { page?: number; per_page?: number; status?: Payment['status']; invoice_id?: number; from_date?: string; to_date?: string }) {
+      const params = new URLSearchParams();
+      if (filters?.page) params.set('page', String(filters.page));
+      if (filters?.per_page) params.set('per_page', String(filters.per_page));
+      if (filters?.status) params.set('status', filters.status);
+      if (filters?.invoice_id) params.set('invoice_id', String(filters.invoice_id));
+      if (filters?.from_date) params.set('from_date', filters.from_date);
+      if (filters?.to_date) params.set('to_date', filters.to_date);
+      
+      const path = `/admin/payments${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<Paginated<Payment>>(path, { token });
+    },
+    
+    adminListStripeWebhooks(token: string, filters?: { page?: number; per_page?: number; event_type?: string; processed?: boolean }) {
+      const params = new URLSearchParams();
+      if (filters?.page) params.set('page', String(filters.page));
+      if (filters?.per_page) params.set('per_page', String(filters.per_page));
+      if (filters?.event_type) params.set('event_type', filters.event_type);
+      if (filters?.processed !== undefined) params.set('processed', String(filters.processed));
+      
+      const path = `/admin/stripe/webhooks${params.toString() ? `?${params.toString()}` : ''}`;
+      return http.get<Paginated<StripeWebhookEvent>>(path, { token });
+    },
+    
+    adminRetryStripeWebhook(token: string, id: number) {
+      return http.postJson<{ data: StripeWebhookEvent; message: string }>(`/admin/stripe/webhooks/${id}/retry`, {}, { token });
+    },
+    
+    // ===== ANALYTICS & REPORTING =====
+    adminGetRevenueMetrics(token: string, period: 'day' | 'week' | 'month' | 'quarter' | 'year', start_date: string, end_date: string) {
+      const params = new URLSearchParams({ period, start_date, end_date });
+      return http.get<{ data: RevenueMetrics }>(`/admin/analytics/revenue?${params.toString()}`, { token });
+    },
+    
+    adminGetJobAnalytics(token: string, filters: AnalyticsFilters = {}) {
+      const params = new URLSearchParams();
+      if (filters.start_date) params.set('start_date', filters.start_date);
+      if (filters.end_date) params.set('end_date', filters.end_date);
+      if (filters.status?.length) {
+        filters.status.forEach(s => params.append('status[]', s));
+      }
+      if (filters.assigned_to) params.set('assigned_to', String(filters.assigned_to));
+      if (filters.contact_id) params.set('contact_id', String(filters.contact_id));
+      
+      return http.get<{ data: JobAnalytics[] }>(`/admin/analytics/jobs?${params.toString()}`, { token });
+    },
+    
+    adminExportData(token: string, request: ExportRequest) {
+      return fetch(joinUrl(API_BASE_URL, '/admin/export'), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      }).then(async (res) => {
+        if (!res.ok) throw new Error('Export failed');
+        
+        const blob = await res.blob();
+        const filename = res.headers.get('Content-Disposition')
+          ?.split('filename=')[1]
+          ?.replace(/"/g, '') || `export.${request.format || 'csv'}`;
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      });
     },
 };
 

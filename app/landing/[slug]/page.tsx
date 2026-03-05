@@ -25,6 +25,8 @@ import Exposure from '@/app/landing/components/Exposure';
 import CtaLink from '@/app/landing/components/CtaLink';
 import SafeEmbed from '@/app/landing/components/SafeEmbed';
 import LeadCapture from '@/app/landing/components/LeadCapture';
+import SteppedAutomationForm from '@/app/landing/components/SteppedAutomationForm';
+import { SITE } from '@/app/config/site';
 
 /** Compute the active variant key using cookies and manifest defaults. */
 async function resolveVariantKey(opts: {
@@ -75,7 +77,7 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
               '@type': 'WebPage',
               name: page.seo.title,
               description: page.seo.description || undefined,
-              url: `https://ofroot.com/landing/${slug}`,
+              url: `${SITE.url}/landing/${slug}`,
             }),
           }}
         />
@@ -130,6 +132,12 @@ export default async function LandingPage({ params }: { params: Promise<{ slug: 
           <div className="max-w-3xl mx-auto">
             <LeadCapture service={slug} />
           </div>
+        </section>
+      )}
+
+      {slug === 'social-comment-dm-automation' && (
+  <section data-snap-section className="section-full snap-fade py-12 px-6 sm:px-12 reveal-in">
+          <SteppedAutomationForm />
         </section>
       )}
 

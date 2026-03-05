@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { api, type Lead, type Tenant } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
 import { PageHeader, Card, CardBody, CardHeader } from '@/app/dashboard/_components/UI';
 
 async function getToken() {
@@ -19,7 +20,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await api.me(token).catch(() => null);
+  const me = await fetchSupabaseUserByToken(token);
   if (!me) redirect('/auth/login');
 
   const lead = await api.adminGetLead(leadId, token).then(r => r.data).catch(() => null);

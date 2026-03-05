@@ -48,21 +48,25 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
   const { slug: rawSlug } = await params;
   const slug = rawSlug.replace(/[^a-z0-9-_]/gi, '');
 
-  // First, try backend (DB) doc
+  // First, try backend (DB) doc without wrapping JSX in a try/catch
+  let remoteDoc: { title: string; body: string } | null = null;
   try {
     const res = await api.publicGetDoc(slug);
-    const html = mdToHtml(res.data.body || '');
+    remoteDoc = { title: res.data.title, body: res.data.body || '' };
+  } catch {}
+
+  if (remoteDoc) {
+    const html = mdToHtml(remoteDoc.body);
     return (
       <div className="relative">
-        
         <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.06),transparent_50%)]" />
-  <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24 reveal-in fade-only">
-          <h1>{res.data.title}</h1>
+        <main className="prose prose-gray mx-auto max-w-3xl px-4 pt-20 pb-12 md:px-6 md:pt-24 reveal-in fade-only">
+          <h1>{remoteDoc.title}</h1>
           <div dangerouslySetInnerHTML={{ __html: html }} />
         </main>
       </div>
     );
-  } catch {}
+  }
 
   // Fallback to file-based doc (e.g., brand guide)
   const mdPath = path.join(process.cwd(), 'docs', `${slug}.md`);
