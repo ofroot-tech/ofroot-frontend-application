@@ -2,6 +2,7 @@
 // The balcony view: core KPIs and recent activity (no dummy data).
 
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { api, type User } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
@@ -100,19 +101,19 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
             <ul className="mt-3 text-sm space-y-2">
               <li className="flex items-center justify-between">
                 <span>Brand your workspace</span>
-                <a className="underline text-gray-700" href="/settings/branding">Open</a>
+                <Link className="underline text-gray-700" href="/settings/branding">Open</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Publish your landing page</span>
-                <a className="underline text-gray-700" href="/landing/new">Start</a>
+                <Link className="underline text-gray-700" href="/landing/new">Start</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Add a lead capture form</span>
-                <a className="underline text-gray-700" href="/docs">How to</a>
+                <Link className="underline text-gray-700" href="/docs">How to</Link>
               </li>
               <li className="flex items-center justify-between">
                 <span>Install tracking</span>
-                <a className="underline text-gray-700" href="/docs">Guide</a>
+                <Link className="underline text-gray-700" href="/docs">Guide</Link>
               </li>
             </ul>
           </CardBody>

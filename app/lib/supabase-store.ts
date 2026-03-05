@@ -260,9 +260,7 @@ export function isSupabaseStoreConfigured(): boolean {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var __ofrootDbPool: Pool | undefined;
-  // eslint-disable-next-line no-var
   var __ofrootDbReadyPromise: Promise<void> | undefined;
 }
 
