@@ -4,50 +4,30 @@ import JsonLd from '@/components/seo/JsonLd';
 import { SITE } from '@/app/config/site';
 
 export const metadata = {
-  title: 'Services | OfRoot',
-  description: 'Integration services for pipelines, lead routing, data sanity, and agent integration. HubSpot, Meta API, Make, and Zapier.',
+  title: 'Automation Services | OfRoot',
+  description: 'Choose your automation integration pillar: HubSpot + Meta, workflow automation, pipeline data sanity, and LLM agent integrations.',
 };
 
 const cards = [
   {
-    href: '/services/integration',
+    href: '/services/hubspot-meta-integrations',
     title: 'HubSpot + Meta Integrations',
-    desc: 'Lead capture, sync, attribution, and booking workflows built to run reliably in production.',
+    desc: 'Capture leads from comments, DMs, and forms, then sync and route them correctly in HubSpot.',
   },
   {
-    href: '/automations',
-    title: 'Automation Services',
-    desc: 'Make.com and Zapier builds, plus direct API integrations when you need reliability and control.',
-  },
-  {
-    href: '/services/automation',
+    href: '/services/workflow-automation',
     title: 'Workflow Automation',
-    desc: 'Routing, follow-up, scheduling handoffs, and monitoring so leads never drop silently.',
+    desc: 'Build reliable Make, Zapier, and API workflows for faster follow-up and booked meetings.',
   },
   {
-    href: '/services/marketing-automation',
-    title: 'HubSpot Workflows',
-    desc: 'Lifecycle stages, assignment rules, follow-ups, and booking KPIs that increase qualified meetings.',
+    href: '/services/data-pipeline-sanity',
+    title: 'Data Pipeline Sanity',
+    desc: 'Fix duplicates, dropped events, and bad mappings so your CRM and reporting are trustworthy.',
   },
   {
-    href: '/services/ai-development-integrations',
-    title: 'Agents and LLM Integrations',
-    desc: 'Agent orchestration, retrieval, and tool integrations that operate on your data safely.',
-  },
-  {
-    href: '/gpu-llm-training',
-    title: 'GPU + LLM Training',
-    desc: 'GPU capacity plus data cleaning, pipelines, and training-run reliability for custom model work.',
-  },
-  {
-    href: '/services/stability',
-    title: 'Reliability and Data Sanity',
-    desc: 'Observability, retries, validation, and runbooks for pipelines and integrations.',
-  },
-  {
-    href: '/services/add-ons',
-    title: 'Add‑ons',
-    desc: 'Add integration surfaces, reporting, and new workflows as your system grows.',
+    href: '/services/llm-agent-integrations',
+    title: 'LLM + Agent Integrations',
+    desc: 'Deploy agent workflows with approvals and safe data access for real operations impact.',
   },
 ];
 
@@ -78,14 +58,13 @@ export default function ServicesIndexPage() {
         }}
       />
       <header className="mb-10 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Services</h1>
-        <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">Integration-first delivery: pipelines, lead routing, data sanity, and agents that drive booked-meeting outcomes.</p>
-        <p className="mt-2 text-sm text-gray-600">Add modules anytime as you grow — <a href="/services/add-ons" className="underline">see add‑ons</a>.</p>
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Automation Services</h1>
+        <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">Everything here is built to improve lead quality, booked meetings, and pipeline reliability.</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {cards.map((c) => (
-          <Link key={c.href} href={c.href} className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#20b2aa]">
+          <Link key={c.href} href={c.href} className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF9312]">
             <h2 className="text-xl font-semibold text-gray-900">{c.title}</h2>
             <p className="mt-1 text-gray-700 text-sm">{c.desc}</p>
             <span className="mt-3 inline-block underline text-gray-800 text-sm">Explore →</span>

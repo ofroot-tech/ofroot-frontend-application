@@ -4,10 +4,10 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { api, type Lead } from '@/app/lib/api';
+import { type Lead } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
-import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
-import { PageHeader, Card, CardHeader, CardBody, DataTable, Pagination } from '@/app/dashboard/_components/UI';
+import { PageHeader, Card, CardHeader, CardBody, DataTable, Pagination, ToolbarButton } from '@/app/dashboard/_components/UI';
+import { getUserFromSessionToken, listLeadsPaginated } from '@/app/lib/supabase-store';
 
 async function getToken() {
   const store = await cookies();
@@ -18,7 +18,7 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await fetchSupabaseUserByToken(token);
+  const me = await getUserFromSessionToken(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};
@@ -32,9 +32,13 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
   let total = 0;
   let currentPage = page;
   let lastPage = page;
+  const exportParams = new URLSearchParams();
+  if (q) exportParams.set('q', q);
+  if (status) exportParams.set('status', status);
+  const exportHref = `/api/admin/leads/export${exportParams.toString() ? `?${exportParams.toString()}` : ''}`;
 
   try {
-    const res = await api.adminListLeads(token, { page, per_page: perPage, q, status });
+    const res = await listLeadsPaginated({ page, per_page: perPage, q, status });
     rows = res.data ?? [];
     total = res.meta?.total ?? rows.length;
     currentPage = res.meta?.current_page ?? page;
@@ -48,12 +52,9 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
 
   async function convertLeadAction(formData: FormData) {
     'use server';
-    const token = await getToken();
-    if (!token) return;
-    const id = Number(formData.get('lead_id'));
-    try {
-      await api.adminConvertLead(id, token);
-    } catch {}
+    // Conversion remains unavailable in the Supabase fallback path for now.
+    // Keep this action as a no-op so table actions don't hard-fail UX.
+    void formData;
     revalidatePath('/dashboard/crm/leads');
   }
 
@@ -63,6 +64,12 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
         title="Leads"
         subtitle="Track inbound inquiries through your pipeline."
         meta={<span>Showing {rows.length} of {total}</span>}
+        actions={
+          <>
+            <ToolbarButton href="/dashboard/crm/workflows">CRM Workflows</ToolbarButton>
+            <ToolbarButton href={exportHref}>Export CSV</ToolbarButton>
+          </>
+        }
       />
 
       <Card>

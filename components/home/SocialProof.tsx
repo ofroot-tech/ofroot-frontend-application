@@ -3,20 +3,33 @@
  *
  * Purpose:
  *  - Short testimonials and sector notes to reduce risk for buyers.
- *  - Highlights the MetroAreaRemovalServices case study as live proof.
  */
 
 export default function SocialProof() {
   return (
-    <section className="py-24 px-6 sm:px-8 bg-white text-center">
-      <div className="max-w-5xl mx-auto">
-        <h2 className="text-4xl sm:text-5xl font-extrabold mb-8 text-gray-900">Proof it works</h2>
+    <section className="bg-white px-6 py-20 sm:px-8 sm:py-24">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="mb-4 text-4xl font-black text-slate-900 sm:text-5xl">Proof from live operations</h2>
+        <p className="mb-10 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+          Teams use OfRoot to stabilize lead capture pipelines, improve CRM integrity, and increase meetings from the same ad spend.
+        </p>
 
-        <p className="text-lg sm:text-xl text-gray-700 mb-10">Operator-led builds running in home services, consulting, and local trades.</p>
-
-        <div className="space-y-6 text-left">
-          <blockquote className="border-l-4 border-gray-900 pl-6 py-2 text-xl text-gray-700 italic font-medium">&ldquo;MetroAreaRemovalServices: AI intake + scheduling now drive reliable weekly bookings. No more missed calls or manual routing.&rdquo;</blockquote>
-          <blockquote className="border-l-4 border-gray-200 pl-6 py-2 text-lg text-gray-700 font-medium">&ldquo;Senior engineers build and run it. We see weekly milestones and can request changes in one thread.&rdquo;</blockquote>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Response speed</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">&lt; 2 min</p>
+            <p className="mt-3 text-sm text-slate-600">Automated first-touch DM and routing on qualified social triggers.</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Lead quality</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">+31%</p>
+            <p className="mt-3 text-sm text-slate-600">Higher qualification rate after rule-based capture and CRM sanity checks.</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-slate-500">Pipeline reliability</p>
+            <p className="mt-2 text-3xl font-black text-slate-900">99.9%</p>
+            <p className="mt-3 text-sm text-slate-600">Monitored workflows with retries and alerting across critical handoffs.</p>
+          </div>
         </div>
       </div>
     </section>

@@ -2,19 +2,38 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
 type Props = { children: React.ReactNode; authed?: boolean };
 const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
+	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
 	{ href: '/dashboard/subscribers', label: 'Subscribers', icon: UserCog },
 	{ href: '/dashboard/tenants', label: 'Tenants', icon: Building2 },
 	{ href: '/dashboard/users', label: 'Users', icon: Users },
 	{ href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
 	{ href: '/dashboard/payroll', label: 'Payroll', icon: BadgeDollarSign },
+];
+const clientEnabledNav = [
+	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
+	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
+];
+
+const clientLockedFeatures = [
+	{ featureKey: 'activity', label: 'Activity', icon: ActivityIcon },
+	{ featureKey: 'subscribers', label: 'Subscribers', icon: UserCog },
+	{ featureKey: 'tenants', label: 'Tenants', icon: Building2 },
+	{ featureKey: 'users', label: 'Users', icon: Users },
+	{ featureKey: 'billing', label: 'Billing', icon: CreditCard },
+	{ featureKey: 'payroll', label: 'Payroll', icon: BadgeDollarSign },
+	{ featureKey: 'crm_leads', label: 'Leads', icon: ClipboardList },
+	{ featureKey: 'crm_contacts', label: 'Contacts', icon: Users },
+	{ featureKey: 'crm_workflows', label: 'Workflows', icon: Workflow },
+	{ featureKey: 'releases', label: 'Releases', icon: Tag },
+	{ featureKey: 'blog', label: 'Blog', icon: NotebookPen },
 ];
 
 export default function DashboardShell({ children, authed = false }: Props) {
@@ -24,10 +43,13 @@ export default function DashboardShell({ children, authed = false }: Props) {
 	const toolsBtnRef = useRef<HTMLButtonElement | null>(null);
 	const modalRef = useRef<HTMLDivElement | null>(null);
 	const lastActiveRef = useRef<HTMLElement | null>(null);
-	const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 	const [hasBlogAddon, setHasBlogAddon] = useState(false);
   const [accountName, setAccountName] = useState<string | null>(null);
   const [accountPlan, setAccountPlan] = useState<string | null>(null);
+  const [accountEmail, setAccountEmail] = useState<string | null>(null);
+  const [requestedFeatures, setRequestedFeatures] = useState<Record<string, boolean>>({});
+  const [requestingFeature, setRequestingFeature] = useState<string | null>(null);
   const { user } = useAuth();
 
 	useEffect(() => {
@@ -39,6 +61,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 				if (alive && res.ok && json?.ok) {
 					setIsSuperAdmin(Boolean(json.data?.isSuperAdmin));
 					setHasBlogAddon(Boolean(json.data?.hasBlogAddon));
+          setAccountEmail(json.data?.email ?? null);
 					setAccountName(json.data?.name ?? null);
 					setAccountPlan(json.data?.plan ?? null);
 				}
@@ -50,20 +73,57 @@ export default function DashboardShell({ children, authed = false }: Props) {
 	}, []);
 
 	const canImpersonate = isSuperAdmin || hasBlogAddon;
+  const ownerEmail = 'dimitri.mcdaniel@gmail.com';
+  const canViewOwnerFunnel = isSuperAdmin || String(accountEmail || '').toLowerCase() === ownerEmail;
+
+  const topRole = String(user?.top_role || '').toLowerCase();
+  const isPrivilegedRole = isSuperAdmin || canViewOwnerFunnel || topRole === 'owner' || topRole === 'admin';
+  const isClientRole = authed && !isPrivilegedRole;
+
+  async function requestFeature(featureKey: string) {
+    setRequestingFeature(featureKey);
+    try {
+      const res = await fetch('/api/feature-requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature_key: featureKey }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body?.ok) throw new Error(body?.error?.message || 'Request failed');
+      setRequestedFeatures((prev) => ({ ...prev, [featureKey]: true }));
+    } catch {
+      // keep UI simple; user can retry.
+    } finally {
+      setRequestingFeature(null);
+    }
+  }
 
 	const nav = authed
 		? [
+      ...(isClientRole ? clientEnabledNav : baseNav),
 			...baseNav,
 			{ href: '/dashboard/crm/leads', label: 'Leads', icon: ClipboardList },
 			{ href: '/dashboard/crm/contacts', label: 'Contacts', icon: Users },
+			{ href: '/dashboard/crm/workflows', label: 'Workflows', icon: Workflow },
 			{ href: '/dashboard/releases', label: 'Releases', icon: Tag },
 			...((hasBlogAddon || isSuperAdmin) ? ([{ href: '/dashboard/blog', label: 'Blog', icon: NotebookPen }] as const) : ([] as const)),
 			...(isSuperAdmin ? ([{ href: '/dashboard/docs', label: 'Docs', icon: Book }] as const) : ([] as const)),
-		]
+      ...(canViewOwnerFunnel ? ([{ href: '/dashboard/owner/funnel', label: 'Owner Funnel', icon: ClipboardList }] as const) : ([] as const)),
+		].filter((item, index, arr) => arr.findIndex((x) => x.href === item.href) === index)
 		: baseNav;
+  const effectiveNav = isClientRole && authed
+    ? nav.filter((item) => clientEnabledNav.some((allowed) => allowed.href === item.href))
+    : nav;
 	const quickActions = useMemo(() => {
+    if (isClientRole) {
+      return [
+        { href: '/dashboard/overview', label: 'View metrics', description: 'Check current onboarding and delivery status.' },
+        { href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow implementation stages.' },
+      ];
+    }
 		const items = [
 			{ href: '/dashboard/overview', label: 'View metrics', description: 'Check key system health and KPIs.' },
+			{ href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow onboarding and implementation stages.' },
 			{ href: '/dashboard/tenants', label: 'Manage tenants', description: 'Review organizations and plans.' },
 			{ href: '/dashboard/subscribers', label: 'Manage subscribers', description: 'Track active subscribers.' },
 			{ href: '/dashboard/users', label: 'Manage users', description: 'Invite teammates and adjust roles.' },
@@ -77,8 +137,11 @@ export default function DashboardShell({ children, authed = false }: Props) {
 		if (canImpersonate) {
 			items.push({ href: '#impersonate', label: 'Switch roles', description: 'Test dashboards using preset personas.' });
 		}
+    if (canViewOwnerFunnel) {
+      items.push({ href: '/dashboard/owner/funnel', label: 'View owner funnel', description: 'Track signups and abandoned onboarding attempts.' });
+    }
 		return items;
-	}, [hasBlogAddon, isSuperAdmin, canImpersonate]);
+	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel, isClientRole]);
 
 	useEffect(() => {
 		if (!toolsOpen) return;
@@ -151,7 +214,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 						<input
 							aria-label="Global search"
 							placeholder="Search users, tenants, subscribers..."
-							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] focus:border-[#20b2aa]"
+							className="w-72 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF9312] focus:border-[#FF9312]"
 						/>
 						{displayName && (
 							<div className="text-xs sm:text-sm text-gray-600 text-right">
@@ -174,7 +237,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 				<aside className={`bg-white border rounded-lg md:sticky md:top-6 h-max ${open ? '' : 'hidden'} md:block`}>
 					<nav className="p-2">
 						<div className="px-3 py-2 text-xs font-semibold uppercase text-gray-500">Navigate</div>
-						{nav.map((item) => {
+						{effectiveNav.map((item) => {
 							const active = pathname?.startsWith(item.href);
 							const Icon = item.icon as React.ComponentType<{ className?: string }>;
 							return (
@@ -189,6 +252,35 @@ export default function DashboardShell({ children, authed = false }: Props) {
 								</Link>
 							);
 						})}
+            {isClientRole && authed ? (
+              <>
+                <div className="my-2 border-t" />
+                <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">Locked features (auto trial, $5/mo after review)</div>
+                {clientLockedFeatures.map((item) => {
+                  const Icon = item.icon as React.ComponentType<{ className?: string }>;
+                  const requested = Boolean(requestedFeatures[item.featureKey]);
+                  return (
+                    <div key={item.featureKey} className="px-3 py-2 rounded-md text-sm text-gray-400 border border-gray-100 mb-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </div>
+                        <button
+                          type="button"
+                          disabled={requested || requestingFeature === item.featureKey}
+                          onClick={() => requestFeature(item.featureKey)}
+                          className="rounded border border-gray-300 px-2 py-0.5 text-[11px] text-gray-600 disabled:opacity-60"
+                        >
+                          {requested ? 'Trial active' : requestingFeature === item.featureKey ? '...' : 'Enable'}
+                        </button>
+                      </div>
+                      <p className="mt-1 text-[11px] text-gray-400">Auto-enrolls for 7 days, then manual review for $5/mo continuation.</p>
+                    </div>
+                  );
+                })}
+              </>
+            ) : null}
 						<div className="my-2 border-t" />
 		{canImpersonate && (
 			<div className="px-3 py-2" id="impersonate">
@@ -244,7 +336,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 											key={action.href}
 											href={action.href}
 											onClick={() => setToolsOpen(false)}
-											className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20b2aa]"
+											className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9312]"
 										>
 											<div className="font-medium text-gray-900">{action.label}</div>
 											<div className="text-xs text-gray-600">{action.description}</div>
@@ -252,7 +344,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 									))}
 									<button
 										type="button"
-										className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#20b2aa]"
+										className="rounded-md border px-4 py-3 text-sm hover:bg-gray-50 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF9312]"
 										onClick={() => setToolsOpen(false)}
 									>
 										Close menu

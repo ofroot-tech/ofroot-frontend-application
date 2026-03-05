@@ -1,25 +1,42 @@
 // app/api/auth/register/route.ts
 
 import { NextRequest } from 'next/server';
-import { getSupabaseAdmin } from '@/app/lib/supabase-server';
 import { setAuthCookie } from '@/app/lib/cookies';
 import { logger } from '@/app/lib/logger';
 import { created, fail } from '@/app/lib/response';
 import { registerSchema } from '@/types/auth';
+import {
+  createSessionForUser,
+  isSupabaseStoreConfigured,
+  registerUser,
+} from '@/app/lib/supabase-store';
+import {
+  AUTOMATION_ONBOARDING_COOKIE,
+  decodeAutomationOnboardingSession,
+} from '@/app/lib/automation-onboarding';
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
-  let name = '', email = '', password = '';
+  let name = '', email = '', password = '', plan: 'free' | 'pro' | 'business' | undefined = undefined, billingCycle: 'monthly' | 'yearly' | undefined = undefined, coupon: string | undefined = undefined;
   if (contentType.includes('application/json')) {
     const body = await req.json().catch(() => ({} as any));
     name = String(body.name || '');
     email = String(body.email || '');
     password = String(body.password || '');
+    if (body.plan) plan = String(body.plan) as any;
+    if (body.billingCycle) billingCycle = String(body.billingCycle) as any;
+    if (body.coupon) coupon = String(body.coupon);
   } else {
     const form = await req.formData();
     name = String(form.get('name') ?? '');
     email = String(form.get('email') ?? '');
     password = String(form.get('password') ?? '');
+    const p = form.get('plan');
+    const b = form.get('billingCycle');
+    const c = form.get('coupon');
+    if (p) plan = String(p) as any;
+    if (b) billingCycle = String(b) as any;
+    if (c) coupon = String(c);
   }
 
   const parse = registerSchema.safeParse({ name, email, password });
@@ -29,32 +46,37 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    // Create user in Supabase Auth
-    const { data, error } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      user_metadata: { name },
-      email_confirm: true, // Auto-confirm for simplicity
-    });
-    if (error) throw error;
+    if (!isSupabaseStoreConfigured()) {
+      return fail('Database is not configured. Please contact support.', 503);
+    }
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || 'dimitri.mcdaniel@gmail.com')
+      .trim()
+      .toLowerCase();
+    const adminEmails = (process.env.ADMIN_EMAILS || '')
+      .split(',')
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean);
+    const onboardingRaw = req.cookies.get(AUTOMATION_ONBOARDING_COOKIE)?.value;
+    const onboarding = decodeAutomationOnboardingSession(onboardingRaw);
+    const isOnboardingSignup = onboarding?.business_email?.trim().toLowerCase() === normalizedEmail;
 
-    // Insert into User table
-    const { error: dbError } = await supabaseAdmin
-      .from('User')
-      .insert({
-        id: data.user.id,
-        name,
-        email,
-      });
-    if (dbError) throw dbError;
+    const roleSlug = normalizedEmail === ownerEmail
+      ? 'owner'
+      : adminEmails.includes(normalizedEmail)
+        ? 'admin'
+        : isOnboardingSignup
+          ? 'client'
+          : 'client';
 
+    const user = await registerUser({ name, email, password, plan, billingCycle, roleSlug });
+    const token = await createSessionForUser(user.id);
     const res = created({});
-    // For Supabase, we can't set session cookie server-side easily, so return success
-    logger.info('auth.register.success', { email });
+    setAuthCookie(res, token);
+    logger.info('auth.register.success', { email, plan, billingCycle, role: roleSlug, isOnboardingSignup });
     return res;
   } catch (err: any) {
-    logger.warn('auth.register.failed', { email, err: err?.message });
-    return fail(err?.message || 'Registration failed', 500);
+    logger.warn('auth.register.failed', { email, err: err?.message, status: err?.status });
+    return fail(err?.message || err?.body?.message || 'Registration failed', err?.status ?? 500);
   }
 }

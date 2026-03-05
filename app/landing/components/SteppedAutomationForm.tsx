@@ -488,11 +488,16 @@ const QUESTIONS: Question[] = [
 ];
 
 function formatMessage(data: Record<string, string>) {
+  const hasNoLlc =
+    data.businessFormationStatus === "NoEntity" ||
+    data.businessFormationStatus === "SoleProprietor";
+  const businessNameLabel = hasNoLlc ? "Business Name" : "Legal Business Name";
   const lines = [
     "Social Media Lead Capture Automation Intake",
     "",
     "Business Information",
-    `- Legal Business Name: ${data.legalBusinessName || ""}`,
+    `- ${businessNameLabel}: ${data.legalBusinessName || ""}`,
+    `- Business Formation Status: ${data.businessFormationStatus || ""}`,
     `- Public Brand Name: ${data.publicBrandName || ""}`,
     `- Primary Contact: ${data.primaryContactNameRole || ""}`,
     `- Email: ${data.primaryContactEmail || ""}`,
@@ -532,13 +537,31 @@ function formatMessage(data: Record<string, string>) {
   return lines.join("\n");
 }
 
+function resolveQuestionCopy(question: Question, formData: Record<string, string>): Question {
+  if (question.id !== "legalBusinessName") return question;
+  const noRegisteredEntity =
+    formData.businessFormationStatus === "NoEntity" ||
+    formData.businessFormationStatus === "SoleProprietor";
+  if (!noRegisteredEntity) return question;
+
+  return {
+    ...question,
+    label: "Business Name",
+    description: "The name customers know your business by",
+    helperText:
+      "Use the business name you currently operate under. This can be your brand name or DBA if you do not have an LLC yet.",
+    placeholder: "e.g., ABC Plumbing",
+  };
+}
+
 export default function SteppedAutomationForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<SubmitState>("idle");
   const [error, setError] = useState<string | null>(null);
 
-  const question = QUESTIONS[currentStep];
+  const baseQuestion = QUESTIONS[currentStep];
+  const question = resolveQuestionCopy(baseQuestion, formData);
   const totalSteps = QUESTIONS.length;
   const isLastStep = currentStep === totalSteps - 1;
   const isFirstStep = currentStep === 0;
@@ -549,14 +572,6 @@ export default function SteppedAutomationForm() {
   }
 
   function handleNext() {
-    // Skip legal business name if user doesn't have an LLC yet
-    if (question.id === "legalBusinessName" && formData.businessFormationStatus === "NoEntity") {
-      if (currentStep < totalSteps - 1) {
-        setCurrentStep(currentStep + 1);
-      }
-      return;
-    }
-
     if (question.required && !currentValue.trim()) {
       toast({ type: "error", title: "Required field", message: `${question.label} is required.` });
       return;
@@ -580,11 +595,22 @@ export default function SteppedAutomationForm() {
       const name = formData.primaryContactNameRole || "";
       const email = formData.primaryContactEmail || "";
       const message = formatMessage(formData);
+      const hasNoLlc =
+        formData.businessFormationStatus === "NoEntity" ||
+        formData.businessFormationStatus === "SoleProprietor";
 
       const response = await fetch("/api/sales-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          businessName: formData.legalBusinessName || "",
+          businessFormationStatus: formData.businessFormationStatus || "",
+          llcUpsellOpportunity: hasNoLlc,
+          payload: formData,
+        }),
       });
 
       const payload = await response.json().catch(() => ({}));

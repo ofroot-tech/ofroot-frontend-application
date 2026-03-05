@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { api, type Contact } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
-import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardHeader, CardBody, DataTable, Pagination } from '@/app/dashboard/_components/UI';
 
 async function getToken() {
@@ -17,7 +17,7 @@ export default async function ContactsPage({ searchParams }: { searchParams?: Pr
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await fetchSupabaseUserByToken(token);
+  const me = await getUserFromSessionToken(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};

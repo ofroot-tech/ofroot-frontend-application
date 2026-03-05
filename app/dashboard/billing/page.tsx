@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { api, type Invoice, type Tenant, type AdminUser } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
-import { fetchSupabaseUserByToken } from '@/app/lib/supabase-user';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import AmountDisplay from './_components/AmountDisplay';
 import CreateInvoiceForm from './_components/CreateInvoiceForm';
@@ -19,7 +19,7 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const me = await fetchSupabaseUserByToken(token);
+  const me = await getUserFromSessionToken(token).catch(() => null);
   if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) ?? {};

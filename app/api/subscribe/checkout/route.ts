@@ -16,7 +16,7 @@ import { fail, ok } from '@/app/lib/response';
 import { getSupabaseAdmin } from '@/app/lib/supabase-server';
 import { registerSchema } from '@/types/auth';
 
-const stripeVersion = '2025-11-17.clover';
+const stripeVersion = '2026-02-25.clover';
 
 function requireStripeSecret(): string {
   const key = process.env.STRIPE_SECRET_KEY;

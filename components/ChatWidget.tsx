@@ -152,7 +152,7 @@ export default function ChatWidget() {
                 key={message.id}
                 className={
                   message.from === 'user'
-                    ? 'ml-auto max-w-[80%] rounded-lg bg-[#0f766e] px-3 py-2 text-white'
+                    ? 'ml-auto max-w-[80%] rounded-lg bg-[#FF9312] px-3 py-2 text-white'
                     : 'mr-auto max-w-[85%] rounded-lg bg-gray-100 px-3 py-2 text-gray-800'
                 }
               >
@@ -166,7 +166,7 @@ export default function ChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={sending ? 'Sending…' : 'Ask a question or request help'}
-              className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-[#20b2aa] focus:outline-none focus:ring-2 focus:ring-[#20b2aa]"
+              className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-[#FF9312] focus:outline-none focus:ring-2 focus:ring-[#FF9312]"
               disabled={sending}
             />
             <div className="mt-2 flex justify-end">
@@ -174,7 +174,7 @@ export default function ChatWidget() {
                 type="button"
                 onClick={sendMessage}
                 disabled={sending}
-                className="inline-flex items-center gap-2 rounded-md bg-[#0f766e] px-3 py-2 text-sm font-semibold text-white hover:bg-[#115e59] disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-md bg-[#FF9312] px-3 py-2 text-sm font-semibold text-white hover:bg-[#E07F00] disabled:opacity-60"
               >
                 {sending ? 'Sending…' : 'Send'}
               </button>

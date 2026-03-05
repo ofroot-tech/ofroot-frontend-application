@@ -7,11 +7,11 @@
  * Dark theme matching the main navbar for visual consistency.
  */
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { X, ArrowRight } from 'lucide-react';
-import { useCallback } from 'react';
 
 export default function PublicNavbar() {
   const pathname = usePathname();
@@ -20,13 +20,10 @@ export default function PublicNavbar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  const toggleMenu = useCallback((next?: boolean) => {
-    setOpen((prev) => {
-      const resolved = typeof next === 'boolean' ? next : !prev;
-      setLiveMessage(resolved ? 'Navigation menu opened' : 'Navigation menu closed');
-      return resolved;
-    });
-  }, []);
+  const toggleMenu = (next = !open) => {
+    setOpen(next);
+    setLiveMessage(next ? 'Mobile menu opened' : 'Mobile menu closed');
+  };
 
   const closeMenu = () => toggleMenu(false);
 
@@ -71,7 +68,7 @@ export default function PublicNavbar() {
       previouslyFocused.current?.focus?.();
       previouslyFocused.current = null;
     };
-  }, [open, toggleMenu]);
+  }, [open]);
 
   const isActive = (href: string) => pathname === href;
 
@@ -82,19 +79,20 @@ export default function PublicNavbar() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <Link href="/" aria-label="OFROOT homepage" className="flex items-center gap-2">
-                <svg
-                  width="36"
-                  height="36"
-                  viewBox="0 0 36 36"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-9 w-9"
+              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
+                <Image
+                  src="/ofroot-logo.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  priority
+                  className="h-9 w-9 rounded-full object-cover"
                   aria-hidden="true"
-                >
-                  <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
-                </svg>
-                <span className="text-white font-semibold text-lg tracking-tight">OFROOT</span>
+                />
+                <span className="text-lg font-semibold tracking-tight leading-none">
+                  <span className="text-white">Of</span>
+                  <span className="text-[#FF9312]">Root</span>
+                </span>
               </Link>
             </div>
 
@@ -189,18 +187,18 @@ export default function PublicNavbar() {
           {/* Drawer Header */}
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
             <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 36 36"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+              <Image
+                src="/ofroot-logo.png"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full object-cover"
                 aria-hidden="true"
-              >
-                <polygon points="18,3 30,30 6,30" fill="#20b2aa" />
-              </svg>
-              <span className="text-white font-semibold text-lg">OFROOT</span>
+              />
+              <span className="text-lg font-semibold tracking-tight leading-none">
+                <span className="text-white">Of</span>
+                <span className="text-[#FF9312]">Root</span>
+              </span>
             </Link>
             <button
               type="button"
@@ -216,14 +214,14 @@ export default function PublicNavbar() {
           <div className="px-6 py-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
             {/* Console CTA */}
             <div className="flex items-center justify-between mb-8">
-              <span className="text-[#20b2aa] text-base font-medium">Console</span>
+              <span className="text-[#FF9312] text-base font-medium">Console</span>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#0f766e] hover:bg-[#0f766e]/10 transition-colors"
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#FF9312] hover:bg-[#FF9312]/10 transition-colors"
                 onClick={closeMenu}
                 aria-label="Go to Console"
               >
-                <ArrowRight className="w-5 h-5 text-[#0f766e]" />
+                <ArrowRight className="w-5 h-5 text-[#FF9312]" />
               </Link>
             </div>
 
@@ -235,28 +233,28 @@ export default function PublicNavbar() {
               <Link
                 href="/services"
                 onClick={closeMenu}
-                className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
+                className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
               >
                 Services
               </Link>
               <Link
                 href="/"
                 onClick={closeMenu}
-                className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
+                className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
               >
                 Development
               </Link>
               <Link
                 href="/marketing"
                 onClick={closeMenu}
-                className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
+                className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
               >
                 Marketing
               </Link>
               <Link
                 href="/blog"
                 onClick={closeMenu}
-                className="block text-white text-base font-medium py-2 hover:text-[#20b2aa] transition-colors"
+                className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
               >
                 Blog
               </Link>

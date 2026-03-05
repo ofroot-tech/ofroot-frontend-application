@@ -20,12 +20,12 @@ import Link from 'next/link';
 import { generateConsultingFaqSchema, generateOrganizationSchema } from '@/app/lib/schemas';
 
 export const metadata: Metadata = {
-  title: 'Book a Strategy Call · OfRoot Consulting',
-  description: 'Schedule a free 20-minute discovery call with our senior architect to discuss your project, goals, and the best path forward.',
-  keywords: ['booking', 'discovery call', 'consultation', 'strategy'],
+  title: 'Book an Integration Call · OfRoot',
+  description: 'Schedule a 20-minute integration call to review lead capture, meeting workflows, and pipeline automation priorities.',
+  keywords: ['integration call', 'automation strategy', 'HubSpot integration', 'Meta API'],
   openGraph: {
-    title: 'Book a Strategy Call · OfRoot',
-    description: 'Schedule a free discovery call with our consulting team.',
+    title: 'Book an Integration Call · OfRoot',
+    description: 'Plan your lead, meeting, and pipeline automation scope.',
     url: 'https://ofroot.technology/consulting/book',
     type: 'website',
   },
@@ -52,15 +52,15 @@ export default function ConsultingBookPage() {
       <section className="py-24 px-6 sm:px-8 text-center bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-5xl sm:text-6xl font-extrabold mb-6 leading-tight text-gray-900">
-            Let&apos;s talk about your project.
+            Let&apos;s map your automation stack.
           </h1>
 
           <p className="text-xl sm:text-2xl text-gray-600 mb-4">
-            Book a 20-minute discovery call to discuss your goals, constraints, and the best path forward.
+            Book a 20-minute integration call to review your lead flow, meeting bottlenecks, and pipeline priorities.
           </p>
 
           <p className="text-lg text-gray-600">
-            No sales pitch. Just an honest conversation about what&apos;s possible.
+            No generic pitch. We focus on what to automate first and what to fix next.
           </p>
         </div>
       </section>
@@ -81,19 +81,19 @@ export default function ConsultingBookPage() {
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-bold mt-1">→</span>
-                    <span>Your current situation and pain points</span>
+                    <span>Your current lead flow and conversion bottlenecks</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-bold mt-1">→</span>
-                    <span>Technical stack and architecture</span>
+                    <span>Your stack (HubSpot, Meta, Make, Zapier, APIs)</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-bold mt-1">→</span>
-                    <span>Timeline and budget expectations</span>
+                    <span>Timeline, SLA, and budget expectations</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-blue-600 font-bold mt-1">→</span>
-                    <span>How a retainer engagement works</span>
+                    <span>Priority order: meetings, leads, and pipeline sanity</span>
                   </li>
                 </ul>
               </div>
@@ -106,7 +106,7 @@ export default function ConsultingBookPage() {
                 <ul className="space-y-3 text-gray-700">
                   <li className="flex items-start gap-3">
                     <span className="text-green-600 font-bold mt-1">✓</span>
-                    <span>A problem you&apos;re trying to solve or a feature you want to build</span>
+                    <span>Where leads are getting lost, delayed, or misrouted</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-green-600 font-bold mt-1">✓</span>
@@ -114,7 +114,7 @@ export default function ConsultingBookPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-green-600 font-bold mt-1">✓</span>
-                    <span>Any context about your team or existing code (GitHub links, etc.)</span>
+                    <span>Any existing workflow maps, CRM fields, or webhook docs</span>
                   </li>
                 </ul>
               </div>
@@ -174,7 +174,7 @@ export default function ConsultingBookPage() {
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">What if I&apos;m not ready to commit to a retainer?</h3>
               <p className="text-gray-700">
-                That&apos;s fine. We can discuss options: hourly consulting, a smaller project, or just architectural advice. The call is about finding the best fit.
+                That&apos;s fine. We can start with a scoped integration sprint to fix one high-impact workflow first.
               </p>
             </div>
 

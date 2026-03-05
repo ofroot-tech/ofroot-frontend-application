@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Newspaper } from 'lucide-react';
 
 /**
@@ -24,13 +24,10 @@ export default function MarketingNavbar() {
   const [blogOpen, setBlogOpen] = useState(false);
   const blogMenuRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleMenu = useCallback((next?: boolean) => {
-    setOpen((prev) => {
-      const resolved = typeof next === 'boolean' ? next : !prev;
-      setLiveMessage(resolved ? 'Mobile menu opened' : 'Mobile menu closed');
-      return resolved;
-    });
-  }, []);
+  const toggleMenu = useCallback((next = !open) => {
+    setOpen(next);
+    setLiveMessage(next ? 'Mobile menu opened' : 'Mobile menu closed');
+  }, [open]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -113,13 +110,13 @@ export default function MarketingNavbar() {
               width={32}
               height={32}
               priority
-              className="rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#20b2aa] w-8 h-8 md:w-10 md:h-10"
+              className="rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF9312] w-8 h-8 md:w-10 md:h-10"
             />
           </Link>
         </div>
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
-          <Link href="/" className="text-gray-700 hover:text-[#20b2aa]">Development</Link>
-          <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#20b2aa]">Waitlist</a>
+          <Link href="/" className="text-gray-700 hover:text-[#FF9312]">Development</Link>
+          <a href="https://form.jotform.com/252643454932157" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-[#FF9312]">Waitlist</a>
           {/* Blog dropdown */}
           <div className="relative" ref={blogMenuRef}>
             <button
@@ -128,7 +125,7 @@ export default function MarketingNavbar() {
               aria-haspopup="menu"
               aria-expanded={blogOpen}
               aria-controls="mk-blog-menu"
-              className="group inline-flex items-center gap-2 bg-[#0f766e] text-white hover:bg-white hover:text-black border border-transparent hover:border-black py-2 px-4 rounded-full shadow-sm hover:shadow-lg transform-gpu will-change-transform transition-all duration-200 motion-reduce:transition-none hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#0f766e]"
+              className="group inline-flex items-center gap-2 bg-[#FF9312] text-white hover:bg:white hover:text-black border border-transparent hover:border-black py-2 px-4 rounded-full shadow-sm hover:shadow-lg transform-gpu will-change-transform transition-all duration-200 motion-reduce:transition-none hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#FF9312]"
             >
               <Newspaper size={16} aria-hidden className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black" />
               <span className="transition-colors duration-200 motion-reduce:transition-none group-hover:text-black">Blog</span>
@@ -138,7 +135,7 @@ export default function MarketingNavbar() {
               id="mk-blog-menu"
               role="menu"
               aria-label="Blog menu"
-              className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#115e59] bg-[#0f766e] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+              className={`absolute right-0 mt-2 w-56 rounded-lg border border-[#E07F00] bg-[#FF9312] text-white shadow-xl backdrop-blur-sm transition-all duration-200 ease-out motion-reduce:transition-none transform origin-top-right ${blogOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
             >
               <Link
                 href="/blog"
@@ -162,7 +159,7 @@ export default function MarketingNavbar() {
               </a>
             </div>
           </div>
-          <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="bg-[#0f766e] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#115e59] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#0f766e]">
+          <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" className="bg-[#FF9312] text-white py-2 md:py-3 px-10 md:px-14 rounded-full tracking-wide shadow-sm min-w-[140px] md:min-w-[180px] inline-flex items-center justify-center gap-3 text-center hover:bg-[#E07F00] transition-transform transform-gpu hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#FF9312]">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
               <path d="M7 10h10M7 14h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.6" />

@@ -1,17 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Open+Sans:wght@400;600&display=swap');
 @import "tailwindcss";
-@import '@radix-ui/themes/styles.css';
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 
   /* Brand color tokens */
-  /* Primary brand color tuned for WCAG contrast with white text. */
-  --color-primary: #0f766e;          /* Teal - primary brand color */
-  --color-primary-dark: #1a8f85;     /* Darker teal for hover/active states */
-  --color-primary-light: #3cc4bc;    /* Lighter teal for accents */
-  --color-accent: #ffe082;           /* Gold/amber accent */
+  --color-primary: #FF9312;          /* Zap orange - primary brand color */
+  --color-primary-dark: #E07F00;     /* Darker orange for hover/active states */
+  --color-primary-light: #FFB14A;    /* Lighter orange for accents */
+  --color-accent: #37FFE0;           /* Electric teal accent */
   --color-text: #171717;             /* Default text color */
   --color-text-muted: #6b7280;       /* Muted/secondary text */
 
@@ -72,11 +70,11 @@ h2 {
 
 /*
   Text color defaults
-  - Uses CSS variables for consistent theming
-  - Can be overridden by component-specific styles where needed
+  - Headings inherit from parent so dark/light surfaces can control contrast.
+  - Body keeps the default text color for normal light surfaces.
 */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--color-text);
+  color: inherit;
 }
 
 body {
@@ -166,11 +164,11 @@ p, li, span, a {
 }
 
 /* Section gradients: gentle, smooth backgrounds using brand tones */
-section#services { background-image: linear-gradient(180deg, rgba(32,178,170,0.03), rgba(0,123,255,0.03)); }
-section#featured { background-image: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(32,178,170,0.02)); }
-section#case-studies { background-image: linear-gradient(180deg, rgba(0,123,255,0.02), rgba(32,178,170,0.02)); }
-section#how { background-image: linear-gradient(180deg, rgba(32,178,170,0.02), rgba(0,123,255,0.02)); }
-section#proof { background-image: linear-gradient(180deg, rgba(32,178,170,0.04), rgba(0,123,255,0.04)); }
+section#services { background-image: linear-gradient(180deg, rgba(255,147,18,0.03), rgba(0,123,255,0.03)); }
+section#featured { background-image: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,147,18,0.02)); }
+section#case-studies { background-image: linear-gradient(180deg, rgba(0,123,255,0.02), rgba(255,147,18,0.02)); }
+section#how { background-image: linear-gradient(180deg, rgba(255,147,18,0.02), rgba(0,123,255,0.02)); }
+section#proof { background-image: linear-gradient(180deg, rgba(255,147,18,0.04), rgba(0,123,255,0.04)); }
 /* Contact section is de-emphasized; styling now driven inline in page. */
 
 /* Ensure gradients are subtle and don't override section backgrounds that are explicitly set */
@@ -206,7 +204,7 @@ section[id] { background-repeat: no-repeat; background-size: cover; }
 
 /* Focus styles for keyboard users */
 :focus {
-  outline: 3px solid rgba(32,178,170,0.18);
+  outline: 3px solid rgba(255,147,18,0.18);
   outline-offset: 3px;
 }
 
@@ -342,6 +340,34 @@ header[role="banner"] {
 
 /* Utility to force left-aligned text if tailwind class conflict occurs */
 .text-left-force { text-align: left !important; }
+
+/* Contrast helpers
+   Apply these classes to any section/card container so text automatically
+   follows light-on-dark or dark-on-light contrast rules. */
+.surface-dark {
+  color: #f8fafc;
+}
+
+.surface-dark :where(h1, h2, h3, h4, h5, h6, p, li, small, strong, label) {
+  color: inherit;
+}
+
+/* Keep plain inline elements inheriting contrast, but allow explicit text-* utility classes to win. */
+.surface-dark :where(span:not([class*='text-']), a:not([class*='text-'])) {
+  color: inherit;
+}
+
+.surface-light {
+  color: #0f172a;
+}
+
+.surface-light :where(h1, h2, h3, h4, h5, h6, p, li, small, strong, label) {
+  color: inherit;
+}
+
+.surface-light :where(span:not([class*='text-']), a:not([class*='text-'])) {
+  color: inherit;
+}
 
 /* Preserve reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
@@ -511,19 +537,19 @@ html, body {
 .section-chevron, .section-chevron-prev { position: absolute; inset-inline: 0; display: flex; justify-content: center; pointer-events: auto; }
 .section-chevron { bottom: var(--chevron-bottom-offset, 18px); }
 .section-chevron-prev { top: var(--chevron-top-offset, 18px); }
-.section-chevron a, .section-chevron-prev a { color: var(--chevron-color, #20b2aa); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.section-chevron a, .section-chevron-prev a { color: var(--chevron-color, #FF9312); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .section-chevron a .chevron, .section-chevron-prev a .chevron { width: 30px; height: 30px; }
 /* Stacked chevrons placed at the end of each section */
 .section-chevron-stack { position: absolute; inset-inline: 0; bottom: max(calc(10% + var(--chevron-bottom-offset, 0px)), calc(env(safe-area-inset-bottom) + var(--chevron-bottom-safety, 64px))); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; pointer-events: auto; }
-.section-chevron-stack a { color: var(--chevron-color, #20b2aa); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.section-chevron-stack a { color: var(--chevron-color, #FF9312); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .section-chevron-stack a .chevron { width: 30px; height: 30px; }
 /* Flow-positioned chevron placed after last paragraph of a section */
 .section-chevron-flow { display: flex; justify-content: center; margin-top: var(--chevron-gap, 16px); }
-.section-chevron-flow a { color: var(--chevron-color, #20b2aa); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.section-chevron-flow a { color: var(--chevron-color, #FF9312); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .section-chevron-flow a .chevron { width: 30px; height: 30px; }
 /* Flow-positioned previous chevron placed before first paragraph of a section */
 .section-chevron-prev-flow { display: flex; justify-content: center; margin-bottom: var(--chevron-gap, 16px); }
-.section-chevron-prev-flow a { color: var(--chevron-color, #20b2aa); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+.section-chevron-prev-flow a { color: var(--chevron-color, #FF9312); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
 .section-chevron-prev-flow a .chevron { width: 30px; height: 30px; }
 
 /* Hide chevrons on the first and last sections inside a snap container */
@@ -600,7 +626,7 @@ html, body {
 }
 
 /* Benefit highlight line inside feature cards */
-.benefit-line { color: #0f766e; /* teal-700 */ font-weight: 600; }
+.benefit-line { color: #E07F00; /* teal-700 */ font-weight: 600; }
 
 /* Benefit label chip (compact green pill) */
 .benefit-chip {
@@ -650,7 +676,7 @@ body.ofroot-nav-fading .promo-banner {
   scrollbar-gutter: stable both-edges;
   /* Firefox scrollbar defaults (WebKit is defined with pseudo-elements below) */
   scrollbar-width: thin;
-  scrollbar-color: rgba(32,178,170,0.45) transparent; /* thumb, track */
+  scrollbar-color: rgba(255,147,18,0.45) transparent; /* thumb, track */
 }
 
 /* The outer document remains scrollable so the footer sits at the bottom of the page
@@ -658,20 +684,20 @@ body.ofroot-nav-fading .promo-banner {
 
 /* Snap container scrollbar styling (WebKit/Blink) */
 .snap-page::-webkit-scrollbar { width: 10px; height: 10px; }
-.snap-page::-webkit-scrollbar-track { background: transparent; margin-block: 8px; background-image: linear-gradient(180deg, rgba(32,178,170,0.0), rgba(32,178,170,0.14), rgba(32,178,170,0.0)); background-size: 100% 260%; background-position: 50% 0%; animation: scrollbarTrackDrift 8s ease-in-out infinite alternate; }
-.snap-page:hover::-webkit-scrollbar-track { background-image: linear-gradient(180deg, rgba(32,178,170,0.02), rgba(32,178,170,0.2), rgba(32,178,170,0.02)); border-radius: 9999px; }
+.snap-page::-webkit-scrollbar-track { background: transparent; margin-block: 8px; background-image: linear-gradient(180deg, rgba(255,147,18,0.0), rgba(255,147,18,0.14), rgba(255,147,18,0.0)); background-size: 100% 260%; background-position: 50% 0%; animation: scrollbarTrackDrift 8s ease-in-out infinite alternate; }
+.snap-page:hover::-webkit-scrollbar-track { background-image: linear-gradient(180deg, rgba(255,147,18,0.02), rgba(255,147,18,0.2), rgba(255,147,18,0.02)); border-radius: 9999px; }
 .snap-page::-webkit-scrollbar-thumb {
-  background-color: rgba(32,178,170,0.45); /* lightseagreen */
+  background-color: rgba(255,147,18,0.45); /* lightseagreen */
   border-radius: 9999px;
   border: 2px solid rgba(255,255,255,0.85); /* inner ring to lighten against white */
-  box-shadow: inset 0 0 8px rgba(32,178,170,0.45), 0 0 6px rgba(32,178,170,0.15);
+  box-shadow: inset 0 0 8px rgba(255,147,18,0.45), 0 0 6px rgba(255,147,18,0.15);
   animation: scrollbarThumbPulse 2600ms ease-in-out infinite alternate;
 }
-.snap-page::-webkit-scrollbar-thumb:hover { background-color: rgba(32,178,170,0.78); box-shadow: inset 0 0 12px rgba(32,178,170,0.6), 0 0 8px rgba(32,178,170,0.25); animation-duration: 1600ms; }
+.snap-page::-webkit-scrollbar-thumb:hover { background-color: rgba(255,147,18,0.78); box-shadow: inset 0 0 12px rgba(255,147,18,0.6), 0 0 8px rgba(255,147,18,0.25); animation-duration: 1600ms; }
 .snap-page::-webkit-scrollbar-corner { background: transparent; }
 
 /* Animate Firefox color on hover (limited support for animation) */
-.snap-page:hover { scrollbar-color: rgba(32,178,170,0.65) transparent; }
+.snap-page:hover { scrollbar-color: rgba(255,147,18,0.65) transparent; }
 
 /* Flash peach -> white -> teal during actual scrolls */
 .snap-page.is-scrolling::-webkit-scrollbar-thumb {
@@ -680,9 +706,9 @@ body.ofroot-nav-fading .promo-banner {
 .snap-page.is-scrolling { scrollbar-color: rgba(255,210,170,0.9) transparent; }
 
 @keyframes scrollbarThumbPulse {
-  0% { background-color: rgba(32,178,170,0.38); box-shadow: inset 0 0 6px rgba(32,178,170,0.32), 0 0 4px rgba(32,178,170,0.12); }
-  50% { background-color: rgba(32,178,170,0.82); box-shadow: inset 0 0 14px rgba(32,178,170,0.6), 0 0 10px rgba(32,178,170,0.28); }
-  100% { background-color: rgba(32,178,170,0.5); box-shadow: inset 0 0 9px rgba(32,178,170,0.45), 0 0 6px rgba(32,178,170,0.18); }
+  0% { background-color: rgba(255,147,18,0.38); box-shadow: inset 0 0 6px rgba(255,147,18,0.32), 0 0 4px rgba(255,147,18,0.12); }
+  50% { background-color: rgba(255,147,18,0.82); box-shadow: inset 0 0 14px rgba(255,147,18,0.6), 0 0 10px rgba(255,147,18,0.28); }
+  100% { background-color: rgba(255,147,18,0.5); box-shadow: inset 0 0 9px rgba(255,147,18,0.45), 0 0 6px rgba(255,147,18,0.18); }
 }
 @keyframes scrollbarTrackDrift {
   0% { background-position: 50% 0%; }
@@ -692,7 +718,7 @@ body.ofroot-nav-fading .promo-banner {
 @keyframes scrollbarFlash {
   0% { background-color: rgba(255,210,170,0.9); box-shadow: inset 0 0 10px rgba(255,210,170,0.55), 0 0 8px rgba(255,210,170,0.25); }
   45% { background-color: rgba(255,255,255,0.95); box-shadow: inset 0 0 12px rgba(255,255,255,0.6), 0 0 10px rgba(255,255,255,0.3); }
-  100% { background-color: rgba(32,178,170,0.78); box-shadow: inset 0 0 12px rgba(32,178,170,0.6), 0 0 8px rgba(32,178,170,0.25); }
+  100% { background-color: rgba(255,147,18,0.78); box-shadow: inset 0 0 12px rgba(255,147,18,0.6), 0 0 8px rgba(255,147,18,0.25); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -791,7 +817,7 @@ body.ofroot-nav-fading .promo-banner {
 .loading-on-click.is-loading::before {
   content: "";
   position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin-left: -9px; margin-top: -9px;
-  border-radius: 9999px; border: 2px solid rgba(16,24,40,0.25); border-top-color: #20b2aa;
+  border-radius: 9999px; border: 2px solid rgba(16,24,40,0.25); border-top-color: #FF9312;
   animation: spin 900ms linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }

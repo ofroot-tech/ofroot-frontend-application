@@ -1,135 +1,71 @@
 "use client";
 
-/**
- * AuthContext — literate walkthrough
- *
- * We keep the narrative tight: bootstrap from Supabase on mount, stay in sync
- * via onAuthStateChange, and route login through our API so we also set the
- * server-side auth cookie for `/api/auth/me` parity. After receiving tokens
- * from the API we hydrate the browser Supabase client with `setSession`, so
- * both client hooks and server routes share the same auth state.
- */
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSupabaseBrowserClient } from "@/app/lib/supabase";
+import api from "@/app/utils/api";
 
 export type AuthUser = {
-  id: string; // Supabase UUID
+  id: number;
   name: string;
   email: string;
   plan?: string | null;
   billing_cycle?: 'monthly' | 'yearly' | null;
   has_blog_addon?: boolean;
+  roles?: string[];
+  top_role?: string;
 };
 
 interface AuthContextType {
   user: AuthUser | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, nextPath?: string) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const toAuthUser = (raw: any): AuthUser => ({
-  id: raw?.id,
-  name: raw?.user_metadata?.name || raw?.user_metadata?.full_name || '',
-  email: raw?.email || '',
-  plan: raw?.user_metadata?.plan ?? null,
-  billing_cycle: raw?.user_metadata?.billing_cycle ?? null,
-  has_blog_addon: Boolean(raw?.user_metadata?.has_blog_addon ?? false),
-});
-
-type ApiLoginSuccess = {
-  user?: any;
-  access_token?: string;
-  refresh_token?: string;
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const supabase = getSupabaseBrowserClient();
 
   useEffect(() => {
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
-
-    let active = true;
-    supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => {
-        if (!active) return;
-        if (session?.user) setUser(toAuthUser(session.user));
+    api
+      .get('/auth/me')
+      .then((res) => {
+        if (res.data?.ok) setUser(res.data.data);
+        else setUser(null);
       })
-      .finally(() => active && setLoading(false));
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUser(toAuthUser(session.user));
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    });
-
-    return () => {
-      active = false;
-      subscription.unsubscribe();
-    };
-  }, [supabase]);
-
-  const login = async (email: string, password: string) => {
-    if (!supabase) {
-      throw new Error('Auth not available');
-    }
-    setLoading(true);
+  const login = async (email: string, password: string, nextPath?: string) => {
+    let res;
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      res = await api.post('/auth/login', new URLSearchParams({ email, password }), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
-
-      const payload: ApiLoginSuccess | { error?: { message?: string } } = await res.json().catch(() => ({} as any));
-      if (!res.ok) {
-        const message = (payload as any)?.error?.message || 'Login failed';
-        throw new Error(message);
-      }
-
-      const { access_token, refresh_token, user: apiUser } = (payload as ApiLoginSuccess) || {};
-      if (access_token && refresh_token) {
-        const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
-        if (error) throw new Error(error.message || 'Unable to persist session');
-        const sessionUser = data?.user ?? data?.session?.user ?? apiUser;
-        if (sessionUser) setUser(toAuthUser(sessionUser));
-      } else if (apiUser) {
-        setUser(toAuthUser(apiUser));
-      }
-
-      router.push('/dashboard');
-    } finally {
-      setLoading(false);
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.error?.message ||
+        err?.response?.data?.message ||
+        err?.message ||
+        'Login failed';
+      throw new Error(message);
     }
+    if (!res.data?.ok) {
+      throw new Error(res.data?.error?.message || 'Login failed');
+    }
+    const me = await api.get('/auth/me');
+    if (me.data?.ok) setUser(me.data.data);
+    router.push(nextPath || '/dashboard');
   };
 
   const logout = async () => {
-    if (!supabase) {
-      router.push('/auth/login');
-      return;
-    }
-    setLoading(true);
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
-      await supabase.auth.signOut();
-      setUser(null);
-      router.push('/auth/login');
-    } finally {
-      setLoading(false);
-    }
+    const res = await api.post('/auth/logout');
+    if (res.data?.ok) setUser(null);
+    router.push('/auth/login');
   };
 
   return (

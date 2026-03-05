@@ -16,14 +16,21 @@ interface LoginFormInputs {
   password: string;
 }
 
-export default function LoginForm() {
-  const { register, handleSubmit, formState } = useForm<LoginFormInputs>({ mode: 'onBlur' });
+export default function LoginForm({ nextPath, defaultEmail }: { nextPath?: string; defaultEmail?: string }) {
+  const { register, handleSubmit, formState } = useForm<LoginFormInputs>({
+    mode: 'onBlur',
+    defaultValues: {
+      email: defaultEmail || '',
+      password: '',
+    },
+  });
   const { errors, isSubmitting } = formState;
   const { login } = useAuth();
   const [error, setError] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [useMagic, setUseMagic] = useState(false);
   const [regOpen, setRegOpen] = useState<boolean | null>(null);
+  const registerHref = nextPath ? `/auth/register?next=${encodeURIComponent(nextPath)}` : '/auth/register';
 
   useEffect(() => {
     let cancelled = false;
@@ -52,7 +59,7 @@ export default function LoginForm() {
         }
         return;
       }
-      await login(data.email, data.password);
+      await login(data.email, data.password, nextPath);
       toast({ type: 'success', title: 'Signed in', message: 'Welcome back!' });
     } catch (err: any) {
       const message = err?.message || "Login failed";
@@ -123,13 +130,13 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={disabled}
-        className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold ${disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#0f766e] text-white hover:bg-[#115e59]'} focus:outline-none focus:ring-2 focus:ring-[#0f766e]`}
+        className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold ${disabled ? 'bg-gray-300 text-gray-500' : 'bg-[#FF9312] text-white hover:bg-[#E07F00]'} focus:outline-none focus:ring-2 focus:ring-[#FF9312]`}
       >
         {disabled ? (useMagic ? 'Sending link…' : 'Signing in…') : (useMagic ? 'Send magic link' : 'Sign in')}
       </button>
 
       <div className="flex items-center justify-between text-xs text-gray-500">
-        {regOpen ? <a href="/auth/register" className="underline">Create account</a> : <span />}
+        {regOpen ? <a href={registerHref} className="underline">Create account</a> : <span />}
         <a href="#" className="underline" aria-disabled>Forgot password?</a>
       </div>
     </form>

@@ -3,8 +3,9 @@
 
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
+import { api } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardBody, DataTable } from '@/app/dashboard/_components/UI';
 
 async function getToken() {
@@ -16,16 +17,8 @@ export default async function ActivityPage({ searchParams }: { searchParams?: Pr
   const token = await getToken();
   if (!token) redirect('/auth/login');
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseAnonKey) redirect('/auth/login');
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-
-  const { data: authData, error: authError } = await supabase.auth.getUser(token);
-  if (authError || !authData?.user) redirect('/auth/login');
+  const me = await getUserFromSessionToken(token).catch(() => null);
+  if (!me) redirect('/auth/login');
 
   const sp = (await searchParams) || {};
   const type = Array.isArray(sp.type) ? sp.type[0] : sp.type; // e.g. 'users' | 'tenants' | 'billing' | 'system'

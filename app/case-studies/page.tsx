@@ -3,28 +3,16 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Case Studies | OfRoot',
-  description: 'Outcome-focused case studies across AI automation, healthcare systems, and stable integrations.',
+  description: 'Real outcomes from lead, workflow, and integration automation systems.',
   alternates: { canonical: '/case-studies' },
 };
 
 const studies = [
   {
     href: '/case-studies/home-services-mvp',
-    title: 'Home services MVP live in 30 days',
-    summary: 'Operator-led build shipped intake → scheduling → invoicing → payments with guardrails and CI/CD.',
-    tag: 'Growth Platform',
-  },
-  {
-    href: '/case-studies/healthcare-ai-automation',
-    title: 'Healthcare systems + AI automation',
-    summary: 'Improved response paths and system reliability with workflow optimization, observability, and AI automation.',
-    tag: 'Healthcare Systems',
-  },
-  {
-    href: '/case-studies/crm-erp-sync',
-    title: 'CRM + ERP sync automation',
-    summary: 'Stable system integrations with retries, auditability, and reporting automation — fewer ops escalations.',
-    tag: 'System Integrations',
+    title: 'MVP shipped 2x faster',
+    summary: 'Home services SaaS accelerated delivery with scaffolds and CI/CD pipelines.',
+    tag: 'Development Automation',
   },
 ];
 
@@ -43,7 +31,7 @@ export default function CaseStudiesIndexPage() {
           <Link
             key={s.href}
             href={s.href}
-            className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#20b2aa]"
+            className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF9312]"
           >
             <div className="text-xs uppercase tracking-wide text-gray-500">{s.tag}</div>
             <h2 className="mt-1 text-xl font-semibold text-gray-900">{s.title}</h2>
