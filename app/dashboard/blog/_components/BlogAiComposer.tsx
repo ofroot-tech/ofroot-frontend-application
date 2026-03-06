@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { BlogPostGenerationInput, BlogPostGenerationResult } from '@/app/lib/api';
 import { ToolbarButton } from '@/app/dashboard/_components/UI';
+import { DEFAULT_AI_MODEL, loadAiWorkspaceConfig } from '@/app/dashboard/blog/_components/aiWorkspace';
 
 export const BLOG_AI_DRAFT_STORAGE_KEY = 'ofroot_blog_ai_draft';
 
@@ -50,11 +51,37 @@ export function BlogAiComposer({ generateDraft }: BlogAiComposerProps) {
       .filter(Boolean)
       .slice(0, 10);
     try {
-      const response = await generateDraft({
+      const workspace = loadAiWorkspaceConfig();
+      const localInput = {
         topic,
         tone: tone.trim() || undefined,
         keywords: keywordsList,
-      });
+      };
+      let response: { ok: true; data: BlogPostGenerationResult } | { ok: false; error: string };
+
+      if (workspace?.apiKey?.trim()) {
+        const res = await fetch('/api/ai/blog-generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...localInput,
+            provider: workspace.provider,
+            apiKey: workspace.apiKey.trim(),
+            model: workspace.model?.trim() || DEFAULT_AI_MODEL,
+            companyName: workspace.companyName || undefined,
+            market: workspace.market || undefined,
+            website: workspace.website || undefined,
+          }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.ok) {
+          response = { ok: false, error: data?.error?.message || 'Unable to generate draft from your AI key.' };
+        } else {
+          response = { ok: true, data: data.data };
+        }
+      } else {
+        response = await generateDraft(localInput);
+      }
 
       if (response.ok) {
         setStatus('success');
@@ -240,7 +267,7 @@ export function BlogAiComposer({ generateDraft }: BlogAiComposerProps) {
                 ? 'Composing with your configured AI provider…'
                 : status === 'success'
                   ? 'Draft ready – double-check before publishing.'
-                  : '1 credit per draft (mock mode is free).'}
+                  : 'Uses your saved AI key when available; otherwise falls back to app defaults.'}
             </div>
             <div className="flex items-center gap-2">
               <button

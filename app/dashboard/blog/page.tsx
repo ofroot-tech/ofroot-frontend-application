@@ -13,6 +13,8 @@ import { SuccessToastFromQuery } from '@/components/SuccessToastFromQuery';
 import { BlogAiComposer } from '@/app/dashboard/blog/_components/BlogAiComposer';
 import { BlogStatusFilters } from '@/app/dashboard/blog/_components/BlogStatusFilters';
 import { AiDraftCard } from '@/app/dashboard/blog/_components/AiDraftCard';
+import { AiWorkspacePanel } from '@/app/dashboard/blog/_components/AiWorkspacePanel';
+import { CompetitorAnalysisPanel } from '@/app/dashboard/blog/_components/CompetitorAnalysisPanel';
 
 async function getToken() {
   const store = await cookies();
@@ -70,6 +72,9 @@ export default async function BlogAdminPage({
           </div>
         }
       />
+
+      <AiWorkspacePanel />
+      <CompetitorAnalysisPanel />
 
       {hasPosts ? (
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
