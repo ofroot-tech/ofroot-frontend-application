@@ -9,7 +9,15 @@ import {
   saveAiWorkspaceConfig,
 } from '@/app/dashboard/blog/_components/aiWorkspace';
 
-export function AiWorkspacePanel() {
+type AiWorkspacePanelProps = {
+  title?: string;
+  description?: string;
+};
+
+export function AiWorkspacePanel({
+  title = 'AI Workspace',
+  description = 'Bring your own API key. This key is used for blog generation and competitor SEO analysis on this page.',
+}: AiWorkspacePanelProps = {}) {
   const [config, setConfig] = React.useState<AiWorkspaceConfig>({
     provider: 'openai',
     apiKey: '',
@@ -40,10 +48,8 @@ export function AiWorkspacePanel() {
     <Card>
       <CardBody className="space-y-4">
         <div>
-          <h2 className="text-base font-semibold text-gray-900">AI Workspace</h2>
-          <p className="text-sm text-gray-600">
-            Bring your own API key. This key is used for blog generation and competitor SEO analysis on this page.
-          </p>
+          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+          <p className="text-sm text-gray-600">{description}</p>
           <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
             <div className="font-semibold">How to get your OpenAI API key</div>
             <ol className="mt-2 list-decimal space-y-1 pl-5">
