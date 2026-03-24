@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { hasCompetitiveAnalysisAccess } from '@/app/lib/plans';
 
 type Props = { children: React.ReactNode; authed?: boolean };
+const competitiveAnalysisNavItem = { href: '/dashboard/competitive-analysis', label: 'Competitive Analysis', icon: Radar };
 const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
 	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
+	competitiveAnalysisNavItem,
 	{ href: '/dashboard/subscribers', label: 'Subscribers', icon: UserCog },
 	{ href: '/dashboard/tenants', label: 'Tenants', icon: Building2 },
 	{ href: '/dashboard/users', label: 'Users', icon: Users },
@@ -77,8 +80,10 @@ export default function DashboardShell({ children, authed = false }: Props) {
   const canViewOwnerFunnel = isSuperAdmin || String(accountEmail || '').toLowerCase() === ownerEmail;
 
   const topRole = String(user?.top_role || '').toLowerCase();
+  const planSource = user?.plan ?? accountPlan;
   const isPrivilegedRole = isSuperAdmin || canViewOwnerFunnel || topRole === 'owner' || topRole === 'admin';
   const isClientRole = authed && !isPrivilegedRole;
+  const canUseCompetitiveAnalysis = isPrivilegedRole || hasCompetitiveAnalysisAccess({ plan: planSource, top_role: topRole });
 
   async function requestFeature(featureKey: string) {
     setRequestingFeature(featureKey);
@@ -112,18 +117,27 @@ export default function DashboardShell({ children, authed = false }: Props) {
 		].filter((item, index, arr) => arr.findIndex((x) => x.href === item.href) === index)
 		: baseNav;
   const effectiveNav = isClientRole && authed
-    ? nav.filter((item) => clientEnabledNav.some((allowed) => allowed.href === item.href))
+    ? nav.filter((item) => clientEnabledNav.some((allowed) => allowed.href === item.href) || (canUseCompetitiveAnalysis && item.href === competitiveAnalysisNavItem.href))
     : nav;
 	const quickActions = useMemo(() => {
     if (isClientRole) {
-      return [
+      const items = [
         { href: '/dashboard/overview', label: 'View metrics', description: 'Check current onboarding and delivery status.' },
         { href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow implementation stages.' },
       ];
+      if (canUseCompetitiveAnalysis) {
+        items.push({
+          href: competitiveAnalysisNavItem.href,
+          label: 'Run crawl benchmark',
+          description: 'Compare your crawl signals against modeled competitor patterns.',
+        });
+      }
+      return items;
     }
 		const items = [
 			{ href: '/dashboard/overview', label: 'View metrics', description: 'Check key system health and KPIs.' },
 			{ href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow onboarding and implementation stages.' },
+			{ href: competitiveAnalysisNavItem.href, label: 'Run crawl benchmark', description: 'Turn crawl logs into competitive SEO insight.' },
 			{ href: '/dashboard/tenants', label: 'Manage tenants', description: 'Review organizations and plans.' },
 			{ href: '/dashboard/subscribers', label: 'Manage subscribers', description: 'Track active subscribers.' },
 			{ href: '/dashboard/users', label: 'Manage users', description: 'Invite teammates and adjust roles.' },
@@ -141,7 +155,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
       items.push({ href: '/dashboard/owner/funnel', label: 'View owner funnel', description: 'Track signups and abandoned onboarding attempts.' });
     }
 		return items;
-	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel, isClientRole]);
+	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel, isClientRole, canUseCompetitiveAnalysis]);
 
 	useEffect(() => {
 		if (!toolsOpen) return;
@@ -192,7 +206,6 @@ export default function DashboardShell({ children, authed = false }: Props) {
 
 	const envBadge = process.env.NODE_ENV === 'production' ? 'Prod' : 'Dev';
 	const displayName = user?.name ?? accountName;
-	const planSource = user?.plan ?? accountPlan;
 	const planLabel = planSource ? planSource.toUpperCase() : null;
 
 	return (
