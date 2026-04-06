@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcryptjs';
 import { Pool } from 'pg';
+import { createClient } from '@supabase/supabase-js';
 import type { CreateLeadInput, Lead, User } from '@/app/lib/api';
 import { derivePlatformAccess } from '@/app/lib/platform-access';
 
@@ -229,6 +230,21 @@ function mapFeatureRequest(row: DbFeatureRequestRow): FeatureRequestRecord {
 
 function normalizeEmail(email: string): string {
   return String(email || '').trim().toLowerCase();
+}
+
+function inferRoleSlugForEmail(emailInput: string): 'owner' | 'admin' | 'client' {
+  const normalizedEmail = normalizeEmail(emailInput);
+  const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || 'dimitri.mcdaniel@gmail.com')
+    .trim()
+    .toLowerCase();
+  const adminEmails = (process.env.ADMIN_EMAILS || '')
+    .split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (normalizedEmail === ownerEmail) return 'owner';
+  if (adminEmails.includes(normalizedEmail)) return 'admin';
+  return 'client';
 }
 
 async function listRoleSlugsForUser(userId: number): Promise<string[]> {
@@ -614,6 +630,103 @@ export async function registerUser(params: {
     product_slug: user.product_slug,
     tenantFeatures: [],
   });
+  return {
+    ...user,
+    roles,
+    top_role: deriveTopRole(roles),
+    enabled_features: access.enabledFeatures,
+    enabled_editions: access.enabledEditions,
+  } as User;
+}
+
+export function isSupabasePasswordAuthConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+export async function authenticateViaSupabase(emailInput: string, password: string): Promise<{
+  id: string;
+  email: string;
+  name: string;
+  plan?: 'free' | 'pro' | 'business' | null;
+  billingCycle?: 'monthly' | 'yearly' | null;
+  productSlug?: string | null;
+} | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseAnonKey) return null;
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: normalizeEmail(emailInput),
+    password,
+  });
+
+  if (error || !data.user?.email) return null;
+
+  const meta = (data.user.user_metadata || {}) as Record<string, unknown>;
+  return {
+    id: data.user.id,
+    email: normalizeEmail(data.user.email),
+    name: String(meta.name || meta.full_name || data.user.email.split('@')[0] || '').trim(),
+    plan: (meta.plan as 'free' | 'pro' | 'business' | null | undefined) ?? null,
+    billingCycle: (meta.billing_cycle as 'monthly' | 'yearly' | null | undefined) ?? null,
+    productSlug: String(meta.product_slug || '').trim().toLowerCase() || null,
+  };
+}
+
+export async function upsertUserFromSupabaseAuth(params: {
+  email: string;
+  password: string;
+  name?: string | null;
+  plan?: 'free' | 'pro' | 'business' | null;
+  billingCycle?: 'monthly' | 'yearly' | null;
+  productSlug?: string | null;
+}): Promise<User> {
+  await ensureSchema();
+  const pool = getPool();
+  const email = normalizeEmail(params.email);
+  const passwordHash = await bcrypt.hash(params.password, 10);
+  const roleSlug = inferRoleSlugForEmail(email);
+
+  const upserted = await pool.query<DbUserRow>(
+    `
+      INSERT INTO ofroot_auth_users (name, email, password_hash, plan, billing_cycle, product_slug)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      ON CONFLICT (email)
+      DO UPDATE SET
+        name = COALESCE(NULLIF(EXCLUDED.name, ''), ofroot_auth_users.name),
+        password_hash = EXCLUDED.password_hash,
+        plan = COALESCE(EXCLUDED.plan, ofroot_auth_users.plan),
+        billing_cycle = COALESCE(EXCLUDED.billing_cycle, ofroot_auth_users.billing_cycle),
+        product_slug = COALESCE(EXCLUDED.product_slug, ofroot_auth_users.product_slug),
+        updated_at = NOW()
+      RETURNING id, name, email, tenant_id, plan, billing_cycle, product_slug, created_at, updated_at
+    `,
+    [
+      String(params.name || email.split('@')[0] || '').trim(),
+      email,
+      passwordHash,
+      params.plan || 'free',
+      params.billingCycle || null,
+      params.productSlug || null,
+    ]
+  );
+
+  const row = upserted.rows[0];
+  const user = mapUser(row);
+  await assignRoleToUser(user.id, roleSlug);
+  const roles = await listRoleSlugsForUser(user.id);
+  const tenantFeatures = await listTenantFeatureKeys(user.tenant_id ?? null);
+  const access = derivePlatformAccess({
+    plan: user.plan,
+    top_role: deriveTopRole(roles),
+    product_slug: user.product_slug,
+    tenantFeatures,
+  });
+
   return {
     ...user,
     roles,

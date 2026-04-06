@@ -10,8 +10,11 @@ import { loginSchema } from '@/types/auth';
 import { captureRouteException } from '@/app/api/_helpers/sentry';
 import {
   authenticateUser,
+  authenticateViaSupabase,
   createSessionForUser,
   isSupabaseStoreConfigured,
+  isSupabasePasswordAuthConfigured,
+  upsertUserFromSupabaseAuth,
 } from '@/app/lib/supabase-store';
 
 export async function POST(req: NextRequest) {
@@ -39,7 +42,21 @@ export async function POST(req: NextRequest) {
     if (!isSupabaseStoreConfigured()) {
       return fail('Database is not configured. Please contact support.', 503);
     }
-    const user = await authenticateUser(email, password);
+    let user = await authenticateUser(email, password);
+    if (!user && isSupabasePasswordAuthConfigured()) {
+      const supabaseUser = await authenticateViaSupabase(email, password);
+      if (supabaseUser) {
+        user = await upsertUserFromSupabaseAuth({
+          email: supabaseUser.email,
+          password,
+          name: supabaseUser.name,
+          plan: supabaseUser.plan,
+          billingCycle: supabaseUser.billingCycle,
+          productSlug: supabaseUser.productSlug,
+        });
+        logger.info('auth.login.synced_from_supabase', { email: supabaseUser.email });
+      }
+    }
     if (!user) return fail('Invalid email or password', 401);
     const token = await createSessionForUser(user.id);
     const res = ok({});
