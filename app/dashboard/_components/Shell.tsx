@@ -2,15 +2,28 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar, FileText, Star } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { hasEditionAccess } from '@/app/lib/platform-access';
 import { hasCompetitiveAnalysisAccess } from '@/app/lib/plans';
 
 type Props = { children: React.ReactNode; authed?: boolean };
+const helprNavItem = { href: '/dashboard/helpr', label: 'Helpr', icon: ClipboardList };
+const ontaskNavItem = { href: '/dashboard/ontask', label: 'OnTask', icon: CreditCard };
+const lifecycleNavItem = { href: '/dashboard/crm/lifecycle', label: 'Lifecycle', icon: Workflow };
+const quotesNavItem = { href: '/dashboard/quotes', label: 'Quotes', icon: FileText };
+const paymentsNavItem = { href: '/dashboard/payments', label: 'Payments', icon: BadgeDollarSign };
+const reviewsNavItem = { href: '/dashboard/reviews', label: 'Reviews', icon: Star };
 const competitiveAnalysisNavItem = { href: '/dashboard/competitive-analysis', label: 'Competitive Analysis', icon: Radar };
 const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
+	helprNavItem,
+	ontaskNavItem,
+	lifecycleNavItem,
+	quotesNavItem,
+	paymentsNavItem,
+	reviewsNavItem,
 	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
 	competitiveAnalysisNavItem,
@@ -51,6 +64,9 @@ export default function DashboardShell({ children, authed = false }: Props) {
   const [accountName, setAccountName] = useState<string | null>(null);
   const [accountPlan, setAccountPlan] = useState<string | null>(null);
   const [accountEmail, setAccountEmail] = useState<string | null>(null);
+  const [accountProductSlug, setAccountProductSlug] = useState<string | null>(null);
+  const [accountEnabledEditions, setAccountEnabledEditions] = useState<Array<'helpr' | 'ontask'>>([]);
+  const [accountEnabledFeatures, setAccountEnabledFeatures] = useState<string[]>([]);
   const [requestedFeatures, setRequestedFeatures] = useState<Record<string, boolean>>({});
   const [requestingFeature, setRequestingFeature] = useState<string | null>(null);
   const { user } = useAuth();
@@ -67,6 +83,9 @@ export default function DashboardShell({ children, authed = false }: Props) {
           setAccountEmail(json.data?.email ?? null);
 					setAccountName(json.data?.name ?? null);
 					setAccountPlan(json.data?.plan ?? null);
+          setAccountProductSlug(json.data?.product_slug ?? null);
+          setAccountEnabledEditions(Array.isArray(json.data?.enabled_editions) ? json.data.enabled_editions : []);
+          setAccountEnabledFeatures(Array.isArray(json.data?.enabled_features) ? json.data.enabled_features : []);
 				}
 			} catch {}
 		})();
@@ -83,6 +102,16 @@ export default function DashboardShell({ children, authed = false }: Props) {
   const planSource = user?.plan ?? accountPlan;
   const isPrivilegedRole = isSuperAdmin || canViewOwnerFunnel || topRole === 'owner' || topRole === 'admin';
   const isClientRole = authed && !isPrivilegedRole;
+  const accessRole = isSuperAdmin ? 'admin' : canViewOwnerFunnel ? 'owner' : topRole;
+  const accessUser = {
+    plan: planSource,
+    top_role: accessRole,
+    product_slug: user?.product_slug ?? accountProductSlug,
+    enabled_editions: user?.enabled_editions ?? accountEnabledEditions,
+    enabled_features: user?.enabled_features ?? accountEnabledFeatures,
+  };
+  const canUseHelpr = hasEditionAccess(accessUser, 'helpr');
+  const canUseOnTask = hasEditionAccess(accessUser, 'ontask');
   const canUseCompetitiveAnalysis = isPrivilegedRole || hasCompetitiveAnalysisAccess({ plan: planSource, top_role: topRole });
 
   async function requestFeature(featureKey: string) {
@@ -114,17 +143,57 @@ export default function DashboardShell({ children, authed = false }: Props) {
 			...((hasBlogAddon || isSuperAdmin) ? ([{ href: '/dashboard/blog', label: 'Blog', icon: NotebookPen }] as const) : ([] as const)),
 			...(isSuperAdmin ? ([{ href: '/dashboard/docs', label: 'Docs', icon: Book }] as const) : ([] as const)),
       ...(canViewOwnerFunnel ? ([{ href: '/dashboard/owner/funnel', label: 'Owner Funnel', icon: ClipboardList }] as const) : ([] as const)),
-		].filter((item, index, arr) => arr.findIndex((x) => x.href === item.href) === index)
-		: baseNav;
+		]
+      .filter((item) => {
+        if (item.href === helprNavItem.href) return canUseHelpr;
+        if (item.href === ontaskNavItem.href) return canUseOnTask;
+        if (item.href === lifecycleNavItem.href) return canUseHelpr || canUseOnTask || !isClientRole;
+        if (item.href === quotesNavItem.href || item.href === paymentsNavItem.href || item.href === reviewsNavItem.href) return canUseOnTask;
+        if (item.href === competitiveAnalysisNavItem.href) return canUseCompetitiveAnalysis;
+        return true;
+      })
+      .filter((item, index, arr) => arr.findIndex((x) => x.href === item.href) === index)
+		: baseNav.filter((item) => item.href !== helprNavItem.href && item.href !== ontaskNavItem.href && item.href !== competitiveAnalysisNavItem.href);
   const effectiveNav = isClientRole && authed
-    ? nav.filter((item) => clientEnabledNav.some((allowed) => allowed.href === item.href) || (canUseCompetitiveAnalysis && item.href === competitiveAnalysisNavItem.href))
+    ? nav.filter((item) =>
+        clientEnabledNav.some((allowed) => allowed.href === item.href)
+        || (canUseHelpr && item.href === helprNavItem.href)
+        || (canUseOnTask && item.href === ontaskNavItem.href)
+        || ((canUseHelpr || canUseOnTask) && item.href === lifecycleNavItem.href)
+        || (canUseOnTask && (item.href === quotesNavItem.href || item.href === paymentsNavItem.href || item.href === reviewsNavItem.href))
+        || (canUseCompetitiveAnalysis && item.href === competitiveAnalysisNavItem.href)
+      )
     : nav;
+  const visibleClientLockedFeatures = clientLockedFeatures.filter((item) => {
+    if (canUseHelpr && (item.featureKey === 'crm_leads' || item.featureKey === 'crm_workflows')) return false;
+    if (canUseOnTask && (item.featureKey === 'activity' || item.featureKey === 'billing' || item.featureKey === 'crm_contacts')) return false;
+    return true;
+  });
 	const quickActions = useMemo(() => {
     if (isClientRole) {
       const items = [
         { href: '/dashboard/overview', label: 'View metrics', description: 'Check current onboarding and delivery status.' },
         { href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow implementation stages.' },
       ];
+      if (canUseHelpr) {
+        items.push({
+          href: helprNavItem.href,
+          label: 'Open Helpr',
+          description: 'Manage lead capture, follow-up, and growth workflows.',
+        });
+      }
+      if (canUseOnTask) {
+        items.push({
+          href: ontaskNavItem.href,
+          label: 'Open OnTask',
+          description: 'Manage billing, invoicing, and operations workflows.',
+        });
+        items.push({
+          href: paymentsNavItem.href,
+          label: 'Review payments',
+          description: 'Track collected cash, pending payments, and refunds.',
+        });
+      }
       if (canUseCompetitiveAnalysis) {
         items.push({
           href: competitiveAnalysisNavItem.href,
@@ -136,12 +205,24 @@ export default function DashboardShell({ children, authed = false }: Props) {
     }
 		const items = [
 			{ href: '/dashboard/overview', label: 'View metrics', description: 'Check key system health and KPIs.' },
+			{ href: helprNavItem.href, label: 'Open Helpr', description: 'Work the growth edition from lead capture through attribution.' },
+			{ href: ontaskNavItem.href, label: 'Open OnTask', description: 'Work the operations edition from invoicing through collections.' },
+      { href: lifecycleNavItem.href, label: 'Open lifecycle', description: 'See the shared lead-to-cash record across both editions.' },
+      { href: quotesNavItem.href, label: 'Manage quotes', description: 'Track estimates, approvals, and invoice conversion.' },
+      { href: paymentsNavItem.href, label: 'Review payments', description: 'Monitor collections, payment status, and refunds.' },
+      { href: reviewsNavItem.href, label: 'Manage reviews', description: 'Work post-payment review requests and retention follow-up.' },
 			{ href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow onboarding and implementation stages.' },
 			{ href: competitiveAnalysisNavItem.href, label: 'Run crawl benchmark', description: 'Turn crawl logs into competitive SEO insight.' },
 			{ href: '/dashboard/tenants', label: 'Manage tenants', description: 'Review organizations and plans.' },
 			{ href: '/dashboard/subscribers', label: 'Manage subscribers', description: 'Track active subscribers.' },
 			{ href: '/dashboard/users', label: 'Manage users', description: 'Invite teammates and adjust roles.' },
-		];
+		].filter((item) => {
+      if (item.href === helprNavItem.href) return canUseHelpr;
+      if (item.href === ontaskNavItem.href) return canUseOnTask;
+      if (item.href === lifecycleNavItem.href) return canUseHelpr || canUseOnTask || !isClientRole;
+      if (item.href === quotesNavItem.href || item.href === paymentsNavItem.href || item.href === reviewsNavItem.href) return canUseOnTask;
+      return true;
+    });
 		if (hasBlogAddon || isSuperAdmin) {
 			items.push({ href: '/dashboard/blog', label: 'Manage blog', description: 'Create and publish posts.' });
 		}
@@ -155,7 +236,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
       items.push({ href: '/dashboard/owner/funnel', label: 'View owner funnel', description: 'Track signups and abandoned onboarding attempts.' });
     }
 		return items;
-	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel, isClientRole, canUseCompetitiveAnalysis]);
+	}, [hasBlogAddon, isSuperAdmin, canImpersonate, canViewOwnerFunnel, isClientRole, canUseCompetitiveAnalysis, canUseHelpr, canUseOnTask]);
 
 	useEffect(() => {
 		if (!toolsOpen) return;
@@ -269,7 +350,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
               <>
                 <div className="my-2 border-t" />
                 <div className="px-3 py-2 text-xs font-semibold uppercase text-gray-400">Locked features (auto trial, $5/mo after review)</div>
-                {clientLockedFeatures.map((item) => {
+                {visibleClientLockedFeatures.map((item) => {
                   const Icon = item.icon as React.ComponentType<{ className?: string }>;
                   const requested = Boolean(requestedFeatures[item.featureKey]);
                   return (

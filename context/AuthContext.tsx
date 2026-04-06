@@ -10,6 +10,9 @@ export type AuthUser = {
   email: string;
   plan?: string | null;
   billing_cycle?: 'monthly' | 'yearly' | null;
+  product_slug?: string | null;
+  enabled_features?: string[];
+  enabled_editions?: Array<'helpr' | 'ontask'>;
   has_blog_addon?: boolean;
   roles?: string[];
   top_role?: string;

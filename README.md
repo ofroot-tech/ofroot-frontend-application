@@ -9,10 +9,11 @@ A modern frontend application built with [Next.js](https://nextjs.org), designed
 - **p5.js** (rendering library for Vanta.js topology)
 - **TypeScript** (type safety)
 
-## Backend Communication
-- Communicates with a **Laravel** backend
-  - Handles authorization, authentication, and all backend logic
-  - API endpoints for data, user management, and more
+## Data Architecture
+- Local Postgres store inside this Next.js app handles custom auth sessions, lead capture, automation onboarding, sales inquiries, and feature requests.
+- Supabase Auth is used for subscription-era user creation and payment verification metadata.
+- An external API configured by `NEXT_PUBLIC_API_BASE_URL` is still required for tenants, contacts, invoices, payroll, blog, docs, jobs, subscribers, and other dashboard screens.
+- Do not remove `NEXT_PUBLIC_API_BASE_URL` until the callers in `app/lib/api.ts` are migrated.
 
 ## Vanta.js Integration
 This project uses Vanta.js for animated backgrounds. The topology effect is implemented on the home page.
@@ -135,9 +136,17 @@ You can start editing the home page by modifying `app/page.tsx`. The page auto-u
 - [Vanta.js Documentation](https://www.vantajs.com/)
 
 
-## Backend API configuration
+## Local Database Configuration
 
-This frontend talks to the Laravel API. Configure the base URL via an environment variable.
+The in-app data store reads from `DATABASE_URL` or `DIRECT_URL` on the server.
+
+- Used by `app/lib/supabase-store.ts`
+- Powers auth sessions, leads, automation onboarding, sales inquiries, and feature requests
+- Required for `/api/auth/*`, `/api/leads`, `/api/automation-onboarding/*`, `/api/sales-inquiry`, and `/api/feature-requests`
+
+## External API configuration
+
+Parts of the dashboard still talk to an external API. Configure its base URL via an environment variable.
 
 - Variable name: `NEXT_PUBLIC_API_BASE_URL`
 - Production (Vercel): set to `https://ofroot-leads.onrender.com/api` in Vercel → Project → Settings → Environment Variables. Scope to Production (and Preview if needed). Redeploy after saving.
@@ -146,34 +155,12 @@ This frontend talks to the Laravel API. Configure the base URL via an environmen
 Tips
 - This variable is intentionally public so client components can call the API from the browser.
 - Avoid double slashes when joining (the app normalizes a trailing slash).
+- This is still required today for API-backed pages such as tenants, contacts, invoices, payroll, docs, blog, jobs, and subscribers.
 
 ### API client
 - File: `app/lib/api.ts`
-- Helpers: `api.createLead`, `api.assignLead`, `api.unassignLead`, `api.listTenants`, `api.createTenant`, `api.updateTenant`.
-- Form helper: `submitLead(formData)` to post to `/leads`.
-
-### Quick usage (client components)
-```tsx
-'use client';
-import { api } from '@/app/lib/api';
-
-export default function LeadForm() {
-  async function onSubmit() {
-    await api.createLead({ phone: '555-1111', service: 'plumbing', zip: '90210', tenant_id: null });
-  }
-  return <button onClick={onSubmit}>Send lead</button>;
-}
-```
-
-### Quick usage (server components / actions)
-```ts
-import { api } from '@/app/lib/api';
-
-export async function createLeadAction(formData: FormData) {
-  const phone = String(formData.get('phone'));
-  await api.createLead({ phone, service: 'plumbing', zip: '90210', tenant_id: null });
-}
-```
+- Purpose: typed wrapper for the remaining external API endpoints.
+- Representative helpers: `api.adminListTenants`, `api.adminListContacts`, `api.adminListInvoices`, `api.payrollListEmployees`, `api.blogList`.
 
 ## Vercel Deployment (recommended)
 
@@ -184,7 +171,7 @@ Recommended settings to ensure a smooth deployment:
 - Install Command: `npm ci` (or `npm install` if you prefer).
 - Build Command: `npm run build` (Vercel will run `next build`).
 - Output Directory: leave blank (Vercel auto-detects Next.js output). If you need to set one, use `.next`.
-- Environment Variables: add `NEXT_PUBLIC_API_BASE_URL` as described above. Example value for production: `https://ofroot-leads.onrender.com/api`.
+- Environment Variables: add `NEXT_PUBLIC_API_BASE_URL` only if you need the API-backed screens. Also add `DATABASE_URL` or `DIRECT_URL` for the local store.
 - Node Version: pin via `engines` in `package.json` or add a `.nvmrc` if you want a specific Node.js version on Vercel.
 
 Notes and best practices:
@@ -202,25 +189,25 @@ This project is configured to work with Vercel's default Next.js settings.
 
 ---
 
-This frontend is designed to work seamlessly with a Laravel backend and is optimized for Vercel hosting.
+This frontend currently uses a mixed data setup and is optimized for Vercel hosting.
 
 ## Admin and Blog add-on
 
 Role and feature visibility in the dashboard are controlled via server-side environment variables and the authenticated user:
 
-- Super admin allowlist: set `ADMIN_EMAILS` to a comma-separated list of emails on the API and on the frontend server runtime (for the server route below). For both local and production, use:
+- Super admin allowlist: set `ADMIN_EMAILS` to a comma-separated list of emails in the frontend server runtime. Keep the external API aligned as long as API-backed admin screens remain in use. For both local and production, use:
   - `ADMIN_EMAILS=1.dimitri.mcdaniel@gmail.com`
-- Blog add-on flag: users can have a boolean `has_blog_addon` feature flag on the backend. Admins can toggle this from the dashboard Users table.
+- Blog add-on flag: users can have a boolean `has_blog_addon` feature flag on the external API data source. Admins can toggle this from the dashboard Users table.
 
 Main-company publishing (super admins):
-- If the logged-in user is a super admin (email is included in `ADMIN_EMAILS`), any new blog post they create, or any draft they publish from the editor, will be attributed to the "main OfRoot tenant" by setting a `tenant_id` in the API payload.
+- If the logged-in user is a super admin (email is included in `ADMIN_EMAILS`), any new blog post they create, or any draft they publish from the editor, will be attributed to the "main OfRoot tenant" by setting a `tenant_id` in the external API payload.
 - Configure which tenant is considered the main OfRoot tenant by setting `OFROOT_TENANT_ID` in the frontend server runtime (e.g., `.env.local` for dev, Vercel Project → Settings for prod). Example: `OFROOT_TENANT_ID=1`.
 - With this set, super-admin posts will surface at the public site (e.g., https://ofroot.technology/blog) under the main tenant.
 
 How it works:
 - The dashboard shell calls a server route `GET /api/admin/me` to determine `isSuperAdmin` and `hasBlogAddon` in order to show/hide links (Docs, Blog).
 - Super admin checks read `process.env.ADMIN_EMAILS` server-side (App Router route).
-- Admin-only backend routes are protected by a middleware that also checks `ADMIN_EMAILS`.
+- Admin-only API-backed routes are protected by server-side checks that also rely on `ADMIN_EMAILS`.
 
 API endpoints involved:
 - Toggle blog add-on (admin-only): `PUT /api/admin/users/{id}/features { has_blog_addon: boolean }`
@@ -232,17 +219,17 @@ UI surface:
 
 ## Public blog pages
 
-The public marketing site exposes a simple blog powered by the API’s public endpoints.
+The public marketing site exposes a simple blog powered by the external API's public endpoints.
 
 - Listing: `/blog` — SSR; fetches `GET /api/public/blog-posts?limit=24`.
 - Detail: `/blog/[slug]` — SSR; fetches `GET /api/public/blog-posts/{slug}?tenant_id=...`. If `tenant_id` isn’t in the URL, the page resolves it by listing posts and matching the slug.
 - SEO: JSON-LD for CollectionPage/BlogPosting is injected server-side.
 
 Environment:
-- Ensure the frontend is pointed at the API: `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api` for local dev.
+- Ensure the frontend is pointed at the external API: `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api` for local dev.
 - For super admin link visibility in the dashboard shell, set `ADMIN_EMAILS` in the frontend runtime (server-only; not exposed to the client), e.g. via `.env.local` for dev. Use:
   - `ADMIN_EMAILS=1.dimitri.mcdaniel@gmail.com`
-- To route super-admin blog publishes to the main tenant on the public site, set `OFROOT_TENANT_ID` in the frontend runtime to the tenant ID used by the API for the main OfRoot company.
+- To route super-admin blog publishes to the main tenant on the public site, set `OFROOT_TENANT_ID` in the frontend runtime to the tenant ID used by the external API for the main OfRoot company.
 
 ## Contact & Email configuration
 
@@ -267,8 +254,8 @@ Vercel (production):
 1. Add the vars above in Project → Settings → Environment Variables.
 2. Redeploy.
 
-Render (Laravel API):
-- Not required for these frontend email routes. If moving email to Laravel later, configure `MAIL_*` there per Laravel docs.
+External API service:
+- Not required for these frontend email routes. If moving email delivery to the external API later, configure mail delivery there.
 
 Security hygiene:
 - Keep this repo public if you want GitHub activity — just ensure secrets live in Vercel/Render envs, not in git.

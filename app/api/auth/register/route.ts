@@ -17,7 +17,7 @@ import {
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
-  let name = '', email = '', password = '', plan: 'free' | 'pro' | 'business' | undefined = undefined, billingCycle: 'monthly' | 'yearly' | undefined = undefined, coupon: string | undefined = undefined;
+  let name = '', email = '', password = '', plan: 'free' | 'pro' | 'business' | undefined = undefined, billingCycle: 'monthly' | 'yearly' | undefined = undefined, coupon: string | undefined = undefined, productSlug: string | undefined = undefined;
   if (contentType.includes('application/json')) {
     const body = await req.json().catch(() => ({} as any));
     name = String(body.name || '');
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
     if (body.plan) plan = String(body.plan) as any;
     if (body.billingCycle) billingCycle = String(body.billingCycle) as any;
     if (body.coupon) coupon = String(body.coupon);
+    if (body.product) productSlug = String(body.product || '').trim().toLowerCase() || undefined;
   } else {
     const form = await req.formData();
     name = String(form.get('name') ?? '');
@@ -34,9 +35,11 @@ export async function POST(req: NextRequest) {
     const p = form.get('plan');
     const b = form.get('billingCycle');
     const c = form.get('coupon');
+    const product = form.get('product');
     if (p) plan = String(p) as any;
     if (b) billingCycle = String(b) as any;
     if (c) coupon = String(c);
+    if (product) productSlug = String(product).trim().toLowerCase() || undefined;
   }
 
   const parse = registerSchema.safeParse({ name, email, password });
@@ -69,7 +72,7 @@ export async function POST(req: NextRequest) {
           ? 'client'
           : 'client';
 
-    const user = await registerUser({ name, email, password, plan, billingCycle, roleSlug });
+    const user = await registerUser({ name, email, password, plan, billingCycle, productSlug, roleSlug });
     const token = await createSessionForUser(user.id);
     const res = created({});
     setAuthCookie(res, token);

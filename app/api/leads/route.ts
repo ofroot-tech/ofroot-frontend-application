@@ -1,11 +1,12 @@
 // app/api/leads/route.ts
-// Proxy to backend /leads using axios-style expectations
+// Persist inbound leads through the local store and emit a workflow event.
 
 import { NextRequest } from 'next/server';
 import { created, fail } from '@/app/lib/response';
 import { logger } from '@/app/lib/logger';
 import { captureRouteException } from '@/app/api/_helpers/sentry';
 import { createLeadRecord } from '@/app/lib/supabase-store';
+import { ingestWorkflowEvent } from '@/app/lib/workflows/engine';
 
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get('content-type') || '';
@@ -19,6 +20,19 @@ export async function POST(req: NextRequest) {
 
   try {
     const lead = await createLeadRecord(payload);
+    await ingestWorkflowEvent({
+      tenantId: lead.tenant_id ?? null,
+      eventType: 'lead.created',
+      eventPayload: {
+        id: lead.id,
+        tenant_id: lead.tenant_id,
+        email: lead.email,
+        status: lead.status,
+        source: lead.source,
+        service: lead.service,
+        zip: lead.zip,
+      },
+    }).catch(() => {});
     return created(lead);
   } catch (err: any) {
     captureRouteException(err, { route: 'leads' });

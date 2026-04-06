@@ -5,6 +5,7 @@ import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import { getAutomationBuildProgressForToken } from '@/app/lib/automation-progress';
 import type { AutomationDeliveryStatus } from '@/app/lib/automation-catalog';
+import { WorkflowEnginePanel } from '@/app/dashboard/automation-build/_components/WorkflowEnginePanel';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 type BuildTab = 'timeline' | 'selected' | 'catalog';
@@ -59,6 +60,8 @@ export default async function AutomationBuildPage({ searchParams }: { searchPara
         title="Automation Build"
         subtitle="Track onboarding progress and your selected automation rollout in one place."
       />
+
+      <WorkflowEnginePanel />
 
       {submitted ? (
         <Card>

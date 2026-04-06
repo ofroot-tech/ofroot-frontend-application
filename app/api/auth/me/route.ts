@@ -1,5 +1,5 @@
 // app/api/auth/me/route.ts
-// Proxy to backend /auth/me using cookie token
+// Resolve the current user from the local session token stored in cookies.
 
 import { NextRequest } from 'next/server';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';

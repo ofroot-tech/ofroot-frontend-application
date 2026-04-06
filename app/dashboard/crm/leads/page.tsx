@@ -4,7 +4,7 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { type Lead } from '@/app/lib/api';
+import { api, type Lead } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { PageHeader, Card, CardHeader, CardBody, DataTable, Pagination, ToolbarButton } from '@/app/dashboard/_components/UI';
 import { getUserFromSessionToken, listLeadsPaginated } from '@/app/lib/supabase-store';
@@ -52,10 +52,18 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
 
   async function convertLeadAction(formData: FormData) {
     'use server';
-    // Conversion remains unavailable in the Supabase fallback path for now.
-    // Keep this action as a no-op so table actions don't hard-fail UX.
-    void formData;
+    const token = await getToken();
+    if (!token) return;
+    const leadId = Number(formData.get('lead_id'));
+    if (!Number.isFinite(leadId)) return;
+    try {
+      await api.adminConvertLead(leadId, token, 'accepted');
+    } catch {
+      // Keep the list resilient; failed conversions should not crash the page render.
+    }
     revalidatePath('/dashboard/crm/leads');
+    revalidatePath('/dashboard/crm/contacts');
+    revalidatePath('/dashboard/crm/lifecycle');
   }
 
   return (
@@ -67,6 +75,7 @@ export default async function LeadsPage({ searchParams }: { searchParams?: Promi
         actions={
           <>
             <ToolbarButton href="/dashboard/crm/workflows">CRM Workflows</ToolbarButton>
+            <ToolbarButton href="/dashboard/crm/lifecycle">Lifecycle</ToolbarButton>
             <ToolbarButton href={exportHref}>Export CSV</ToolbarButton>
           </>
         }

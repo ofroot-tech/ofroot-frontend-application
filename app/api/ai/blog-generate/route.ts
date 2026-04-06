@@ -4,6 +4,8 @@ import { NextRequest } from 'next/server';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';
 import { fail, ok } from '@/app/lib/response';
 import type { BlogPostGenerationResult } from '@/app/lib/api';
+import { getUserFromSessionToken } from '@/app/lib/supabase-store';
+import { ingestWorkflowEvent } from '@/app/lib/workflows/engine';
 
 type BlogGenerateRequest = {
   topic?: string;
@@ -29,6 +31,7 @@ function parseJsonObject(input: string): Record<string, any> | null {
 export async function POST(req: NextRequest) {
   const token = await getAuthTokenFromRequest(req);
   if (!token) return fail('Please sign in again.', 401);
+  const user = await getUserFromSessionToken(token).catch(() => null);
 
   const body = (await req.json().catch(() => ({}))) as BlogGenerateRequest;
   const topic = (body.topic || '').trim();
@@ -116,6 +119,17 @@ export async function POST(req: NextRequest) {
     if (!result.title || !result.body) {
       return fail('AI response missing required blog fields.', 502);
     }
+
+    await ingestWorkflowEvent({
+      tenantId: user?.tenant_id ?? null,
+      eventType: 'blog.draft_generated',
+      eventPayload: {
+        title: result.title,
+        slug: result.slug,
+        tags: result.tags || [],
+        topic,
+      },
+    }).catch(() => {});
 
     return ok(result);
   } catch (err: any) {

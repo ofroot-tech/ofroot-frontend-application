@@ -1,5 +1,5 @@
 // app/api/admin/subscribers/route.ts
-// Proxy to Laravel admin subscribers endpoint, normalized shape.
+// Proxy to the external admin subscribers endpoint, normalized shape.
 
 import { NextRequest } from 'next/server';
 import { api as serverApi } from '@/app/lib/api';

@@ -6,7 +6,7 @@
 //
 // Contract:
 // - Reads auth token from cookies.
-// - Calls backend /auth/me to resolve the current user.
+// - Resolves the current user from the local session store.
 // - Evaluates ADMIN_EMAILS (comma-separated) to determine super-admin status.
 // - Responds with ok({ email, isSuperAdmin }) or fail(...).
 
@@ -26,18 +26,27 @@ function isSuperAdmin(email: string | undefined | null) {
 export async function GET(_req: NextRequest) {
   const token = await getAuthTokenFromRequest();
   if (!token) {
-    return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
+    return ok({ email: null, name: null, plan: null, product_slug: null, enabled_editions: [], enabled_features: [], isSuperAdmin: false, hasBlogAddon: false });
   }
   try {
     const user = await getUserFromSessionToken(token);
     if (!user) {
-      return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
+      return ok({ email: null, name: null, plan: null, product_slug: null, enabled_editions: [], enabled_features: [], isSuperAdmin: false, hasBlogAddon: false });
     }
     const email = user?.email ?? null;
     const name = user?.name ?? null;
     const plan = user?.plan ?? null;
-    return ok({ email, name, plan, isSuperAdmin: isSuperAdmin(email), hasBlogAddon: false });
+    return ok({
+      email,
+      name,
+      plan,
+      product_slug: user?.product_slug ?? null,
+      enabled_editions: user?.enabled_editions ?? [],
+      enabled_features: user?.enabled_features ?? [],
+      isSuperAdmin: isSuperAdmin(email),
+      hasBlogAddon: false,
+    });
   } catch {
-    return ok({ email: null, name: null, plan: null, isSuperAdmin: false, hasBlogAddon: false });
+    return ok({ email: null, name: null, plan: null, product_slug: null, enabled_editions: [], enabled_features: [], isSuperAdmin: false, hasBlogAddon: false });
   }
 }

@@ -1,6 +1,6 @@
 // ============================================================
 // File: app/lib/api.ts
-// Purpose: Provide a unified, typed API client for the Laravel backend.
+// Purpose: Provide a unified, typed API client for the remaining external API.
 // Reason: Ensures all network calls in Next.js App Router share consistent
 //         headers, timeouts, error handling, and typing.
 // ============================================================
@@ -111,7 +111,7 @@ export const http = {
 
 // ============================================================
 // MODEL TYPES
-// Purpose: Mirror Laravel models and shape API responses with type safety.
+// Purpose: Mirror external API models and shape API responses with type safety.
 // Reason: Ensures consistent data structures across client and backend.
 // ============================================================
 
@@ -256,6 +256,9 @@ export type User = {
   tenant_id?: number | null;
   plan?: string | null;
   billing_cycle?: 'monthly' | 'yearly' | null;
+  product_slug?: string | null;
+  enabled_features?: string[];
+  enabled_editions?: Array<'helpr' | 'ontask'>;
   roles?: string[];
   top_role?: string;
   created_at?: string;
@@ -367,6 +370,85 @@ export type BlogPostGenerationResult = {
   tags?: string[] | null;
   ai_context?: BlogPostAiContext;
 };
+
+// ---------- Workflow Engine ----------
+export type WorkflowTriggerType = 'lead.created' | 'blog.draft_generated' | 'invoice.status_changed';
+export type WorkflowActionType = 'send_email' | 'send_webhook' | 'update_record' | 'ai_prompt';
+export type WorkflowStatus = 'draft' | 'active' | 'paused';
+export type WorkflowRunStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'partial';
+export type WorkflowRunStepStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'skipped';
+export type WorkflowConditionOperator = 'equals' | 'contains' | 'greaterThan';
+
+export type WorkflowCondition = {
+  key: string;
+  operator: WorkflowConditionOperator;
+  value: string | number | boolean;
+};
+
+export type WorkflowStep = {
+  key: string;
+  name?: string;
+  action_type: WorkflowActionType;
+  config: Record<string, unknown>;
+};
+
+export type WorkflowDefinition = {
+  id: number;
+  tenant_id: number | null;
+  name: string;
+  status: WorkflowStatus;
+  trigger_type: WorkflowTriggerType;
+  trigger_config: Record<string, unknown>;
+  conditions: WorkflowCondition[];
+  steps: WorkflowStep[];
+  version: number;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WorkflowRun = {
+  id: number;
+  tenant_id: number | null;
+  workflow_id: number;
+  event_type: WorkflowTriggerType;
+  event_payload: Record<string, unknown>;
+  status: WorkflowRunStatus;
+  attempt_count: number;
+  idempotency_key: string;
+  started_at: string | null;
+  finished_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WorkflowRunStep = {
+  id: number;
+  run_id: number;
+  step_key: string;
+  action_type: WorkflowActionType;
+  status: WorkflowRunStepStatus;
+  attempt: number;
+  input_payload: Record<string, unknown>;
+  output_payload: Record<string, unknown>;
+  error_message?: string | null;
+  started_at: string | null;
+  finished_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CreateWorkflowInput = {
+  name: string;
+  trigger_type: WorkflowTriggerType;
+  trigger_config?: Record<string, unknown>;
+  conditions?: WorkflowCondition[];
+  steps?: WorkflowStep[];
+  status?: WorkflowStatus;
+};
+
+export type UpdateWorkflowInput = Partial<CreateWorkflowInput>;
+export type TestWorkflowInput = { event_payload: Record<string, unknown> };
 
 // ---------- Generic Pagination ----------
 export type Paginated<T> = {
@@ -1110,6 +1192,42 @@ export const api = {
   },
   blogGenerate(input: BlogPostGenerationInput, token: string) {
     return http.postJson<{ data: BlogPostGenerationResult }>(`/blog-posts/generate`, input, { token });
+  },
+
+  // ---------- Workflow Engine ----------
+  workflowList(token: string) {
+    return http.get<{ ok: true; data: { items: WorkflowDefinition[] } }>(`/workflows`, { token });
+  },
+  workflowGet(id: number, token: string) {
+    return http.get<{ ok: true; data: { item: WorkflowDefinition } }>(`/workflows/${id}`, { token });
+  },
+  workflowCreate(input: CreateWorkflowInput, token: string) {
+    return http.postJson<{ ok: true; data: { item: WorkflowDefinition } }>(`/workflows`, input, { token });
+  },
+  workflowUpdate(id: number, input: UpdateWorkflowInput, token: string) {
+    return http.putJson<{ ok: true; data: { item: WorkflowDefinition } }>(`/workflows/${id}`, input, { token });
+  },
+  workflowActivate(id: number, token: string) {
+    return http.postJson<{ ok: true; data: { item: WorkflowDefinition } }>(`/workflows/${id}/activate`, {}, { token });
+  },
+  workflowPause(id: number, token: string) {
+    return http.postJson<{ ok: true; data: { item: WorkflowDefinition } }>(`/workflows/${id}/pause`, {}, { token });
+  },
+  workflowDelete(id: number, token: string) {
+    return http.del<{ ok: true; data: { deleted: boolean } }>(`/workflows/${id}`, { token });
+  },
+  workflowRuns(id: number, token: string) {
+    return http.get<{ ok: true; data: { items: WorkflowRun[] } }>(`/workflows/${id}/runs`, { token });
+  },
+  workflowRunDetail(runId: number, token: string) {
+    return http.get<{ ok: true; data: { run: WorkflowRun; steps: WorkflowRunStep[] } }>(`/workflows/run/${runId}`, { token });
+  },
+  workflowTest(id: number, input: TestWorkflowInput, token: string) {
+    return http.postJson<{ ok: true; data: { matched_workflows: number; queued_runs: number[]; skipped: Array<{ workflow_id: number; reason: string }> } }>(
+      `/workflows/${id}/test`,
+      input,
+      { token }
+    );
   },
 
   // ---------- Chat ----------

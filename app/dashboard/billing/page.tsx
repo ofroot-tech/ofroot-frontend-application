@@ -2,9 +2,11 @@
 // Billing — invoices, payments, dunning.
 
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { api, type Invoice, type Tenant, type AdminUser } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { listReviewRequests } from '@/app/lib/platform-store';
 import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardBody } from '@/app/dashboard/_components/UI';
 import AmountDisplay from './_components/AmountDisplay';
@@ -34,10 +36,20 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
     api.adminListTenants(token).catch(() => null),
     api.adminListUsers(token).catch(() => null),
   ]);
+  const [paymentsRes, openQuotesRes, reviewRequests] = await Promise.all([
+    api.adminListPayments(token, { page: 1, per_page: 25 }).catch(() => null),
+    api.adminListQuotes(token, { page: 1, per_page: 25, status: ['draft', 'sent', 'viewed', 'approved'] }).catch(() => null),
+    listReviewRequests({ tenant_id: me.tenant_id ?? undefined }).catch(() => []),
+  ]);
   const invoices: Invoice[] = (list?.data ?? []).filter((i) => !statusParam || i.status === statusParam);
   const meta = list?.meta;
   const tenants: Tenant[] = tenantsRes?.data ?? [];
   const users: AdminUser[] = usersRes?.data ?? [];
+  const payments = paymentsRes?.data ?? [];
+  const openQuotes = openQuotesRes?.data ?? [];
+  const collectedPaymentsCents = payments.filter((payment) => payment.status === 'succeeded').reduce((sum, payment) => sum + (payment.amount_cents || 0), 0);
+  const openQuoteValueCents = openQuotes.reduce((sum, quote) => sum + (quote.total_cents || 0), 0);
+  const draftReviews = reviewRequests.filter((request) => request.status === 'draft').length;
   return (
     <div className="space-y-6 reveal-in fade-only">
       <PageHeader title="Billing" subtitle="Invoices, payments, and dunning." />
@@ -172,13 +184,34 @@ export default async function BillingPage({ searchParams }: { searchParams?: Pro
         <Card>
           <CardBody>
             <h2 className="font-medium mb-2">Payments</h2>
-            <p className="text-sm text-gray-600">None yet.</p>
+            <p className="text-sm text-gray-600">
+              {payments.length} recent payments loaded with {collectedPaymentsCents > 0 ? `${(collectedPaymentsCents / 100).toLocaleString(undefined, { style: 'currency', currency: 'USD' })} collected.` : 'no recorded collections yet.'}
+            </p>
+            <Link href="/dashboard/payments" className="mt-3 inline-flex text-sm font-medium underline">
+              Open payments
+            </Link>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
-            <h2 className="font-medium mb-2">Dunning</h2>
-            <p className="text-sm text-gray-600">All quiet.</p>
+            <h2 className="font-medium mb-2">Quotes</h2>
+            <p className="text-sm text-gray-600">
+              {openQuotes.length} open quotes currently represent {(openQuoteValueCents / 100).toLocaleString(undefined, { style: 'currency', currency: 'USD' })} in pipeline value.
+            </p>
+            <Link href="/dashboard/quotes" className="mt-3 inline-flex text-sm font-medium underline">
+              Open quotes
+            </Link>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <h2 className="font-medium mb-2">Reviews</h2>
+            <p className="text-sm text-gray-600">
+              {draftReviews} draft review requests are waiting for outreach after payment or service completion.
+            </p>
+            <Link href="/dashboard/reviews" className="mt-3 inline-flex text-sm font-medium underline">
+              Open reviews
+            </Link>
           </CardBody>
         </Card>
       </div>

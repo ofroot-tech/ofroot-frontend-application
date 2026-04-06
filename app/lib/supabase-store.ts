@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto';
 import bcrypt from 'bcryptjs';
 import { Pool } from 'pg';
 import type { CreateLeadInput, Lead, User } from '@/app/lib/api';
+import { derivePlatformAccess } from '@/app/lib/platform-access';
 
 const SESSION_TTL_DAYS = 30;
 
@@ -12,6 +13,7 @@ type DbUserRow = {
   tenant_id: number | string | null;
   plan: string | null;
   billing_cycle: 'monthly' | 'yearly' | null;
+  product_slug: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -151,6 +153,7 @@ function mapUser(row: DbUserRow): User {
     tenant_id: row.tenant_id == null ? null : toNum(row.tenant_id),
     plan: row.plan,
     billing_cycle: row.billing_cycle,
+    product_slug: row.product_slug,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
@@ -244,6 +247,25 @@ async function listRoleSlugsForUser(userId: number): Promise<string[]> {
   return result.rows.map((row) => String(row.slug || '').trim()).filter(Boolean);
 }
 
+async function listTenantFeatureKeys(tenantId: number | null | undefined): Promise<string[]> {
+  await ensureSchema();
+  if (tenantId == null) return [];
+
+  const pool = getPool();
+  const result = await pool.query<{ feature_key: string }>(
+    `
+      SELECT feature_key
+      FROM ofroot_tenant_features
+      WHERE tenant_id = $1
+        AND enabled = TRUE
+      ORDER BY feature_key ASC
+    `,
+    [tenantId]
+  );
+
+  return result.rows.map((row) => String(row.feature_key || '').trim().toLowerCase()).filter(Boolean);
+}
+
 function deriveTopRole(roleSlugs: string[]): string {
   if (roleSlugs.includes('owner')) return 'owner';
   if (roleSlugs.includes('admin')) return 'admin';
@@ -285,6 +307,18 @@ async function ensureSchema(): Promise<void> {
     global.__ofrootDbReadyPromise = (async () => {
       const pool = getPool();
       await pool.query(`
+        CREATE TABLE IF NOT EXISTS ofroot_tenant_features (
+          id BIGSERIAL PRIMARY KEY,
+          tenant_id BIGINT NOT NULL,
+          feature_key TEXT NOT NULL,
+          enabled BOOLEAN NOT NULL DEFAULT TRUE,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+          UNIQUE (tenant_id, feature_key)
+        );
+      `);
+
+      await pool.query(`
         CREATE TABLE IF NOT EXISTS ofroot_auth_users (
           id BIGSERIAL PRIMARY KEY,
           name TEXT NOT NULL,
@@ -293,6 +327,7 @@ async function ensureSchema(): Promise<void> {
           tenant_id BIGINT NULL,
           plan TEXT NULL DEFAULT 'free',
           billing_cycle TEXT NULL,
+          product_slug TEXT NULL,
           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
           updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
@@ -473,6 +508,10 @@ async function ensureSchema(): Promise<void> {
       `);
 
       await pool.query(`
+        ALTER TABLE ofroot_auth_users ADD COLUMN IF NOT EXISTS product_slug TEXT NULL;
+      `);
+
+      await pool.query(`
         ALTER TABLE ofroot_leads ADD COLUMN IF NOT EXISTS tenant_id BIGINT NULL;
       `);
 
@@ -543,6 +582,7 @@ export async function registerUser(params: {
   password: string;
   plan?: 'free' | 'pro' | 'business';
   billingCycle?: 'monthly' | 'yearly';
+  productSlug?: string;
   roleSlug?: 'owner' | 'admin' | 'client';
 }): Promise<User> {
   await ensureSchema();
@@ -552,12 +592,12 @@ export async function registerUser(params: {
 
   const inserted = await pool.query<DbUserRow>(
     `
-      INSERT INTO ofroot_auth_users (name, email, password_hash, plan, billing_cycle)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO ofroot_auth_users (name, email, password_hash, plan, billing_cycle, product_slug)
+      VALUES ($1, $2, $3, $4, $5, $6)
       ON CONFLICT (email) DO NOTHING
-      RETURNING id, name, email, tenant_id, plan, billing_cycle, created_at, updated_at
+      RETURNING id, name, email, tenant_id, plan, billing_cycle, product_slug, created_at, updated_at
     `,
-    [params.name.trim(), email, passwordHash, params.plan || 'free', params.billingCycle || null]
+    [params.name.trim(), email, passwordHash, params.plan || 'free', params.billingCycle || null, params.productSlug || null]
   );
 
   const row = inserted.rows[0];
@@ -568,10 +608,18 @@ export async function registerUser(params: {
   const user = mapUser(row);
   await assignRoleToUser(user.id, params.roleSlug || 'client');
   const roles = await listRoleSlugsForUser(user.id);
+  const access = derivePlatformAccess({
+    plan: user.plan,
+    top_role: deriveTopRole(roles),
+    product_slug: user.product_slug,
+    tenantFeatures: [],
+  });
   return {
     ...user,
     roles,
     top_role: deriveTopRole(roles),
+    enabled_features: access.enabledFeatures,
+    enabled_editions: access.enabledEditions,
   } as User;
 }
 
@@ -582,7 +630,7 @@ export async function findUserByEmail(emailInput: string): Promise<User | null> 
 
   const found = await pool.query<DbUserRow>(
     `
-      SELECT id, name, email, tenant_id, plan, billing_cycle, created_at, updated_at
+      SELECT id, name, email, tenant_id, plan, billing_cycle, product_slug, created_at, updated_at
       FROM ofroot_auth_users
       WHERE email = $1
       LIMIT 1
@@ -594,10 +642,19 @@ export async function findUserByEmail(emailInput: string): Promise<User | null> 
   if (!row) return null;
   const user = mapUser(row);
   const roles = await listRoleSlugsForUser(user.id);
+  const tenantFeatures = await listTenantFeatureKeys(user.tenant_id ?? null);
+  const access = derivePlatformAccess({
+    plan: user.plan,
+    top_role: deriveTopRole(roles),
+    product_slug: user.product_slug,
+    tenantFeatures,
+  });
   return {
     ...user,
     roles,
     top_role: deriveTopRole(roles),
+    enabled_features: access.enabledFeatures,
+    enabled_editions: access.enabledEditions,
   } as User;
 }
 
@@ -608,7 +665,7 @@ export async function authenticateUser(emailInput: string, password: string): Pr
 
   const found = await pool.query<DbUserRow & { password_hash: string }>(
     `
-      SELECT id, name, email, password_hash, tenant_id, plan, billing_cycle, created_at, updated_at
+      SELECT id, name, email, password_hash, tenant_id, plan, billing_cycle, product_slug, created_at, updated_at
       FROM ofroot_auth_users
       WHERE email = $1
       LIMIT 1
@@ -624,10 +681,19 @@ export async function authenticateUser(emailInput: string, password: string): Pr
 
   const user = mapUser(row);
   const roles = await listRoleSlugsForUser(user.id);
+  const tenantFeatures = await listTenantFeatureKeys(user.tenant_id ?? null);
+  const access = derivePlatformAccess({
+    plan: user.plan,
+    top_role: deriveTopRole(roles),
+    product_slug: user.product_slug,
+    tenantFeatures,
+  });
   return {
     ...user,
     roles,
     top_role: deriveTopRole(roles),
+    enabled_features: access.enabledFeatures,
+    enabled_editions: access.enabledEditions,
   } as User;
 }
 
@@ -654,7 +720,7 @@ export async function getUserFromSessionToken(token: string): Promise<User | nul
 
   const result = await pool.query<DbUserRow>(
     `
-      SELECT u.id, u.name, u.email, u.tenant_id, u.plan, u.billing_cycle, u.created_at, u.updated_at
+      SELECT u.id, u.name, u.email, u.tenant_id, u.plan, u.billing_cycle, u.product_slug, u.created_at, u.updated_at
       FROM ofroot_auth_sessions s
       JOIN ofroot_auth_users u ON u.id = s.user_id
       WHERE s.token = $1
@@ -668,10 +734,19 @@ export async function getUserFromSessionToken(token: string): Promise<User | nul
   if (!row) return null;
   const user = mapUser(row);
   const roles = await listRoleSlugsForUser(user.id);
+  const tenantFeatures = await listTenantFeatureKeys(user.tenant_id ?? null);
+  const access = derivePlatformAccess({
+    plan: user.plan,
+    top_role: deriveTopRole(roles),
+    product_slug: user.product_slug,
+    tenantFeatures,
+  });
   return {
     ...user,
     roles,
     top_role: deriveTopRole(roles),
+    enabled_features: access.enabledFeatures,
+    enabled_editions: access.enabledEditions,
   } as User;
 }
 
