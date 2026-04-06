@@ -52,7 +52,10 @@ export default function Footer() {
               <Link href="/marketing" className="hover:underline hover:text-[#ffe082] transition">Marketing</Link>
             </li>
             <li>
-              <a href="#" onClick={e => {e.preventDefault(); window.open('https://form.jotform.com/252643454932157', '_blank');}} className="hover:underline hover:text-[#ffe082] transition">Helpr</a>
+              <Link href="/platform" className="hover:underline hover:text-[#ffe082] transition">Platform</Link>
+            </li>
+            <li>
+              <Link href="/helpr" className="hover:underline hover:text-[#ffe082] transition">Helpr</Link>
             </li>
             <li>
               <Link href="/ontask" className="hover:underline hover:text-[#ffe082] transition">OnTask</Link>

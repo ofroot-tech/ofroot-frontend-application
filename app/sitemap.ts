@@ -26,6 +26,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/blog',
     '/case-studies',
     '/docs/brand-guide',
+    '/platform',
+    '/helpr',
     '/ontask',
   ]
 
