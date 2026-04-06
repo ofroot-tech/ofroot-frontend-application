@@ -1,13 +1,13 @@
 // app/api/admin/docs/route.ts
 //
-// Server route to create/update Markdown files under /docs.
+// Server route to manage docs through the external docs API.
 // SECURITY: This must be limited to super admins. We gate by ADMIN_EMAILS env
-// via the backend token decoded from our /auth/me proxy.
+// after resolving the current user from the server-side auth flow.
 //
 // Production Note (persistence):
 //   Writing to the local filesystem is non-persistent on many serverless hosts
-//   (e.g., Vercel). This route now proxies the Laravel backend Docs API which
-//   persists to the database.
+//   (e.g., Vercel). This route proxies the external Docs API, which persists
+//   the content outside the local filesystem.
 
 import { NextRequest } from 'next/server';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';

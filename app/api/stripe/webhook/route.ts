@@ -303,6 +303,7 @@ async function markPaymentVerified(payload: { metadata?: Stripe.Metadata | null;
     const explicitId = (meta as any)?.supabase_user_id as string | undefined;
     const plan = (meta as any)?.plan as string | undefined;
     const billing_cycle = (meta as any)?.billing_cycle as string | undefined;
+    const product_slug = (meta as any)?.product_slug as string | undefined;
     const name = (meta as any)?.user_name as string | undefined;
     const claimedEmail = ((meta as any)?.user_email || payload?.email || '') as string;
 
@@ -322,6 +323,7 @@ async function markPaymentVerified(payload: { metadata?: Stripe.Metadata | null;
       payment_verified: true,
       ...(plan ? { plan } : {}),
       ...(billing_cycle ? { billing_cycle } : {}),
+      ...(product_slug ? { product_slug } : {}),
     } as Record<string, any>;
 
     await admin.auth.admin.updateUserById(userId, { user_metadata: mergedMeta });

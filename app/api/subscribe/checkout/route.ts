@@ -48,12 +48,14 @@ async function ensureSupabaseUser(params: {
   name: string;
   plan: 'pro' | 'business';
   billingCycle: 'monthly' | 'yearly';
+  productSlug?: string;
 }) {
   const admin = getSupabaseAdmin();
   const metadata = {
     name: params.name,
     plan: params.plan,
     billing_cycle: params.billingCycle,
+    ...(params.productSlug ? { product_slug: params.productSlug } : {}),
     payment_status: 'pending',
     payment_verified: false,
   } as const;
@@ -81,7 +83,7 @@ async function ensureSupabaseUser(params: {
 export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get('content-type') || '';
-    let name = '', email = '', password = '', plan: 'pro' | 'business' = 'pro', billingCycle: 'monthly' | 'yearly' = 'monthly';
+    let name = '', email = '', password = '', plan: 'pro' | 'business' = 'pro', billingCycle: 'monthly' | 'yearly' = 'monthly', productSlug: string | undefined = undefined;
     if (contentType.includes('application/json')) {
       const body = await req.json().catch(() => ({} as any));
       name = String(body.name || '');
@@ -89,6 +91,7 @@ export async function POST(req: NextRequest) {
       password = String(body.password || '');
       if (body.plan === 'business') plan = 'business';
       if (body.billingCycle === 'yearly') billingCycle = 'yearly';
+      if (body.product) productSlug = String(body.product || '').trim().toLowerCase() || undefined;
     } else {
       const form = await req.formData();
       name = String(form.get('name') ?? '');
@@ -96,8 +99,10 @@ export async function POST(req: NextRequest) {
       password = String(form.get('password') ?? '');
       const planField = String(form.get('plan') ?? '');
       const billField = String(form.get('billingCycle') ?? '');
+      const productField = String(form.get('product') ?? '');
       if (planField === 'business') plan = 'business';
       if (billField === 'yearly') billingCycle = 'yearly';
+      if (productField) productSlug = productField.trim().toLowerCase() || undefined;
     }
 
     const baseParse = registerSchema.safeParse({ name, email, password });
@@ -107,10 +112,11 @@ export async function POST(req: NextRequest) {
     }
 
     const priceId = resolvePriceId(plan, billingCycle);
-    const supabaseUser = await ensureSupabaseUser({ email, password, name, plan, billingCycle });
+    const supabaseUser = await ensureSupabaseUser({ email, password, name, plan, billingCycle, productSlug });
 
     const origin = req.nextUrl?.origin || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const stripe = new Stripe(requireStripeSecret(), { apiVersion: stripeVersion });
+    const subscribeQuery = productSlug ? `?product=${encodeURIComponent(productSlug)}` : '';
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -118,17 +124,18 @@ export async function POST(req: NextRequest) {
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/auth/login?flash=subscription-success`,
-      cancel_url: `${origin}/subscribe?canceled=1`,
+      cancel_url: `${origin}/subscribe${subscribeQuery ? `${subscribeQuery}&canceled=1` : '?canceled=1'}`,
       metadata: {
         supabase_user_id: supabaseUser.id,
         user_email: email,
         user_name: name,
         plan,
         billing_cycle: billingCycle,
+        ...(productSlug ? { product_slug: productSlug } : {}),
       },
     });
 
-    logger.info('subscribe.checkout.started', { email, plan, billingCycle, session: session.id });
+    logger.info('subscribe.checkout.started', { email, plan, billingCycle, productSlug, session: session.id });
     return ok({ url: session.url });
   } catch (err: any) {
     logger.error('subscribe.checkout.failed', { message: err?.message });

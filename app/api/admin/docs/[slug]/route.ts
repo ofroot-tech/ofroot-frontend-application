@@ -1,13 +1,13 @@
 // app/api/admin/docs/[slug]/route.ts
 //
 // Super-admin protected CRUD for a single Markdown doc under /docs.
-// Now proxies to the Laravel backend for durable persistence.
+// Proxies to the external docs API for durable persistence.
 // Supports:
 // - GET:    fetch { slug, title, body }
 // - PUT:    update the file contents (title + body)
 // - DELETE: remove the file
 //
-// Production Note (persistence): local FS is ephemeral on serverless. Proxied to DB via backend.
+// Production Note (persistence): local FS is ephemeral on serverless. Proxied to durable storage via the external API.
 
 import { NextRequest } from 'next/server';
 import { getAuthTokenFromRequest } from '@/app/lib/cookies';

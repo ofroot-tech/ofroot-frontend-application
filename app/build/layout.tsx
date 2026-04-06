@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     'startup development',
     'product development',
     'Next.js development',
-    'Laravel development',
+    'Supabase development',
     'AI integration',
     'software development agency',
   ],

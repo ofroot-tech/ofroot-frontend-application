@@ -4,10 +4,50 @@ import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { api } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { createOrUpdateReviewRequest } from '@/app/lib/platform-store';
+import { ingestWorkflowEvent } from '@/app/lib/workflows/engine';
 
 async function getToken() {
   const store = await cookies();
   return store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
+}
+
+async function emitInvoiceWorkflowEvent(token: string, invoiceId: number) {
+  try {
+    const invoice = (await api.adminGetInvoice(invoiceId, token)).data;
+    await ingestWorkflowEvent({
+      tenantId: invoice.tenant_id ?? null,
+      eventType: 'invoice.status_changed',
+      eventPayload: {
+        id: invoice.id,
+        tenant_id: invoice.tenant_id ?? null,
+        number: invoice.number,
+        status: invoice.status,
+        amount_cents: invoice.amount_cents,
+        amount_due_cents: invoice.amount_due_cents,
+        amount_paid_cents: invoice.amount_paid_cents,
+        due_date: invoice.due_date,
+        customer_name: (invoice.meta as any)?.bill_to || null,
+        customer_email: (invoice.meta as any)?.bill_to_email || null,
+      },
+    }).catch(() => {});
+
+    if (invoice.status === 'paid' || (invoice.amount_due_cents || 0) <= 0) {
+      await createOrUpdateReviewRequest({
+        tenant_id: invoice.tenant_id ?? null,
+        invoice_id: invoice.id,
+        recipient_name: (invoice.meta as any)?.bill_to || null,
+        recipient_email: (invoice.meta as any)?.bill_to_email || null,
+        recipient_phone: (invoice.meta as any)?.bill_to_phone || null,
+        source: 'invoice_paid',
+        status: 'draft',
+        review_url: (invoice.meta as any)?.review_url || 'https://www.google.com/search?q=leave+a+business+review',
+        notes: 'Auto-created after payment or zero balance.',
+      }).catch(() => {});
+    }
+  } catch {
+    // Keep billing actions resilient; workflow/review side effects should not block the core action.
+  }
 }
 
 export type CreateInvoicePayload = {
@@ -51,6 +91,7 @@ export async function updateInvoiceStatusAction(id: number, status: 'draft'|'sen
   if (!token) return { ok: false as const, error: 'unauthorized' };
   try {
     await api.adminUpdateInvoice(id, { status }, token);
+    await emitInvoiceWorkflowEvent(token, id);
     revalidatePath(`/dashboard/billing/invoices/${id}`);
     revalidatePath('/dashboard/billing');
     return { ok: true as const };
@@ -79,6 +120,7 @@ export async function recordPaymentAction(
       },
       token
     );
+    await emitInvoiceWorkflowEvent(token, id);
     revalidatePath(`/dashboard/billing/invoices/${id}`);
     revalidatePath('/dashboard/billing');
     return { ok: true as const };
@@ -92,6 +134,7 @@ export async function sendInvoiceAction(id: number) {
   if (!token) return { ok: false as const, error: 'unauthorized' };
   try {
     await api.adminSendInvoice(id, token);
+    await emitInvoiceWorkflowEvent(token, id);
     revalidatePath(`/dashboard/billing/invoices/${id}`);
     return { ok: true as const };
   } catch (e: any) {

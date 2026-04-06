@@ -4,8 +4,9 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import { api, type User } from '@/app/lib/api';
+import { api } from '@/app/lib/api';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
+import { hasEditionAccess, PLATFORM_EDITION_CATALOG } from '@/app/lib/platform-access';
 import { getUserFromSessionToken } from '@/app/lib/supabase-store';
 import { PageHeader, Card, CardBody, RangeSelect } from '@/app/dashboard/_components/UI';
 
@@ -43,6 +44,24 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
     { title: 'MRR', value: `$${mrr}` },
     { title: 'Hours saved this week', value: String(hoursSavedWeek) },
   ];
+  const workspaceCards = [
+    {
+      edition: 'helpr' as const,
+      href: '/dashboard/helpr',
+      fallbackHref: '/subscribe?product=helpr',
+      cta: 'Open Helpr',
+      lockedCta: 'Start Helpr',
+      bullets: ['Landing pages and lead capture', 'Routing and fast follow-up', 'Attribution and growth workflows'],
+    },
+    {
+      edition: 'ontask' as const,
+      href: '/dashboard/ontask',
+      fallbackHref: '/subscribe?product=ontask',
+      cta: 'Open OnTask',
+      lockedCta: 'Start OnTask',
+      bullets: ['Billing, quotes, and invoice operations', 'Payments, reviews, and cash collection', 'Shared CRM and lifecycle trail'],
+    },
+  ];
 
   return (
     <div className="space-y-6 reveal-in fade-only">
@@ -53,7 +72,7 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
       />
 
   {/* KPI row */}
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {kpis.map((k) => (
           <Card key={k.title}>
             <CardBody>
@@ -62,6 +81,40 @@ export default async function OverviewPage({ searchParams }: { searchParams?: Pr
             </CardBody>
           </Card>
         ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {workspaceCards.map((item) => {
+          const catalog = PLATFORM_EDITION_CATALOG[item.edition];
+          const enabled = hasEditionAccess(me, item.edition);
+          return (
+            <Card key={item.edition} className={enabled ? 'border-gray-200' : 'border-amber-200'}>
+              <CardBody className="space-y-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">{catalog.label}</div>
+                    <h2 className="mt-1 text-xl font-semibold text-gray-950">{catalog.name}</h2>
+                    <p className="mt-2 text-sm leading-6 text-gray-600">{catalog.description}</p>
+                  </div>
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${enabled ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                    {enabled ? 'Enabled' : 'Locked'}
+                  </span>
+                </div>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {item.bullets.map((bullet) => (
+                    <li key={bullet}>• {bullet}</li>
+                  ))}
+                </ul>
+                <Link
+                  href={enabled ? item.href : item.fallbackHref}
+                  className="inline-flex rounded-md border px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                >
+                  {enabled ? item.cta : item.lockedCta}
+                </Link>
+              </CardBody>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Health and Activity */}
