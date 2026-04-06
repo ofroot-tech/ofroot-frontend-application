@@ -29,7 +29,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     name: 'OnTask',
     anchorPrice: '$19',
     heroTitle: 'Start your subscription to OnTask',
-    heroSubtitle: 'Lightweight task automation for local pros — forms to follow‑ups, done for you.',
+    heroSubtitle: 'Operations software for local service businesses — lead follow-up, paperwork, payments, and reporting in one shared platform.',
     planPrices: {
       pro: { monthly: '$19', yearly: '$190' },
       business: { monthly: '$49', yearly: '$490' },
@@ -65,7 +65,7 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
     name: 'Helpr',
     anchorPrice: '$19',
     heroTitle: 'Start your subscription to Helpr',
-    heroSubtitle: 'Inbound lead capture with fast follow‑ups and reviews — ship in days, not weeks.',
+    heroSubtitle: 'Lead capture and follow-up for service teams — inbound demand, review automation, and routing on the same shared platform as OnTask.',
     planPrices: {
       pro: { monthly: '$19', yearly: '$190' },
       business: { monthly: '$49', yearly: '$490' },
@@ -75,8 +75,8 @@ export const PRODUCT_CATALOG: Record<string, ProductConfig> = {
       'Email/SMS flows and review boosts',
       'Basic analytics and attribution',
       'Sentry observability',
-      'Providers can bid on nearby jobs to keep schedules full',
-      'Homeowners get competitive, open prices from vetted providers',
+      'Lead routing into the shared CRM and automations layer',
+      'Upgradeable path into full operations workflows when the team is ready',
     ],
   },
 

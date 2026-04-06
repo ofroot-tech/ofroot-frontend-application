@@ -12,7 +12,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { X, ChevronDown, ArrowRight } from 'lucide-react';
 
@@ -34,6 +34,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: 'Automations', href: '/automations' },
+  { label: 'Platform', href: '/platform' },
   { label: 'Pricing', href: '/pricing' },
   {
     label: 'Integrations',
@@ -227,10 +228,10 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  const toggleMobileMenu = (next = !mobileMenuOpen) => {
+  const toggleMobileMenu = useCallback((next = !mobileMenuOpen) => {
     setMobileMenuOpen(next);
     setLiveMessage(next ? 'Navigation menu opened' : 'Navigation menu closed');
-  };
+  }, [mobileMenuOpen]);
 
   const closeMobileMenu = () => {
     toggleMobileMenu(false);
@@ -278,7 +279,7 @@ export default function Navbar() {
       previouslyFocused.current?.focus?.();
       previouslyFocused.current = null;
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, toggleMobileMenu]);
 
   if (!shouldRenderNav) {
     return null;
