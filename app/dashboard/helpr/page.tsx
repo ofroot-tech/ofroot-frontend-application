@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { Card, CardBody, PageHeader, ToolbarButton } from '@/app/dashboard/_components/UI';
+import { Card, CardBody, CardHeader, DataTable, KpiCard, PageHeader, ToolbarButton } from '@/app/dashboard/_components/UI';
 import { upgradeEditionAction } from '@/app/dashboard/platform-actions';
 import { TOKEN_COOKIE_NAME, LEGACY_COOKIE_NAME } from '@/app/lib/cookies';
 import { hasEditionAccess } from '@/app/lib/platform-access';
-import { getUserFromSessionToken } from '@/app/lib/supabase-store';
+import { getUserFromSessionToken, listLeadsPaginated } from '@/app/lib/supabase-store';
+import { listWorkflowDefinitions } from '@/app/lib/workflows/store';
 
 async function getToken() {
   const store = await cookies();
@@ -45,6 +46,29 @@ const sharedPlatformNotes = [
   'Tenants, billing, and access remain on one platform model.',
 ];
 
+function formatDateTime(value?: string | null) {
+  if (!value) return '—';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return '—';
+  return parsed.toLocaleString();
+}
+
+function sourceLabel(value?: string | null) {
+  const normalized = String(value || '').trim();
+  if (!normalized) return 'Unknown';
+  return normalized.replace(/[_-]+/g, ' ');
+}
+
+async function countLeadsByStatus(tenantId: number | null, status?: string) {
+  const res = await listLeadsPaginated({
+    page: 1,
+    per_page: 1,
+    tenant_id: tenantId,
+    status,
+  }).catch(() => null);
+  return res?.meta?.total ?? 0;
+}
+
 export default async function HelprWorkspacePage() {
   const token = await getToken();
   if (!token) redirect('/auth/login');
@@ -55,17 +79,180 @@ export default async function HelprWorkspacePage() {
   const hasAccess = hasEditionAccess(me, 'helpr');
   const hasOnTaskAccess = hasEditionAccess(me, 'ontask');
   const canManageTenant = me.tenant_id != null && ['owner', 'admin'].includes(String(me.top_role || '').trim().toLowerCase());
+  const tenantId = me.tenant_id ?? null;
+
+  const [
+    workflows,
+    totalLeadCount,
+    newLeadCount,
+    routedLeadCount,
+    acceptedLeadCount,
+    quotedLeadCount,
+    wonLeadCount,
+    recentLeadSnapshot,
+    sourceSample,
+  ] = hasAccess ? await Promise.all([
+    listWorkflowDefinitions(tenantId).catch(() => []),
+    countLeadsByStatus(tenantId),
+    countLeadsByStatus(tenantId, 'new'),
+    countLeadsByStatus(tenantId, 'routed'),
+    countLeadsByStatus(tenantId, 'accepted'),
+    countLeadsByStatus(tenantId, 'quoted'),
+    countLeadsByStatus(tenantId, 'won'),
+    listLeadsPaginated({ page: 1, per_page: 8, tenant_id: tenantId }).catch(() => null),
+    listLeadsPaginated({ page: 1, per_page: 50, tenant_id: tenantId }).catch(() => null),
+  ]) : [[], 0, 0, 0, 0, 0, 0, null, null];
+
+  const recentLeads = recentLeadSnapshot?.data ?? [];
+  const activeWorkflowCount = workflows.filter((workflow) => workflow.status === 'active').length;
+  const responseQueueCount = newLeadCount + routedLeadCount;
+  const qualifiedLeadCount = acceptedLeadCount + quotedLeadCount + wonLeadCount;
+  const sourceCounts = (sourceSample?.data ?? []).reduce<Record<string, number>>((acc, lead) => {
+    const key = sourceLabel(lead.source);
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+  const topSources = Object.entries(sourceCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4);
+  const recentWorkflows = workflows.slice(0, 5);
 
   return (
     <div className="space-y-6 reveal-in fade-only">
       <PageHeader
         title="Helpr"
         subtitle="Growth edition on the shared OfRoot platform. Capture demand, route leads, and automate follow-up without splitting the customer lifecycle."
-        actions={hasAccess ? <ToolbarButton href="/platform?edition=helpr">View positioning</ToolbarButton> : <ToolbarButton href="/subscribe?product=helpr">Start Helpr</ToolbarButton>}
+        actions={hasAccess ? (
+          <div className="flex flex-wrap gap-2">
+            <ToolbarButton href="/dashboard/crm/leads">Open leads</ToolbarButton>
+            <ToolbarButton href="/dashboard/crm/workflows">Open workflows</ToolbarButton>
+            <ToolbarButton href="/platform?edition=helpr">View positioning</ToolbarButton>
+          </div>
+        ) : <ToolbarButton href="/subscribe?product=helpr">Start Helpr</ToolbarButton>}
       />
 
       {hasAccess ? (
         <>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <KpiCard label="Captured leads" value={totalLeadCount} hint="Shared tenant lead volume" />
+            <KpiCard label="Needs response" value={responseQueueCount} hint="New and routed leads" />
+            <KpiCard label="Qualified pipeline" value={qualifiedLeadCount} hint="Accepted, quoted, and won" />
+            <KpiCard label="Active workflows" value={activeWorkflowCount} hint={`${workflows.length} installed for this tenant`} />
+          </div>
+
+          <div className="grid gap-4 xl:grid-cols-[1.45fr_1fr]">
+            <Card>
+              <CardHeader>
+                <div>
+                  <div className="font-semibold">Recent inbound activity</div>
+                  <p className="mt-1 text-sm text-gray-600">Latest captured leads inside the Helpr workspace.</p>
+                </div>
+              </CardHeader>
+              <CardBody className="p-0">
+                <DataTable
+                  columns={[
+                    { key: 'created', title: 'Created' },
+                    { key: 'lead', title: 'Lead' },
+                    { key: 'service', title: 'Service' },
+                    { key: 'source', title: 'Source' },
+                    { key: 'status', title: 'Status' },
+                    { key: 'actions', title: '', align: 'right' },
+                  ]}
+                >
+                  {recentLeads.length === 0 ? (
+                    <tr>
+                      <td className="px-4 py-6 text-center text-gray-600" colSpan={6}>
+                        No Helpr leads captured yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    recentLeads.map((lead) => (
+                      <tr key={lead.id} className="border-t align-top">
+                        <td className="px-4 py-3 text-sm text-gray-700">{formatDateTime(lead.created_at)}</td>
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-gray-950">{lead.name || 'Unknown lead'}</div>
+                          <div className="text-xs text-gray-500">{lead.email || lead.phone || 'No contact detail'}</div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{lead.service || '—'}</td>
+                        <td className="px-4 py-3 text-sm text-gray-700">{sourceLabel(lead.source)}</td>
+                        <td className="px-4 py-3">
+                          <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                            {lead.status || 'new'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Link href={`/dashboard/crm/leads/${lead.id}`} className="text-sm underline">
+                            Open
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </DataTable>
+              </CardBody>
+            </Card>
+
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div>
+                    <div className="font-semibold">Workflow coverage</div>
+                    <p className="mt-1 text-sm text-gray-600">Installed Helpr automations on the shared engine.</p>
+                  </div>
+                </CardHeader>
+                <CardBody className="space-y-3">
+                  {recentWorkflows.length === 0 ? (
+                    <div className="text-sm text-gray-600">
+                      No workflows installed yet. Add Helpr templates to activate routing and follow-up.
+                    </div>
+                  ) : (
+                    recentWorkflows.map((workflow) => (
+                      <div key={workflow.id} className="rounded-lg border border-gray-200 p-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="font-medium text-gray-950">{workflow.name}</div>
+                            <div className="mt-1 text-xs uppercase tracking-[0.12em] text-gray-500">
+                              {workflow.trigger_type.replace(/\./g, ' ')}
+                            </div>
+                          </div>
+                          <span className="rounded-full bg-gray-100 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-700">
+                            {workflow.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  <Link href="/dashboard/crm/workflows" className="inline-flex text-sm font-medium underline">
+                    Manage workflows
+                  </Link>
+                </CardBody>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <div>
+                    <div className="font-semibold">Recent source mix</div>
+                    <p className="mt-1 text-sm text-gray-600">Latest 50 leads by acquisition source.</p>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  {topSources.length === 0 ? (
+                    <p className="text-sm text-gray-600">No recent source data yet.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {topSources.map(([source, count]) => (
+                        <div key={source} className="flex items-center justify-between gap-4 text-sm">
+                          <span className="text-gray-700">{source}</span>
+                          <span className="font-medium text-gray-950">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+          </div>
+
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {focusAreas.map((item) => (
               <Card key={item.title}>
