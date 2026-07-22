@@ -4,7 +4,7 @@ import Link from 'next/link';
 const columns = [
   { title: 'Services', links: [['AI Discoverability', '/services/ai-discoverability'], ['Automation Systems', '/services/automation-systems'], ['Private Company AI', '/services/private-company-ai']] },
   { title: 'Solutions', links: [['Generate Demand', '/solutions/generate-demand'], ['Convert More Leads', '/solutions/convert-more-leads'], ['Unlock Company Knowledge', '/solutions/unlock-company-knowledge']] },
-  { title: 'Company', links: [['Results', '/results'], ['Insights', '/insights'], ['Security', '/security'], ['Book an Audit', '/book']] },
+  { title: 'Company', links: [['Results', '/results'], ['Engagements', '/pricing'], ['Insights', '/insights'], ['Security', '/security'], ['Book an Audit', '/book']] },
 ];
 
 export default function Footer() {

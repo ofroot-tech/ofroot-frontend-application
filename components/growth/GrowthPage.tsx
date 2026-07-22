@@ -16,7 +16,7 @@ export default function GrowthPage({ content, kind }: { content: GrowthPageConte
     ],
   };
   return (
-    <main id="main-content" className="bg-[#f7f6f2] text-slate-950">
+    <main id="main-content" className="growth-page-full-bleed relative left-1/2 w-screen -translate-x-1/2 bg-[#f7f6f2] text-slate-950">
       <PageView kind={kind} name={content.eyebrow.toLowerCase().replaceAll(' ', '_')} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
 

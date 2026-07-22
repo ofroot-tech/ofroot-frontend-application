@@ -431,6 +431,14 @@ html, body {
   padding-bottom: clamp(2rem, 4vw, 4rem);
 }
 
+/* New growth-system pages own their full-width layout. Legacy service and
+   case-study pages continue to receive the original constrained shell. */
+.services-layout:has(> .growth-page-full-bleed),
+.case-studies-layout:has(> .case-study-full-bleed) {
+  max-width: none;
+  padding: 0;
+}
+
 /* Utility: slightly increased spacing for feature grids */
 .grid-gap-modern {
   gap: clamp(1rem, 2vw, 2rem);

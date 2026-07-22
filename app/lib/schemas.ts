@@ -35,13 +35,13 @@ export function generatePricingSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'OfRoot Integration Services',
-    description: 'Integration engineering and automation services for lead pipelines, CRM sync, and AI workflows',
+    name: 'OfRoot AI Growth Systems',
+    description: 'AI discoverability, revenue automation, private company AI, and ongoing growth-system optimization.',
     offers: [
       {
         '@type': 'Offer',
-        name: 'Integration Sprint',
-        description: 'Two-week implementation for one priority integration workflow',
+        name: 'Growth Systems Build',
+        description: 'A focused production build for one priority conversion or automation workflow.',
         price: '3500',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
@@ -50,8 +50,8 @@ export function generatePricingSchema() {
       },
       {
         '@type': 'Offer',
-        name: 'Monthly Integration Partner',
-        description: 'Ongoing integration delivery and reliability optimization',
+        name: 'Ongoing Optimization',
+        description: 'Ongoing implementation, monitoring, and growth-system optimization.',
         price: '6000',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
@@ -60,17 +60,10 @@ export function generatePricingSchema() {
       },
       {
         '@type': 'Offer',
-        name: 'Enterprise + LLM Ops',
-        description: 'Custom enterprise integration and agent workflow implementation',
+        name: 'Company Intelligence System',
+        description: 'Custom private company AI implementation around approved sources and access rules.',
         priceCurrency: 'USD',
-        url: 'https://ofroot.technology/consulting/book',
-      },
-      {
-        '@type': 'Offer',
-        name: 'Self-serve Subscription',
-        description: 'Optional product subscription for self-serve onboarding and modules',
-        priceCurrency: 'USD',
-        url: 'https://ofroot.technology/subscribe',
+        url: 'https://ofroot.technology/book',
       },
     ],
   };

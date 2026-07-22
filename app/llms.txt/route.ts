@@ -20,6 +20,7 @@ export function GET() {
 - [Security](${SITE_URL}/security)
 - [Insights](${SITE_URL}/insights)
 - [Growth Systems Audit](${SITE_URL}/book)
+- [Engagements and starting ranges](${SITE_URL}/pricing)
 
 OfRoot does not guarantee rankings or inclusion in specific AI-generated answers. Security controls and certifications must be validated against the selected customer architecture.`;
   return new Response(text, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
