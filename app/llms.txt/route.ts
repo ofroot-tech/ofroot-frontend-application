@@ -1,6 +1,19 @@
 import { SITE_URL } from '@/app/lib/growth-content';
+import { featurePages, featurePath } from '@/app/lib/feature-content';
 
 export function GET() {
+  const featureGroups = [
+    ['AI discoverability capabilities', 'ai-discoverability'],
+    ['Automation capabilities', 'automation-systems'],
+    ['Private company AI use cases', 'private-company-ai'],
+  ].map(([heading, service]) => {
+    const links = featurePages
+      .filter(feature => feature.service === service)
+      .map(feature => `- [${feature.eyebrow}](${SITE_URL}${featurePath(feature)}): ${feature.directAnswer}`)
+      .join('\n');
+    return `## ${heading}\n${links}`;
+  }).join('\n\n');
+
   const text = `# OfRoot Technology
 
 > OfRoot builds AI-powered growth and operations systems that help companies get discovered, convert demand, and operate faster.
@@ -9,6 +22,8 @@ export function GET() {
 - [AI Discoverability](${SITE_URL}/services/ai-discoverability): Search, answer, content, schema, and citation-readiness systems.
 - [Automation Systems](${SITE_URL}/services/automation-systems): Lead capture, CRM, routing, follow-up, reporting, and workflow monitoring.
 - [Private Company AI](${SITE_URL}/services/private-company-ai): Permission-aware assistants built around approved company knowledge.
+
+${featureGroups}
 
 ## Buyer outcomes
 - [Generate Demand](${SITE_URL}/solutions/generate-demand)

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import landing from '@/app/landing/manifest.json'
 import { insights } from '@/app/lib/insights-content'
+import { featurePages, featurePath } from '@/app/lib/feature-content'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'
@@ -49,6 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const landingSlugs = Object.keys((landing as any).pages || {});
   for (const slug of landingSlugs) routes.push(`/landing/${slug}`);
   for (const insight of insights) routes.push(`/insights/${insight.slug}`);
+  for (const feature of featurePages) routes.push(featurePath(feature));
 
   const uniqueRoutes = Array.from(new Set(routes));
   return uniqueRoutes.map((path) => ({

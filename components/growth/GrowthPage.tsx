@@ -2,12 +2,14 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import type { GrowthPageContent } from '@/app/lib/growth-content';
 import { SITE_URL } from '@/app/lib/growth-content';
+import { featurePath, getFeaturesForService } from '@/app/lib/feature-content';
 import { PageView, TrackedLink } from './Analytics';
 
 const primary = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-[#171717] transition hover:bg-[#ffad42] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FF9312]';
 const secondary = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 font-semibold text-white transition hover:border-white/50 hover:bg-white/10';
 
 export default function GrowthPage({ content, kind }: { content: GrowthPageContent; kind: 'service' | 'solution' }) {
+  const features = kind === 'service' ? getFeaturesForService(content.path.split('/').at(-1) || '') : [];
   const breadcrumbs = {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
@@ -43,6 +45,26 @@ export default function GrowthPage({ content, kind }: { content: GrowthPageConte
           <p className="mx-0 max-w-3xl text-balance text-2xl font-semibold leading-snug text-slate-800 sm:text-3xl">{content.summary}</p>
         </div>
       </section>
+
+      {features.length > 0 && (
+        <section className="border-y border-slate-200 bg-white px-6 py-20 sm:px-8" aria-labelledby="feature-capabilities">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-6 lg:grid-cols-[.7fr_1.3fr]">
+              <div><p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B55B00]">Explore the system</p><h2 id="feature-capabilities" className="mt-3 text-3xl font-black sm:text-4xl">Each capability has one clear job.</h2></div>
+              <p className="mx-0 max-w-2xl text-lg text-slate-600">Choose the specific problem you need to understand. Every page explains the buyer question, implementation boundary, measures, and next step in plain language.</p>
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {features.map(feature => (
+                <Link key={feature.slug} href={featurePath(feature)} className="group rounded-2xl border border-slate-200 bg-[#f7f6f2] p-6 transition hover:-translate-y-0.5 hover:border-[#FF9312]/50 hover:shadow-[0_14px_35px_rgba(15,23,42,.08)]">
+                  <h3 className="text-xl font-bold text-slate-950">{feature.eyebrow}</h3>
+                  <p className="mx-0 mt-3 text-sm leading-relaxed text-slate-600">{feature.description}</p>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#B55B00]">Explore capability <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <div id="system">
         {content.sections.map((section, index) => (

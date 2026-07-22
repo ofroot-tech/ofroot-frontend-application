@@ -85,11 +85,16 @@ const nextConfig: NextConfig = {
     ];
   },
   webpack: (config, { webpack }) => {
+    // Low-disk release verification can disable the disposable webpack cache
+    // without changing the production bundle or Vercel's normal build path.
+    if (process.env.NEXT_DISABLE_BUILD_CACHE === 'true') {
+      config.cache = false;
+    }
+
     // Surface a build-time warning if the critical env var is missing in Vercel/CI
     const required = ['NEXT_PUBLIC_API_BASE_URL'];
     for (const key of required) {
       if (!process.env[key]) {
-        // eslint-disable-next-line no-console
         console.warn(`Warning: Missing ${key}. Set it in .env.local (dev) or Vercel Project Settings (prod).`);
       }
     }
