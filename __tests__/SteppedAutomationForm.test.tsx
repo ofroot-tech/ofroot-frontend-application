@@ -31,9 +31,13 @@ describe("SteppedAutomationForm", () => {
     if (input && input.type === "radio") {
       const radios = container.querySelectorAll("input[type='radio']");
       (radios[0] as HTMLInputElement).click();
-    } else if (input) {
-      input.value = "test value";
+    } else if (input instanceof HTMLSelectElement) {
+      input.value = input.options[1]?.value || input.options[0]?.value || "";
       input.dispatchEvent(new Event("change", { bubbles: true }));
+    } else if (input) {
+      const prototype = input instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+      Object.getOwnPropertyDescriptor(prototype, "value")?.set?.call(input, "test value");
+      input.dispatchEvent(new Event("input", { bubbles: true }));
     }
   }
 
@@ -43,7 +47,7 @@ describe("SteppedAutomationForm", () => {
       root.render(<SteppedAutomationForm />);
     });
     expect(container.innerHTML).toBeTruthy();
-    expect(container.textContent).toContain("Question 1 of 42");
+    expect(container.textContent).toContain("Question 1 of 43");
   });
 
   // Test 2: Exactly one question renders per step
@@ -53,7 +57,7 @@ describe("SteppedAutomationForm", () => {
     });
     const questionLabels = container.querySelectorAll("h2.text-2xl");
     expect(questionLabels.length).toBe(1);
-    expect(questionLabels[0].textContent).toContain("Legal Business Name");
+    expect(questionLabels[0].textContent).toContain("Do You Have a Registered Business Entity?");
   });
 
   // Test 3: Each question has exactly one input field
@@ -100,8 +104,8 @@ describe("SteppedAutomationForm", () => {
     act(() => {
       root.render(<SteppedAutomationForm />);
     });
-    expect(container.textContent).toContain("Question 1 of 42");
-    expect(container.textContent).toContain("Legal Business Name");
+    expect(container.textContent).toContain("Question 1 of 43");
+    expect(container.textContent).toContain("Do You Have a Registered Business Entity?");
 
     // Fill the required field
     act(() => {
@@ -113,8 +117,8 @@ describe("SteppedAutomationForm", () => {
       nextBtn.click();
     });
 
-    expect(container.textContent).toContain("Question 2 of 42");
-    expect(container.textContent).toContain("Public Brand Name");
+    expect(container.textContent).toContain("Question 2 of 43");
+    expect(container.textContent).toContain("Legal Business Name");
   });
 
   // Test 7: Previous button goes to prior question
@@ -133,7 +137,7 @@ describe("SteppedAutomationForm", () => {
       nextBtn.click();
     });
 
-    expect(container.textContent).toContain("Question 2 of 42");
+    expect(container.textContent).toContain("Question 2 of 43");
 
     // Fill second field and go back
     act(() => {
@@ -145,7 +149,7 @@ describe("SteppedAutomationForm", () => {
       prevBtn.click();
     });
 
-    expect(container.textContent).toContain("Question 1 of 42");
+    expect(container.textContent).toContain("Question 1 of 43");
   });
 
   // Test 8: First step has no previous button
@@ -162,14 +166,21 @@ describe("SteppedAutomationForm", () => {
     act(() => {
       root.render(<SteppedAutomationForm />);
     });
+    act(() => {
+      fillField();
+    });
+    let nextBtn = container.querySelector('[data-testid="btn-next"]') as HTMLButtonElement;
+    act(() => {
+      nextBtn.click();
+    });
     const input = container.querySelector('[data-testid="field-legalBusinessName"]') as HTMLInputElement;
 
     act(() => {
-      input.value = "Test Company LLC";
-      input.dispatchEvent(new Event("change", { bubbles: true }));
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, "Test Company LLC");
+      input.dispatchEvent(new Event("input", { bubbles: true }));
     });
 
-    const nextBtn = container.querySelector('[data-testid="btn-next"]') as HTMLButtonElement;
+    nextBtn = container.querySelector('[data-testid="btn-next"]') as HTMLButtonElement;
     act(() => {
       nextBtn.click();
     });
@@ -201,7 +212,7 @@ describe("SteppedAutomationForm", () => {
         title: "Required field",
       })
     );
-    expect(container.textContent).toContain("Question 1 of 42");
+    expect(container.textContent).toContain("Question 1 of 43");
   });
 
   // Test 11: Navigation through multiple questions
@@ -212,7 +223,7 @@ describe("SteppedAutomationForm", () => {
 
     // Test at least 5 questions
     for (let i = 1; i < 5; i++) {
-      expect(container.textContent).toContain(`Question ${i} of 42`);
+      expect(container.textContent).toContain(`Question ${i} of 43`);
       act(() => {
         fillField();
       });
@@ -225,7 +236,7 @@ describe("SteppedAutomationForm", () => {
       }
     }
 
-    expect(container.textContent).toContain("Question 5 of 42");
+    expect(container.textContent).toContain("Question 5 of 43");
   });
 
   // Test 12: Select fields show options
@@ -371,16 +382,16 @@ describe("SteppedAutomationForm", () => {
   });
 
   // Test 18: Has all expected questions
-  it("has 42 questions defined", () => {
+  it("has 43 questions defined", () => {
     act(() => {
       root.render(<SteppedAutomationForm />);
     });
 
     let found = 0;
-    for (let i = 1; i <= 42; i++) {
-      if (container.textContent?.includes(`Question ${i} of 42`)) {
+    for (let i = 1; i <= 43; i++) {
+      if (container.textContent?.includes(`Question ${i} of 43`)) {
         found = i;
-        if (i < 42) {
+        if (i < 43) {
           act(() => {
             fillField();
           });

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import landing from '@/app/landing/manifest.json'
+import { insights } from '@/app/lib/insights-content'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'
@@ -23,8 +24,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services/website-app-development',
     '/services/stability',
     '/services/growth-systems',
+    '/services/ai-discoverability',
+    '/services/automation-systems',
+    '/services/private-company-ai',
+    '/solutions/generate-demand',
+    '/solutions/convert-more-leads',
+    '/solutions/unlock-company-knowledge',
+    '/results',
+    '/security',
+    '/insights',
+    '/book',
+    '/demo/private-ai',
     '/blog',
     '/case-studies',
+    '/case-studies/home-services-mvp',
+    '/case-studies/crm-erp-sync',
+    '/case-studies/healthcare-ai-automation',
     '/docs/brand-guide',
     '/platform',
     '/helpr',
@@ -33,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const landingSlugs = Object.keys((landing as any).pages || {});
   for (const slug of landingSlugs) routes.push(`/landing/${slug}`);
+  for (const insight of insights) routes.push(`/insights/${insight.slug}`);
 
   const uniqueRoutes = Array.from(new Set(routes));
   return uniqueRoutes.map((path) => ({

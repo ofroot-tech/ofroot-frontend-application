@@ -19,10 +19,10 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'),
   title: {
-    default: `${SITE.name} · Engineering, Automation, and AI`,
+    default: `${SITE.name} · AI Growth Systems`,
     template: `%s · ${SITE.name}`,
   },
-  description: 'On‑demand engineering, automation, and AI — by subscription. Ship faster with focused sprints and transparent pricing.',
+  description: 'AI-powered growth and operations systems that help companies get discovered, convert demand, and operate faster.',
   alternates: {
     canonical: '/',
   },
@@ -30,14 +30,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} · Engineering, Automation, and AI`,
-    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    title: `${SITE.name} · AI Growth Systems`,
+    description: 'Turn visibility, automation, and company knowledge into growth.',
     images: [
       {
         url: `${SITE.url}/og.jpg`,
         width: 1200,
         height: 630,
-        alt: `${SITE.name} — Build faster with AI & automation`,
+        alt: `${SITE.name} — AI growth systems`,
       },
     ],
   },
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ofroot_tech',
     creator: '@ofroot_tech',
-    title: `${SITE.name} · Engineering, Automation, and AI`,
-    description: 'On‑demand engineering, automation, and AI — by subscription.',
+    title: `${SITE.name} · AI Growth Systems`,
+    description: 'Turn visibility, automation, and company knowledge into growth.',
     images: [`${SITE.url}/og.jpg`],
   },
   robots: {
@@ -88,6 +88,7 @@ export default function RootLayout({
         <meta name="robots" content="index,follow" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <a href="#main-content" className="sr-only z-[100000] rounded bg-white px-4 py-3 font-semibold text-slate-950 focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to main content</a>
         <AuthProvider>
           <Toaster />
           <ExitIntentPrompt />
@@ -96,16 +97,6 @@ export default function RootLayout({
               so it stays fixed relative to the viewport and above effects */}
           <Navbar />
           <div className="relative flex min-h-screen flex-col overflow-hidden bg-white">
-            <div className="floating-circles pointer-events-none" aria-hidden="true">
-              <span className="c1" />
-              <span className="c2" />
-              <span className="c3" />
-              <span className="c4" />
-              <span className="c5" />
-              <span className="c6" />
-              <span className="c7" />
-              <span className="c8" />
-            </div>
             <RevealObserver />
             {/* Auto-enable snap/fade behavior wherever a page opts into .snap-page */}
             <SectionSnapperAll />
@@ -113,7 +104,7 @@ export default function RootLayout({
             <SmoothAnchorScroll />
             {/* Lightweight global loading state for CTA buttons */}
             <LoadingOnClickManager />
-            <main className="relative z-10 flex-1">{children}</main>
+            <div className="relative z-10 flex-1">{children}</div>
             <div className="relative z-10">
               <Footer />
             </div>
@@ -141,11 +132,6 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 name: SITE.name,
                 url: SITE.url,
-                potentialAction: {
-                  '@type': 'SearchAction',
-                  target: `${SITE.url}/search?q={search_term_string}`,
-                  'query-input': 'required name=search_term_string',
-                },
               }),
             }}
           />

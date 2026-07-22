@@ -1,521 +1,85 @@
 'use client';
 
-/**
- * Navbar Component - Vast.ai Inspired Design
- * 
- * A modern, dark navigation bar with:
- * - Desktop: Horizontal nav with dropdowns, CTAs on right
- * - Mobile: Logo + CTA + hamburger that opens full-screen dark drawer
- * 
- * Design inspired by vast.ai navigation patterns.
- */
-
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { X, ChevronDown, ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react';
+import { track } from '@/app/lib/ab';
 
-/* ─────────────────────────────────────────────────────────────
-   Navigation Data Structure
-   ───────────────────────────────────────────────────────────── */
-type NavLink = {
-  label: string;
-  href: string;
-  external?: boolean;
-};
-
-type NavItem = {
-  label: string;
-  href?: string;
-  external?: boolean;
-  children?: NavLink[];
-};
-
-const navItems: NavItem[] = [
-  { label: 'Automations', href: '/automations' },
-  { label: 'Platform', href: '/platform' },
-  { label: 'Pricing', href: '/pricing' },
-  {
-    label: 'Integrations',
-    children: [
-      { label: 'HubSpot + Meta', href: '/services/hubspot-meta-integrations' },
-      { label: 'Workflow Automation', href: '/services/workflow-automation' },
-      { label: 'Data Pipeline Sanity', href: '/services/data-pipeline-sanity' },
-      { label: 'LLM + Agent Integrations', href: '/services/llm-agent-integrations' },
-    ],
-  },
-  { label: 'Services', href: '/services' },
-  {
-    label: 'Proof',
-    children: [
-      { label: 'Case Studies', href: '/case-studies' },
-    ],
-  },
-  { label: 'Blog', href: '/blog' },
+const groups = [
+  { label: 'Services', links: [['AI Discoverability', '/services/ai-discoverability'], ['Automation Systems', '/services/automation-systems'], ['Private Company AI', '/services/private-company-ai']] },
+  { label: 'Solutions', links: [['Generate Demand', '/solutions/generate-demand'], ['Convert More Leads', '/solutions/convert-more-leads'], ['Unlock Company Knowledge', '/solutions/unlock-company-knowledge']] },
 ];
+const links = [['Results', '/results'], ['Insights', '/insights'], ['Security', '/security']];
 
-/* ─────────────────────────────────────────────────────────────
-   Desktop Dropdown Component
-   ───────────────────────────────────────────────────────────── */
-function DesktopDropdown({ item }: { item: NavItem }) {
+export default function Navbar() {
+  const pathname = usePathname() || '/';
   const [open, setOpen] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  const shouldRender = !pathname.startsWith('/landing') && !pathname.startsWith('/dashboard');
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setOpen(true);
-  };
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+      if (event.key !== 'Tab' || !panel.current) return;
+      const nodes = Array.from(panel.current.querySelectorAll<HTMLElement>('a, button'));
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', keydown);
+    panel.current?.querySelector<HTMLElement>('button')?.focus();
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', keydown);
+      previous?.focus();
+    };
+  }, [open]);
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 150);
-  };
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <button
-        type="button"
-        className="flex items-center gap-1 whitespace-nowrap text-gray-300 hover:text-white transition-colors text-sm font-medium"
-        aria-expanded={open}
-        aria-haspopup="true"
-      >
-        {item.label}
-        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
-      </button>
-
-      {/* Dropdown Panel */}
-      <div
-        className={`absolute top-full left-0 mt-2 min-w-[180px] rounded-lg bg-[#1a1a1a] border border-gray-800 shadow-xl py-2 transition-all duration-200 ${
-          open ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
-        }`}
-      >
-        {item.children?.map((child) => (
-          <Link
-            key={child.label}
-            href={child.href}
-            target={child.external ? '_blank' : undefined}
-            rel={child.external ? 'noopener noreferrer' : undefined}
-            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-            onClick={() => setOpen(false)}
-          >
-            {child.label}
-            {child.external && (
-              <span className="ml-1 text-gray-500">↗</span>
-            )}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Mobile Dropdown Component
-   ───────────────────────────────────────────────────────────── */
-function MobileDropdown({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-white text-base font-medium py-2"
-        aria-expanded={open}
-      >
-        {item.label}
-        <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
-      </button>
-
-      {/* Expanded Children */}
-      <div
-        className={`overflow-hidden transition-all duration-200 ${
-          open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="pl-4 py-2 space-y-2">
-          {item.children?.map((child) => (
-            <Link
-              key={child.label}
-              href={child.href}
-              target={child.external ? '_blank' : undefined}
-              rel={child.external ? 'noopener noreferrer' : undefined}
-              className="block text-gray-400 hover:text-white text-sm py-1.5 transition-colors"
-              onClick={onNavigate}
-            >
-              {child.label}
-              {child.external && <span className="ml-1">↗</span>}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Arrow Button Component (Vast.ai style)
-   ───────────────────────────────────────────────────────────── */
-function ArrowButton({
-  href,
-  children,
-  variant = 'outline',
-  external = false,
-  className = '',
-  onClick,
-}: {
-  href: string;
-  children: React.ReactNode;
-  variant?: 'outline' | 'primary';
-  external?: boolean;
-  className?: string;
-  onClick?: () => void;
-}) {
-  const baseClasses = 'inline-flex items-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200';
-  const variantClasses =
-    variant === 'primary'
-      ? 'text-[#FF9312] hover:text-[#FFB14A]'
-      : 'text-white hover:text-gray-300';
-
-  const content = (
-    <>
-      {children}
-      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full border ${
-        variant === 'primary' ? 'border-[#FF9312]' : 'border-current'
-      }`}>
-        <ArrowRight className="w-3.5 h-3.5" />
-      </span>
-    </>
-  );
-
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`${baseClasses} ${variantClasses} ${className}`}
-        onClick={onClick}
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link href={href} className={`${baseClasses} ${variantClasses} ${className}`} onClick={onClick}>
-      {content}
+  if (!shouldRender) return null;
+  const close = () => setOpen(false);
+  const logo = (
+    <Link href="/" onClick={close} className="flex items-center gap-2" aria-label="OfRoot home">
+      <Image src="/ofroot-logo.png" alt="" width={36} height={36} priority className="h-9 w-9 rounded-full" />
+      <span className="text-lg font-bold"><span className="text-white">Of</span><span className="text-[#FF9312]">Root</span></span>
     </Link>
   );
-}
 
-/* ─────────────────────────────────────────────────────────────
-   Main Navbar Component
-   ───────────────────────────────────────────────────────────── */
-export default function Navbar() {
-  const pathname = usePathname() ?? '/';
-  const normalized = pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
-
-  // Hide navbar on landing pages and dashboard (they have their own nav)
-  const shouldRenderNav = !normalized.startsWith('/landing') && !normalized.startsWith('/dashboard');
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [liveMessage, setLiveMessage] = useState('');
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const previouslyFocused = useRef<HTMLElement | null>(null);
-
-  const toggleMobileMenu = useCallback((next = !mobileMenuOpen) => {
-    setMobileMenuOpen(next);
-    setLiveMessage(next ? 'Navigation menu opened' : 'Navigation menu closed');
-  }, [mobileMenuOpen]);
-
-  const closeMobileMenu = () => {
-    toggleMobileMenu(false);
-  };
-
-  // Focus trap and body scroll lock for mobile menu
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!mobileMenuOpen) return;
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        toggleMobileMenu(false);
-      }
-      if (e.key === 'Tab') {
-        const container = menuRef.current;
-        if (!container) return;
-        const focusable = Array.from(
-          container.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])')
-        ).filter((el) => !el.hasAttribute('disabled'));
-        if (!focusable.length) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    if (mobileMenuOpen) {
-      previouslyFocused.current = document.activeElement as HTMLElement | null;
-      setTimeout(() => {
-        menuRef.current?.querySelector<HTMLElement>('button, a[href]')?.focus();
-      }, 0);
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-      previouslyFocused.current?.focus?.();
-      previouslyFocused.current = null;
-    };
-  }, [mobileMenuOpen, toggleMobileMenu]);
-
-  if (!shouldRenderNav) {
-    return null;
-  }
-
-  return (
-    <>
-      {/* ─────────────────────────────────────────────────────────
-          Desktop Navigation Bar
-          ───────────────────────────────────────────────────────── */}
-      <header
-        role="banner"
-        className="fixed top-0 left-0 right-0 z-[9999] bg-[#121212] border-b border-gray-800/50"
-      >
-        <div className="mx-auto max-w-[92rem] px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center">
-            {/* Logo */}
-            <div className="shrink-0 flex items-center gap-3">
-              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
-                <Image
-                  src="/ofroot-logo.png"
-                  alt=""
-                  width={36}
-                  height={36}
-                  priority
-                  className="h-9 w-9 rounded-full object-cover"
-                  aria-hidden="true"
-                />
-                <span className="text-lg font-semibold tracking-tight leading-none">
-                  <span className="text-white">Of</span>
-                  <span className="text-[#FF9312]">Root</span>
-                </span>
-              </Link>
-            </div>
-
-            {/* Desktop Nav Links */}
-            <nav className="hidden xl:flex flex-1 items-center justify-center gap-7 px-10" aria-label="Primary navigation">
-              {navItems.map((item) =>
-                item.children ? (
-                  <DesktopDropdown key={item.label} item={item} />
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href!}
-                    target={item.external ? '_blank' : undefined}
-                    rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="whitespace-nowrap text-gray-300 hover:text-white transition-colors text-sm font-medium"
-                  >
-                    {item.label}
-                  </Link>
-                )
-              )}
-            </nav>
-
-            {/* Desktop CTAs */}
-            <div className="hidden xl:flex shrink-0 items-center gap-5">
-              <ArrowButton
-                href="/consulting/book"
-                variant="primary"
-              >
-                Book an Integration Call
-              </ArrowButton>
-              <ArrowButton
-                href="https://form.jotform.com/252643426225151"
-                variant="outline"
-                external
-              >
-                Talk to an Engineer
-              </ArrowButton>
-              {/* Console button temporarily hidden
-              <ArrowButton href="/dashboard" variant="outline">
-                Console
-              </ArrowButton>
-              */}
-            </div>
-
-            {/* Mobile: CTA + Hamburger */}
-            <div className="flex xl:hidden items-center gap-4 ml-auto">
-              {/* Console button temporarily hidden
-              <ArrowButton href="/dashboard" variant="outline" className="text-sm">
-                Console
-              </ArrowButton>
-              */}
-              <button
-                type="button"
-                onClick={() => toggleMobileMenu()}
-                className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={mobileMenuOpen}
-                aria-controls="mobile-nav-drawer"
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <div className="w-6 h-6 flex flex-col justify-center gap-1.5">
-                    <span className="block w-full h-0.5 bg-current" />
-                    <span className="block w-full h-0.5 bg-current" />
-                  </div>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Screen reader announcement */}
-      <div aria-live="polite" className="sr-only">
-        {liveMessage}
+  return <>
+    <header className="sticky top-0 z-[9999] border-b border-white/10 bg-[#071225]/95 text-white backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-[92rem] items-center px-4 sm:px-6 lg:px-8">
+        {logo}
+        <nav className="ml-auto hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
+          {groups.map(group => (
+            <details key={group.label} className="group relative">
+              <summary className="flex cursor-pointer list-none items-center gap-1 py-5 text-sm font-semibold text-slate-200 hover:text-white">{group.label}<ChevronDown className="h-4 w-4 transition group-open:rotate-180" /></summary>
+              <div className="absolute left-1/2 top-[56px] w-72 -translate-x-1/2 rounded-2xl border border-white/10 bg-[#0b172b] p-2 shadow-2xl">
+                {group.links.map(([label, href]) => <Link key={href} href={href} className="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-200 hover:bg-white/5 hover:text-white">{label}</Link>)}
+              </div>
+            </details>
+          ))}
+          {links.map(([label, href]) => <Link key={href} href={href} className="text-sm font-semibold text-slate-200 hover:text-white">{label}</Link>)}
+          <Link href="/book?source=nav" onClick={() => track({ category: 'cta', action: 'audit_cta_clicked', label: 'nav', meta: { path: pathname } })} className="inline-flex items-center gap-2 rounded-full bg-[#FF9312] px-5 py-2.5 text-sm font-bold text-slate-950 hover:bg-[#ffad42]">Book a Growth Systems Audit<ArrowRight className="h-4 w-4" /></Link>
+        </nav>
+        <button type="button" onClick={() => setOpen(true)} className="ml-auto rounded-lg p-2 text-white hover:bg-white/10 lg:hidden" aria-label="Open navigation" aria-expanded={open} aria-controls="mobile-navigation"><Menu className="h-6 w-6" /></button>
       </div>
-
-      {/* ─────────────────────────────────────────────────────────
-          Mobile Navigation Drawer
-          ───────────────────────────────────────────────────────── */}
-      <div
-        id="mobile-nav-drawer"
-        ref={menuRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile navigation"
-        className={`fixed inset-0 z-[10000] xl:hidden transition-all duration-300 ${
-          mobileMenuOpen ? 'visible' : 'invisible'
-        }`}
-      >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-            mobileMenuOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-          onClick={closeMobileMenu}
-          aria-hidden="true"
-        />
-
-        {/* Drawer Panel */}
-        <div
-          className={`absolute inset-0 bg-[#121212] transform transition-transform duration-300 ease-out ${
-            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
-            <Link href="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
-              <Image
-                src="/ofroot-logo.png"
-                alt=""
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover"
-                aria-hidden="true"
-              />
-              <span className="text-lg font-semibold tracking-tight leading-none">
-                <span className="text-white">Of</span>
-                <span className="text-[#FF9312]">Root</span>
-              </span>
-            </Link>
-            <button
-              type="button"
-              onClick={closeMobileMenu}
-              className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Drawer Content */}
-          <div className="px-6 py-8 overflow-y-auto max-h-[calc(100vh-4rem)]">
-            {/* Primary CTAs */}
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-between">
-                <span className="text-[#FF9312] text-base font-medium">Book an Integration Call</span>
-                <Link
-                  href="/consulting/book"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#FF9312] hover:bg-[#FF9312]/10 transition-colors"
-                  onClick={closeMobileMenu}
-                  aria-label="Book an integration call"
-                >
-                  <ArrowRight className="w-5 h-5 text-[#FF9312]" />
-                </Link>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-white text-base font-medium">Talk to an Engineer</span>
-                <a
-                  href="https://form.jotform.com/252643426225151"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 hover:border-gray-500 transition-colors"
-                  onClick={closeMobileMenu}
-                  aria-label="Talk to an engineer"
-                >
-                  <ArrowRight className="w-5 h-5 text-white" />
-                </a>
-              </div>
-              {/* Console button temporarily hidden
-              <div className="flex items-center justify-between">
-                <span className="text-[#FF9312] text-base font-medium">Console</span>
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#FF9312] hover:bg-[#FF9312]/10 transition-colors"
-                  onClick={closeMobileMenu}
-                  aria-label="Go to Console"
-                >
-                  <ArrowRight className="w-5 h-5 text-[#FF9312]" />
-                </Link>
-              </div>
-              */}
-            </div>
-
-            {/* Divider */}
-            <div className="h-px bg-gray-800 mb-6" />
-
-            {/* Navigation Links */}
-            <nav className="space-y-1" aria-label="Mobile navigation">
-              {navItems.map((item) =>
-                item.children ? (
-                  <MobileDropdown key={item.label} item={item} onNavigate={closeMobileMenu} />
-                ) : (
-                  <Link
-                    key={item.label}
-                    href={item.href!}
-                    target={item.external ? '_blank' : undefined}
-                    rel={item.external ? 'noopener noreferrer' : undefined}
-                    className="block text-white text-base font-medium py-2 hover:text-[#FF9312] transition-colors"
-                    onClick={closeMobileMenu}
-                  >
-                    {item.label}
-                    {item.external && <span className="ml-1 text-gray-500">↗</span>}
-                  </Link>
-                )
-              )}
-            </nav>
-          </div>
+    </header>
+    {open && (
+      <div className="fixed inset-0 z-[10000] bg-black/60 lg:hidden" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) close(); }}>
+        <div id="mobile-navigation" ref={panel} role="dialog" aria-modal="true" aria-label="Mobile navigation" className="ml-auto flex h-full w-full max-w-md flex-col bg-[#071225] p-5 text-white">
+          <div className="flex items-center justify-between">{logo}<button type="button" onClick={close} className="rounded-lg p-2 hover:bg-white/10" aria-label="Close navigation"><X className="h-6 w-6" /></button></div>
+          <nav className="mt-8 flex-1 overflow-y-auto" aria-label="Mobile navigation">
+            {groups.map(group => <div key={group.label} className="border-b border-white/10 py-5"><p className="mb-2 text-xs font-bold uppercase tracking-[.15em] text-[#FFC46B]">{group.label}</p>{group.links.map(([label, href]) => <Link key={href} href={href} onClick={close} className="block py-2 font-semibold text-slate-200">{label}</Link>)}</div>)}
+            <div className="py-4">{links.map(([label, href]) => <Link key={href} href={href} onClick={close} className="block py-3 font-semibold text-slate-200">{label}</Link>)}</div>
+          </nav>
+          <Link href="/book?source=mobile-nav" onClick={() => { close(); track({ category: 'cta', action: 'audit_cta_clicked', label: 'mobile_nav', meta: { path: pathname } }); }} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-5 py-3 font-bold text-slate-950">Book a Growth Systems Audit<ArrowRight className="h-4 w-4" /></Link>
         </div>
       </div>
-
-      {/* Spacer to prevent content from hiding under fixed navbar */}
-      <div className="h-16" aria-hidden="true" />
-    </>
-  );
+    )}
+  </>;
 }

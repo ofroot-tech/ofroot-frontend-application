@@ -1,10 +1,11 @@
 // app/invoice/[externalId]/pay/page.tsx
 "use client";
 import { notFound, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { use, useCallback, useMemo, useState } from 'react';
 
-export default function PublicInvoicePayPage({ params }: { params: { externalId: string } }) {
-  const externalId = decodeURIComponent(params.externalId || '');
+export default function PublicInvoicePayPage({ params }: { params: Promise<{ externalId: string }> }) {
+  const { externalId: rawExternalId } = use(params);
+  const externalId = decodeURIComponent(rawExternalId || '');
   if (!externalId) notFound();
   const sp = useSearchParams();
   const status = sp?.get('status');

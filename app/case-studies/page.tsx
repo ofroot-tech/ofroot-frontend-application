@@ -14,15 +14,27 @@ const studies = [
     summary: 'Home services SaaS accelerated delivery with scaffolds and CI/CD pipelines.',
     tag: 'Development Automation',
   },
+  {
+    href: '/case-studies/crm-erp-sync',
+    title: 'CRM and ERP sync with visible failure handling',
+    summary: 'Source-of-truth rules, retries, recoverable failures, and reporting automation.',
+    tag: 'Automation Systems',
+  },
+  {
+    href: '/case-studies/healthcare-ai-automation',
+    title: 'AI-assisted operational workflows',
+    summary: 'Routing, summarization, observability, and runbooks for an anonymized healthcare operations system.',
+    tag: 'Private Company AI',
+  },
 ];
 
 export default function CaseStudiesIndexPage() {
   return (
     <div>
       <header className="mb-10 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Case Studies</h1>
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">Case Studies and Selected Systems</h1>
         <p className="mt-3 text-lg text-gray-700 max-w-3xl mx-auto">
-          Proof that small, focused systems work delivers outsized results.
+          Existing OfRoot examples across delivery, integration reliability, and AI-assisted operations.
         </p>
       </header>
 

@@ -23,6 +23,7 @@
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import * as Sentry from '@sentry/nextjs';
+import { track } from '@/app/lib/ab';
 
 export default function BookingWidget() {
   const [hasMounted] = useState(() => typeof window !== 'undefined');
@@ -93,6 +94,7 @@ export default function BookingWidget() {
           rel="noopener noreferrer"
           className="font-semibold text-black hover:underline"
           onClick={() => {
+            track({ category: 'cta', action: 'external_calendar_opened', label: 'calendly_fallback', meta: { path: window.location.pathname } });
             Sentry.captureMessage('Calendly fallback link clicked', {
               level: 'info',
               tags: { component: 'BookingWidget', event: 'fallback_link_clicked' },

@@ -1,0 +1,10 @@
+import Link from 'next/link';
+import PrivateAiDemo from '@/components/growth/PrivateAiDemo';
+import { PageView, TrackedLink } from '@/components/growth/Analytics';
+import { growthMetadata } from '@/app/lib/growth-content';
+
+export const metadata = growthMetadata('Private Company AI Demo', 'Explore a fictional, static demonstration of a permission-aware company knowledge assistant with source-backed answers.', '/demo/private-ai');
+
+export default function PrivateAiDemoPage() {
+  return <main id="main-content" className="bg-[#071225] px-6 py-16 text-white sm:px-8 sm:py-24"><PageView kind="demo" name="private_company_ai" /><div className="mx-auto max-w-6xl"><nav aria-label="Breadcrumb" className="mb-8 text-sm text-slate-400"><Link href="/">Home</Link> / <Link href="/services/private-company-ai">Private Company AI</Link> / <span className="text-white">Demo</span></nav><div className="mb-12 grid gap-6 lg:grid-cols-[1fr_.75fr] lg:items-end"><div><p className="mb-4 text-sm font-bold uppercase tracking-[.18em] text-[#FFC46B]">Fictional product demo</p><h1 className="max-w-4xl text-balance text-4xl font-black text-white sm:text-6xl">See what source-backed company answers can feel like.</h1></div><p className="mx-0 text-lg text-slate-300">This first version is a polished simulation. It demonstrates workspace boundaries, citations, and plain-language answers without sending data to a paid AI API.</p></div><PrivateAiDemo /><div className="mt-12 flex flex-col items-start justify-between gap-5 rounded-2xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center"><div><h2 className="text-2xl font-bold text-white">Map this pattern to your approved knowledge.</h2><p className="mx-0 mt-2 text-sm text-slate-300">Start with sources, access rules, user needs, and measurable outcomes.</p></div><TrackedLink href="/book?focus=private-ai-demo" source="private-ai-demo:final" className="rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit</TrackedLink></div></div></main>;
+}

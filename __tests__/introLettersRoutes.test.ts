@@ -127,7 +127,7 @@ describe('intro letters routes', () => {
     expect(signed).not.toBeNull();
 
     global.fetch = jest
-      .fn()
+      .fn<typeof fetch>()
       .mockResolvedValueOnce(
         new Response(JSON.stringify({ id: 'email_1' }), {
           status: 200,

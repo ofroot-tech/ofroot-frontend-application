@@ -18,7 +18,7 @@ export function generateOrganizationSchema() {
     name: 'OfRoot',
     url: 'https://ofroot.technology',
     logo: 'https://ofroot.technology/ofroot-logo.png',
-    description: 'On-demand engineering, automation, and AI by subscription.',
+    description: 'AI-powered growth and operations systems for visibility, conversion, and company knowledge.',
     sameAs: [
       'https://twitter.com/ofroot_tech',
       'https://www.linkedin.com/company/106671711',
@@ -26,7 +26,7 @@ export function generateOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Sales',
-      url: 'https://ofroot.technology/consulting/book',
+      url: 'https://ofroot.technology/book',
     },
   };
 }

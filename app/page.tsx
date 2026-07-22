@@ -1,168 +1,47 @@
-import { Metadata } from 'next';
-import HomeTrackedLink from '@/components/home/HomeTrackedLink';
-import HomeViewPing from '@/components/home/HomeViewPing';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight, Bot, Compass, Network, SearchCheck } from 'lucide-react';
+import { TrackedLink, TrackedSection } from '@/components/growth/Analytics';
+import { SITE_URL } from '@/app/lib/growth-content';
 
 export const metadata: Metadata = {
-  title: 'OfRoot — Automation Integrations for Leads, Meetings, and Pipelines',
-  description: 'We build HubSpot, Meta, Make, Zapier, and API automations that convert engagement into booked meetings, clean leads, and reliable pipeline data.',
-  keywords: ['automation integrations', 'HubSpot lead routing', 'Meta API integration', 'Make automation', 'Zapier workflows', 'pipeline automation'],
-  openGraph: {
-    title: 'OfRoot — Automation Integrations for Leads, Meetings, and Pipelines',
-    description: 'Automation systems for lead capture, booking workflows, and data pipeline reliability.',
-    url: 'https://ofroot.technology',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@ofroot_tech',
-    creator: '@ofroot_tech',
-  },
+  title: 'AI Growth Systems for Visibility, Conversion, and Operations',
+  description: 'OfRoot builds connected systems that help companies get discovered, convert demand, and operate faster with automation and private company AI.',
+  alternates: { canonical: '/' },
+  openGraph: { title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.', url: SITE_URL, type: 'website' },
+  twitter: { card: 'summary_large_image', title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.' },
 };
 
+const outcomes = [
+  { icon: SearchCheck, step: 'Discover', title: 'Get Discovered', body: 'Build visibility across Google, AI-generated answers, and the platforms customers use to research solutions.', label: 'Explore AI Discoverability', href: '/services/ai-discoverability' },
+  { icon: Network, step: 'Convert', title: 'Convert Demand', body: 'Connect lead capture, qualification, CRM routing, follow-up, and reporting so opportunities do not disappear between systems.', label: 'Explore Automation Systems', href: '/services/automation-systems' },
+  { icon: Bot, step: 'Operate', title: 'Operate Faster', body: 'Deploy secure AI assistants that understand approved company documents, software, processes, and knowledge.', label: 'Explore Private Company AI', href: '/services/private-company-ai' },
+];
+
+const models = [
+  ['AI Visibility Foundation', 'Focused assessment and a technical implementation plan for discoverability.'],
+  ['Growth Systems Build', 'Discoverability, conversion infrastructure, and automation designed as one system.'],
+  ['Company Intelligence System', 'Private company AI connected to approved knowledge and workflows.'],
+  ['Ongoing Optimization', 'Continuous measurement, content, automation, and AI-system improvement.'],
+];
+
 export default function HomePage() {
-  return (
-    <main className="w-full bg-white">
-      <HomeViewPing />
-      <section className="surface-dark bg-[#071225] px-6 pb-16 pt-28 text-white sm:px-8 sm:pt-32">
-        <div className="mx-auto max-w-6xl">
-          <p className="mb-4 inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#FFC46B]">
-            Revenue automation systems
-          </p>
-          <h1 className="max-w-4xl text-4xl font-black leading-tight sm:text-6xl text-white" style={{color: '#FFFFFF', textShadow: '0 2px 8px rgba(0,0,0,0.5)'}}>
-            Book more qualified meetings from the traffic you already have.
-          </h1>
-          <p className="mt-5 max-w-3xl text-base text-slate-200 sm:text-xl">
-            We build and operate HubSpot, Meta, Make, and API automations that cut lead response
-            time, fix routing gaps, and keep your pipeline data reliable.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <HomeTrackedLink
-              href="/consulting/book"
-              label="book_20_min_audit"
-              placement="hero_primary"
-              className="rounded-md bg-[#FF9312] px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-[#FFB14A]"
-            >
-              Book a 20-minute automation audit
-            </HomeTrackedLink>
-            <HomeTrackedLink
-              href="/case-studies"
-              label="see_case_studies"
-              placement="hero_secondary"
-              className="rounded-md border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
-            >
-              See case studies
-            </HomeTrackedLink>
-          </div>
+  const schema = { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'OfRoot', url: SITE_URL, description: 'AI-powered growth and operations systems for visibility, conversion, and company knowledge.', serviceType: ['AI Discoverability', 'Automation Systems', 'Private Company AI'], areaServed: 'US' };
+  return <main id="main-content" className="bg-[#f7f6f2] text-slate-950">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    <section className="relative overflow-hidden bg-[#071225] px-6 pb-20 pt-16 text-white sm:px-8 sm:pb-28 sm:pt-24">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true" style={{ background: 'radial-gradient(circle at 80% 10%, rgba(55,255,224,.17), transparent 27%), radial-gradient(circle at 15% 90%, rgba(255,147,18,.2), transparent 32%)' }} />
+      <div className="relative mx-auto max-w-6xl"><div className="grid gap-12 lg:grid-cols-[1.25fr_.75fr] lg:items-end"><div><p className="mb-5 text-sm font-bold uppercase tracking-[.2em] text-[#FFC46B]">AI Growth Systems</p><h1 className="max-w-5xl text-balance text-5xl font-black leading-[.98] text-white sm:text-7xl">Turn visibility, automation, and company knowledge into growth.</h1><p className="mx-0 mt-7 max-w-3xl text-lg text-slate-200 sm:text-xl">OfRoot helps companies get discovered in traditional and AI search, convert more demand through connected automation, and deploy secure AI systems built around their business.</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><TrackedLink href="/book?source=homepage-hero" source="homepage:hero" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950 hover:bg-[#ffad42]">Book a Growth Systems Audit<ArrowRight className="h-4 w-4" /></TrackedLink><TrackedLink href="#systems" source="homepage:explore" event="secondary_cta_clicked" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-6 py-3 font-semibold text-white hover:bg-white/10">Explore Our Systems</TrackedLink></div><p className="mx-0 mt-7 max-w-3xl text-sm text-slate-400">Built for companies that need measurable growth, reliable systems, and technical ownership.</p></div><div className="hidden lg:block"><div className="relative mx-auto aspect-square max-w-[360px] rounded-full border border-white/10"><div className="absolute inset-[14%] rounded-full border border-[#37FFE0]/30" /><div className="absolute inset-[29%] flex items-center justify-center rounded-full bg-white/5 text-center font-bold text-white shadow-[0_0_80px_rgba(55,255,224,.12)]">One connected<br />growth system</div>{['Discover', 'Convert', 'Operate'].map((label, i) => <span key={label} className={`absolute rounded-full border border-white/15 bg-[#0c1b31] px-4 py-2 text-sm font-semibold ${i === 0 ? 'left-1/2 top-0 -translate-x-1/2' : i === 1 ? 'bottom-[12%] right-0' : 'bottom-[12%] left-0'}`}>{label}</span>)}</div></div></div></div>
+    </section>
 
-          <div className="mt-8 grid gap-3 rounded-lg border border-white/15 bg-white/5 p-4 text-sm text-slate-200 md:grid-cols-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Typical response speed</p>
-              <p className="mt-1 font-semibold text-white">&lt; 2 minutes on qualified triggers</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Lead quality impact</p>
-              <p className="mt-1 font-semibold text-white">+31% qualified lead rate</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.12em] text-slate-300">Pipeline reliability</p>
-              <p className="mt-1 font-semibold text-white">99.9% monitored handoff uptime</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section id="systems" className="px-6 py-20 sm:px-8 sm:py-24"><div className="mx-auto max-w-6xl"><div className="mb-10 grid gap-5 lg:grid-cols-[.75fr_1.25fr]"><div><p className="text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Discover → Convert → Operate</p></div><div><h2 className="text-balance text-3xl font-black sm:text-5xl">Three connected outcomes. One accountable partner.</h2><p className="mx-0 mt-4 max-w-2xl text-lg text-slate-600">Each layer strengthens the next. Build the whole system or begin with the bottleneck that has the clearest business cost.</p></div></div><div className="grid gap-4 lg:grid-cols-3">{outcomes.map(({ icon: Icon, step, title, body, label, href }, i) => <article key={title} className="relative flex min-h-[330px] flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_50px_rgba(15,23,42,.06)]"><div className="mb-10 flex items-center justify-between"><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF1DF] text-[#A94F00]"><Icon className="h-6 w-6" /></div><span className="text-xs font-bold uppercase tracking-[.15em] text-slate-400">0{i + 1} · {step}</span></div><h3 className="text-2xl font-black">{title}</h3><p className="mx-0 mt-3 flex-1 text-sm text-slate-600">{body}</p><Link href={href} className="mt-8 inline-flex items-center gap-2 font-semibold text-[#8F4700] hover:underline">{label}<ArrowRight className="h-4 w-4" /></Link></article>)}</div></div></section>
 
-      <section className="px-6 py-16 sm:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-8 rounded-xl border border-slate-200 bg-slate-50 p-5">
-            <p className="text-sm font-semibold text-slate-900">
-              Trusted stack coverage: HubSpot, Meta Ads + CAPI, Make, Zapier, webhooks, and internal APIs.
-            </p>
-            <p className="mt-2 text-sm text-slate-600">
-              &quot;OfRoot helped us stop dropped leads and speed up follow-up in week one.&quot;
-            </p>
-          </div>
+    <section className="border-y border-slate-200 bg-white px-6 py-20 sm:px-8"><div className="mx-auto max-w-6xl"><div className="grid gap-8 lg:grid-cols-[.8fr_1.2fr]"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">One connected growth system</p><h2 className="text-balance text-3xl font-black sm:text-4xl">Simple enough to explain. Strong enough to operate.</h2></div><div className="grid gap-3 sm:grid-cols-3">{[['Discover', 'Visibility creates demand.'], ['Convert', 'Automation converts demand.'], ['Operate', 'Company intelligence helps the business deliver and scale.']].map(([title, body], i) => <div key={title} className="relative rounded-2xl bg-[#f7f6f2] p-5"><span className="text-xs font-bold text-[#B55B00]">0{i + 1}</span><h3 className="mt-6 text-xl font-bold">{title}</h3><p className="mx-0 mt-2 text-sm text-slate-600">{body}</p>{i < 2 && <ArrowRight className="absolute -right-2 top-1/2 z-10 hidden h-4 w-4 text-[#B55B00] sm:block" />}</div>)}</div></div></div></section>
 
-          <h2 className="text-3xl font-black text-slate-900 sm:text-4xl">Pick your integration</h2>
-          <p className="mt-3 max-w-3xl text-slate-600">
-            Choose the path that matches your bottleneck. Every engagement is scoped to improve
-            meetings booked, lead quality, and reporting confidence.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <HomeTrackedLink
-              href="/services/hubspot-meta-integrations"
-              label="hubspot_meta_service"
-              placement="service_grid"
-              action="home_service_click"
-              className="rounded-xl border border-slate-200 p-6 hover:border-[#FF9312] hover:bg-[#FFF7ED]"
-            >
-              <h3 className="text-xl font-semibold text-slate-900">HubSpot + Meta lead integrations</h3>
-              <p className="mt-2 text-sm text-slate-600">Capture comments, DMs, and forms, then route qualified leads into HubSpot with clean lifecycle stages and ownership.</p>
-            </HomeTrackedLink>
-            <HomeTrackedLink
-              href="/services/workflow-automation"
-              label="workflow_automation_service"
-              placement="service_grid"
-              action="home_service_click"
-              className="rounded-xl border border-slate-200 p-6 hover:border-[#FF9312] hover:bg-[#FFF7ED]"
-            >
-              <h3 className="text-xl font-semibold text-slate-900">Workflow automation (Make, Zapier, API)</h3>
-              <p className="mt-2 text-sm text-slate-600">Build stable automations for follow-up, reminders, qualification, and meeting handoffs across your stack.</p>
-            </HomeTrackedLink>
-            <HomeTrackedLink
-              href="/services/data-pipeline-sanity"
-              label="data_pipeline_sanity_service"
-              placement="service_grid"
-              action="home_service_click"
-              className="rounded-xl border border-slate-200 p-6 hover:border-[#FF9312] hover:bg-[#FFF7ED]"
-            >
-              <h3 className="text-xl font-semibold text-slate-900">Data sanity and pipeline reliability</h3>
-              <p className="mt-2 text-sm text-slate-600">Fix duplicates, dropped events, and broken mappings so reporting and attribution reflect reality.</p>
-            </HomeTrackedLink>
-            <HomeTrackedLink
-              href="/services/llm-agent-integrations"
-              label="llm_agent_service"
-              placement="service_grid"
-              action="home_service_click"
-              className="rounded-xl border border-slate-200 p-6 hover:border-[#FF9312] hover:bg-[#FFF7ED]"
-            >
-              <h3 className="text-xl font-semibold text-slate-900">LLM and agent integrations</h3>
-              <p className="mt-2 text-sm text-slate-600">Add agent workflows with approval gates and data controls to automate repetitive sales and ops tasks safely.</p>
-            </HomeTrackedLink>
-          </div>
-          <div className="mt-8">
-            <HomeTrackedLink
-              href="/consulting/book"
-              label="book_20_min_audit_after_services"
-              placement="services_section_cta"
-              className="inline-flex rounded-md bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
-            >
-              Book a 20-minute automation audit
-            </HomeTrackedLink>
-          </div>
-        </div>
-      </section>
+    <section className="px-6 py-20 sm:px-8"><div className="mx-auto max-w-6xl"><div className="grid gap-6 lg:grid-cols-[.75fr_1.25fr]"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Selected systems and capabilities</p><h2 className="text-3xl font-black sm:text-4xl">Proof without inflated promises.</h2></div><div><p className="mx-0 max-w-2xl text-lg text-slate-600">Existing OfRoot work covers workflow reliability, operational visibility, AI-assisted routing, CRM and ERP synchronization, and production delivery. Where the repository does not provide independently verifiable metrics, we describe the capability rather than present it as a quantified customer result.</p><div className="mt-7 grid gap-3 sm:grid-cols-2">{['Faster lead and workflow response', 'Fewer manual handoffs', 'Improved routing reliability', 'Better system visibility', 'Reduced administrative work', 'More measurable conversion paths'].map(item => <div key={item} className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold">{item}</div>)}</div><Link href="/results" className="mt-7 inline-flex items-center gap-2 font-semibold text-[#8F4700] hover:underline">Explore results and case studies<ArrowRight className="h-4 w-4" /></Link></div></div></div></section>
 
-      <section className="bg-slate-50 px-6 py-16 sm:px-8">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-3xl font-black text-slate-900 sm:text-4xl">Common problems we fix</h2>
-          <ul className="mt-6 space-y-3 text-slate-700">
-            <li>• Dropped, duplicated, or delayed leads between Meta, forms, and HubSpot.</li>
-            <li>• Broken workflow automations that silently fail after launch.</li>
-            <li>• Slow follow-up that kills meeting conversion.</li>
-            <li>• Pipeline and attribution data that cannot be trusted.</li>
-          </ul>
-          <div className="mt-8">
-            <HomeTrackedLink
-              href="/consulting/book"
-              label="book_20_min_audit_final"
-              placement="final_problem_section_cta"
-              className="inline-flex rounded-md bg-[#FF9312] px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-[#FFB14A]"
-            >
-              Get a scoped implementation plan
-            </HomeTrackedLink>
-          </div>
-        </div>
-      </section>
-    </main>
-  );
+    <TrackedSection className="border-y border-slate-200 bg-[#efece5] px-6 py-20 sm:px-8"><div className="mx-auto max-w-6xl"><div className="mb-10 max-w-3xl"><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Engagement models</p><h2 className="text-3xl font-black sm:text-4xl">Scope the work around the outcome.</h2><p className="mx-0 mt-4 text-slate-600">Engagements are scoped around business outcomes, system complexity, and implementation requirements.</p></div><div className="grid gap-4 md:grid-cols-2">{models.map(([title, body], i) => <article key={title} className="rounded-2xl border border-slate-200 bg-white p-6"><div className="mb-6 flex items-center justify-between"><Compass className="h-5 w-5 text-[#A94F00]" /><span className="text-xs font-bold text-slate-400">0{i + 1}</span></div><h3 className="text-xl font-bold">{title}</h3><p className="mx-0 mt-2 text-sm text-slate-600">{body}</p></article>)}</div></div></TrackedSection>
+
+    <section className="bg-[#071225] px-6 py-20 text-white sm:px-8"><div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#FFC46B]">Start with the bottleneck</p><h2 className="max-w-4xl text-balance text-4xl font-black text-white sm:text-5xl">Find the smallest system change that can create meaningful growth.</h2></div><TrackedLink href="/book?source=homepage-final" source="homepage:final" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit<ArrowRight className="h-4 w-4" /></TrackedLink></div></section>
+  </main>;
 }

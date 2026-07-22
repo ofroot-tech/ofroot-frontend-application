@@ -25,24 +25,15 @@ import AuditRequestButton from '@/components/AuditRequestButton';
 import { PRODUCT_CATALOG, type ProductConfig } from '@/app/config/products';
 import { api } from '@/app/lib/api';
 
-export default async function SubscribePage({ searchParams }: { searchParams?: URLSearchParams | { [key: string]: string | string[] | undefined } | Promise<URLSearchParams | { [key: string]: string | string[] | undefined }> }) {
+export default async function SubscribePage({ searchParams }: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
   // Server-side guard: if already authenticated, take them to the dashboard.
   const store = await cookies();
   const token = store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
   if (token) redirect('/dashboard/overview');
 
-  // Next.js 15 may provide searchParams as a Promise. Await if needed.
-  const awaited = (searchParams && typeof (searchParams as any)?.then === 'function')
-    ? await (searchParams as Promise<URLSearchParams | { [key: string]: string | string[] | undefined }>)
-    : (searchParams as URLSearchParams | { [key: string]: string | string[] | undefined } | undefined);
-  let productParam: string | null | undefined;
-  if (awaited && typeof (awaited as any).get === 'function') {
-    productParam = (awaited as unknown as URLSearchParams).get('product');
-  } else {
-    const spObj = (awaited as { [key: string]: string | string[] | undefined } | undefined) || {};
-    const maybe = spObj.product;
-    productParam = Array.isArray(maybe) ? maybe[0] : maybe;
-  }
+  const awaited = searchParams ? await searchParams : {};
+  const maybe = awaited.product;
+  const productParam = Array.isArray(maybe) ? maybe[0] : maybe;
   const productSlug = (productParam || '').toString().toLowerCase();
   // Try to fetch product details from backend; fallback to static catalog
   let productConfig: ProductConfig | undefined = productSlug ? PRODUCT_CATALOG[productSlug] : undefined;

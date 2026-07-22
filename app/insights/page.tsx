@@ -1,0 +1,12 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { insights } from '@/app/lib/insights-content';
+import { growthMetadata } from '@/app/lib/growth-content';
+
+export const metadata = growthMetadata('Insights on AI Discoverability and Growth Systems', 'Practical outlines on AI discoverability, automation, conversion systems, private AI, company knowledge, and revenue operations.', '/insights');
+
+const categories = ['AI discoverability', 'Automation', 'Company knowledge', 'Conversion systems', 'Private AI', 'Revenue operations', 'Technical implementation'];
+
+export default function InsightsPage() {
+  return <main id="main-content" className="bg-[#f7f6f2] text-slate-950"><section className="bg-[#071225] px-6 py-20 text-white sm:px-8 sm:py-28"><div className="mx-auto max-w-6xl"><p className="mb-5 text-sm font-bold uppercase tracking-[.18em] text-[#FFC46B]">Insights</p><h1 className="max-w-4xl text-balance text-4xl font-black text-white sm:text-6xl">Clear answers for technical growth decisions.</h1><p className="mx-0 mt-6 max-w-3xl text-lg text-slate-200">A focused editorial structure for discoverability, conversion, automation, company knowledge, and private AI. These first entries are substantive outlines—not a library of thin articles.</p><div className="mt-8 flex flex-wrap gap-2">{categories.map(category => <span key={category} className="rounded-full border border-white/15 px-3 py-1 text-xs text-slate-300">{category}</span>)}</div></div></section><section className="px-6 py-20 sm:px-8"><div className="mx-auto max-w-6xl"><div className="grid gap-5 lg:grid-cols-3">{insights.map(insight => <Link href={`/insights/${insight.slug}`} key={insight.slug} className="group flex min-h-[340px] flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_50px_rgba(15,23,42,.05)]"><p className="mx-0 text-xs font-bold uppercase tracking-[.15em] text-[#B55B00]">{insight.category}</p><h2 className="mt-8 text-balance text-2xl font-black">{insight.title}</h2><p className="mx-0 mt-4 flex-1 text-sm text-slate-600">{insight.description}</p><span className="mt-8 inline-flex items-center gap-2 font-semibold text-[#8F4700]">Open the outline<ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></span></Link>)}</div><p className="mx-auto mt-10 text-center text-sm text-slate-500">Existing published content remains available in the <Link href="/blog" className="font-semibold text-[#8F4700] hover:underline">OfRoot blog</Link>.</p></div></section></main>;
+}

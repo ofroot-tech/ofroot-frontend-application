@@ -3,8 +3,9 @@ import { api, type Invoice } from '@/app/lib/api';
 import AmountDisplay from '@/app/dashboard/billing/_components/AmountDisplay';
 import { notFound } from 'next/navigation';
 
-export default async function PublicReceiptPage({ params }: { params: { externalId: string } }) {
-  const externalId = decodeURIComponent(params.externalId || '');
+export default async function PublicReceiptPage({ params }: { params: Promise<{ externalId: string }> }) {
+  const { externalId: rawExternalId } = await params;
+  const externalId = decodeURIComponent(rawExternalId || '');
   if (!externalId) notFound();
 
   let invoice: Invoice | undefined;
