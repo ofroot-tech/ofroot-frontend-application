@@ -2,6 +2,7 @@ import { SITE } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
 import Link from 'next/link';
 import { api } from '@/app/lib/api';
+import type { Metadata } from 'next';
 
 // ------------------------------------------------------------
 // Force dynamic rendering to avoid build-time API failures
@@ -19,6 +20,12 @@ function formatDate(input?: string | null) {
     return String(input);
   }
 }
+
+export const metadata: Metadata = {
+  title: 'Articles',
+  description: 'Browse published articles from OfRoot.',
+  alternates: { canonical: '/blog' },
+};
 
 export default async function BlogPage() {
   let items: Awaited<ReturnType<typeof api.publicListBlogPosts>>['data']['items'] = [];
@@ -53,12 +60,8 @@ export default async function BlogPage() {
       <JsonLd data={listLd as any} />
       <main className="min-h-screen bg-white text-gray-900 pt-24 pb-20 px-4">
         <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-bold mb-8 text-left">Blog</h1>
-          <div className="flex flex-wrap gap-3 mb-8">
-            <button className="bg-[#FF9312] text-white px-4 py-2 rounded-full font-semibold shadow">All Posts</button>
-            <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold shadow">AI</button>
-            <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold shadow">Industry</button>
-          </div>
+          <h1 className="text-4xl font-bold mb-2 text-left">Articles</h1>
+          <p className="mb-8 max-w-2xl text-gray-600">Published notes, implementation perspectives, and product updates.</p>
 
           <div className="grid md:grid-cols-2 gap-8">
             {items.map((post, i) => {
@@ -82,6 +85,7 @@ export default async function BlogPage() {
                       <h2 className="text-2xl font-bold mb-2 group-hover:text-[#FF9312] transition-colors">{post.title}</h2>
                       <div className="text-gray-500 text-sm mb-2">{date}</div>
                       {post.excerpt ? <p className="text-gray-700 mb-4">{post.excerpt}</p> : null}
+                      {post.tags?.length ? <p className="text-sm font-medium text-orange-800">{post.tags.join(' · ')}</p> : null}
                     </div>
                   </div>
                 </Link>

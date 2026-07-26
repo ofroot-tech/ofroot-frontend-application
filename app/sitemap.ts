@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next'
 import landing from '@/app/landing/manifest.json'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
+import { api } from '@/app/lib/api'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'
   const now = new Date().toISOString()
   // Static top-level routes; dynamic can be added later from CMS/API
@@ -53,10 +54,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const feature of featurePages) routes.push(featurePath(feature));
 
   const uniqueRoutes = Array.from(new Set(routes));
-  return uniqueRoutes.map((path) => ({
+  const staticEntries = uniqueRoutes.map((path) => ({
     url: `${base}${path}`,
     lastModified: now,
-    changeFrequency: 'weekly',
+    changeFrequency: 'weekly' as const,
     priority: path === '' ? 1 : 0.7,
-  }))
+  }));
+
+  try {
+    const response = await api.publicListBlogPosts({ limit: 100 });
+    const blogEntries = response.data.items.map((post) => {
+      const url = new URL(`/blog/${encodeURIComponent(post.slug)}`, base);
+      if (post.tenant_id != null) url.searchParams.set('tenant_id', String(post.tenant_id));
+      return {
+        url: url.toString(),
+        lastModified: post.updated_at || post.published_at || post.created_at || now,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      };
+    });
+    return [...staticEntries, ...blogEntries];
+  } catch (error) {
+    console.error('[sitemap] Failed to include public blog posts:', error);
+    return staticEntries;
+  }
 }
