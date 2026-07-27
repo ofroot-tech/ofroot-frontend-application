@@ -47,3 +47,11 @@
 - Result: The visible navbar text is `ofroot` on desktop and mobile. The logo image source remains `/ofroot-logo.png`; desktop navigation, mobile menu, CTA destinations, and booking source tags are unchanged. Static commands exited 0. Lint emitted the same unrelated existing repository warnings previously recorded.
 - Exit status: 0
 - Remaining uncertainty: This is local rendering evidence only. No commit, push, deployment, or production verification occurred.
+
+## Evidence: Direct main release and public readback
+- Date: 2026-07-27
+- Graph node: N6
+- Command or verification method: `git fetch origin main`; `git push origin HEAD:main`; cache-busted `curl -sSIL` and HTML readback against `https://www.ofroot.technology/`.
+- Result: Remote main matched the local base before release. The direct push advanced `origin/main` from `f743b0c` to `f7dbc14`. Public requests returned Vercel HTTP 200, but still had an unchanged ETag, `x-vercel-cache: HIT`, approximately 9.7-hour cache age, and older navbar markup. The public deployment has not yet been verified as carrying this commit.
+- Exit status: 0
+- Remaining uncertainty: Git delivery is complete; production deployment/provider state remains pending and must not be represented as live code.

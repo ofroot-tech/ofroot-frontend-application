@@ -5,8 +5,8 @@
   "objective": "Refresh the OfRoot Technology public marketing navigation without changing routes, CTA attribution, logo asset, or production state.",
   "status": "completed",
   "createdAt": "2026-07-27T00:00:00-05:00",
-  "updatedAt": "2026-07-27T01:00:00-05:00",
-  "iterationCount": 5,
+  "updatedAt": "2026-07-27T01:30:00-05:00",
+  "iterationCount": 6,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -125,13 +125,34 @@
       "blockingReason": null,
       "createdAt": "2026-07-27T01:00:00-05:00",
       "updatedAt": "2026-07-27T01:00:00-05:00"
+    },
+    {
+      "id": "N6",
+      "type": "documentation",
+      "title": "Record direct main release state",
+      "objective": "Record the authorized direct push and distinguish it from an unverified public deployment.",
+      "status": "verified",
+      "dependencies": ["N5"],
+      "requiredSkills": ["graph-loop-engineering", "grill-me"],
+      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E7"]}],
+      "inputs": ["user waiver", "git push output", "public readback"],
+      "outputs": ["truthful release-state record"],
+      "evidenceRefs": ["E7"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-07-27T01:30:00-05:00",
+      "updatedAt": "2026-07-27T01:30:00-05:00"
     }
   ],
   "edges": [
     {"from": "N1", "to": "N2", "type": "depends_on"},
     {"from": "N2", "to": "N3", "type": "depends_on"},
     {"from": "N3", "to": "N4", "type": "depends_on"},
-    {"from": "N4", "to": "N5", "type": "depends_on"}
+    {"from": "N4", "to": "N5", "type": "depends_on"},
+    {"from": "N5", "to": "N6", "type": "depends_on"}
   ],
   "events": [
     {"timestamp": "2026-07-27T00:00:00-05:00", "nodeId": "N1", "summary": "Graph created after brand, source, route, and baseline-state inspection.", "type": "graph_created", "evidenceRefs": ["E1"]},
@@ -140,6 +161,7 @@
     {"timestamp": "2026-07-27T00:28:00-05:00", "nodeId": "N3", "summary": "Required static, build, and local runtime validations passed.", "type": "validation_passed", "evidenceRefs": ["E3", "E4"]},
     {"timestamp": "2026-07-27T00:30:00-05:00", "nodeId": "N4", "summary": "Feature records updated and consistency check scheduled.", "type": "context_updated", "evidenceRefs": ["E5"]},
     {"timestamp": "2026-07-27T00:30:00-05:00", "nodeId": "N4", "summary": "Graph completed with local-only evidence; no publication action occurred.", "type": "graph_completed", "evidenceRefs": ["E5"]},
-    {"timestamp": "2026-07-27T01:00:00-05:00", "nodeId": "N5", "summary": "Visible wordmark casing normalized to lowercase and verified in desktop/mobile local browser DOM.", "type": "artifact_created", "evidenceRefs": ["E6"]}
+    {"timestamp": "2026-07-27T01:00:00-05:00", "nodeId": "N5", "summary": "Visible wordmark casing normalized to lowercase and verified in desktop/mobile local browser DOM.", "type": "artifact_created", "evidenceRefs": ["E6"]},
+    {"timestamp": "2026-07-27T01:30:00-05:00", "nodeId": "N6", "summary": "Direct main push completed after user waiver; public deployment remains unverified because Vercel served stale markup.", "type": "context_updated", "evidenceRefs": ["E7"]}
   ]
 }

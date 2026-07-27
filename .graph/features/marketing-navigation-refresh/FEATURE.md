@@ -65,7 +65,7 @@ Improve the public marketing navigation on desktop and mobile without changing i
 - Continuation validation: `git diff --check`, lint, and typecheck passed; desktop and mobile browser DOM snapshots both expose the navbar wordmark as `ofroot`.
 
 ## Remaining uncertainty
-This is local-only evidence. No commit, push, deploy, or production verification occurred.
+Release commit `f7dbc14` was pushed directly to `origin/main` on 2026-07-27 after the user expressly waived the pre-push gate. The public Vercel response still served an older cached deployment (old navbar markup, unchanged ETag, cache age about 9.7 hours) after 30 seconds, so deployment/live behavior remains unverified.
 
 ## Next bounded action
 No further in-scope action. Review the local diff before any publication decision.
