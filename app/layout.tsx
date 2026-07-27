@@ -17,7 +17,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 // Default site-wide metadata for SEO/SMO
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'),
+  metadataBase: new URL(SITE.url),
   title: {
     default: `${SITE.name} · AI Growth Systems`,
     template: `%s · ${SITE.name}`,

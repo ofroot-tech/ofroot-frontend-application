@@ -11,13 +11,15 @@
  *  - Compatible with Google, Bing, schema validators
  */
 
+import { CANONICAL_SITE_URL } from '@/app/config/site';
+
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'OfRoot',
-    url: 'https://ofroot.technology',
-    logo: 'https://ofroot.technology/ofroot-logo.png',
+    url: CANONICAL_SITE_URL,
+    logo: `${CANONICAL_SITE_URL}/ofroot-logo.png`,
     description: 'AI-powered growth and operations systems for visibility, conversion, and company knowledge.',
     sameAs: [
       'https://twitter.com/ofroot_tech',
@@ -26,7 +28,7 @@ export function generateOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Sales',
-      url: 'https://ofroot.technology/book',
+      url: `${CANONICAL_SITE_URL}/book`,
     },
   };
 }
@@ -46,7 +48,7 @@ export function generatePricingSchema() {
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
         availability: 'https://schema.org/InStock',
-        url: 'https://ofroot.technology/pricing',
+        url: `${CANONICAL_SITE_URL}/pricing`,
       },
       {
         '@type': 'Offer',
@@ -56,14 +58,14 @@ export function generatePricingSchema() {
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
         availability: 'https://schema.org/InStock',
-        url: 'https://ofroot.technology/pricing',
+        url: `${CANONICAL_SITE_URL}/pricing`,
       },
       {
         '@type': 'Offer',
         name: 'Company Intelligence System',
         description: 'Custom private company AI implementation around approved sources and access rules.',
         priceCurrency: 'USD',
-        url: 'https://ofroot.technology/book',
+        url: `${CANONICAL_SITE_URL}/book`,
       },
     ],
   };
@@ -132,7 +134,7 @@ export function generateServiceSchema() {
     '@type': 'ProfessionalService',
     name: 'OfRoot Consulting',
     description: 'Senior architecture and engineering consulting services',
-    url: 'https://ofroot.technology/consulting',
+    url: `${CANONICAL_SITE_URL}/consulting`,
     areaServed: 'US',
     availableLanguage: ['en'],
     telephone: '+1-XXX-XXX-XXXX',

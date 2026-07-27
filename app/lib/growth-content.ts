@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import { CANONICAL_SITE_URL } from '@/app/config/site';
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology';
+export const SITE_URL = CANONICAL_SITE_URL;
 
 export type GrowthPageContent = {
   path: string;
