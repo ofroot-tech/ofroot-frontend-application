@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 import landing from '@/app/landing/manifest.json'
+import { CANONICAL_SITE_URL } from '@/app/config/site'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology'
+  const base = CANONICAL_SITE_URL
   const now = new Date().toISOString()
   // Static top-level routes; dynamic can be added later from CMS/API
   const routes = [

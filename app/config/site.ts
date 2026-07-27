@@ -1,8 +1,10 @@
+export const CANONICAL_SITE_URL = 'https://www.ofroot.technology';
+
 export const SITE = {
   name: 'OfRoot',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology',
+  url: CANONICAL_SITE_URL,
   logo: {
-    url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://ofroot.technology') + '/favicon.ico',
+    url: `${CANONICAL_SITE_URL}/favicon.ico`,
     width: 64,
     height: 64,
   },

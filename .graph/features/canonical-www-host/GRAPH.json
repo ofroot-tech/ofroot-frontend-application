@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.1",
+  "graphId": "canonical-www-host-20260727",
+  "featureId": "canonical-www-host",
+  "objective": "Align repository-generated public SEO URLs with the observed www canonical host.",
+  "status": "completed_with_validation_gap",
+  "createdAt": "2026-07-27T05:45:00Z",
+  "updatedAt": "2026-07-27T05:52:00Z",
+  "iterationCount": 2,
+  "maximumIterations": 25,
+  "rootNodeIds": ["N1"],
+  "nodes": [
+    {
+      "id": "N1",
+      "type": "observe",
+      "title": "Observe redirect and URL sources",
+      "objective": "Verify the live redirect target and locate repository-generated canonical URLs.",
+      "status": "verified",
+      "dependencies": [],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-1", "E-2"]}
+      ],
+      "inputs": ["live headers", "repository source"],
+      "outputs": ["canonical-host decision inputs"],
+      "evidenceRefs": ["E-1", "E-2"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-07-27T05:45:00Z",
+      "updatedAt": "2026-07-27T05:45:00Z"
+    },
+    {
+      "id": "N2",
+      "type": "decision",
+      "title": "Choose canonical source and redirect boundary",
+      "objective": "Use www as the canonical source and preserve external redirect ownership.",
+      "status": "completed",
+      "dependencies": ["N1"],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-1", "E-3"]}
+      ],
+      "inputs": ["N1"],
+      "outputs": ["documented source-of-truth URL"],
+      "evidenceRefs": ["E-1", "E-3"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-07-27T05:45:00Z",
+      "updatedAt": "2026-07-27T05:45:00Z"
+    },
+    {
+      "id": "N3",
+      "type": "task",
+      "title": "Align generated public URLs",
+      "objective": "Update the smallest shared code surface and explicit schema URLs.",
+      "status": "completed",
+      "dependencies": ["N2"],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-3"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E-3"]}
+      ],
+      "inputs": ["canonical host decision"],
+      "outputs": ["scoped source and test changes"],
+      "evidenceRefs": ["E-3"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-07-27T05:45:00Z",
+      "updatedAt": "2026-07-27T05:52:00Z"
+    },
+    {
+      "id": "N4",
+      "type": "validation",
+      "title": "Verify canonical URL contract",
+      "objective": "Run focused automated checks, TypeScript validation, and scoped diff review.",
+      "status": "partially_verified",
+      "dependencies": ["N3"],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-3", "E-5"]},
+        {"id": "AC-2", "required": true, "status": "blocked", "evidenceRefs": ["E-4"]}
+      ],
+      "inputs": ["N3 changes"],
+      "outputs": ["passed local evidence or explicit blocker"],
+      "evidenceRefs": ["E-3", "E-4", "E-5"],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-07-27T05:45:00Z",
+      "updatedAt": "2026-07-27T05:52:00Z",
+      "validation": {"requiredCommands": [
+        {"id": "canonical-host-test", "command": "npx jest __tests__/canonicalHost.test.ts --runInBand", "required": true, "outcome": "blocked", "exitStatus": 130, "evidenceRefs": ["E-4"], "error": "No local Jest executable; npx attempt was cancelled after waiting."},
+        {"id": "typecheck", "command": "npx tsc --noEmit", "required": true, "outcome": "blocked", "exitStatus": 130, "evidenceRefs": ["E-4"], "error": "No local TypeScript executable; npx attempt was cancelled after waiting."},
+        {"id": "build", "command": "npm run build", "required": true, "outcome": "blocked", "exitStatus": 127, "evidenceRefs": ["E-4"], "error": "sh: next: command not found"},
+        {"id": "static-contract", "command": "node -e canonical-host-source-contract", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E-3"]}
+      ]},
+      "runtimeVerification": "not_performed"
+    }
+  ],
+  "edges": [
+    {"from": "N1", "to": "N2", "type": "depends_on"},
+    {"from": "N2", "to": "N3", "type": "depends_on"},
+    {"from": "N3", "to": "N4", "type": "validates"}
+  ],
+  "events": [
+    {"timestamp": "2026-07-27T05:45:00Z", "nodeId": "N1", "summary": "Observed live naked-to-www redirect and repository URL sources.", "evidenceRefs": ["E-1", "E-2"]},
+    {"timestamp": "2026-07-27T05:45:00Z", "nodeId": "N2", "summary": "Recorded www canonical-host decision and external redirect boundary.", "evidenceRefs": ["E-1", "E-3"]},
+    {"timestamp": "2026-07-27T05:45:00Z", "nodeId": "N3", "summary": "Started smallest shared-source implementation.", "evidenceRefs": []},
+    {"timestamp": "2026-07-27T05:52:00Z", "nodeId": "N3", "summary": "Aligned shared site URL, metadata base, sitemap, robots, schema helpers, and consulting Open Graph URL to www.", "evidenceRefs": ["E-3"]},
+    {"timestamp": "2026-07-27T05:52:00Z", "nodeId": "N4", "summary": "Static contract and live redirect observation passed; test, typecheck, and build are blocked by missing local dependencies.", "evidenceRefs": ["E-3", "E-4", "E-5"]},
+    {"timestamp": "2026-07-27T05:52:00Z", "nodeId": "N4", "summary": "Feature completed with validation gap.", "evidenceRefs": ["E-3", "E-4", "E-5"]}
+  ]
+}

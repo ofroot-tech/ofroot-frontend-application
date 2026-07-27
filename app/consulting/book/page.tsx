@@ -18,6 +18,7 @@ import BookingWidget from '@/components/consulting/BookingWidget';
 import PreCallBriefForm from '@/components/consulting/PreCallBriefForm';
 import Link from 'next/link';
 import { generateConsultingFaqSchema, generateOrganizationSchema } from '@/app/lib/schemas';
+import { CANONICAL_SITE_URL } from '@/app/config/site';
 
 export const metadata: Metadata = {
   title: 'Book an Integration Call · OfRoot',
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Book an Integration Call · OfRoot',
     description: 'Plan your lead, meeting, and pipeline automation scope.',
-    url: 'https://ofroot.technology/consulting/book',
+    url: `${CANONICAL_SITE_URL}/consulting/book`,
     type: 'website',
   },
 };

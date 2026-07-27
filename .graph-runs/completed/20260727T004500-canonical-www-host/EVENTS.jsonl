@@ -1,0 +1,4 @@
+{"timestamp":"2026-07-27T05:45:00Z","event":"graph_created","detail":"Initialized feature graph after confirming clean worktree and absent prior graph context."}
+{"timestamp":"2026-07-27T05:52:00Z","event":"implementation_completed","detail":"Changed shared canonical URL source and explicit schema/metadata URL generators to the www host."}
+{"timestamp":"2026-07-27T05:52:00Z","event":"validation_partially_completed","detail":"Static contract and live redirect check passed; Jest, TypeScript, and build are blocked because local dependencies are absent."}
+{"timestamp":"2026-07-27T05:54:00Z","event":"approval_received","detail":"User explicitly waived the pre-push gate and authorized publishing without deployment despite the documented validation gap."}
