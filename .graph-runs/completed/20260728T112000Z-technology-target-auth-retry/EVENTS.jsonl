@@ -1,0 +1,1 @@
+{"timestamp":"2026-07-28T11:10:36Z","event":"readonly_retry_blocked","result":"Second MCP resource-list attempt failed during OAuth refresh; no schema/data operation executed."}

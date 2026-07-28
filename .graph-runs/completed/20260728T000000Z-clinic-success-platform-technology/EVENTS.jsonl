@@ -1,0 +1,7 @@
+{"timestamp":"2026-07-28T11:10:36Z","event":"contract_reviewed","result":"Technology-to-Health contract read from the dedicated worktree; no Health data access permitted."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"target_inspection","result":"Current repository has no backend or Supabase project directory dedicated to Clinic Success."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"human_gate_blocked","result":"Need named Technology backend/database, migration owner, secret owner, environment, and rollback path."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"graph_validated","result":"python3 consistency checker exited 0 and derived the blocked state with no issues."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"crm_readiness_defined","result":"Architecture-only clinic-scoped CRM adapter boundary added; no CRM connection or Health-data transfer authorized."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"technology_target_configured","result":"codex mcp lists the configured Supabase endpoint for mkgycihcekojbvmsexgv; read-only startup failed during OAuth refresh."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"implementation_plan_created","result":"Target-local source/data-model reconciliation and validation plan added without a migration, deployment, or database write."}

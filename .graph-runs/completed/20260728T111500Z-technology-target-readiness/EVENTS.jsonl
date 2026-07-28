@@ -1,0 +1,3 @@
+{"timestamp":"2026-07-28T11:10:36Z","event":"target_confirmed","result":"Configured Supabase MCP URL includes project_ref=mkgycihcekojbvmsexgv."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"readonly_schema_check_blocked","result":"MCP OAuth refresh failed before the request began; no remote schema/data was accessed."}
+{"timestamp":"2026-07-28T11:10:36Z","event":"implementation_plan_created","result":"Smallest reviewable target-local model and validation plan documented without a remote write."}

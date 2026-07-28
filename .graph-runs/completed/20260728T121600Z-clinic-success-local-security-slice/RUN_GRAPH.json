@@ -1,0 +1,1 @@
+{"featureGraph":".graph/features/clinic-success-platform-technology/GRAPH.json","terminalState":"blocked","localImplementation":"partially_verified","reason":"Remote writes and receiver exposure remain gated by RLS/migration ownership and Health signature-profile ratification."}

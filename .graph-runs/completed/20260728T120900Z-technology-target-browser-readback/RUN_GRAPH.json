@@ -1,0 +1,1 @@
+{"featureGraph":".graph/features/clinic-success-platform-technology/GRAPH.json","terminalState":"blocked","targetCheck":"passed","reason":"Remote writes remain gated by Production-only target, universal RLS-disabled public schema, and unresolved migration/secret/rollback ownership."}

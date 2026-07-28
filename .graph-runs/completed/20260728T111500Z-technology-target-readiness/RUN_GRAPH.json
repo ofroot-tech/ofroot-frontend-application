@@ -1,0 +1,1 @@
+{"featureGraph":".graph/features/clinic-success-platform-technology/GRAPH.json","state":"blocked","target":"mkgycihcekojbvmsexgv","reason":"Configured Supabase MCP OAuth token refresh failed before a read-only schema request."}
