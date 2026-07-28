@@ -5,8 +5,8 @@
   "objective": "Build the separate OfRoot Technology Phase 2 Clinic Success foundation without accessing Health data.",
   "status": "in_progress",
   "createdAt": "2026-07-28T11:10:36Z",
-  "updatedAt": "2026-07-28T13:26:04Z",
-  "iterationCount": 10,
+  "updatedAt": "2026-07-28T14:16:15Z",
+  "iterationCount": 11,
   "maximumIterations": 25,
   "rootNodeIds": ["OBS-1", "OBS-2"],
   "nodes": [
@@ -195,20 +195,20 @@
       "type": "task",
       "title": "Implement signed referral issuance and event receiver",
       "objective": "Create opaque referral URLs and a fail-closed HMAC/timestamp/version/idempotency/replay protected receiver.",
-      "status": "partially_verified",
+      "status": "verified",
       "dependencies": ["TASK-1"],
       "requiredSkills": [],
-      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "pending", "evidenceRefs": []}],
+      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-21"]}],
       "inputs": ["schema, signing-secret boundary, event contract"],
       "outputs": ["receiver tests and operational-only logs"],
-      "evidenceRefs": ["E-11", "E-12", "E-14", "E-15", "E-17", "E-20"],
+      "evidenceRefs": ["E-11", "E-12", "E-14", "E-15", "E-17", "E-20", "E-21", "E-22"],
       "attemptCount": 3,
       "maximumAttempts": 3,
       "riskLevel": "critical",
       "approvalRequired": false,
-      "blockingReason": "Local release and real-database integration pass. Production publication, live bad-signature rejection, Health-emitted accepted/duplicate behavior, and final database readback remain.",
+      "blockingReason": null,
       "createdAt": "2026-07-28T11:10:36Z",
-      "updatedAt": "2026-07-28T13:26:04Z"
+      "updatedAt": "2026-07-28T14:16:15Z"
     },
     {
       "id": "TASK-3",
@@ -246,7 +246,7 @@
       "maximumAttempts": 3,
       "riskLevel": "high",
       "approvalRequired": false,
-      "blockingReason": "Disconnected CRM tables exist only in the unapplied migration artifact; no runtime integration or database validation exists.",
+      "blockingReason": "Disconnected CRM tables are deployed with clinic-scope constraints, but destination-specific adapter runtime, sync-health query tests, and immutable-mapping behavior tests remain intentionally absent.",
       "createdAt": "2026-07-28T11:10:36Z",
       "updatedAt": "2026-07-28T11:10:36Z"
     }
@@ -285,6 +285,7 @@
     {"timestamp": "2026-07-28T13:04:58Z", "nodeId": "GATE-1", "summary": "Shared secrets are present, but the dedicated Technology database credential is absent and the canonical receiver remains 404.", "eventType": "validation_blocked", "evidenceRefs": ["E-18"]},
     {"timestamp": "2026-07-28T13:26:04Z", "nodeId": "GATE-1", "summary": "Authorized Technology migration, forced-RLS readback, dedicated least-privilege login, and Production-sensitive database variable verified.", "eventType": "validation_passed", "evidenceRefs": ["E-19"]},
     {"timestamp": "2026-07-28T13:26:04Z", "nodeId": "TASK-1", "summary": "Migration ledger, schema, denied API roles, receiver grants, and prohibited-field scan passed on Technology Production.", "eventType": "validation_passed", "evidenceRefs": ["E-19"]},
-    {"timestamp": "2026-07-28T13:26:04Z", "nodeId": "TASK-2", "summary": "Nineteen tests, compiler, lint, isolated build, real-database accepted event, duplicate retry, one-increment readback, and synthetic cleanup passed.", "eventType": "validation_partially_completed", "evidenceRefs": ["E-20"]}
+    {"timestamp": "2026-07-28T13:26:04Z", "nodeId": "TASK-2", "summary": "Nineteen tests, compiler, lint, isolated build, real-database accepted event, duplicate retry, one-increment readback, and synthetic cleanup passed.", "eventType": "validation_partially_completed", "evidenceRefs": ["E-20"]},
+    {"timestamp": "2026-07-28T14:16:15Z", "nodeId": "TASK-2", "summary": "Final Production deployment, canonical 401, two live Health events, altered-body conflict, byte-exact duplicate, aggregate readback, privacy scan, and exact cleanup passed.", "eventType": "validation_passed", "evidenceRefs": ["E-21", "E-22"]}
   ]
 }

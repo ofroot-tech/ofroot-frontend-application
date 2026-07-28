@@ -1,7 +1,7 @@
 # Feature: Clinic Success Platform — Technology Phase 2 foundation
 
 ## Status
-Production database integration is verified and the application is at the deployment gate. Technology migration `20260728121108` is applied to `mkgycihcekojbvmsexgv`; all ten tables use FORCE RLS; browser/API roles have no access; and a dedicated `clinic_success_receiver_login` reaches only receipt, lifecycle, and aggregate tables through the transaction pooler. `main-website` Production has all three sensitive server-only variables. Nineteen focused tests, TypeScript, focused ESLint, an isolated production build, and a valid-event/identical-retry database integration pass. Synthetic rows were removed. The canonical receiver remains on the prior deployment until publication and live verification complete.
+The Technology receiver foundation is live and verified. Migration `20260728121108` is applied to Technology project `mkgycihcekojbvmsexgv`; all ten tables use FORCE RLS; browser/API roles have no access; and the dedicated receiver login reaches only receipt, lifecycle, and aggregate tables. Final Vercel deployment `dpl_FhS9NDcoG4fuGWLTdcn3RBBHbu27` is Ready from commit `249a33a` and serves `POST https://www.ofroot.technology/api/clinic-success/events`. Live Health-emitted `account_created` and `activated` events returned 202; an altered-body reuse returned 409; a byte-exact retry returned 200 duplicate; and Technology readback proved two immutable events with aggregate counts one and one. The health-free synthetic rows were then removed with exact predicates and all scoped counts returned to zero.
 
 ## Objective
 
@@ -22,7 +22,7 @@ Implement the OfRoot Technology-side Clinic Success Platform foundation without 
 
 ## Next bounded action
 
-Publish the scoped source to `main-website`, verify the Vercel deployment is Ready, prove the canonical route is no longer 404 and rejects a bad signature with 401, then coordinate one Health-emitted valid event plus identical retry and confirm one Technology aggregate increment. Do not retrieve or expose the rotated shared secret values.
+Implement the pending aggregate-only dashboard query and clinic authorization boundary against `clinic_lifecycle_aggregates`. Keep the CRM adapter disconnected and do not expose the receiver credential or raw lifecycle ledger to browser clients.
 
 ## Last reviewed
 2026-07-28

@@ -159,3 +159,19 @@
 - Result: Four suites and nineteen tests passed. TypeScript and focused ESLint exited 0. The isolated production build exited 0 and lists dynamic route `/api/clinic-success/events`. A health-free synthetic event returned 202 accepted; an identical retry returned 200 duplicate. Database readback showed one receipt, one lifecycle event, and aggregate count one. All synthetic clinic, referral, receipt, event, and aggregate rows were then removed and absence was verified.
 - Exit status: 0
 - Remaining uncertainty: The exact Production-sensitive shared key values were not retrieved. Live 401, accepted, duplicate, and database readback remain required after deployment; the accepted/duplicate calls must be emitted by the Health process that owns the matching key.
+
+## Evidence: Production receiver and cross-application idempotency verified live
+- Date: 2026-07-28
+- Graph node: TASK-2
+- Command or verification method: Vercel deployment inspection and runtime logs; canonical HTTPS POST probes; Health-emitted signed `account_created` and `activated` events; byte-exact retry and altered-body conflict; independent Technology `psql` readback.
+- Result: Final deployment `dpl_FhS9NDcoG4fuGWLTdcn3RBBHbu27` is Ready from commit `249a33a` and owns `https://www.ofroot.technology`. The canonical route returns 401 `invalid_signature` for a bad signature. Original event IDs `f7f1f9ba-c2cf-465a-bd15-8e6a35a77d6d` (`account_created`) and `d07ce7ee-4303-44ff-a249-707dd6f6d30e` (`activated`) each returned 202. A newline-modified reuse returned 409 `event_id_conflict`; the byte-exact retry returned 200 with `duplicate: true`. Technology contained exactly two receipts and two lifecycle rows, with aggregate counts one and one. Both receipt hashes were valid, schema/signature versions were `1.0-draft`/`v1`, and the prohibited health/patient column scan returned zero.
+- Exit status: 0
+- Remaining uncertainty: Dashboard read access and the disconnected CRM adapter runtime remain unimplemented Phase 2 nodes.
+
+## Evidence: Exact synthetic cross-application rows removed
+- Date: 2026-07-28
+- Graph node: TASK-2
+- Command or verification method: One parameterized Technology Postgres transaction with exact clinic, referral, event ID, event type, and synthetic clinic-name preconditions; post-commit scoped readback.
+- Result: Preconditions found clinic 1, referral 1, receipts 2, lifecycle rows 2, and aggregate rows 2. Deleted aggregate 2, lifecycle 2, receipt 2, referral 1, and clinic 1. Post-cleanup counts were zero for every scoped relation. No non-synthetic row matched or was touched.
+- Exit status: 0
+- Remaining uncertainty: None for the synthetic Technology cleanup.
