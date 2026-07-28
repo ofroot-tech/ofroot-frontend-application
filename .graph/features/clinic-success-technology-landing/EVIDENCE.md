@@ -47,3 +47,11 @@
 - Result: Passed with exit 0. Webpack compiled successfully, lint and type checks completed, static pages generated, and `/clinic-success` appears as a static route. The output retained four unrelated lint warnings and a Sentry deprecation warning; neither was introduced by this feature.
 - Exit status: 0
 - Remaining uncertainty: Build proof is local; deployment and live canonical-host behavior remain unverified until promotion.
+
+## Evidence: Production promotion and canonical-host readback
+- Date: 2026-07-28
+- Graph node: N6
+- Command or verification method: Committed the exact staged scope as `631be92` (`Add clinic success pilot landing page`), pushed `HEAD` to `origin/main`, observed Vercel deployment `dpl_4zK8thhUo6oPZ9cGmk6vK1tHLWdH` transition to Ready, and fetched the canonical route plus sitemap and LLM route.
+- Result: `https://www.ofroot.technology/clinic-success` returned HTTP 200, `age: 0`, `x-matched-path: /clinic-success`, and the expected title, description, canonical URL, Open Graph, Twitter metadata, JSON-LD, and explicit no-automatic-Health-patient-data copy. `https://www.ofroot.technology/sitemap.xml` returned 200 and contains the canonical route. `https://www.ofroot.technology/llms.txt` returned 200 and contains the accurate route description and boundary.
+- Exit status: 0
+- Remaining uncertainty: The page is a public informational and conversion surface; no authenticated booking submission or future Health integration was exercised, because neither was part of this feature.

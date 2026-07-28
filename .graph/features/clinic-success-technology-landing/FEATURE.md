@@ -1,7 +1,7 @@
 # Feature: Clinic Success Technology landing page
 
 ## Status
-Ready for production promotion
+Released and live verified
 
 ## Objective
 Create one public, clinic-facing conversion path for the Clinic Success Platform Appointment Preparation Pilot. It must explain the pilot, referral flow, aggregate-only operations dashboard, implementation and ongoing service model, and a clear consultation CTA without claiming outcomes or automatic access to Health patient data.
@@ -57,16 +57,15 @@ Create one public, clinic-facing conversion path for the Clinic Success Platform
 ## Premium marketing audit
 - Score: 93/100
 - Strongest category: Brand clarity and UX. The page gives clinics a clear first-screen purpose, a decisive CTA, an early boundary statement, and a calm visual progression from pilot to service model.
-- Primary risk: Production deployment and canonical-host readback remain unverified until the scoped commit is promoted.
-- Score: 96/100 after the successful production build; live canonical-host verification remains outside this local audit.
+- Score: 100/100. The production build, provider deployment, and canonical-host readback now verify the full public-page contract.
 
 ## Validation summary
 - Passed: `git diff --check`, `npm run lint` (four unrelated existing warnings), `npx tsc --noEmit`, local development compilation, rendered page and metadata HTTP readback, sitemap, `llms.txt`, `llms-full.txt`, desktop screenshot, and narrow mobile screenshot.
 - Passed: `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 ./node_modules/.bin/next build` completed with exit 0 in the network-enabled environment. The route manifest lists `/clinic-success` as static. The repository retains four unrelated lint warnings and a Sentry deprecation warning.
-- Pending: production deployment and public-host verification, now authorized.
+- Passed: commit `631be92` was pushed to `origin/main`; Vercel production deployment `dpl_4zK8thhUo6oPZ9cGmk6vK1tHLWdH` became Ready; the live canonical page returned 200 with a fresh `age: 0` response, correct metadata, the explicit patient-data boundary, sitemap inclusion, and the `llms.txt` description.
 
 ## Next bounded action
-Commit the scoped release after the grill gate, promote through the established Vercel production path, then verify the live canonical route and metadata.
+No further feature action. Any later copy or workflow expansion must preserve the separate Health-data approval boundary.
 
 ## Last reviewed
 2026-07-28
