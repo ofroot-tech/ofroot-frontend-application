@@ -22,6 +22,7 @@ export function GET() {
 - [AI Discoverability](${SITE_URL}/services/ai-discoverability): Search, answer, content, schema, and citation-readiness systems.
 - [Automation Systems](${SITE_URL}/services/automation-systems): Lead capture, CRM, routing, follow-up, reporting, and workflow monitoring.
 - [Private Company AI](${SITE_URL}/services/private-company-ai): Permission-aware assistants built around approved company knowledge.
+- [Clinic Success Platform Appointment Preparation Pilot](${SITE_URL}/clinic-success): A clinic-facing referral-link and aggregate-operations pilot. Technology does not receive Health patient data automatically.
 
 ${featureGroups}
 

@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services/ai-discoverability',
     '/services/automation-systems',
     '/services/private-company-ai',
+    '/clinic-success',
     '/solutions/generate-demand',
     '/solutions/convert-more-leads',
     '/solutions/unlock-company-knowledge',

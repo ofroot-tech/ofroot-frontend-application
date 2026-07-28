@@ -38,6 +38,11 @@ Buyer outcome: ${SITE_URL}/solutions/unlock-company-knowledge
 Security approach: ${SITE_URL}/security
 Fictional demo: ${SITE_URL}/demo/private-ai
 
+## Clinic Success Platform Appointment Preparation Pilot
+The Clinic Success Platform pilot is a Technology service for clinic growth, referral links, and aggregate operations. It gives a clinic a focused referral path and agreed aggregate reporting to support operational review around appointment preparation. Health owns patient data, patient records, clinical workflows, and care decisions. Technology does not receive Health patient data automatically; any proposed Health-data access requires a separate documented approval and architecture conversation.
+
+Canonical page: ${SITE_URL}/clinic-success
+
 ${featureDetails}
 
 ## Proof boundary
