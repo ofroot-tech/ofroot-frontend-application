@@ -3,6 +3,7 @@ import landing from '@/app/landing/manifest.json'
 import { CANONICAL_SITE_URL } from '@/app/config/site'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
+import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     '',
     '/automations',
+    '/ai-process',
     '/hubspot-integration',
     '/meta-conversions-api',
     '/make-zapier-automation',
@@ -40,6 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/book',
     '/demo/private-ai',
     '/blog',
+    AI_PROCESS_GUIDE.href,
     '/case-studies/home-services-mvp',
     '/case-studies/crm-erp-sync',
     '/case-studies/healthcare-ai-automation',

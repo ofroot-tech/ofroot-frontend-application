@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar, FileText, Star } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar, FileText, Star, Route } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { hasEditionAccess } from '@/app/lib/platform-access';
@@ -16,7 +16,8 @@ const quotesNavItem = { href: '/dashboard/quotes', label: 'Quotes', icon: FileTe
 const paymentsNavItem = { href: '/dashboard/payments', label: 'Payments', icon: BadgeDollarSign };
 const reviewsNavItem = { href: '/dashboard/reviews', label: 'Reviews', icon: Star };
 const competitiveAnalysisNavItem = { href: '/dashboard/competitive-analysis', label: 'Competitive Analysis', icon: Radar };
-const baseNav = [
+export const aiProcessNavItem = { href: '/dashboard/ai-process', label: 'AI Process', icon: Route };
+export const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
 	helprNavItem,
 	ontaskNavItem,
@@ -24,6 +25,7 @@ const baseNav = [
 	quotesNavItem,
 	paymentsNavItem,
 	reviewsNavItem,
+	aiProcessNavItem,
 	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
 	competitiveAnalysisNavItem,
@@ -33,8 +35,9 @@ const baseNav = [
 	{ href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
 	{ href: '/dashboard/payroll', label: 'Payroll', icon: BadgeDollarSign },
 ];
-const clientEnabledNav = [
+export const clientEnabledNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
+	aiProcessNavItem,
 	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 ];
 
@@ -173,6 +176,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
     if (isClientRole) {
       const items = [
         { href: '/dashboard/overview', label: 'View metrics', description: 'Check current onboarding and delivery status.' },
+        { href: aiProcessNavItem.href, label: 'View AI process', description: 'Follow the journey from discovery through measured ROI.' },
         { href: '/dashboard/automation-build', label: 'Track automation build', description: 'Follow implementation stages.' },
       ];
       if (canUseHelpr) {
@@ -205,6 +209,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
     }
 		const items = [
 			{ href: '/dashboard/overview', label: 'View metrics', description: 'Check key system health and KPIs.' },
+			{ href: aiProcessNavItem.href, label: 'View AI process', description: 'Follow the client journey from discovery through measured ROI.' },
 			{ href: helprNavItem.href, label: 'Open Helpr', description: 'Work the growth edition from lead capture through attribution.' },
 			{ href: ontaskNavItem.href, label: 'Open OnTask', description: 'Work the operations edition from invoicing through collections.' },
       { href: lifecycleNavItem.href, label: 'Open lifecycle', description: 'See the shared lead-to-cash record across both editions.' },

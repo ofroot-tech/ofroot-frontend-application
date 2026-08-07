@@ -115,7 +115,8 @@ export const growthPages: Record<string, GrowthPageContent> = {
     ],
     related: [
       { label: 'Convert More Leads', href: '/solutions/convert-more-leads' },
-      { label: 'Existing automation services', href: '/services' },
+      { label: 'AI Process Audit', href: '/ai-process' },
+      { label: 'Find what to automate first', href: '/blog/find-expensive-manual-work-before-automating' },
     ],
   },
   privateCompanyAi: {

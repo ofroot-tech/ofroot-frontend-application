@@ -4,10 +4,17 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { track } from '@/app/lib/ab';
 
-export function PageView({ kind, name }: { kind: 'service' | 'solution' | 'feature' | 'demo' | 'pricing'; name: string }) {
+export function PageView({ kind, name }: { kind: 'service' | 'solution' | 'feature' | 'demo' | 'pricing' | 'ai_process'; name: string }) {
   useEffect(() => {
     track({ category: 'view', action: `${kind}_page_viewed`, label: name, meta: { path: window.location.pathname } });
   }, [kind, name]);
+  return null;
+}
+
+export function TrackedPageView({ event, label }: { event: string; label: string }) {
+  useEffect(() => {
+    track({ category: 'view', action: event, label, meta: { path: window.location.pathname } });
+  }, [event, label]);
   return null;
 }
 
