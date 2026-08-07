@@ -1,7 +1,7 @@
 # Feature: AI Process article and production release
 
 ## Status
-In progress
+Complete
 
 ## Objective
 Publish the AI Process experience with a source-controlled supporting blog article and durable contextual internal links, then verify the canonical production routes.
@@ -42,8 +42,14 @@ Publish the AI Process experience with a source-controlled supporting blog artic
 - Production drift: merge the reviewed branch to `main`, wait for the matching Vercel commit, then verify each canonical route.
 - Rollback: revert the single release commit or PR merge and redeploy `main`.
 
+## Completion proof
+- PR #17 merged to `main` as `98e52a83dc4f1d937090fa111f2fae993f1058e8`.
+- Vercel production deployment `dpl_9JQEpe7XXcLEf1GepcDKVeMe9kx7` reached Ready for that exact commit and attached both canonical aliases.
+- Direct readback returned HTTP 200 for the page, blog index, article, automation pages, sitemap, and llms.txt; expected headings, metadata, links, and responsive layouts were present.
+- The authenticated dashboard route remains protected and redirects unauthenticated requests to login.
+
 ## Next bounded action
-Resolve the pre-push grill-me gate, then publish the validated commit and verify the matching canonical deployment.
+None. Monitor ordinary production analytics and error reporting.
 
 ## Last reviewed
 2026-08-07
