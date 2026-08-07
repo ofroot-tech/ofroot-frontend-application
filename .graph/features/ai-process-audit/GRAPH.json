@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.1",
+  "graphId": "ai-process-audit-20260806",
+  "featureId": "ai-process-audit",
+  "objective": "Create a public AI Process Audit sales page and an authenticated client process journey using existing OfRoot contracts.",
+  "status": "completed_with_validation_gap",
+  "createdAt": "2026-08-06T22:53:36Z",
+  "updatedAt": "2026-08-06T23:12:10Z",
+  "iterationCount": 4,
+  "maximumIterations": 25,
+  "rootNodeIds": ["N1"],
+  "nodes": [
+    {
+      "id": "N1",
+      "type": "observe",
+      "title": "Inspect existing contracts",
+      "objective": "Identify current public, booking, dashboard, navigation, analytics, SEO, and test patterns.",
+      "status": "completed",
+      "dependencies": [],
+      "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E-1"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E-2"]}
+      ],
+      "inputs": ["user request", "repository source"],
+      "outputs": ["bounded architecture evidence"],
+      "evidenceRefs": ["E-1", "E-2"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-06T22:53:36Z",
+      "updatedAt": "2026-08-06T22:53:36Z"
+    },
+    {
+      "id": "N2",
+      "type": "decision",
+      "title": "Design bounded experience",
+      "objective": "Define layout, data ownership, empty states, and route boundaries before coding.",
+      "status": "completed",
+      "dependencies": ["N1"],
+      "requiredSkills": ["premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E-3"]}
+      ],
+      "inputs": ["E-2"],
+      "outputs": ["feature design", "decisions"],
+      "evidenceRefs": ["E-3"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-06T22:53:36Z",
+      "updatedAt": "2026-08-06T22:53:36Z"
+    },
+    {
+      "id": "N3",
+      "type": "task",
+      "title": "Implement AI Process experience",
+      "objective": "Add the typed model, public route, dashboard route, navigation, analytics, sitemap, and tests.",
+      "status": "completed",
+      "dependencies": ["N2"],
+      "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E-4"]},
+        {"id": "AC-5", "required": true, "status": "passed", "evidenceRefs": ["E-4"]},
+        {"id": "AC-6", "required": true, "status": "passed", "evidenceRefs": ["E-4"]}
+      ],
+      "inputs": ["feature design"],
+      "outputs": ["source changes", "tests"],
+      "evidenceRefs": ["E-4"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-06T22:53:36Z",
+      "updatedAt": "2026-08-06T23:12:10Z"
+    },
+    {
+      "id": "N4",
+      "type": "validation",
+      "title": "Validate implementation",
+      "objective": "Run scoped review, tests, type check, lint, build, and local browser verification.",
+      "status": "partially_verified",
+      "dependencies": ["N3"],
+      "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-7", "required": true, "status": "passed", "evidenceRefs": ["E-5", "E-6", "E-7"]},
+        {"id": "AC-8", "required": true, "status": "blocked", "evidenceRefs": ["E-8"]}
+      ],
+      "inputs": ["source changes", "tests"],
+      "outputs": ["validation evidence", "audit score"],
+      "evidenceRefs": ["E-5", "E-6", "E-7", "E-8", "E-9"],
+      "attemptCount": 2,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": "Production build is blocked by ENOSPC and a broken default Homebrew Node runtime.",
+      "validation": {
+        "requiredCommands": [
+          {"id": "targeted-tests", "command": "bundled-node node_modules/jest/bin/jest.js --runInBand __tests__/aiProcess.test.tsx", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E-5"]},
+          {"id": "typecheck", "command": "bundled-node node_modules/typescript/bin/tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E-5"]},
+          {"id": "lint", "command": "bundled-node node_modules/next/dist/bin/next lint", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E-6"]},
+          {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 bundled-node node_modules/next/dist/bin/next build", "required": true, "outcome": "blocked", "exitStatus": 1, "evidenceRefs": ["E-8"], "error": "ENOSPC: no space left on device, write"}
+        ],
+        "runtimeVerification": "passed"
+      },
+      "createdAt": "2026-08-06T22:53:36Z",
+      "updatedAt": "2026-08-06T23:12:10Z"
+    },
+    {
+      "id": "N5",
+      "type": "completion_review",
+      "title": "Reconcile evidence and completion state",
+      "objective": "Inspect the final diff, update living documents, and run the graph consistency checker.",
+      "status": "completed",
+      "dependencies": ["N4"],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-9", "required": true, "status": "passed", "evidenceRefs": ["E-10"]}
+      ],
+      "inputs": ["validation evidence"],
+      "outputs": ["truthful terminal report"],
+      "evidenceRefs": ["E-10"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-06T22:53:36Z",
+      "updatedAt": "2026-08-06T23:12:10Z"
+    }
+  ],
+  "edges": [
+    {"from": "N2", "to": "N1", "type": "depends_on"},
+    {"from": "N3", "to": "N2", "type": "depends_on"},
+    {"from": "N4", "to": "N3", "type": "depends_on"},
+    {"from": "N5", "to": "N4", "type": "depends_on"}
+  ],
+  "events": [
+    {"timestamp": "2026-08-06T22:53:36Z", "nodeId": "N1", "summary": "graph_created", "evidenceRefs": ["E-1"]},
+    {"timestamp": "2026-08-06T22:53:36Z", "nodeId": "N1", "summary": "Existing contracts inspected", "evidenceRefs": ["E-2"]},
+    {"timestamp": "2026-08-06T22:53:36Z", "nodeId": "N2", "summary": "Bounded architecture selected", "evidenceRefs": ["E-3"]},
+    {"timestamp": "2026-08-06T22:53:36Z", "nodeId": "N3", "summary": "Implementation started", "evidenceRefs": []},
+    {"timestamp": "2026-08-06T23:12:10Z", "nodeId": "N3", "summary": "Implementation completed", "evidenceRefs": ["E-4"]},
+    {"timestamp": "2026-08-06T23:12:10Z", "nodeId": "N4", "summary": "Validation partially completed; build blocked by environment", "evidenceRefs": ["E-5", "E-6", "E-7", "E-8", "E-9"]},
+    {"timestamp": "2026-08-06T23:12:10Z", "nodeId": "N5", "summary": "Completion review started", "evidenceRefs": []},
+    {"timestamp": "2026-08-06T23:12:10Z", "nodeId": "N5", "summary": "Completion review passed with production build validation gap", "evidenceRefs": ["E-10"]}
+  ]
+}

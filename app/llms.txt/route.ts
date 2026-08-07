@@ -22,6 +22,8 @@ export function GET() {
 - [AI Discoverability](${SITE_URL}/services/ai-discoverability): Search, answer, content, schema, and citation-readiness systems.
 - [Automation Systems](${SITE_URL}/services/automation-systems): Lead capture, CRM, routing, follow-up, reporting, and workflow monitoring.
 - [Private Company AI](${SITE_URL}/services/private-company-ai): Permission-aware assistants built around approved company knowledge.
+- [AI Process Audit](${SITE_URL}/ai-process): Process discovery, manual-cost analysis, opportunity scoring, implementation planning, and measured improvement.
+- [How to Find the Manual Work Worth Automating First](${SITE_URL}/blog/find-expensive-manual-work-before-automating): A practical guide to mapping work, calculating cost, scoring opportunities, and measuring results.
 - [Clinic Success Platform Appointment Preparation Pilot](${SITE_URL}/clinic-success): A clinic-facing referral-link and aggregate-operations pilot. Technology does not receive Health patient data automatically.
 
 ${featureGroups}
