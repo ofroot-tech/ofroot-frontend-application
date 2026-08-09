@@ -19,7 +19,7 @@ Use this to inform headings, CTAs, and microcopy. Examples:
 
 ## 2) Core visual identity
 
-- Logo: Circular avatar found in `/public/ofroot-logo.png`. Keep generous whitespace around it (≥ logo height).
+- Logo: Monochrome wordmark found in `/public/ofroot-tech-logo.svg`. Use it in OfRoot teal (`#20B2AA`) and keep clear space around it equal to at least the mark's stem width.
 - Color system: Brand teal with neutral grays and purposeful accents.
 
 Primary brand (teal)

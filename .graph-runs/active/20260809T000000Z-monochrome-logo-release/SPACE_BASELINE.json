@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-08-09T08:40:47.368307+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/ofroot-monochrome-logo/ofroot-frontend-application/.graph-runs/active/20260809T000000Z-monochrome-logo-release/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/ofroot-monochrome-logo/ofroot-frontend-application",
+  "repositoryBytes": 9763605,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/ofroot-monochrome-logo/ofroot-frontend-application/.graph-runs/active/20260809T000000Z-monochrome-logo-release",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 3120984064
+}
