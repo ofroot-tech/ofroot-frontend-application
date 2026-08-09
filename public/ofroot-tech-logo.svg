@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 48" role="img" aria-labelledby="ofroot-logo-title">
+  <title id="ofroot-logo-title">OfRoot Tech</title>
+  <g fill="none" stroke="#20B2AA" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M24 5v20" />
+    <path d="M24 25 10 39" />
+    <path d="m24 25 14 14" />
+  </g>
+  <text x="58" y="32" fill="#20B2AA" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="600" letter-spacing="2.1">OFROOT TECH</text>
+</svg>

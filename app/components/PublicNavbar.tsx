@@ -81,18 +81,14 @@ export default function PublicNavbar() {
             <div className="flex items-center gap-3">
               <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
                 <Image
-                  src="/ofroot-logo.png"
+                  src="/ofroot-tech-logo.svg"
                   alt=""
-                  width={36}
-                  height={36}
+                  width={187}
+                  height={28}
                   priority
-                  className="h-9 w-9 rounded-full object-cover"
+                  className="h-7 w-auto"
                   aria-hidden="true"
                 />
-                <span className="text-lg font-semibold tracking-tight leading-none">
-                  <span className="text-white">Of</span>
-                  <span className="text-[#FF9312]">Root</span>
-                </span>
               </Link>
             </div>
 
@@ -188,17 +184,13 @@ export default function PublicNavbar() {
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
             <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
               <Image
-                src="/ofroot-logo.png"
+                src="/ofroot-tech-logo.svg"
                 alt=""
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded-full object-cover"
+                width={174}
+                height={26}
+                className="h-[26px] w-auto"
                 aria-hidden="true"
               />
-              <span className="text-lg font-semibold tracking-tight leading-none">
-                <span className="text-white">Of</span>
-                <span className="text-[#FF9312]">Root</span>
-              </span>
             </Link>
             <button
               type="button"

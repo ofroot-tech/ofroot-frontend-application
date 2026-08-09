@@ -44,9 +44,8 @@ export default function Navbar() {
   if (!shouldRender) return null;
   const close = () => setOpen(false);
   const logo = (
-    <Link href="/" onClick={close} className="group flex items-center gap-2.5 rounded-full pr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]" aria-label="OfRoot home">
-      <Image src="/ofroot-logo.png" alt="" width={40} height={40} priority className="h-10 w-10 rounded-full ring-1 ring-white/15 transition-transform duration-200 group-hover:scale-[1.03] motion-reduce:transition-none" />
-      <span className="text-[1.08rem] font-extrabold tracking-[-0.01em]"><span className="text-white">of</span><span className="text-[#37FFE0]">root</span></span>
+    <Link href="/" onClick={close} className="group flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]" aria-label="OfRoot Tech home">
+      <Image src="/ofroot-tech-logo.svg" alt="" width={187} height={28} priority className="h-7 w-auto transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none" aria-hidden="true" />
     </Link>
   );
 

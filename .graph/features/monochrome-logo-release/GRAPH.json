@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "1.1",
+  "graphId": "monochrome-logo-release-20260809",
+  "featureId": "monochrome-logo-release",
+  "objective": "Publish and verify the one-color OfRoot Tech logo on the canonical Vercel production site.",
+  "status": "incomplete",
+  "createdAt": "2026-08-09T00:00:00-05:00",
+  "updatedAt": "2026-08-09T00:00:00-05:00",
+  "iterationCount": 2,
+  "maximumIterations": 25,
+  "rootNodeIds": ["N1"],
+  "nodes": [
+    {
+      "id": "N1",
+      "type": "observe",
+      "title": "Confirm release scope and production identity",
+      "objective": "Confirm the exact diff, repository, provider project, production domain, environment gate, and rollback target.",
+      "status": "verified",
+      "dependencies": [],
+      "requiredSkills": ["graph-loop-engineering", "grill-me", "vercel:deployments-cicd"],
+      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E1"]}],
+      "inputs": ["repository diff", "GitHub identity", "Vercel project state"],
+      "outputs": ["bounded release scope", "verified production target", "rollback deployment"],
+      "evidenceRefs": ["E1"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    },
+    {
+      "id": "N2",
+      "type": "task",
+      "title": "Implement the monochrome logo",
+      "objective": "Add the approved one-color SVG and replace the visual logo placements without changing navigation behavior.",
+      "status": "verified",
+      "dependencies": ["N1"],
+      "requiredSkills": ["imagegen", "graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E2"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E2"]}
+      ],
+      "inputs": ["approved logo concept", "brand guide", "existing navigation components"],
+      "outputs": ["public/ofroot-tech-logo.svg", "updated logo placements"],
+      "evidenceRefs": ["E2"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    },
+    {
+      "id": "N3",
+      "type": "validation",
+      "title": "Run fresh release validation",
+      "objective": "Re-run scoped review, lint, typecheck, build, and runtime gates before publication.",
+      "status": "verified",
+      "dependencies": ["N2"],
+      "requiredSkills": ["graph-loop-engineering", "playwright"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E4"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E4"]}
+      ],
+      "validation": {
+        "requiredCommands": [
+          {"id": "diff", "command": "git diff --check", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E4"]},
+          {"id": "lint", "command": "eslint focused changed TSX files", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E4"]},
+          {"id": "typecheck", "command": "tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E4"]},
+          {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 next build", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E4"]}
+        ],
+        "runtimeVerification": "passed"
+      },
+      "inputs": ["scoped source diff", "repository validation commands"],
+      "outputs": ["fresh release evidence"],
+      "evidenceRefs": ["E4"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    },
+    {
+      "id": "N4",
+      "type": "human_gate",
+      "title": "Authorize production publication",
+      "objective": "Confirm explicit authority to push, merge, and deploy the scoped logo change.",
+      "status": "verified",
+      "dependencies": ["N1"],
+      "requiredSkills": ["grill-me"],
+      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E3"]}],
+      "inputs": ["user production instruction", "release risk summary"],
+      "outputs": ["production publication approval"],
+      "evidenceRefs": ["E3"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": true,
+      "approvalRefs": ["E3"],
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    },
+    {
+      "id": "N5",
+      "type": "task",
+      "title": "Publish through GitHub",
+      "objective": "Commit, push, open a scoped PR, and merge to main.",
+      "status": "pending",
+      "dependencies": ["N3", "N4"],
+      "requiredSkills": ["github:yeet"],
+      "acceptanceCriteria": [{"id": "AC-1", "required": true, "status": "pending", "evidenceRefs": []}],
+      "inputs": ["validated change", "publication approval"],
+      "outputs": ["merged main commit"],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": true,
+      "approvalRefs": ["E3"],
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    },
+    {
+      "id": "N6",
+      "type": "validation",
+      "title": "Verify canonical production",
+      "objective": "Wait for the matching Vercel production deployment and verify the asset and rendered header on the canonical host.",
+      "status": "pending",
+      "dependencies": ["N5"],
+      "requiredSkills": ["vercel:deployments-cicd", "vercel:verification"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "pending", "evidenceRefs": []},
+        {"id": "AC-2", "required": true, "status": "pending", "evidenceRefs": []}
+      ],
+      "validation": {
+        "requiredCommands": [
+          {"id": "deployment", "command": "Vercel deployment status for merged main commit", "required": true, "outcome": "not_run", "exitStatus": null, "evidenceRefs": []},
+          {"id": "asset-readback", "command": "curl canonical /ofroot-tech-logo.svg", "required": true, "outcome": "not_run", "exitStatus": null, "evidenceRefs": []},
+          {"id": "browser-readback", "command": "canonical desktop and mobile browser verification", "required": true, "outcome": "not_run", "exitStatus": null, "evidenceRefs": []}
+        ],
+        "runtimeVerification": "not_performed"
+      },
+      "inputs": ["merged main commit", "Vercel deployment", "canonical host"],
+      "outputs": ["canonical production proof"],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-09T00:00:00-05:00",
+      "updatedAt": "2026-08-09T00:00:00-05:00"
+    }
+  ],
+  "edges": [
+    {"from": "N2", "to": "N1", "type": "depends_on"},
+    {"from": "N3", "to": "N2", "type": "validates"},
+    {"from": "N5", "to": "N3", "type": "depends_on"},
+    {"from": "N5", "to": "N4", "type": "requires_approval_from"},
+    {"from": "N6", "to": "N5", "type": "validates"}
+  ],
+  "events": [
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N1", "summary": "Release target, scope, environment gate, write identity, and rollback were verified.", "type": "validation_passed", "evidenceRefs": ["E1"]},
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N2", "summary": "Monochrome logo implementation and prior local runtime checks were verified.", "type": "artifact_created", "evidenceRefs": ["E2"]},
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N4", "summary": "User explicitly authorized live production publication.", "type": "approval_received", "evidenceRefs": ["E3"]},
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N3", "summary": "Fresh release validation started.", "type": "validation_started", "evidenceRefs": []},
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N3", "summary": "Diff, SVG, focused lint, TypeScript, production build, and prior desktop/mobile runtime gates passed.", "type": "validation_passed", "evidenceRefs": ["E4"]},
+    {"timestamp": "2026-08-09T00:00:00-05:00", "nodeId": "N5", "summary": "Publication node is ready after validation and approval gates passed.", "type": "node_ready", "evidenceRefs": ["E3", "E4"]}
+  ]
+}

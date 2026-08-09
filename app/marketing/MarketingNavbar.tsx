@@ -105,12 +105,13 @@ export default function MarketingNavbar() {
         <div className="flex items-center">
           <Link href="/" aria-label="OfRoot Marketing homepage">
             <Image
-              src="/ofroot-logo.png"
-              alt="OfRoot logo"
-              width={32}
-              height={32}
+              src="/ofroot-tech-logo.svg"
+              alt=""
+              width={187}
+              height={28}
               priority
-              className="rounded-full object-cover transition-transform duration-150 ease-out hover:scale-105 active:scale-95 focus:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF9312] w-8 h-8 md:w-10 md:h-10"
+              className="h-7 w-auto transition-transform duration-150 ease-out hover:scale-[1.02] active:scale-[0.99] motion-reduce:transition-none"
+              aria-hidden="true"
             />
           </Link>
         </div>
