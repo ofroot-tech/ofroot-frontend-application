@@ -13,3 +13,10 @@
 - Context: UI Skills category discovery identified `visual`; the first candidate endpoint returned 404.
 - Decision: Activate `[registry] leonxlnx/redesign-skill` and apply only targeted, stack-preserving guidance. Keep repository typography, palette, and restrained motion rules.
 - Evidence: `ui-skills@0.2.4` category/list/get command results and local frontend guidance.
+
+## Decision: Release through preview-before-merge gates
+- Date: 2026-08-10
+- Status: accepted and completed
+- Context: The user separately authorized publication after local validation completed.
+- Decision: Push the isolated branch, require GitHub and Vercel preview success, verify preview content, squash-merge, wait for the linked production deployment, and verify the canonical route before claiming live status.
+- Evidence: E-7 and E-8.

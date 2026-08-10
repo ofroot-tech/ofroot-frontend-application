@@ -46,4 +46,28 @@
 - Command or verification method: `python3 /Users/ofroot/.agents/skills/graph-loop-engineering/scripts/validate_graph_consistency.py --graph .graph/features/blog-index-ui-audit/GRAPH.json --feature .graph/features/blog-index-ui-audit/FEATURE.md --evidence .graph/features/blog-index-ui-audit/EVIDENCE.md`.
 - Result: The pre-terminal check returned no issues or repairs. Terminal records were then reconciled for a final derived `completed` check.
 - Exit status: passed
-- Remaining uncertainty: Work remains local and unpublished.
+- Remaining uncertainty: Publication was not part of the original bounded node; later release evidence is recorded separately.
+
+## E-7: Preview and merge gate
+- Date: 2026-08-10
+- Graph node: N7
+- Command or verification method: GitHub PR checks, Vercel deployment inspection, and authenticated preview readback.
+- Result: PR #21 targeted exact head `afb20e97866f3206bec4b072ce03b975c2dded20`. GitGuardian and Vercel checks passed. Preview deployment `dpl_G1VXbtMxY5hhAhuEjXGToByY5U9b` reached Ready and returned HTTP 200 with the new heading and all three insight routes; the old placeholder was absent. PR #21 then squash-merged as `93aa42ea4d1b4424129dff0fec40c30c4e501862`.
+- Exit status: passed
+- Remaining uncertainty: Canonical production was not proven until E-8.
+
+## E-8: Canonical production verification
+- Date: 2026-08-10
+- Graph node: N7
+- Command or verification method: Vercel production inspection, cache-busted canonical HTTP readback, and Playwright checks using system Chrome at 1440x900 and 390x844.
+- Result: Production deployment `dpl_9JXB9N1oHCuzbFnEEvb7YLcozVVG` reached Ready. `https://www.ofroot.technology/blog?release=93aa42e` returned HTTP 200, the expected title and canonical URL, one H1, the new heading, and all three insight links; the old placeholder was absent. Document width matched viewport width at desktop and mobile. The only failed browser request was the existing unauthenticated `/api/auth/me` 401, reproduced on the unchanged homepage and an insight route.
+- Exit status: passed
+- Remaining uncertainty: None for the requested publication scope.
+
+## E-9: Post-release graph consistency
+- Date: 2026-08-10
+- Graph node: N8
+- Command or verification method: `python3 /Users/ofroot/.agents/skills/graph-loop-engineering/scripts/validate_graph_consistency.py --graph .graph/features/blog-index-ui-audit/GRAPH.json --feature .graph/features/blog-index-ui-audit/FEATURE.md --evidence .graph/features/blog-index-ui-audit/EVIDENCE.md`.
+- Result: The checker returned `status: completed`, `derivedStatus: completed`, no issues, and no repairs.
+- Exit status: passed
+- Remaining uncertainty: None.

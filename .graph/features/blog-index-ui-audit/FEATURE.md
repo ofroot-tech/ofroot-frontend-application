@@ -5,6 +5,8 @@ Graph state: completed.
 
 Implementation state: verified.
 
+Release state: live and verified.
+
 ## Objective
 Replace the blog index's empty archive dead end with useful, truthful routes to existing editorial content while preserving the featured guide and API-backed posts.
 
@@ -28,7 +30,7 @@ When the API returns zero posts, visitors see three clearly labeled editorial ro
 ## Non-goals
 - Inventing posts, customer proof, metrics, or outcomes
 - Changing the API, navigation, fonts, logo, global palette, or article route
-- Commit, push, merge, preview, or production deployment
+- The original implementation node did not authorize publication; the user separately authorized publication on 2026-08-10.
 
 ## Acceptance criteria
 - [x] The featured source-controlled guide remains present.
@@ -37,6 +39,8 @@ When the API returns zero posts, visitors see three clearly labeled editorial ro
 - [x] No placeholder promise about future posts remains in the zero-post experience.
 - [x] The page preserves one `h1`, keyboard focus styling, responsive balance, and no horizontal overflow.
 - [x] Focused tests, typecheck, lint, production build, and local browser checks passed.
+- [x] The exact preview commit passed GitHub and Vercel checks and returned the intended fallback content.
+- [x] The merged production deployment reached Ready and the canonical page passed desktop and mobile readback.
 
 ## Affected systems
 Public Next.js App Router blog index and static rendering tests.
@@ -62,6 +66,7 @@ Import the existing insight records into the blog index and render them only whe
 - Loaded registry skill `leonxlnx/redesign-skill`; rejected conflicting font and animation advice.
 - Replaced the zero-post placeholder with three source-controlled structured insight routes.
 - Passed focused and full tests, TypeScript, lint, production build, and responsive browser verification.
+- Published PR #21 and verified the canonical production route after the merged deployment reached Ready.
 
 ### Active
 - None.
@@ -70,7 +75,7 @@ Import the existing insight records into the blog index and render them only whe
 - None.
 
 ### Deferred
-- Additional published field notes and production release.
+- Additional published field notes.
 
 ## Validation status
 
@@ -82,16 +87,16 @@ Import the existing insight records into the blog index and render them only whe
 | Automated tests | passed | E-5 | Focused 5/5 and full 83/83 tests passed. |
 | Build | passed | E-5 | Next.js generated 168 routes after the dependency-layout repair. |
 | Runtime verification | passed | E-5 | Desktop and mobile rendered checks passed with no overflow or browser errors. |
-| Deployment | not performed | | Not authorized. |
+| Deployment | passed | E-7, E-8 | PR #21 merged as `93aa42e`; the linked Vercel production deployment reached Ready and canonical readback passed. |
 
 ## Open questions
 None required for the bounded first node.
 
 ## Next bounded action
-Await user review of the local branch; publication requires separate authorization and the pre-push gate.
+Monitor the public route normally; no additional release action is required.
 
 ## Last reviewed
-2026-08-10 — `.graph-runs/completed/20260810T041659Z-blog-index-ui-audit`.
+2026-08-10 — production verification after PR #21.
 
 ## Consistency check
-Passed with no issues or repairs. The graph derives `completed` after E-6 reconciliation.
+Passed with no issues or repairs. The graph derives `completed` after release evidence and E-9 reconciliation.
