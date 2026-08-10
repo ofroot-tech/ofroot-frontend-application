@@ -5,8 +5,8 @@
   "objective": "Audit the public blog index and replace its zero-post dead end with truthful editorial routing.",
   "status": "completed",
   "createdAt": "2026-08-10T04:16:59Z",
-  "updatedAt": "2026-08-10T04:38:00Z",
-  "iterationCount": 6,
+  "updatedAt": "2026-08-10T04:49:00Z",
+  "iterationCount": 8,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -15,14 +15,18 @@
     {"id":"N3","type":"plan","title":"Plan the first bounded improvement","objective":"Choose the smallest change that resolves the observed empty-state weakness without changing API behavior.","status":"completed","dependencies":["N2"],"requiredSkills":["premium-marketing-redesign","apple-liquid-glass-ui","registry:leonxlnx/redesign-skill"],"acceptanceCriteria":[{"id":"AC-3","required":true,"status":"passed","evidenceRefs":["E-3"]}],"inputs":["E-1","E-2"],"outputs":["bounded implementation plan"],"evidenceRefs":["E-3"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"medium","approvalRequired":false,"blockingReason":null,"createdAt":"2026-08-10T04:16:59Z","updatedAt":"2026-08-10T04:16:59Z"},
     {"id":"N4","type":"task","title":"Implement zero-post editorial routes","objective":"Render existing insight routes when the external post list is empty and update focused tests.","status":"completed","dependencies":["N3"],"requiredSkills":["premium-marketing-redesign","apple-liquid-glass-ui","registry:leonxlnx/redesign-skill"],"acceptanceCriteria":[{"id":"AC-4","required":true,"status":"passed","evidenceRefs":["E-4"]},{"id":"AC-5","required":true,"status":"passed","evidenceRefs":["E-4"]}],"inputs":["bounded implementation plan"],"outputs":["source changes","focused tests"],"evidenceRefs":["E-4"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"medium","approvalRequired":false,"blockingReason":null,"createdAt":"2026-08-10T04:16:59Z","updatedAt":"2026-08-10T04:36:00Z"},
     {"id":"N5","type":"validation","title":"Validate source and rendered behavior","objective":"Run scoped review, focused tests, typecheck, lint, build, and responsive local runtime checks.","status":"verified","dependencies":["N4"],"requiredSkills":["graph-loop-engineering","premium-marketing-redesign","apple-liquid-glass-ui"],"acceptanceCriteria":[{"id":"AC-6","required":true,"status":"passed","evidenceRefs":["E-5"]},{"id":"AC-7","required":true,"status":"passed","evidenceRefs":["E-5"]}],"inputs":["source changes"],"outputs":["validation evidence","updated audit score"],"evidenceRefs":["E-5"],"attemptCount":2,"maximumAttempts":3,"riskLevel":"high","approvalRequired":false,"blockingReason":null,"validation":{"requiredCommands":[{"id":"focused-tests","command":"npm test -- --runInBand __tests__/aiProcessBlog.test.tsx","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"typecheck","command":"npx tsc --noEmit","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"lint","command":"npm run lint","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"build","command":"NEXT_DISABLE_BUILD_CACHE=true NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"full-tests","command":"npm test -- --runInBand","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]}],"runtimeVerification":"passed"},"createdAt":"2026-08-10T04:16:59Z","updatedAt":"2026-08-10T04:36:00Z"},
-    {"id":"N6","type":"completion_review","title":"Reconcile graph and handoff","objective":"Run graph consistency and report local state, evidence, remaining risks, and next action.","status":"completed","dependencies":["N5"],"requiredSkills":["graph-loop-engineering"],"acceptanceCriteria":[{"id":"AC-8","required":true,"status":"passed","evidenceRefs":["E-6"]}],"inputs":["validation evidence"],"outputs":["consistent feature record","local handoff"],"evidenceRefs":["E-6"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"low","approvalRequired":false,"blockingReason":null,"createdAt":"2026-08-10T04:16:59Z","updatedAt":"2026-08-10T04:38:00Z"}
+    {"id":"N6","type":"completion_review","title":"Reconcile graph and handoff","objective":"Run graph consistency and report local state, evidence, remaining risks, and next action.","status":"completed","dependencies":["N5"],"requiredSkills":["graph-loop-engineering"],"acceptanceCriteria":[{"id":"AC-8","required":true,"status":"passed","evidenceRefs":["E-6"]}],"inputs":["validation evidence"],"outputs":["consistent feature record","local handoff"],"evidenceRefs":["E-6"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"low","approvalRequired":false,"blockingReason":null,"createdAt":"2026-08-10T04:16:59Z","updatedAt":"2026-08-10T04:38:00Z"},
+    {"id":"N7","type":"validation","title":"Publish and verify production","objective":"Pass preview gates, merge the reviewed change, and verify the canonical production route.","status":"verified","dependencies":["N6"],"requiredSkills":["graph-loop-engineering","grill-me"],"acceptanceCriteria":[{"id":"AC-9","required":true,"status":"passed","evidenceRefs":["E-7"]},{"id":"AC-10","required":true,"status":"passed","evidenceRefs":["E-8"]}],"inputs":["user publication authorization","verified implementation"],"outputs":["merged PR","verified production deployment"],"evidenceRefs":["E-7","E-8"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"high","approvalRequired":true,"blockingReason":null,"validation":{"requiredCommands":[{"id":"preview-gates","command":"gh pr view 21 --json mergeStateStatus,statusCheckRollup,headRefOid; vercel inspect preview; vercel curl /blog","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-7"]},{"id":"production-readback","command":"vercel inspect production; curl canonical /blog; Playwright desktop and mobile readback","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]}],"runtimeVerification":"passed"},"createdAt":"2026-08-10T04:41:00Z","updatedAt":"2026-08-10T04:49:00Z"},
+    {"id":"N8","type":"completion_review","title":"Reconcile released feature","objective":"Record release proof and confirm the living graph remains internally consistent.","status":"completed","dependencies":["N7"],"requiredSkills":["graph-loop-engineering"],"acceptanceCriteria":[{"id":"AC-11","required":true,"status":"passed","evidenceRefs":["E-9"]}],"inputs":["preview and production evidence"],"outputs":["released feature record"],"evidenceRefs":["E-9"],"attemptCount":1,"maximumAttempts":3,"riskLevel":"low","approvalRequired":false,"blockingReason":null,"createdAt":"2026-08-10T04:49:00Z","updatedAt":"2026-08-10T04:49:00Z"}
   ],
   "edges": [
     {"from":"N2","to":"N1","type":"depends_on"},
     {"from":"N3","to":"N2","type":"depends_on"},
     {"from":"N4","to":"N3","type":"depends_on"},
     {"from":"N5","to":"N4","type":"depends_on"},
-    {"from":"N6","to":"N5","type":"depends_on"}
+    {"from":"N6","to":"N5","type":"depends_on"},
+    {"from":"N7","to":"N6","type":"depends_on"},
+    {"from":"N8","to":"N7","type":"depends_on"}
   ],
   "events": [
     {"timestamp":"2026-08-10T04:16:59Z","nodeId":"N1","summary":"Live and source blog audit completed","evidenceRefs":["E-1"]},
@@ -32,6 +36,9 @@
     {"timestamp":"2026-08-10T04:36:00Z","nodeId":"N4","summary":"Zero-post editorial routes and focused assertions implemented","evidenceRefs":["E-4"]},
     {"timestamp":"2026-08-10T04:36:00Z","nodeId":"N5","summary":"Initial build blocked by an external dependency symlink; hard-linked exact lockfile-matched dependencies repaired the environment","evidenceRefs":["E-5"]},
     {"timestamp":"2026-08-10T04:36:00Z","nodeId":"N5","summary":"Focused and full tests, typecheck, lint, production build, and responsive runtime verification passed","evidenceRefs":["E-5"]},
-    {"timestamp":"2026-08-10T04:38:00Z","nodeId":"N6","summary":"Graph consistency passed and local feature state reconciled","evidenceRefs":["E-6"]}
+    {"timestamp":"2026-08-10T04:38:00Z","nodeId":"N6","summary":"Graph consistency passed and local feature state reconciled","evidenceRefs":["E-6"]},
+    {"timestamp":"2026-08-10T04:46:04Z","nodeId":"N7","summary":"Preview gates passed and PR #21 squash-merged","evidenceRefs":["E-7"]},
+    {"timestamp":"2026-08-10T04:48:45Z","nodeId":"N7","summary":"Production deployment reached Ready and canonical browser verification passed","evidenceRefs":["E-8"]},
+    {"timestamp":"2026-08-10T04:49:00Z","nodeId":"N8","summary":"Post-release feature record reconciled","evidenceRefs":["E-9"]}
   ]
 }
