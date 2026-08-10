@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-08-10T07:14:47.481517+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/site-motion/ofroot-frontend-application/.graph-runs/active/20260810T071333Z-marketing-motion-system/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/site-motion/ofroot-frontend-application",
+  "repositoryBytes": 6533262,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/site-motion/ofroot-frontend-application/.graph-runs/active/20260810T071333Z-marketing-motion-system",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 7337435136
+}

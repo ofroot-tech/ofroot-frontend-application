@@ -1,0 +1,10 @@
+{"timestamp":"2026-08-10T07:10:00Z","event":"node_completed","nodeId":"N1","summary":"Audited current and reference motion patterns."}
+{"timestamp":"2026-08-10T07:11:00Z","event":"skill_selected","nodeId":"N2","summary":"Selected registry:mengto/animation-systems with repository and premium-marketing guidance."}
+{"timestamp":"2026-08-10T07:13:00Z","event":"decision_recorded","nodeId":"N3","summary":"Chose a restrained CSS-first motion system and rejected mismatched spectacle effects."}
+{"timestamp":"2026-08-10T07:13:33Z","event":"node_started","nodeId":"N4","summary":"Implementing homepage motion primitives and focused tests."}
+{"timestamp":"2026-08-10T07:18:30Z","event":"node_completed","nodeId":"N4","summary":"Implemented scoped CSS-first motion primitives and focused observer coverage.","evidenceRefs":["E-4"]}
+{"timestamp":"2026-08-10T07:18:31Z","event":"node_started","nodeId":"N5","summary":"Validating automated, build, responsive, reduced-motion, and fallback behavior."}
+{"timestamp":"2026-08-10T07:23:30Z","event":"node_completed","nodeId":"N5","summary":"Automated, build, desktop, mobile, reduced-motion, no-JavaScript, and console gates completed.","evidenceRefs":["E-5"]}
+{"timestamp":"2026-08-10T07:23:31Z","event":"node_started","nodeId":"N6","summary":"Reconciling the final diff and Graph Loop records."}
+{"timestamp":"2026-08-10T07:25:28Z","event":"node_completed","nodeId":"N6","summary":"Final diff and Graph Loop records reconciled.","evidenceRefs":["E-6"]}
+{"timestamp":"2026-08-10T07:25:28Z","event":"run_completed","summary":"Marketing motion system completed locally; publication not authorized."}
