@@ -1,10 +1,10 @@
 # Feature: Marketing navigation refresh
 
 ## Status
-Completed with local validation — 2026-08-10 brand and navigation iteration
+Completed and verified in canonical production — 2026-08-10
 
 ## Objective
-Modernize the public marketing logo, navigation, and homepage CTA spacing on desktop and mobile without changing routes, CTA intent, analytics source attribution, or production state.
+Modernize the public marketing logo, navigation, and homepage CTA spacing on desktop and mobile while preserving routes, CTA intent, and analytics source attribution.
 
 ## Current iteration: 2026-08-10
 
@@ -44,7 +44,7 @@ Modernize the public marketing logo, navigation, and homepage CTA spacing on des
 ### Non-goals
 - Changing page content, route taxonomy, booking behavior, analytics event names, authentication, data, or infrastructure.
 - Copying Linear's logo or visual identity.
-- Committing, pushing, deploying, or changing production state.
+- Direct provider mutation outside the repository's reviewed Git-to-Vercel release path.
 
 ### Competing hypotheses
 
@@ -120,14 +120,14 @@ Modernize the public marketing logo, navigation, and homepage CTA spacing on des
 - Desktop at 1440px and 1024px and mobile at 390px have no horizontal overflow; mobile focus trapping, Escape close, focus restoration, and body-scroll restoration passed.
 - Public marketing audit: 96/100. The existing 241 kB homepage first-load JavaScript caps the performance category and was not expanded by this scoped change.
 - Homepage CTA follow-up: desktop and mobile browser measurements confirmed all three target buttons at 48px high, with the expected responsive padding, icon gap, typography, and no horizontal overflow.
+- Release verification: PR #24 merged as `6758900`; matching Vercel production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b` reached `READY` with the canonical aliases attached.
+- Canonical verification: the homepage, shared SVG, desktop/mobile navigation, all target CTA measurements, mobile focus/scroll behavior, hero coexistence, console health, and sampled navigation destinations passed on `www.ofroot.technology`.
 
 ## Remaining uncertainty
-Release commit `f7dbc14` was pushed directly to `origin/main` on 2026-07-27 after the user expressly waived the pre-push gate. The public Vercel response still served an older cached deployment (old navbar markup, unchanged ETag, cache age about 9.7 hours) after 30 seconds, so deployment/live behavior remains unverified.
-
-The 2026-08-10 logo, navbar, and homepage CTA-spacing iteration is committed only in the clean local worktree on `update/navbar-brand-refresh`. It is not pushed, previewed, merged, deployed, or verified on the canonical site. PR #23 merged to `main` as `c89f920`; this branch was rebased onto that commit, the compact-line conflict was resolved by retaining both `HeroGrowthSystemOrbit` and the CTA-spacing classes, and the affected checks passed again.
+No release-specific correctness issue remains unverified for the scoped UI behavior. Business conversion impact and longer-term production performance require normal post-release monitoring; they are not inferred from deployment success.
 
 ## Next bounded action
-Use the user's 2026-08-10 publication authorization and the now-resolved pre-push grill gate to push the rebased branch, verify its preview, merge through a narrow PR, then verify the matching Vercel production deployment and canonical desktop/mobile runtime.
+Monitor production errors and CTA analytics through the normal observability path. Any further visual iteration should begin from current `main` and preserve the verified route, attribution, accessibility, and spacing contracts.
 
 ## Last reviewed
 2026-08-10

@@ -111,3 +111,11 @@
 - Result: The three homepage pill CTAs share reusable primary/secondary classes, remain 48px high, use 20px mobile / 22px desktop horizontal padding and a 9px text-icon gap, preserve all destinations and tracking fields, and do not overflow. The rebased homepage also retains the merged `HeroGrowthSystemOrbit`; its 3 tests pass and the desktop runtime exposes the orbit as visible and animating. Static checks, TypeScript, and the 168-page production build passed. The same pre-existing unrelated warnings remain.
 - Exit status: 0
 - Remaining uncertainty: This is local evidence. Push, PR preview, merge, matching production deployment, and canonical runtime verification remain pending.
+
+## Evidence: Reviewed release and canonical production verification
+- Date: 2026-08-10
+- Graph node: N13
+- Command or verification method: Mandatory `grill-me` release review; `gh` repository/PR/check inspection; Vercel project and deployment API readback; authenticated rendered preview inspection; squash merge; provider production polling; cache-busted canonical HTTP headers; local/remote SVG SHA-256 comparison; desktop 1440px, 1024px, and mobile 390px canonical browser checks; sampled navigation-route HTTP checks.
+- Result: PR #24 passed GitGuardian, Vercel Preview Comments, and Vercel; the exact final preview head `05a7688` was `READY`, rendered the new logo/navbar/CTA contract, retained `HeroGrowthSystemOrbit`, had no overflow, and produced zero clean-tab console warnings/errors. PR #24 squash-merged to `main` as `6758900e59c5d164a24b9bba415de2b48d9825d7`. Vercel production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b` matched that commit, target `production`, reached `READY`, reported no alias error, and attached `www.ofroot.technology`. Canonical HTTP returned 200. The canonical SVG hash exactly matched source (`77b504d7ab4ca046011d237c8015a57a9f3ea0c8006782b2084e959c31462322`). Desktop and mobile CTA dimensions matched the 48px contract; mobile focus trap, Escape close, focus restoration, scroll restoration, and overflow checks passed. All sampled navbar destinations returned HTTP 200.
+- Exit status: 0
+- Remaining uncertainty: Deployment proves delivery and runtime behavior, not downstream conversion lift. Normal analytics and error monitoring remain operational follow-up.

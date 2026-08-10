@@ -62,3 +62,10 @@
 - Context: PR #23 is already open and building. It changes the hero orbit on a different element, but both branches edit the same compact source line in `app/page.tsx`.
 - Decision: Do not merge this branch against stale `main`. PR #23 was allowed to finish first; this branch was then rebased onto its squash merge `c89f920`. The conflict resolution retained both the imported `HeroGrowthSystemOrbit` and the CTA-spacing classes. Static, test, build, and browser checks were rerun after the rebase.
 - Evidence: `gh pr view 23`, direct `app/page.tsx` diff comparison, rebase conflict/readback, 3 passing hero tests, 168-page build, and computed desktop/mobile runtime measurements.
+
+## Decision: Release through reviewed Git-to-Vercel production flow
+- Date: 2026-08-10
+- Status: accepted and completed
+- Context: The user explicitly requested publication once ready. The repository requires a pre-push grill, exact preview verification, and truthful separation between Git, provider, and canonical proof.
+- Decision: Rebase onto the current production-ready `main`, push an isolated review branch, verify the exact protected Vercel preview, squash-merge PR #24, then wait for the matching production deployment and canonical desktop/mobile checks. Keep local screenshots outside the commit.
+- Evidence: PR #24, merge `6758900`, deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b`, canonical asset hash match, browser measurements, mobile interaction checks, and route HTTP checks.

@@ -1,0 +1,14 @@
+{
+  "autoRemoved": [],
+  "completedAt": "2026-08-10T07:15:17Z",
+  "preserved": [
+    "application and user files",
+    ".git and .graph durable records",
+    "dependencies and shared build caches",
+    "local validation screenshots in output"
+  ],
+  "publishedEvidence": "PR #24 merge 6758900; Vercel production dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b; canonical https://www.ofroot.technology/",
+  "reclaimedBytes": 0,
+  "repository": "/Users/ofroot/.codex/worktrees/navbar-brand-refresh",
+  "status": "completed"
+}

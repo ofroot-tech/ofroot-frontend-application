@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-08-10T07:15:17Z",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [],
+    "reviewOnly": [".next", "node_modules", "output"]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/navbar-brand-refresh",
+  "repositoryBytes": 1317552128,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/navbar-brand-refresh/.graph-runs/completed/20260810T071517Z-navbar-brand-release",
+  "sharedArtifacts": {
+    ".next": 128925696,
+    "node_modules": "shared symlink",
+    "output": "preserved local screenshots"
+  },
+  "volumeFreeBytes": 7341006848
+}
