@@ -1,0 +1,35 @@
+{
+  "autoRemoved": [
+    {
+      "bytes": 0,
+      "path": "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application/.graph-runs/active/20260810T065000Z-hero-circulation-release/tmp"
+    }
+  ],
+  "completedAt": "2026-08-10T06:59:35.155580+00:00",
+  "preserved": [
+    "application and untracked user files",
+    ".git and .graph durable records",
+    "Graph Loop evidence outside the owned tmp directory",
+    "dependencies and shared build caches",
+    "Git worktrees, branches, stashes, and sessions"
+  ],
+  "publishedEvidence": "PR #23 merge c89f920; Vercel production dpl_9X5WSaJh6DVwWJDFuEWU4W6E9oir; canonical https://www.ofroot.technology/",
+  "reclaimedBytes": 0,
+  "repository": "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application",
+  "repositoryDeltaBeforeCleanupBytes": 10709,
+  "reviewOnlySharedArtifacts": {
+    ".next": {
+      "baselineBytes": 120196618,
+      "currentBytes": 120196618,
+      "deltaBytes": 0
+    },
+    "node_modules": {
+      "baselineBytes": 994085483,
+      "currentBytes": 994085483,
+      "deltaBytes": 0
+    }
+  },
+  "runDirectory": "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application/.graph-runs/active/20260810T065000Z-hero-circulation-release",
+  "status": "completed",
+  "volumeFreeDeltaAfterCleanupBytes": -2387968
+}

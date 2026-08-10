@@ -79,3 +79,19 @@
 - Result: Commit `62b3514` was pushed on `update/hero-circulation` and PR #23 opened against `main`. GitGuardian, Vercel Preview Comments, and Vercel all passed. Vercel reported the preview Ready at `https://main-website-git-update-hero-circulation-ofroot-techs-projects.vercel.app/`. The deployed figure exposed the intended accessible label, ran `heroGrowthOrbit` for 18 seconds, changed position over a 1.2-second sample, used inverse track and label transforms to keep labels upright, switched to `data-animate=false` and `animation-play-state: paused` off-screen, and emitted no browser warnings or errors.
 - Exit status: 0
 - Remaining uncertainty: The preview is not canonical production; merge and post-deploy verification remain required.
+
+## Evidence: E-9 — merge and canonical production verification
+- Date: 2026-08-10
+- Graph node: N9
+- Command or verification method: GitHub PR merge readback; `git fetch origin main`; Vercel production inspection; canonical browser DOM, computed-style, position, viewport, and console sampling; canonical HTTP header and HTML readback.
+- Result: PR #23 squash-merged to `main` as `c89f92034efaf7375a7285cdccb84024926a04eb`. Vercel deployment `dpl_9X5WSaJh6DVwWJDFuEWU4W6E9oir` reached `READY`, target `production`, and the `www.ofroot.technology` alias resolved to that exact deployment. The canonical homepage returned HTTP 200 with `x-vercel-cache: HIT`. Its accessible figure was present; `heroGrowthOrbit` ran for 18 seconds; the sampled label position changed from `(1230, 946)` to `(1183, 888)` over 1.2 seconds; track and label transforms remained inverse; off-screen state changed to paused; and the production browser console contained no warnings or errors.
+- Exit status: 0
+- Remaining uncertainty: None for publication. Release-record consistency and bounded cleanup remain under N10.
+
+## Evidence: E-10 — release reconciliation and cleanup
+- Date: 2026-08-10
+- Graph node: N10
+- Command or verification method: Graph Loop consistency checker before and after completion-state reconciliation; `cleanup_after_publish.py cleanup`; Git status and diff checks.
+- Result: The in-progress release record was internally consistent with no issues or repairs. Post-publish cleanup completed with status `completed`, removed only the run-owned temporary directory, reclaimed 0 bytes, and preserved application files, dependencies, shared caches, Git state, and durable evidence. The completed graph was then rerun through the consistency checker.
+- Exit status: 0
+- Remaining uncertainty: None.

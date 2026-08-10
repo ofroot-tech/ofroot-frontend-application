@@ -3,10 +3,10 @@
   "graphId": "hero-growth-system-circulation-20260810",
   "featureId": "hero-growth-system-circulation",
   "objective": "Make the homepage hero growth-system labels circulate cleanly while remaining readable and accessible.",
-  "status": "incomplete",
+  "status": "completed",
   "createdAt": "2026-08-10T06:24:50Z",
-  "updatedAt": "2026-08-10T06:42:30Z",
-  "iterationCount": 7,
+  "updatedAt": "2026-08-10T07:00:21Z",
+  "iterationCount": 10,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -189,42 +189,42 @@
       "type": "validation",
       "title": "Merge and verify production",
       "objective": "Squash-merge the verified PR and prove the resulting commit is Ready in Vercel production and active on the canonical homepage.",
-      "status": "pending",
+      "status": "verified",
       "dependencies": ["N8"],
       "requiredSkills": ["graph-loop-engineering", "grill-me", "vercel:deployments-cicd", "vercel:verification"],
-      "acceptanceCriteria": [{"id":"AC-9","required":true,"status":"pending","evidenceRefs":[]}],
+      "acceptanceCriteria": [{"id":"AC-9","required":true,"status":"passed","evidenceRefs":["E-9"]}],
       "inputs": ["verified preview", "user production authorization"],
       "outputs": ["merged commit", "production deployment proof", "canonical runtime proof"],
-      "evidenceRefs": ["E-7"],
-      "attemptCount": 0,
+      "evidenceRefs": ["E-7", "E-9"],
+      "attemptCount": 1,
       "maximumAttempts": 3,
       "riskLevel": "high",
       "approvalRequired": true,
       "approvalRefs": ["E-7"],
       "blockingReason": null,
-      "validation": {"requiredCommands":[{"id":"merge","command":"gh pr merge <number> --squash","required":true,"outcome":"not_run","exitStatus":null,"evidenceRefs":[]},{"id":"production-readback","command":"Vercel production inspect and canonical browser verification","required":true,"outcome":"not_run","exitStatus":null,"evidenceRefs":[]}],"runtimeVerification":"not_performed"},
+      "validation": {"requiredCommands":[{"id":"merge","command":"gh pr merge <number> --squash","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-9"]},{"id":"production-readback","command":"Vercel production inspect and canonical browser verification","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-9"]}],"runtimeVerification":"verified"},
       "createdAt": "2026-08-10T06:42:30Z",
-      "updatedAt": "2026-08-10T06:42:30Z"
+      "updatedAt": "2026-08-10T06:59:43Z"
     },
     {
       "id": "N10",
       "type": "completion_review",
       "title": "Reconcile the released feature",
       "objective": "Record release evidence, run consistency, and complete bounded post-publish cleanup.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": ["N9"],
       "requiredSkills": ["graph-loop-engineering"],
-      "acceptanceCriteria": [{"id":"AC-10","required":true,"status":"pending","evidenceRefs":[]}],
+      "acceptanceCriteria": [{"id":"AC-10","required":true,"status":"passed","evidenceRefs":["E-10"]}],
       "inputs": ["preview and production evidence"],
       "outputs": ["consistent released feature record", "post-publish cleanup record"],
-      "evidenceRefs": [],
-      "attemptCount": 0,
+      "evidenceRefs": ["E-9", "E-10"],
+      "attemptCount": 1,
       "maximumAttempts": 3,
       "riskLevel": "low",
       "approvalRequired": false,
       "blockingReason": null,
       "createdAt": "2026-08-10T06:42:30Z",
-      "updatedAt": "2026-08-10T06:42:30Z"
+      "updatedAt": "2026-08-10T07:00:21Z"
     }
   ],
   "edges": [
@@ -251,6 +251,9 @@
     {"timestamp":"2026-08-10T06:42:30Z","nodeId":"N7","summary":"approval_received: user authorized preview-verified squash merge and production publication","evidenceRefs":["E-7"]},
     {"timestamp":"2026-08-10T06:42:30Z","nodeId":"N7","summary":"Release publication node started","evidenceRefs":["E-7"]},
     {"timestamp":"2026-08-10T06:50:20Z","nodeId":"N7","summary":"Commit 62b3514 pushed and ready PR #23 opened against main","evidenceRefs":["E-8"]},
-    {"timestamp":"2026-08-10T06:50:20Z","nodeId":"N8","summary":"Required checks and the exact Vercel preview runtime passed","evidenceRefs":["E-8"]}
+    {"timestamp":"2026-08-10T06:50:20Z","nodeId":"N8","summary":"Required checks and the exact Vercel preview runtime passed","evidenceRefs":["E-8"]},
+    {"timestamp":"2026-08-10T06:59:43Z","nodeId":"N9","summary":"PR #23 merged as c89f920 and the exact Ready deployment passed canonical runtime verification","evidenceRefs":["E-9"]},
+    {"timestamp":"2026-08-10T06:59:43Z","nodeId":"N10","summary":"Final release reconciliation started","evidenceRefs":["E-9"]},
+    {"timestamp":"2026-08-10T07:00:21Z","nodeId":"N10","summary":"Release evidence, post-publish cleanup, and consistency reconciliation completed","evidenceRefs":["E-10"]}
   ]
 }
