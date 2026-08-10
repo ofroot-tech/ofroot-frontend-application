@@ -14,6 +14,8 @@
 
 2026-08-10 — The rooted-circle lowercase logo, responsive navbar, and 48px homepage CTA-spacing contract were released through PR #24 and verified on Vercel production and `www.ofroot.technology`. Merge `6758900` maps to production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b`.
 
+2026-08-10 — Unlayered legacy rules in `app/globals.css` set fluid type on every anchor and `6px 2px` padding on every navigation anchor. Navbar controls that need exact dimensions must override that cascade at the component boundary; the scoped CTA-refinement contract is a 65px rendered header, 44px desktop audit target, 14px navigation type, and preserved booking attribution.
+
 ## Relevant conventions
 - `docs/BRAND_GUIDE.md` identifies `public/ofroot-logo.png` as the circular logo and permits teal for primary actions/focus accents.
 - Public navigation is high visibility. Preserve exact routes and CTA source tags unless a task explicitly changes them.
