@@ -51,7 +51,7 @@ function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
     <Link
       href="/"
       onClick={onNavigate}
-      className="group inline-flex min-h-11 items-center rounded-xl pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]"
+      className="group inline-flex min-h-[44px] items-center rounded-xl pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]"
       aria-label="OfRoot Tech home"
     >
       <Image
@@ -60,7 +60,7 @@ function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
         width={144}
         height={48}
         priority
-        className="h-8 w-auto transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
+        className="h-[32px] w-auto transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
         aria-hidden="true"
       />
     </Link>
@@ -73,7 +73,7 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
   return (
     <details className="group relative">
       <summary
-        className={`flex min-h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] [&::-webkit-details-marker]:hidden ${
+        className={`flex min-h-[40px] cursor-pointer list-none items-center gap-[6px] rounded-xl px-[12px] py-[8px] text-[14px] font-medium leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] [&::-webkit-details-marker]:hidden ${
           active
             ? 'bg-white/[.09] text-white'
             : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
@@ -81,7 +81,7 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
         aria-label={`${group.label} navigation`}
       >
         {group.label}
-        <ChevronDown className="h-3.5 w-3.5 text-slate-500 transition-transform duration-200 group-open:rotate-180 group-open:text-slate-300 motion-reduce:transition-none" />
+        <ChevronDown className="size-[14px] text-slate-500 transition-transform duration-200 group-open:rotate-180 group-open:text-slate-300 motion-reduce:transition-none" />
       </summary>
       <div className="absolute left-1/2 top-[calc(100%+10px)] w-72 -translate-x-1/2 rounded-2xl border border-white/[.11] bg-[#091526] p-2 shadow-[0_20px_55px_rgba(2,6,23,.42)] supports-[backdrop-filter]:bg-[#091526]/92 supports-[backdrop-filter]:backdrop-blur-2xl">
         <div className="px-3 pb-2 pt-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#5EEAD4]">
@@ -94,14 +94,14 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
               key={link.href}
               href={link.href}
               aria-current={current ? 'page' : undefined}
-              className={`group/link flex min-h-11 items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+              className={`group/link flex min-h-[44px] items-center justify-between rounded-xl !px-[12px] !py-[10px] !text-[14px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
                 current
                   ? 'bg-white/[.09] text-white'
                   : 'text-slate-300 hover:bg-white/[.06] hover:text-white'
               }`}
             >
               {link.label}
-              <ArrowRight className="h-3.5 w-3.5 text-slate-600 transition-[color,transform] duration-200 group-hover/link:translate-x-0.5 group-hover/link:text-[#5EEAD4] motion-reduce:transform-none motion-reduce:transition-none" />
+              <ArrowRight className="size-[14px] text-slate-600 transition-[color,transform] duration-200 group-hover/link:translate-x-0.5 group-hover/link:text-[#5EEAD4] motion-reduce:transform-none motion-reduce:transition-none" />
             </Link>
           );
         })}
@@ -162,10 +162,10 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-[9999] border-b border-white/[.08] bg-[#071225] text-white shadow-[0_1px_0_rgba(255,255,255,.025)]">
-        <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-[64px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <BrandLink />
 
-          <nav className="ml-auto hidden items-center gap-2 lg:flex" aria-label="Primary navigation">
+          <nav className="ml-auto hidden items-center gap-[8px] lg:flex" aria-label="Primary navigation">
             {groups.map(group => (
               <DesktopGroup key={group.label} group={group} pathname={pathname} />
             ))}
@@ -176,7 +176,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   aria-current={current ? 'page' : undefined}
-                  className={`min-h-10 rounded-xl px-3 py-2 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] ${
+                  className={`inline-flex min-h-[40px] items-center rounded-xl !px-[12px] !py-[8px] !text-[14px] font-medium !leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] ${
                     current
                       ? 'bg-white/[.09] text-white'
                       : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
@@ -186,23 +186,27 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <span className="mx-2 h-5 w-px bg-white/[.12]" aria-hidden="true" />
             <Link
               href="/book?source=nav"
               onClick={() =>
                 track({ category: 'cta', action: 'audit_cta_clicked', label: 'nav', meta: { path: pathname } })
               }
-              className="group/audit inline-flex min-h-10 items-center gap-2 whitespace-nowrap rounded-full bg-[#FF9312] px-4 py-2 text-sm font-bold text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
+              className="group/audit ml-2 inline-flex min-h-[44px] items-center gap-[10px] whitespace-nowrap rounded-full bg-[#FF9312] !py-[6px] !pl-[16px] !pr-[8px] !text-[14px] font-semibold !leading-none text-slate-950 shadow-sm ring-1 ring-inset ring-white/25 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
             >
               Book an audit
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/audit:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
+              <span
+                aria-hidden="true"
+                className="inline-flex size-[24px] items-center justify-center rounded-full bg-slate-950/[.10] transition-colors duration-200 group-hover/audit:bg-slate-950/[.16] motion-reduce:transition-none"
+              >
+                <ArrowRight className="size-[14px] transition-transform duration-200 group-hover/audit:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
+              </span>
             </Link>
           </nav>
 
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 text-white transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] lg:hidden"
+            className="ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 text-white transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] lg:hidden"
             aria-label="Open navigation"
             aria-expanded={open}
             aria-controls="mobile-navigation"
@@ -233,7 +237,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={close}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0]"
                 aria-label="Close navigation"
               >
                 <X className="h-5 w-5" />
@@ -255,7 +259,7 @@ export default function Navbar() {
                           href={link.href}
                           onClick={close}
                           aria-current={current ? 'page' : undefined}
-                          className={`flex min-h-11 items-center justify-between rounded-xl px-2 py-2.5 text-[0.98rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+                          className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
                             current
                               ? 'bg-white/[.09] text-white'
                               : 'text-slate-200 hover:bg-white/[.06] hover:text-white'
@@ -279,7 +283,7 @@ export default function Navbar() {
                       href={link.href}
                       onClick={close}
                       aria-current={current ? 'page' : undefined}
-                      className={`flex min-h-11 items-center justify-between rounded-xl px-2 py-2.5 text-[0.98rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+                      className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
                         current
                           ? 'bg-white/[.09] text-white'
                           : 'text-slate-200 hover:bg-white/[.06] hover:text-white'
@@ -299,7 +303,7 @@ export default function Navbar() {
                 close();
                 track({ category: 'cta', action: 'audit_cta_clicked', label: 'mobile_nav', meta: { path: pathname } });
               }}
-              className="group/audit mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-5 py-3 font-bold text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
+              className="group/audit mt-3 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#FF9312] px-5 py-3 !text-[16px] font-bold !leading-none text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
             >
               Book a Growth Systems Audit
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/audit:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />

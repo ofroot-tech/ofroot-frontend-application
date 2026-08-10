@@ -1,7 +1,7 @@
 # Feature: Marketing navigation refresh
 
 ## Status
-Completed and verified in canonical production — 2026-08-10
+Completed and locally verified — 2026-08-10. The prior release remains verified in canonical production; this CTA refinement is not published.
 
 ## Objective
 Modernize the public marketing logo, navigation, and homepage CTA spacing on desktop and mobile while preserving routes, CTA intent, and analytics source attribution.
@@ -110,6 +110,7 @@ Modernize the public marketing logo, navigation, and homepage CTA spacing on des
 - Moved the desktop layout to the 1024px breakpoint after direct fit evidence and retained the mobile treatment below it.
 - Reworked the mobile menu as one inset navigation sheet with clear group dividers and the full audit CTA.
 - Normalized the three homepage pill CTAs to a measured 48px height, 20px mobile / 22px desktop horizontal padding, 9px text-icon gap, restrained hover motion, and explicit focus/reduced-motion behavior.
+- Corrected the legacy global anchor cascade inside the shared navbar, removed the freestanding CTA divider, restored a 65px header and 14px navigation type, and refined the desktop audit CTA to a 44px target with 16px / 8px side padding and a 24px tonal arrow surface.
 
 ## Validation summary
 - `git diff --check`, `npm run lint`, and `npx tsc --noEmit` passed.
@@ -122,12 +123,13 @@ Modernize the public marketing logo, navigation, and homepage CTA spacing on des
 - Homepage CTA follow-up: desktop and mobile browser measurements confirmed all three target buttons at 48px high, with the expected responsive padding, icon gap, typography, and no horizontal overflow.
 - Release verification: PR #24 merged as `6758900`; matching Vercel production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b` reached `READY` with the canonical aliases attached.
 - Canonical verification: the homepage, shared SVG, desktop/mobile navigation, all target CTA measurements, mobile focus/scroll behavior, hero coexistence, console health, and sampled navigation destinations passed on `www.ofroot.technology`.
+- CTA refinement follow-up: diff, focused and repository lint, TypeScript, the 168-page Turbopack build, and production-like browser checks passed. At 1440px and 1024px the desktop CTA measures 44px high with 14px type and no overflow; at 390px the mobile dialog remains visible, closes with Escape, restores focus, and restores body scrolling.
 
 ## Remaining uncertainty
-No release-specific correctness issue remains unverified for the scoped UI behavior. Business conversion impact and longer-term production performance require normal post-release monitoring; they are not inferred from deployment success.
+The CTA refinement is verified only in the clean local worktree. Its GitHub preview, merge ancestry, provider deployment, and canonical production behavior are not yet observed. The previous navbar release remains the verified production state.
 
 ## Next bounded action
-Monitor production errors and CTA analytics through the normal observability path. Any further visual iteration should begin from current `main` and preserve the verified route, attribution, accessibility, and spacing contracts.
+Review the local screenshot. Publish only after separate authorization and the required pre-push grill, preview, merge, provider, and canonical verification gates.
 
 ## Last reviewed
 2026-08-10

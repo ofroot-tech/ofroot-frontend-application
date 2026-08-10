@@ -5,8 +5,8 @@
   "objective": "Modernize the OfRoot Technology public logo, marketing navigation, and homepage CTA spacing while preserving routes and CTA attribution.",
   "status": "completed",
   "createdAt": "2026-07-27T00:00:00-05:00",
-  "updatedAt": "2026-08-10T07:15:17Z",
-  "iterationCount": 15,
+  "updatedAt": "2026-08-10T12:32:40Z",
+  "iterationCount": 16,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -341,6 +341,42 @@
         ],
         "runtimeVerification": "passed"
       }
+    },
+    {
+      "id": "N14",
+      "type": "validation",
+      "title": "Refine and verify the navbar audit CTA",
+      "objective": "Correct the legacy anchor cascade and deliver a quieter desktop CTA treatment while preserving navigation behavior.",
+      "status": "verified",
+      "dependencies": ["N13"],
+      "requiredSkills": ["repo:docs/skills/frontend.md", "installed:apple-liquid-glass-ui", "installed:premium-marketing-redesign", "registry:ibelick/baseline-ui", "playwright", "graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E16"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E16"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E16"]},
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E16"]}
+      ],
+      "inputs": ["user screenshot and treatment request", "canonical computed-style baseline", "origin/main Navbar.tsx", "legacy global anchor rules"],
+      "outputs": ["scoped Navbar.tsx refinement", "desktop/mobile screenshots", "computed-style and interaction evidence"],
+      "evidenceRefs": ["E16"],
+      "attemptCount": 2,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T12:10:00Z",
+      "updatedAt": "2026-08-10T12:32:40Z",
+      "validation": {
+        "requiredCommands": [
+          {"id": "diff", "command": "git diff --check", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]},
+          {"id": "focused-lint", "command": "npx eslint app/components/Navbar.tsx", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]},
+          {"id": "typecheck", "command": "npx tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]},
+          {"id": "repository-lint", "command": "npm run lint", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]},
+          {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]},
+          {"id": "browser", "command": "production-like Playwright checks at 1440px, 1024px, and 390px", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E16"]}
+        ],
+        "runtimeVerification": "passed"
+      }
     }
   ],
   "edges": [
@@ -355,7 +391,8 @@
     {"from": "N9", "to": "N10", "type": "depends_on"},
     {"from": "N10", "to": "N11", "type": "depends_on"},
     {"from": "N11", "to": "N12", "type": "depends_on"},
-    {"from": "N12", "to": "N13", "type": "depends_on"}
+    {"from": "N12", "to": "N13", "type": "depends_on"},
+    {"from": "N13", "to": "N14", "type": "depends_on"}
   ],
   "events": [
     {"timestamp": "2026-07-27T00:00:00-05:00", "nodeId": "N1", "summary": "Graph created after brand, source, route, and baseline-state inspection.", "type": "graph_created", "evidenceRefs": ["E1"]},
@@ -383,6 +420,10 @@
     {"timestamp": "2026-08-10T07:09:44Z", "nodeId": "N13", "summary": "Final PR #24 head passed GitHub checks and exact protected-preview runtime verification.", "type": "validation_passed", "evidenceRefs": ["E15"]},
     {"timestamp": "2026-08-10T07:10:52Z", "nodeId": "N13", "summary": "PR #24 squash-merged to main as 6758900.", "type": "artifact_published", "evidenceRefs": ["E15"]},
     {"timestamp": "2026-08-10T07:13:21Z", "nodeId": "N13", "summary": "Matching Vercel production deployment reached READY with canonical aliases attached.", "type": "deployment_verified", "evidenceRefs": ["E15"]},
-    {"timestamp": "2026-08-10T07:15:17Z", "nodeId": "N13", "summary": "Canonical asset, desktop/mobile runtime, interaction, console, and destination-route checks passed.", "type": "graph_completed", "evidenceRefs": ["E15"]}
+    {"timestamp": "2026-08-10T07:15:17Z", "nodeId": "N13", "summary": "Canonical asset, desktop/mobile runtime, interaction, console, and destination-route checks passed.", "type": "graph_completed", "evidenceRefs": ["E15"]},
+    {"timestamp": "2026-08-10T12:10:00Z", "nodeId": "N14", "summary": "Feature reopened in a clean origin/main worktree for a bounded navbar CTA treatment follow-up.", "type": "graph_updated", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T12:13:00Z", "nodeId": "N14", "summary": "Repository, installed, and live-registry UI guidance selected and reconciled for a compact navbar treatment.", "type": "skill_selected", "evidenceRefs": ["E16"]},
+    {"timestamp": "2026-08-10T12:32:40Z", "nodeId": "N14", "summary": "Scoped cascade repair, static gates, production build, and desktop/mobile runtime checks passed.", "type": "validation_passed", "evidenceRefs": ["E16"]},
+    {"timestamp": "2026-08-10T12:32:40Z", "nodeId": "N14", "summary": "Graph completed with local validation only; no publication action occurred.", "type": "graph_completed", "evidenceRefs": ["E16"]}
   ]
 }

@@ -69,3 +69,10 @@
 - Context: The user explicitly requested publication once ready. The repository requires a pre-push grill, exact preview verification, and truthful separation between Git, provider, and canonical proof.
 - Decision: Rebase onto the current production-ready `main`, push an isolated review branch, verify the exact protected Vercel preview, squash-merge PR #24, then wait for the matching production deployment and canonical desktop/mobile checks. Keep local screenshots outside the commit.
 - Evidence: PR #24, merge `6758900`, deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b`, canonical asset hash match, browser measurements, mobile interaction checks, and route HTTP checks.
+
+## Decision: Contain the legacy global cascade at the navbar boundary
+- Date: 2026-08-10
+- Status: accepted
+- Context: The user screenshot showed a visually oversized CTA. Production measurement found the component's intended `text-sm` and `px-4` values were not reaching the browser because unlayered `p, li, span, a` and `nav a` rules override Tailwind's layered utilities. Browser zoom and Retina scaling did not explain the CSS measurements.
+- Decision: Do not change the broad legacy stylesheet in this narrow follow-up. Restore exact pixel dimensions inside `Navbar.tsx`, remove the decorative divider, keep a 44px pointer target, and use a quiet 24px arrow surface to improve internal hierarchy. Preserve all routes, labels, analytics fields, focus behavior, and mobile-menu mechanics.
+- Evidence: Canonical before measurement, scoped source inspection, clean-worktree production build, and desktop/mobile production-like browser measurements recorded in E16.
