@@ -2,11 +2,11 @@
   "schemaVersion": "1.1",
   "graphId": "marketing-navigation-refresh-20260727",
   "featureId": "marketing-navigation-refresh",
-  "objective": "Refresh the OfRoot Technology public marketing navigation without changing routes, CTA attribution, logo asset, or production state.",
+  "objective": "Modernize the OfRoot Technology public logo, marketing navigation, and homepage CTA spacing without changing routes, CTA attribution, or production state.",
   "status": "completed",
   "createdAt": "2026-07-27T00:00:00-05:00",
-  "updatedAt": "2026-07-27T01:30:00-05:00",
-  "iterationCount": 6,
+  "updatedAt": "2026-08-10T07:28:00Z",
+  "iterationCount": 14,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -145,6 +145,169 @@
       "blockingReason": null,
       "createdAt": "2026-07-27T01:30:00-05:00",
       "updatedAt": "2026-07-27T01:30:00-05:00"
+    },
+    {
+      "id": "N7",
+      "type": "observe",
+      "title": "Inspect current logo, navbar, and reference",
+      "objective": "Map the current shared navigation behavior and compare its rendered hierarchy with a strong current public reference.",
+      "status": "verified",
+      "dependencies": ["N6"],
+      "requiredSkills": ["graph-loop-engineering", "playwright"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E8"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E8"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E8"]}
+      ],
+      "inputs": ["app/components/Navbar.tsx", "public/ofroot-tech-logo.svg", "docs/BRAND_GUIDE.md", "canonical and Linear screenshots"],
+      "outputs": ["bounded route map", "visual baseline", "reference selection"],
+      "evidenceRefs": ["E8"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:18:19Z",
+      "updatedAt": "2026-08-10T06:19:00Z"
+    },
+    {
+      "id": "N8",
+      "type": "decision",
+      "title": "Select UI guidance and bounded redesign",
+      "objective": "Choose task-relevant design guidance and translate it into explicit OfRoot acceptance criteria.",
+      "status": "verified",
+      "dependencies": ["N7"],
+      "requiredSkills": ["repo:docs/skills/frontend.md", "installed:apple-liquid-glass-ui", "installed:premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E9"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E9"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E9"]}
+      ],
+      "inputs": ["N7 outputs", "repository guidance", "installed UI skills", "UI catalog attempts"],
+      "outputs": ["layout plan", "component plan", "interaction and accessibility criteria"],
+      "evidenceRefs": ["E9"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:19:00Z",
+      "updatedAt": "2026-08-10T06:20:00Z"
+    },
+    {
+      "id": "N9",
+      "type": "task",
+      "title": "Implement the logo and navbar refresh",
+      "objective": "Build the smallest responsive redesign that modernizes hierarchy while preserving routes, tracking, and accessibility behavior.",
+      "status": "verified",
+      "dependencies": ["N8"],
+      "requiredSkills": ["repo:docs/skills/frontend.md", "installed:apple-liquid-glass-ui", "installed:premium-marketing-redesign"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E10"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E10"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E10"]},
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E10"]}
+      ],
+      "inputs": ["N8 outputs", "app/components/Navbar.tsx", "public/ofroot-tech-logo.svg"],
+      "outputs": ["scoped navbar and logo changes"],
+      "evidenceRefs": ["E10"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:20:00Z",
+      "updatedAt": "2026-08-10T06:35:00Z"
+    },
+    {
+      "id": "N10",
+      "type": "validation",
+      "title": "Validate static, build, and browser behavior",
+      "objective": "Verify the scoped diff, logo asset, compiler/build gates, and desktop/mobile navigation behavior.",
+      "status": "verified",
+      "dependencies": ["N9"],
+      "requiredSkills": ["playwright", "graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E11"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E11"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E11"]},
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E11", "E12"]}
+      ],
+      "inputs": ["N9 outputs"],
+      "outputs": ["static results", "build result", "desktop/mobile screenshots", "interaction evidence"],
+      "evidenceRefs": ["E11", "E12"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:20:00Z",
+      "updatedAt": "2026-08-10T06:44:00Z",
+      "validation": {
+        "requiredCommands": [
+          {"id": "diff", "command": "git diff --check", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E11"]},
+          {"id": "lint", "command": "focused ESLint", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E11"]},
+          {"id": "typecheck", "command": "npx tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E11"]},
+          {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E11"]}
+        ],
+        "runtimeVerification": "passed"
+      }
+    },
+    {
+      "id": "N11",
+      "type": "completion_review",
+      "title": "Record evidence and review completion",
+      "objective": "Update durable context, run graph consistency validation, and report the truthful local-only state.",
+      "status": "verified",
+      "dependencies": ["N10"],
+      "requiredSkills": ["graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E13"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E13"]}
+      ],
+      "inputs": ["N9 and N10 evidence"],
+      "outputs": ["consistent feature and run records", "final audit score"],
+      "evidenceRefs": ["E13"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "low",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:20:00Z",
+      "updatedAt": "2026-08-10T06:48:00Z"
+    },
+    {
+      "id": "N12",
+      "type": "validation",
+      "title": "Normalize and validate homepage CTA spacing",
+      "objective": "Apply a consistent modern spacing contract to the three homepage pill CTAs while preserving destinations and tracking.",
+      "status": "verified",
+      "dependencies": ["N11"],
+      "requiredSkills": ["repo:docs/skills/frontend.md", "graph-loop-engineering"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E14"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E14"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E14"]}
+      ],
+      "inputs": ["user button-spacing request", "N11 outputs", "app/page.tsx"],
+      "outputs": ["shared CTA classes", "desktop/mobile spacing evidence", "release-order risk record"],
+      "evidenceRefs": ["E14"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:55:00Z",
+      "updatedAt": "2026-08-10T07:28:00Z",
+      "validation": {
+        "requiredCommands": [
+          {"id": "diff", "command": "git diff --check", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
+          {"id": "lint", "command": "focused ESLint", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
+          {"id": "typecheck", "command": "npx tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
+          {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]}
+        ],
+        "runtimeVerification": "passed"
+      }
     }
   ],
   "edges": [
@@ -152,7 +315,13 @@
     {"from": "N2", "to": "N3", "type": "depends_on"},
     {"from": "N3", "to": "N4", "type": "depends_on"},
     {"from": "N4", "to": "N5", "type": "depends_on"},
-    {"from": "N5", "to": "N6", "type": "depends_on"}
+    {"from": "N5", "to": "N6", "type": "depends_on"},
+    {"from": "N6", "to": "N7", "type": "depends_on"},
+    {"from": "N7", "to": "N8", "type": "depends_on"},
+    {"from": "N8", "to": "N9", "type": "depends_on"},
+    {"from": "N9", "to": "N10", "type": "depends_on"},
+    {"from": "N10", "to": "N11", "type": "depends_on"},
+    {"from": "N11", "to": "N12", "type": "depends_on"}
   ],
   "events": [
     {"timestamp": "2026-07-27T00:00:00-05:00", "nodeId": "N1", "summary": "Graph created after brand, source, route, and baseline-state inspection.", "type": "graph_created", "evidenceRefs": ["E1"]},
@@ -162,6 +331,19 @@
     {"timestamp": "2026-07-27T00:30:00-05:00", "nodeId": "N4", "summary": "Feature records updated and consistency check scheduled.", "type": "context_updated", "evidenceRefs": ["E5"]},
     {"timestamp": "2026-07-27T00:30:00-05:00", "nodeId": "N4", "summary": "Graph completed with local-only evidence; no publication action occurred.", "type": "graph_completed", "evidenceRefs": ["E5"]},
     {"timestamp": "2026-07-27T01:00:00-05:00", "nodeId": "N5", "summary": "Visible wordmark casing normalized to lowercase and verified in desktop/mobile local browser DOM.", "type": "artifact_created", "evidenceRefs": ["E6"]},
-    {"timestamp": "2026-07-27T01:30:00-05:00", "nodeId": "N6", "summary": "Direct main push completed after user waiver; public deployment remains unverified because Vercel served stale markup.", "type": "context_updated", "evidenceRefs": ["E7"]}
+    {"timestamp": "2026-07-27T01:30:00-05:00", "nodeId": "N6", "summary": "Direct main push completed after user waiver; public deployment remains unverified because Vercel served stale markup.", "type": "context_updated", "evidenceRefs": ["E7"]},
+    {"timestamp": "2026-08-10T06:18:19Z", "nodeId": "N7", "summary": "Feature reopened for a bounded logo and navbar modernization from a clean origin/main worktree.", "type": "graph_updated", "evidenceRefs": ["E8"]},
+    {"timestamp": "2026-08-10T06:19:00Z", "nodeId": "N8", "summary": "Repository frontend guidance and installed Apple and premium marketing skills selected after live catalog commands returned no entries.", "type": "skill_selected", "evidenceRefs": ["E9"]},
+    {"timestamp": "2026-08-10T06:20:00Z", "nodeId": "N8", "summary": "Linear hierarchy selected as reference while retaining OfRoot identity, routes, and interaction contracts.", "type": "decision_recorded", "evidenceRefs": ["E8", "E9"]},
+    {"timestamp": "2026-08-10T06:20:00Z", "nodeId": "N9", "summary": "Scoped logo and navbar implementation started.", "type": "node_started", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T06:35:00Z", "nodeId": "N9", "summary": "Scoped rooted-circle logo and responsive navigation refresh implemented with routes and attribution preserved.", "type": "artifact_created", "evidenceRefs": ["E10"]},
+    {"timestamp": "2026-08-10T06:44:00Z", "nodeId": "N10", "summary": "Required static, build, browser, accessibility, route, attribution, and discovery validations passed.", "type": "validation_passed", "evidenceRefs": ["E11", "E12"]},
+    {"timestamp": "2026-08-10T06:45:00Z", "nodeId": "N11", "summary": "Completion review and durable record update started.", "type": "node_started", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T06:48:00Z", "nodeId": "N11", "summary": "Scoped diff, evidence, audit, and durable context reviewed for local completion.", "type": "context_updated", "evidenceRefs": ["E13"]},
+    {"timestamp": "2026-08-10T06:48:00Z", "nodeId": "N11", "summary": "Graph completed with local validation only; no publication or production action occurred.", "type": "graph_completed", "evidenceRefs": ["E13"]},
+    {"timestamp": "2026-08-10T06:55:00Z", "nodeId": "N12", "summary": "Feature reopened for a bounded homepage CTA-spacing follow-up.", "type": "graph_updated", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T07:10:00Z", "nodeId": "N12", "summary": "Homepage CTA geometry, static gates, production build, and desktop/mobile runtime measurements passed.", "type": "validation_passed", "evidenceRefs": ["E14"]},
+    {"timestamp": "2026-08-10T07:10:00Z", "nodeId": "N12", "summary": "Graph completed with local validation; PR #23 release ordering remains an external merge dependency.", "type": "graph_completed", "evidenceRefs": ["E14"]},
+    {"timestamp": "2026-08-10T07:28:00Z", "nodeId": "N12", "summary": "Rebased onto the PR #23 squash merge, retained both homepage changes, and passed static, hero test, production build, and desktop/mobile browser gates.", "type": "validation_passed", "evidenceRefs": ["E14"]}
   ]
 }

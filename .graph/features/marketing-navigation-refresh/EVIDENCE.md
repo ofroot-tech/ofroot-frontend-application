@@ -55,3 +55,59 @@
 - Result: Remote main matched the local base before release. The direct push advanced `origin/main` from `f743b0c` to `f7dbc14`. Public requests returned Vercel HTTP 200, but still had an unchanged ETag, `x-vercel-cache: HIT`, approximately 9.7-hour cache age, and older navbar markup. The public deployment has not yet been verified as carrying this commit.
 - Exit status: 0
 - Remaining uncertainty: Git delivery is complete; production deployment/provider state remains pending and must not be represented as live code.
+
+## Evidence: 2026-08-10 baseline and reference inspection
+- Date: 2026-08-10
+- Graph node: N7
+- Command or verification method: Clean worktree inspection from `origin/main`; source review; `git status`; canonical desktop and 390px mobile screenshots; Linear 1440 x 900 screenshot; official Linear and Apple web sources.
+- Result: The work is isolated on `update/navbar-brand-refresh`. Existing routes and booking source tags are mapped. The canonical header presents as a heavy gray strip with a thin uppercase teal lockup and oversized CTA. Linear provides a current reference for quiet hierarchy. The repository brand guide permits a teal logo update, and the user explicitly authorized improving the logo.
+- Exit status: 0
+- Remaining uncertainty: The proposed OfRoot treatment has not yet been rendered locally.
+
+## Evidence: UI guidance selection
+- Date: 2026-08-10
+- Graph node: N8
+- Command or verification method: Read repository frontend guidance, Graph Loop UI routing, installed `apple-liquid-glass-ui` and `premium-marketing-redesign` skills; ran `npx --yes ui-skills@0.2.4 start` and `categories` twice.
+- Result: The live catalog commands exited 0 but returned no entries, so the selection used the evidence-backed repository and installed-skill fallback. Applied constraints are one navigation material, preserved OfRoot tokens, one primary CTA, explicit focus behavior, mobile-first layout, and reduced motion.
+- Exit status: 0
+- Remaining uncertainty: External UI catalog content was unavailable and is not treated as validation evidence.
+
+## Evidence: Focused logo and navbar implementation
+- Date: 2026-08-10
+- Graph node: N9
+- Command or verification method: Scoped diff review; route-string comparison against `origin/main`; SVG XML and unique-color checks; local desktop and mobile render inspection.
+- Result: The implementation updates the shared one-color logo lockup, intrinsic dimensions at its four known consumers, the main responsive navbar, and the brand guide. All pre-existing destination paths, `/book?source=nav`, `/book?source=mobile-nav`, `audit_cta_clicked`, `nav`, and `mobile_nav` values remain unchanged. The new navbar adds active-route state, a compact desktop CTA, a 1024px desktop breakpoint, and an inset mobile sheet without new dependencies.
+- Exit status: 0
+- Remaining uncertainty: This is local source and runtime evidence, not a commit, preview, deployment, or canonical production result.
+
+## Evidence: Static, build, and browser validation
+- Date: 2026-08-10
+- Graph node: N10
+- Command or verification method: `git diff --check`; `xmllint --noout public/ofroot-tech-logo.svg`; unique-color search; focused ESLint; `npx tsc --noEmit`; `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build`; production-like local server; Playwright through installed Chrome at 1440 x 900, 1024 x 800, and 390 x 844.
+- Result: Diff, XML, one-color, focused lint, TypeScript, and the 168-page Turbopack production build passed. Browser checks passed for desktop/mobile visibility, no overflow, disclosure contents, active-route state, booking hrefs, focus-on-open, focus loop, body-scroll lock/restoration, Escape close, and focus restoration. The logo route returned HTTP 200 `image/svg+xml`. Focused lint emitted one unchanged `PublicNavbar.tsx` Hook dependency warning and zero errors; the build repeated that and other pre-existing warnings outside the changed navbar.
+- Exit status: 0
+- Remaining uncertainty: Browser evidence is local only. A first metadata route-check command failed because the zsh special parameter `path` cleared the command PATH; the corrected `route_name` retry passed and no application code was implicated.
+
+## Evidence: Public marketing audit
+- Date: 2026-08-10
+- Graph node: N10
+- Command or verification method: Production build output plus local HTTP checks of `/`, `/results`, `/robots.txt`, `/sitemap.xml`, `/llms.txt`, `/llms-full.txt`, `/og.jpg`, and `/ofroot-tech-logo.svg`; homepage and inner-route canonical/title extraction; rendered visual review.
+- Result: Audit score is 96/100: performance and delivery 31/35, SEO and indexability 30/30, GEO and machine-readable discoverability 20/20, brand clarity and UX 15/15. All checked routes returned HTTP 200 with expected content types; homepage and Results titles/canonicals are correct. The score is capped by the existing 241 kB homepage first-load JavaScript, which is outside this navbar-only change.
+- Exit status: 0
+- Remaining uncertainty: The audit is local build/runtime evidence, not canonical production verification.
+
+## Evidence: Completion review and graph consistency
+- Date: 2026-08-10
+- Graph node: N11
+- Command or verification method: Final scoped diff/status review and Graph Loop consistency checker.
+- Result: The final application diff is limited to the navbar, shared logo asset, intrinsic logo dimensions at known consumers, and the brand guide. Pre-completion consistency returned `incomplete` with no issues or repairs because N11 was still in progress. Final consistency returned `{ "status": "completed", "derivedStatus": "completed", "issues": [], "repairs": [] }`. No unrelated dirty-checkout work was touched.
+- Exit status: 0
+- Remaining uncertainty: Publication and canonical runtime evidence were deliberately not performed.
+
+## Evidence: Homepage CTA spacing follow-up and rebase validation
+- Date: 2026-08-10
+- Graph node: N12
+- Command or verification method: Scoped `app/page.tsx` diff; rebase onto `origin/main` at `c89f920`; explicit compact-line conflict resolution; production-like local browser measurements at desktop and 390px mobile; `git diff --check`; focused ESLint; `npx tsc --noEmit`; `npm test -- --runInBand __tests__/heroGrowthSystemOrbit.test.tsx`; `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build`.
+- Result: The three homepage pill CTAs share reusable primary/secondary classes, remain 48px high, use 20px mobile / 22px desktop horizontal padding and a 9px text-icon gap, preserve all destinations and tracking fields, and do not overflow. The rebased homepage also retains the merged `HeroGrowthSystemOrbit`; its 3 tests pass and the desktop runtime exposes the orbit as visible and animating. Static checks, TypeScript, and the 168-page production build passed. The same pre-existing unrelated warnings remain.
+- Exit status: 0
+- Remaining uncertainty: This is local evidence. Push, PR preview, merge, matching production deployment, and canonical runtime verification remain pending.

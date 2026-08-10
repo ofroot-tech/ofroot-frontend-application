@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-08-10T06:18:36.092353+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/navbar-brand-refresh/.graph-runs/active/20260810T061819Z-navbar-brand-refresh/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/navbar-brand-refresh",
+  "repositoryBytes": 7081882,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/navbar-brand-refresh/.graph-runs/active/20260810T061819Z-navbar-brand-refresh",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 12068978688
+}

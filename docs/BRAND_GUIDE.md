@@ -19,7 +19,7 @@ Use this to inform headings, CTAs, and microcopy. Examples:
 
 ## 2) Core visual identity
 
-- Logo: Monochrome wordmark found in `/public/ofroot-tech-logo.svg`. Use it in OfRoot teal (`#20B2AA`) and keep clear space around it equal to at least the mark's stem width.
+- Logo: Monochrome lowercase lockup found in `/public/ofroot-tech-logo.svg`. Its rooted-circle mark and wordmark use OfRoot teal (`#20B2AA`). Keep clear space around it equal to at least the mark's stem width, and do not add effects inside the asset.
 - Color system: Brand teal with neutral grays and purposeful accents.
 
 Primary brand (teal)
