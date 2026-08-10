@@ -11,6 +11,7 @@ import BlogPage, { metadata as blogMetadata } from '@/app/blog/page';
 import AiProcessGuidePage, { metadata as articleMetadata } from '@/app/blog/find-expensive-manual-work-before-automating/page';
 import AiProcessPage from '@/app/ai-process/page';
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide';
+import { insights } from '@/app/lib/insights-content';
 import sitemap from '@/app/sitemap';
 
 describe('AI Process supporting article', () => {
@@ -27,7 +28,12 @@ describe('AI Process supporting article', () => {
     const html = renderToStaticMarkup(await BlogPage());
     expect(html).toContain(AI_PROCESS_GUIDE.title);
     expect(html).toContain(`href="${AI_PROCESS_GUIDE.href}"`);
-    expect(html).toContain('More field notes are being prepared.');
+    expect(html).toContain('Choose the next question.');
+    expect(html).not.toContain('More field notes are being prepared.');
+    for (const insight of insights) {
+      expect(html).toContain(insight.title);
+      expect(html).toContain(`href="/insights/${insight.slug}"`);
+    }
   });
 
   it('links from the AI Process page back to the article', () => {
