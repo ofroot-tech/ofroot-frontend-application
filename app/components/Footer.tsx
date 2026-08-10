@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
           <div>
             <Link href="/" aria-label="OfRoot home" className="inline-flex items-center gap-3">
-              <Image src="/ofroot-tech-logo.svg" alt="" width={213} height={32} className="h-8 w-auto" aria-hidden="true" />
+              <Image src="/ofroot-tech-logo.svg" alt="" width={144} height={48} className="h-8 w-auto" aria-hidden="true" />
             </Link>
             <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">AI-powered growth and operations systems for companies that need more visibility, faster execution, and less manual work.</p>
             <a href="mailto:communications@ofroot.technology" className="mt-6 inline-block text-sm font-semibold text-slate-200 hover:text-white">communications@ofroot.technology</a>

@@ -83,8 +83,8 @@ export default function PublicNavbar() {
                 <Image
                   src="/ofroot-tech-logo.svg"
                   alt=""
-                  width={187}
-                  height={28}
+                  width={144}
+                  height={48}
                   priority
                   className="h-7 w-auto"
                   aria-hidden="true"
@@ -186,8 +186,8 @@ export default function PublicNavbar() {
               <Image
                 src="/ofroot-tech-logo.svg"
                 alt=""
-                width={174}
-                height={26}
+                width={144}
+                height={48}
                 className="h-[26px] w-auto"
                 aria-hidden="true"
               />

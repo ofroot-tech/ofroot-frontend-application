@@ -107,8 +107,8 @@ export default function MarketingNavbar() {
             <Image
               src="/ofroot-tech-logo.svg"
               alt=""
-              width={187}
-              height={28}
+              width={144}
+              height={48}
               priority
               className="h-7 w-auto transition-transform duration-150 ease-out hover:scale-[1.02] active:scale-[0.99] motion-reduce:transition-none"
               aria-hidden="true"

@@ -1,10 +1,58 @@
 # Feature: Marketing navigation refresh
 
 ## Status
-Completed with local validation
+Completed with local validation — 2026-08-10 brand and navigation iteration
 
 ## Objective
-Improve the public marketing navigation on desktop and mobile without changing its routes, CTA intent, shipped logo asset, analytics source attribution, or any production state.
+Modernize the public marketing logo, navigation, and homepage CTA spacing on desktop and mobile without changing routes, CTA intent, analytics source attribution, or production state.
+
+## Current iteration: 2026-08-10
+
+### Inputs
+- The current public pathname, navigation destinations, dropdown groups, and mobile-menu state.
+- The approved one-color OfRoot logo asset and local navy, teal, and orange brand system.
+- Direct screenshots of the canonical site and Linear's current public homepage.
+
+### Processing
+- `app/components/Navbar.tsx` turns the route model into desktop navigation, dropdowns, the booking CTA, and a mobile dialog.
+- `public/ofroot-tech-logo.svg` supplies the shared public brand lockup.
+- Existing focus trapping, Escape handling, scroll locking, and tracking protect behavior while visual hierarchy changes.
+
+### Outputs
+- A slimmer, calmer public header with active-route feedback and a single clear CTA.
+- A simpler lowercase OfRoot lockup that remains recognizable at mobile size.
+- A mobile inset sheet with clear grouping and preserved keyboard behavior.
+
+### Dependencies
+- Next.js App Router, `next/image`, `lucide-react`, Tailwind CSS, and `app/lib/ab.ts` tracking.
+- The existing route structure and shared asset consumers in the footer and alternate public navigations.
+
+### Failure points
+- A shared logo change could become illegible on light or dark surfaces.
+- Compact desktop navigation could overflow near its breakpoint.
+- A visual rewrite could alter booking attribution or route destinations.
+- Translucent material could reduce contrast or read as decorative glassmorphism.
+
+### Success criteria
+- The same navigation destinations and `nav` / `mobile-nav` booking source values remain present.
+- The logo is legible at desktop and 390px mobile sizes and uses the documented OfRoot teal.
+- Desktop navigation fits at its breakpoint with a visible current-route state and one compact CTA.
+- Mobile navigation traps focus, closes with Escape/backdrop, restores focus, and does not overflow.
+- Focus, contrast, and motion-reduction behavior remain explicit.
+- Focused lint, TypeScript, production build, desktop runtime, and mobile runtime checks pass.
+
+### Non-goals
+- Changing page content, route taxonomy, booking behavior, analytics event names, authentication, data, or infrastructure.
+- Copying Linear's logo or visual identity.
+- Committing, pushing, deploying, or changing production state.
+
+### Competing hypotheses
+
+| Hypothesis | Why it could be true | Disconfirming evidence |
+| --- | --- | --- |
+| H4: The logo feels dated because the thin branching mark and widely spaced uppercase wordmark read like an older technology brand. | The canonical screenshot shows a small skeletal symbol followed by a narrow all-caps label. | A revised lowercase lockup still feels dated when rendered at the same size and context. |
+| H5: The navbar feels dated because the tall gray bar, equally weighted links, and oversized CTA compete with the hero. | The canonical desktop screenshot shows the header as a separate heavy slab with little active-state guidance. | A slimmer, quieter header fails to improve scan order or visual continuity in browser comparison. |
+| H6: The problem comes mainly from the hero/header transition, not the controls themselves. | The header sits directly over a dark hero and a mismatched surface can exaggerate separation. | The same dated impression remains when the navbar is inspected independently or on an inner light page. |
 
 ## System breakdown
 
@@ -57,18 +105,29 @@ Improve the public marketing navigation on desktop and mobile without changing i
 - Improved desktop group-menu surfaces and mobile information grouping, hit targets, focus states, Escape close, focus restoration, and scroll locking.
 - Moved the full desktop breakpoint from `lg` to `xl` after direct browser evidence showed overflow at 1025 px; desktop fits at 1280 px and mobile has no overflow at 1025 px.
 - Normalized the visible navbar wordmark to lowercase `ofroot` while keeping the existing two-tone treatment and the shipped logo image untouched.
+- Replaced the dated thin all-caps lockup with a one-color rooted-circle mark and lowercase `ofroot` wordmark, preserving the approved teal.
+- Reduced the header to a quiet navy bar with a fine divider, compact route controls, active-route state, and one shorter desktop audit CTA.
+- Moved the desktop layout to the 1024px breakpoint after direct fit evidence and retained the mobile treatment below it.
+- Reworked the mobile menu as one inset navigation sheet with clear group dividers and the full audit CTA.
+- Normalized the three homepage pill CTAs to a measured 48px height, 20px mobile / 22px desktop horizontal padding, 9px text-icon gap, restrained hover motion, and explicit focus/reduced-motion behavior.
 
 ## Validation summary
 - `git diff --check`, `npm run lint`, and `npx tsc --noEmit` passed.
 - `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build` passed. The placeholder was the repository-documented local validation value; no environment file changed.
 - Local browser verification passed for wide desktop, mobile menu behavior, mobile CTA visibility, Escape close/focus restoration, body-scroll restoration, and the responsive threshold.
 - Continuation validation: `git diff --check`, lint, and typecheck passed; desktop and mobile browser DOM snapshots both expose the navbar wordmark as `ofroot`.
+- 2026-08-10 iteration: SVG structure/color, focused lint, TypeScript, 168-page Turbopack build, and production-like desktop/mobile browser validation passed.
+- Desktop at 1440px and 1024px and mobile at 390px have no horizontal overflow; mobile focus trapping, Escape close, focus restoration, and body-scroll restoration passed.
+- Public marketing audit: 96/100. The existing 241 kB homepage first-load JavaScript caps the performance category and was not expanded by this scoped change.
+- Homepage CTA follow-up: desktop and mobile browser measurements confirmed all three target buttons at 48px high, with the expected responsive padding, icon gap, typography, and no horizontal overflow.
 
 ## Remaining uncertainty
 Release commit `f7dbc14` was pushed directly to `origin/main` on 2026-07-27 after the user expressly waived the pre-push gate. The public Vercel response still served an older cached deployment (old navbar markup, unchanged ETag, cache age about 9.7 hours) after 30 seconds, so deployment/live behavior remains unverified.
 
+The 2026-08-10 logo, navbar, and homepage CTA-spacing iteration is committed only in the clean local worktree on `update/navbar-brand-refresh`. It is not pushed, previewed, merged, deployed, or verified on the canonical site. PR #23 merged to `main` as `c89f920`; this branch was rebased onto that commit, the compact-line conflict was resolved by retaining both `HeroGrowthSystemOrbit` and the CTA-spacing classes, and the affected checks passed again.
+
 ## Next bounded action
-No further in-scope action. Review the local diff before any publication decision.
+Use the user's 2026-08-10 publication authorization and the now-resolved pre-push grill gate to push the rebased branch, verify its preview, merge through a narrow PR, then verify the matching Vercel production deployment and canonical desktop/mobile runtime.
 
 ## Last reviewed
-2026-07-27
+2026-08-10

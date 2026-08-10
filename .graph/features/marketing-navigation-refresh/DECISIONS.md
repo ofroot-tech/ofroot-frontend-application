@@ -27,3 +27,38 @@
 - Context: User requested “push live bypass gates,” which expressly waived the mandatory pre-push grill gate. Remote `origin/main` was refreshed and matched the local base before release.
 - Decision: Commit the scoped application change and Graph records as `f7dbc14`, then push detached `HEAD` directly to `origin/main`. Keep generated local screenshots untracked.
 - Evidence: `git push origin HEAD:main` advanced `origin/main` from `f743b0c` to `f7dbc14`. Public Vercel readback was still stale at the time of verification.
+
+## Decision: Use Linear's hierarchy as a reference, not a template
+- Date: 2026-08-10
+- Status: accepted
+- Context: The user requested a strong current online example. Linear's public header demonstrates a compact brand lockup, quiet navigation, a restrained divider, and one decisive action.
+- Decision: Adapt its hierarchy and restraint while retaining OfRoot's route structure, navy surface, teal identity, orange conversion CTA, and accessible interaction model.
+- Evidence: Direct 1440 x 900 browser screenshot of `https://linear.app/homepage`; canonical OfRoot desktop/mobile screenshots; repository brand guide.
+
+## Decision: Replace the shared lockup with a simpler lowercase mark
+- Date: 2026-08-10
+- Status: accepted
+- Context: The user expressly asked to improve the dated logo, which authorizes a focused update to the protected shared logo asset. Earlier user feedback also rejected a complex root-and-circuit concept.
+- Decision: Keep a one-color teal asset, reduce the icon to a rooted circle, and use a lowercase `ofroot` wordmark. Do not copy Linear's striped circle or typography.
+- Evidence: User request, `docs/BRAND_GUIDE.md`, current `public/ofroot-tech-logo.svg`, and prior feedback recorded in memory.
+
+## Decision: Use one restrained navigation material
+- Date: 2026-08-10
+- Status: accepted
+- Context: The current header reads as a heavy gray slab, while Apple material guidance recommends glass only where it clarifies control hierarchy.
+- Decision: Use a navy translucent header and one mobile sheet, both with fallback backgrounds, soft borders, restrained shadows, and reduced-motion-safe transitions.
+- Evidence: Installed Apple Liquid Glass UI guidance, canonical screenshots, and local brand tokens.
+
+## Decision: Normalize homepage CTA geometry without changing intent
+- Date: 2026-08-10
+- Status: accepted
+- Context: The user asked for more modern spacing inside page buttons after approving the navbar direction.
+- Decision: Limit the follow-up to the three homepage pill CTAs. Use a shared 48px control height, responsive horizontal padding, a 9px icon gap, compact line-height, explicit focus rings, and reduced-motion-safe transitions. Preserve routes, labels, and analytics fields.
+- Evidence: Desktop/mobile computed-style measurements and the scoped `app/page.tsx` diff.
+
+## Decision: Treat PR #23 as a release-order dependency
+- Date: 2026-08-10
+- Status: accepted
+- Context: PR #23 is already open and building. It changes the hero orbit on a different element, but both branches edit the same compact source line in `app/page.tsx`.
+- Decision: Do not merge this branch against stale `main`. PR #23 was allowed to finish first; this branch was then rebased onto its squash merge `c89f920`. The conflict resolution retained both the imported `HeroGrowthSystemOrbit` and the CTA-spacing classes. Static, test, build, and browser checks were rerun after the rebase.
+- Evidence: `gh pr view 23`, direct `app/page.tsx` diff comparison, rebase conflict/readback, 3 passing hero tests, 168-page build, and computed desktop/mobile runtime measurements.
