@@ -12,6 +12,8 @@
 
 2026-08-10 — The shared public lockup is `public/ofroot-tech-logo.svg`; known consumers are the main navbar, footer, `PublicNavbar`, and `MarketingNavbar`. Navbar route destinations and `nav` / `mobile-nav` booking sources are protected behavior.
 
+2026-08-10 — The rooted-circle lowercase logo, responsive navbar, and 48px homepage CTA-spacing contract were released through PR #24 and verified on Vercel production and `www.ofroot.technology`. Merge `6758900` maps to production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b`.
+
 ## Relevant conventions
 - `docs/BRAND_GUIDE.md` identifies `public/ofroot-logo.png` as the circular logo and permits teal for primary actions/focus accents.
 - Public navigation is high visibility. Preserve exact routes and CTA source tags unless a task explicitly changes them.

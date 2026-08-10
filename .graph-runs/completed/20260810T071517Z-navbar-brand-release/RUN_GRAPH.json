@@ -1,0 +1,9 @@
+{
+  "featureId": "marketing-navigation-refresh",
+  "durableGraph": ".graph/features/marketing-navigation-refresh/GRAPH.json",
+  "status": "completed",
+  "currentNode": "N13",
+  "startedAt": "2026-08-10T06:45:00Z",
+  "publicationAuthorized": true,
+  "completedAt": "2026-08-10T07:15:17Z"
+}

@@ -2,11 +2,11 @@
   "schemaVersion": "1.1",
   "graphId": "marketing-navigation-refresh-20260727",
   "featureId": "marketing-navigation-refresh",
-  "objective": "Modernize the OfRoot Technology public logo, marketing navigation, and homepage CTA spacing without changing routes, CTA attribution, or production state.",
+  "objective": "Modernize the OfRoot Technology public logo, marketing navigation, and homepage CTA spacing while preserving routes and CTA attribution.",
   "status": "completed",
   "createdAt": "2026-07-27T00:00:00-05:00",
-  "updatedAt": "2026-08-10T07:28:00Z",
-  "iterationCount": 14,
+  "updatedAt": "2026-08-10T07:15:17Z",
+  "iterationCount": 15,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -298,13 +298,46 @@
       "approvalRequired": false,
       "blockingReason": null,
       "createdAt": "2026-08-10T06:55:00Z",
-      "updatedAt": "2026-08-10T07:28:00Z",
+      "updatedAt": "2026-08-10T06:57:30Z",
       "validation": {
         "requiredCommands": [
           {"id": "diff", "command": "git diff --check", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
           {"id": "lint", "command": "focused ESLint", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
           {"id": "typecheck", "command": "npx tsc --noEmit", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]},
           {"id": "build", "command": "NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E14"]}
+        ],
+        "runtimeVerification": "passed"
+      }
+    },
+    {
+      "id": "N13",
+      "type": "release",
+      "title": "Publish and verify the reviewed production release",
+      "objective": "Deliver the verified branch through GitHub and Vercel, then prove the matching canonical desktop/mobile runtime.",
+      "status": "verified",
+      "dependencies": ["N12"],
+      "requiredSkills": ["graph-loop-engineering", "grill-me", "vercel-deploy", "browser:control-in-app-browser"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E15"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E15"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E15"]},
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E15"]}
+      ],
+      "inputs": ["N12 outputs", "user publication authorization", "current origin/main", "Vercel main-website project"],
+      "outputs": ["merged PR #24", "READY production deployment", "canonical runtime evidence"],
+      "evidenceRefs": ["E15"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T06:45:00Z",
+      "updatedAt": "2026-08-10T07:15:17Z",
+      "validation": {
+        "requiredCommands": [
+          {"id": "github", "command": "gh PR and check inspection", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E15"]},
+          {"id": "provider", "command": "Vercel exact deployment readback", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E15"]},
+          {"id": "canonical", "command": "canonical HTTP, asset hash, desktop/mobile runtime, and route checks", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E15"]}
         ],
         "runtimeVerification": "passed"
       }
@@ -321,7 +354,8 @@
     {"from": "N8", "to": "N9", "type": "depends_on"},
     {"from": "N9", "to": "N10", "type": "depends_on"},
     {"from": "N10", "to": "N11", "type": "depends_on"},
-    {"from": "N11", "to": "N12", "type": "depends_on"}
+    {"from": "N11", "to": "N12", "type": "depends_on"},
+    {"from": "N12", "to": "N13", "type": "depends_on"}
   ],
   "events": [
     {"timestamp": "2026-07-27T00:00:00-05:00", "nodeId": "N1", "summary": "Graph created after brand, source, route, and baseline-state inspection.", "type": "graph_created", "evidenceRefs": ["E1"]},
@@ -344,6 +378,11 @@
     {"timestamp": "2026-08-10T06:55:00Z", "nodeId": "N12", "summary": "Feature reopened for a bounded homepage CTA-spacing follow-up.", "type": "graph_updated", "evidenceRefs": []},
     {"timestamp": "2026-08-10T07:10:00Z", "nodeId": "N12", "summary": "Homepage CTA geometry, static gates, production build, and desktop/mobile runtime measurements passed.", "type": "validation_passed", "evidenceRefs": ["E14"]},
     {"timestamp": "2026-08-10T07:10:00Z", "nodeId": "N12", "summary": "Graph completed with local validation; PR #23 release ordering remains an external merge dependency.", "type": "graph_completed", "evidenceRefs": ["E14"]},
-    {"timestamp": "2026-08-10T07:28:00Z", "nodeId": "N12", "summary": "Rebased onto the PR #23 squash merge, retained both homepage changes, and passed static, hero test, production build, and desktop/mobile browser gates.", "type": "validation_passed", "evidenceRefs": ["E14"]}
+    {"timestamp": "2026-08-10T06:57:30Z", "nodeId": "N12", "summary": "Rebased onto the PR #23 squash merge, retained both homepage changes, and passed static, hero test, production build, and desktop/mobile browser gates.", "type": "validation_passed", "evidenceRefs": ["E14"]},
+    {"timestamp": "2026-08-10T06:45:00Z", "nodeId": "N13", "summary": "User authorized production publication; mandatory grill review started.", "type": "approval_received", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T07:09:44Z", "nodeId": "N13", "summary": "Final PR #24 head passed GitHub checks and exact protected-preview runtime verification.", "type": "validation_passed", "evidenceRefs": ["E15"]},
+    {"timestamp": "2026-08-10T07:10:52Z", "nodeId": "N13", "summary": "PR #24 squash-merged to main as 6758900.", "type": "artifact_published", "evidenceRefs": ["E15"]},
+    {"timestamp": "2026-08-10T07:13:21Z", "nodeId": "N13", "summary": "Matching Vercel production deployment reached READY with canonical aliases attached.", "type": "deployment_verified", "evidenceRefs": ["E15"]},
+    {"timestamp": "2026-08-10T07:15:17Z", "nodeId": "N13", "summary": "Canonical asset, desktop/mobile runtime, interaction, console, and destination-route checks passed.", "type": "graph_completed", "evidenceRefs": ["E15"]}
   ]
 }
