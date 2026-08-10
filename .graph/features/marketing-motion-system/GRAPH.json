@@ -5,8 +5,8 @@
   "objective": "Create a restrained reusable motion system for the public homepage while preserving clarity, accessibility, and performance.",
   "status": "completed",
   "createdAt": "2026-08-10T07:13:33Z",
-  "updatedAt": "2026-08-10T07:25:28Z",
-  "iterationCount": 6,
+  "updatedAt": "2026-08-10T12:07:20Z",
+  "iterationCount": 9,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -27,6 +27,15 @@
     },
     {
       "id": "N6", "type": "completion_review", "title": "Reconcile the completed motion system", "objective": "Inspect the final diff, run Graph Loop consistency, and record truthful completion state.", "status": "completed", "dependencies": ["N5"], "requiredSkills": ["graph-loop-engineering"], "acceptanceCriteria": [{"id":"AC-6","required":true,"status":"passed","evidenceRefs":["E-6"]}], "inputs": ["implementation and validation evidence"], "outputs": ["consistent feature record", "completed run"], "evidenceRefs": ["E-6"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "low", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:13:33Z", "updatedAt": "2026-08-10T07:25:28Z"
+    },
+    {
+      "id": "N7", "type": "repair", "title": "Remove reduced-motion hover transforms", "objective": "Address the unresolved PR review defect without changing standard motion or layout.", "status": "completed", "dependencies": ["N6"], "requiredSkills": ["graph-loop-engineering", "github:gh-address-comments", "repository:frontend"], "acceptanceCriteria": [{"id":"AC-7","required":true,"status":"passed","evidenceRefs":["E-8"]}], "inputs": ["PR #27 unresolved P2 review thread"], "outputs": ["bounded reduced-motion CSS override"], "evidenceRefs": ["E-8"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "medium", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T11:43:32Z", "updatedAt": "2026-08-10T11:45:33Z"
+    },
+    {
+      "id": "N8", "type": "validation", "title": "Revalidate the review repair", "objective": "Prove the reduced-motion hover repair and rerun the production-readiness stack.", "status": "completed", "dependencies": ["N7"], "requiredSkills": ["graph-loop-engineering", "github:gh-address-comments"], "acceptanceCriteria": [{"id":"AC-8","required":true,"status":"passed","evidenceRefs":["E-8"]}], "inputs": ["bounded reduced-motion repair"], "outputs": ["automated, build, and rendered evidence"], "evidenceRefs": ["E-8"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "medium", "approvalRequired": false, "blockingReason": null, "validation": {"requiredCommands":[{"id":"focused-tests","command":"npm test -- --runInBand __tests__/revealObserver.test.tsx __tests__/heroGrowthSystemOrbit.test.tsx","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"full-tests","command":"npm test -- --runInBand","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"typecheck","command":"npx tsc --noEmit","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"lint","command":"npm run lint","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"build","command":"NEXT_DISABLE_BUILD_CACHE=true NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"runtime","command":"Playwright reduced-motion hover and active-state verification","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]}],"runtimeVerification":"passed"}, "createdAt": "2026-08-10T11:43:32Z", "updatedAt": "2026-08-10T11:45:33Z"
+    },
+    {
+      "id": "N9", "type": "human_gate", "title": "Authorize merge without independent human approval", "objective": "Resolve the only remaining pre-push production-risk decision before updating and merging PR #27.", "status": "completed", "dependencies": ["N8"], "requiredSkills": ["graph-loop-engineering", "grill-me"], "acceptanceCriteria": [{"id":"AC-9","required":true,"status":"passed","evidenceRefs":["E-9"]}], "inputs": ["green local validation", "unresolved independent-approval requirement"], "outputs": ["explicit waiver or reviewer approval"], "evidenceRefs": ["E-9"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "high", "approvalRequired": true, "blockingReason": null, "createdAt": "2026-08-10T11:45:33Z", "updatedAt": "2026-08-10T12:07:20Z"
     }
   ],
   "edges": [
@@ -34,7 +43,10 @@
     {"from":"N3","to":"N2","type":"depends_on"},
     {"from":"N4","to":"N3","type":"depends_on"},
     {"from":"N5","to":"N4","type":"depends_on"},
-    {"from":"N6","to":"N5","type":"depends_on"}
+    {"from":"N6","to":"N5","type":"depends_on"},
+    {"from":"N7","to":"N6","type":"depends_on"},
+    {"from":"N8","to":"N7","type":"depends_on"},
+    {"from":"N9","to":"N8","type":"depends_on"}
   ],
   "events": [
     {"timestamp":"2026-08-10T07:10:00Z","nodeId":"N1","summary":"Current OfRoot motion and production reference patterns audited","evidenceRefs":["E-1"]},
@@ -44,6 +56,11 @@
     {"timestamp":"2026-08-10T07:18:30Z","nodeId":"N4","summary":"Scoped CSS-first motion system and focused tests implemented","evidenceRefs":["E-4"]},
     {"timestamp":"2026-08-10T07:23:30Z","nodeId":"N5","summary":"Automated, build, responsive, reduced-motion, fallback, and console validation passed","evidenceRefs":["E-5"]},
     {"timestamp":"2026-08-10T07:23:31Z","nodeId":"N6","summary":"Completion review started","evidenceRefs":[]},
-    {"timestamp":"2026-08-10T07:25:28Z","nodeId":"N6","summary":"Final diff and Graph Loop records reconciled","evidenceRefs":["E-6"]}
+    {"timestamp":"2026-08-10T07:25:28Z","nodeId":"N6","summary":"Final diff and Graph Loop records reconciled","evidenceRefs":["E-6"]},
+    {"timestamp":"2026-08-10T11:43:32Z","nodeId":"N7","summary":"repair_requested: unresolved P2 reduced-motion hover transform found during pre-merge review","evidenceRefs":[]},
+    {"timestamp":"2026-08-10T11:45:33Z","nodeId":"N7","summary":"Reduced-motion hover and active transforms neutralized with a bounded CSS override","evidenceRefs":["E-8"]},
+    {"timestamp":"2026-08-10T11:45:33Z","nodeId":"N8","summary":"validation_passed: focused and full tests, typecheck, lint, build, and rendered reduced-motion interaction checks passed","evidenceRefs":["E-8"]},
+    {"timestamp":"2026-08-10T11:45:33Z","nodeId":"N9","summary":"approval_requested: no independent human approval is recorded for PR #27","evidenceRefs":[]},
+    {"timestamp":"2026-08-10T12:07:20Z","nodeId":"N9","summary":"approval_received: user explicitly waived independent human review for this bounded production release","evidenceRefs":["E-9"]}
   ]
 }

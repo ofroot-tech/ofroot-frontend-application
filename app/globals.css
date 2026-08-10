@@ -945,6 +945,14 @@ html[data-motion-ready='true'] .motion-reveal:not(.in-view) {
   .motion-cta {
     transition: none;
   }
+
+  .motion-card:hover,
+  .motion-card:active,
+  .motion-card:hover .motion-card-arrow,
+  .motion-cta:hover,
+  .motion-cta:active {
+    transform: none;
+  }
 }
 
 /* Homepage hero: circulate the connected outcomes while keeping every label upright. */

@@ -1,7 +1,7 @@
 # Feature: Marketing motion system
 
 ## Status
-Completed locally. Publication was not requested.
+Completed locally with the PR review repair verified. Remote publication evidence is tracked in the production release flight recorder.
 
 ## Objective
 Improve the public homepage with a coherent, restrained motion system inspired by strong production sites without copying effects that do not fit OfRoot's service-led conversion path.
@@ -52,7 +52,7 @@ Improve the public homepage with a coherent, restrained motion system inspired b
 - Mobile receives smaller offsets and stagger.
 
 ## Next bounded action
-Pre-push readiness is verified on current `origin/main` (`ade596d`). Resolve the human gate by choosing a review-only pull request or a preview-verified production release; then publish only within that authorization.
+Publish only within the approved production-release run: commit and push the reduced-motion repair, require refreshed PR checks and preview proof on the new head, merge PR #27, then verify the exact Vercel production deployment and canonical homepage. Roll back with a revert PR if canonical verification fails.
 
 ## Last reviewed
-2026-08-10
+2026-08-10 12:07 UTC

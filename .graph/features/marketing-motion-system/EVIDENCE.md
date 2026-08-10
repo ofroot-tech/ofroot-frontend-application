@@ -71,3 +71,26 @@
 - Tooling note: The bundled Playwright CLI wrapper could not resolve `playwright-cli`; the already-installed lockfile-matched Playwright package and system Chrome supplied equivalent browser evidence without dependency changes.
 - Console note: The only HTTP/console error was the previously documented anonymous `/api/auth/me` 401 outside this diff.
 - Remaining uncertainty: No remote branch, pull request, provider preview, merge, deployment, or canonical production verification exists. Publication scope is awaiting explicit user choice.
+
+## Evidence: E-8 — reduced-motion review repair and production-readiness revalidation
+- Date: 2026-08-10
+- Graph nodes: N7, N8
+- Trigger: Unresolved PR #27 review thread `PRRT_kwDOPyojvc6X2BlU` identified hover and active transforms that remained effective under `prefers-reduced-motion: reduce`.
+- Repair: Added a bounded reduced-motion override for card hover/active, card-arrow hover, and CTA hover/active transforms. Standard motion, layout, markup, copy, routes, dependencies, and data behavior were unchanged.
+- Commands and results:
+  - `git diff --check` — passed.
+  - Focused Jest — 2 suites, 6 tests passed.
+  - Full Jest — 22 suites, 89 tests passed; existing unrelated React act diagnostics remain noisy.
+  - `npx tsc --noEmit` — passed.
+  - `npm run lint` — exit 0 with the existing unrelated warnings.
+  - Cache-disabled production build — passed; 168 static pages generated; homepage remained 1.5 kB with 241 kB first load.
+  - Playwright with a 1440x1000 viewport and reduced motion — hero and orbit animation names were `none`; CTA hover, CTA active, card hover, and card-arrow hover transforms were `none`; transition duration was `0s`; no horizontal overflow occurred.
+- Local console note: The known anonymous `/api/auth/me` 401 and local-only missing Vercel Analytics script produced diagnostics outside this CSS repair.
+- Remaining uncertainty: The repair is not committed or pushed. PR checks, a matching preview, merge, Vercel production identity, and canonical runtime remain unverified for the repaired head.
+
+## Evidence: E-9 — independent-review waiver
+- Date: 2026-08-10
+- Graph node: N9
+- Method: Required pre-push `grill-me` gate presented the absence of independent human approval, the verified repair evidence, the exact release path, and the revert-PR rollback.
+- Result: The user replied `waive`, explicitly approving publication without independent human review for this bounded release.
+- Remaining uncertainty: The waiver authorizes the release path; it does not replace refreshed PR checks, exact preview verification, merge proof, Vercel production identity, or canonical runtime proof.

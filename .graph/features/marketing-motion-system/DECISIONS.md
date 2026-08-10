@@ -25,3 +25,8 @@
 - Date: 2026-08-10
 - Decision: Fast-forward the feature branch to current `origin/main`, retain the newer 48px CTA sizing and focus-ring classes, and layer the motion class onto those shared CTA definitions.
 - Reason: The only overlapping upstream source was homepage CTA presentation. Preserving upstream accessibility and sizing while adding the bounded motion class avoids reverting released navbar work or duplicating CTA markup.
+
+## D-6 — Treat reduced-motion hover feedback as release-blocking
+- Date: 2026-08-10
+- Decision: Neutralize hover and active transforms inside the existing reduced-motion media query before production publication.
+- Reason: Reduced motion must cover interaction states, not only entrance and continuous animations. The PR review exposed a real accessibility contradiction that local non-hover emulation had not exercised.
