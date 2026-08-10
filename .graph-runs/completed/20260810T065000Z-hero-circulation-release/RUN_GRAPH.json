@@ -1,8 +1,9 @@
 {
   "featureId": "hero-growth-system-circulation",
   "durableGraph": ".graph/features/hero-growth-system-circulation/GRAPH.json",
-  "status": "in_progress",
-  "currentNode": "N7",
+  "status": "completed",
+  "currentNode": "N10",
   "startedAt": "2026-08-10T06:42:08Z",
-  "publicationAuthorized": true
+  "publicationAuthorized": true,
+  "completedAt": "2026-08-10T07:00:21Z"
 }

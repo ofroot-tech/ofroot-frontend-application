@@ -1,3 +1,0 @@
-# Completion
-
-Publication in progress.

@@ -1,7 +1,7 @@
 # Feature: Hero growth-system circulation
 
 ## Status
-Pull request #23 and its Vercel preview are verified; production merge is in progress.
+Released and verified on the canonical production homepage.
 
 ## Objective
 Animate the three homepage hero system labels so they circulate around the existing central message without changing hero copy, CTA hierarchy, or layout.
@@ -44,9 +44,13 @@ Animate the three homepage hero system labels so they circulate around the exist
 - AC-4: The bounded component, styles, and focused tests are implemented without unrelated edits.
 - AC-5: Static, compiler, automated, build, accessibility-motion, and browser runtime checks pass.
 - AC-6: The Graph Loop record is consistent and accurately reflects local-only completion.
+- AC-7: The isolated branch is committed, pushed, and represented by a ready pull request.
+- AC-8: Required checks and the exact Vercel preview runtime pass.
+- AC-9: The verified pull request is merged and the exact production deployment passes canonical runtime verification.
+- AC-10: Release evidence, Graph Loop consistency, and bounded post-publish cleanup are complete.
 
 ## Next bounded action
-Squash-merge the verified pull request, prove the production deployment, and verify the canonical homepage runtime.
+No release action remains. Monitor the canonical homepage through normal production observability.
 
 ## Last reviewed
 2026-08-10
