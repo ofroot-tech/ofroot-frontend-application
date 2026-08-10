@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-08-10T06:24:57.154875+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application/.graph-runs/active/20260810T062450Z-hero-circulation/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application",
+  "repositoryBytes": 6472145,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/hero-circulation/ofroot-frontend-application/.graph-runs/active/20260810T062450Z-hero-circulation",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 10108182528
+}
