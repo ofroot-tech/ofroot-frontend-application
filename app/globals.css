@@ -23,6 +23,11 @@
   --reveal-distance: 16px;
   --reveal-duration: 700ms;
   --reveal-ease: cubic-bezier(.2,.9,.2,1);
+  --motion-duration-micro: 180ms;
+  --motion-duration-section: 640ms;
+  --motion-distance: 18px;
+  --motion-ease-out: cubic-bezier(.16,1,.3,1);
+  --motion-ease-ui: cubic-bezier(.2,.8,.2,1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -832,6 +837,115 @@ body.ofroot-nav-fading .promo-banner {
   animation: spin 900ms linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Public marketing motion system.
+   The existing orbit remains the only continuous focal animation. */
+.motion-hero-item,
+.motion-hero-visual {
+  animation: motionHeroEnter 720ms var(--motion-ease-out) backwards;
+  animation-delay: calc(70ms + var(--motion-delay, 0ms));
+}
+
+.motion-hero-visual {
+  animation-name: motionHeroVisualEnter;
+}
+
+/* Progressive enhancement: content is visible until RevealObserver confirms
+   that viewport observation is available. */
+.motion-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html[data-motion-ready='true'] .motion-reveal:not(.in-view) {
+  opacity: 0;
+  transform: translate3d(0, var(--motion-distance), 0);
+}
+
+.motion-reveal.in-view {
+  animation: motionRevealEnter var(--motion-duration-section) var(--motion-ease-out) backwards;
+  animation-delay: var(--motion-delay, 0ms);
+}
+
+.motion-card {
+  transition:
+    border-color var(--motion-duration-micro) var(--motion-ease-ui),
+    box-shadow var(--motion-duration-micro) var(--motion-ease-ui),
+    transform var(--motion-duration-micro) var(--motion-ease-ui);
+}
+
+.motion-card .motion-card-arrow {
+  transition: transform var(--motion-duration-micro) var(--motion-ease-ui);
+}
+
+.motion-cta {
+  transition:
+    background-color var(--motion-duration-micro) var(--motion-ease-ui),
+    border-color var(--motion-duration-micro) var(--motion-ease-ui),
+    box-shadow var(--motion-duration-micro) var(--motion-ease-ui),
+    color var(--motion-duration-micro) var(--motion-ease-ui),
+    transform var(--motion-duration-micro) var(--motion-ease-ui);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .motion-card:hover {
+    border-color: rgba(181, 91, 0, 0.32);
+    box-shadow: 0 22px 58px rgba(15, 23, 42, 0.1);
+    transform: translate3d(0, -4px, 0);
+  }
+
+  .motion-card:hover .motion-card-arrow {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  .motion-cta:hover {
+    box-shadow: 0 12px 30px rgba(255, 147, 18, 0.2);
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+.motion-card:active,
+.motion-cta:active {
+  transform: scale(.985);
+}
+
+@keyframes motionHeroEnter {
+  from { opacity: 0; transform: translate3d(0, 20px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes motionHeroVisualEnter {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes motionRevealEnter {
+  from { opacity: 0; transform: translate3d(0, var(--motion-distance), 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 639px) {
+  :root { --motion-distance: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-hero-item,
+  .motion-hero-visual,
+  .motion-reveal,
+  .motion-reveal.in-view,
+  html[data-motion-ready='true'] .motion-reveal:not(.in-view) {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .motion-card,
+  .motion-card .motion-card-arrow,
+  .motion-cta {
+    transition: none;
+  }
+}
 
 /* Homepage hero: circulate the connected outcomes while keeping every label upright. */
 .hero-growth-orbit__track,

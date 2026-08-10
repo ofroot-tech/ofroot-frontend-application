@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.1",
+  "graphId": "marketing-motion-system-20260810",
+  "featureId": "marketing-motion-system",
+  "objective": "Create a restrained reusable motion system for the public homepage while preserving clarity, accessibility, and performance.",
+  "status": "completed",
+  "createdAt": "2026-08-10T07:13:33Z",
+  "updatedAt": "2026-08-10T07:25:28Z",
+  "iterationCount": 6,
+  "maximumIterations": 25,
+  "rootNodeIds": ["N1"],
+  "nodes": [
+    {
+      "id": "N1", "type": "observe", "title": "Audit current and reference motion", "objective": "Observe the current homepage and production reference patterns before choosing effects.", "status": "completed", "dependencies": [], "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign"], "acceptanceCriteria": [{"id":"AC-1","required":true,"status":"passed","evidenceRefs":["E-1"]}], "inputs": ["canonical homepage", "repository source", "production reference sites", "official motion guidance"], "outputs": ["motion opportunity audit"], "evidenceRefs": ["E-1"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "low", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:05:00Z", "updatedAt": "2026-08-10T07:10:00Z"
+    },
+    {
+      "id": "N2", "type": "decision", "title": "Select motion guidance", "objective": "Load and reconcile the smallest useful UI-motion guidance set.", "status": "completed", "dependencies": ["N1"], "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign", "registry:mengto/animation-systems"], "acceptanceCriteria": [{"id":"AC-2","required":true,"status":"passed","evidenceRefs":["E-2"]}], "inputs": ["repository UI guidance", "installed skills", "live UI Skills registry"], "outputs": ["selected guidance", "applied constraints"], "evidenceRefs": ["E-2"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "low", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:10:00Z", "updatedAt": "2026-08-10T07:11:00Z"
+    },
+    {
+      "id": "N3", "type": "plan", "title": "Bound the motion system", "objective": "Map reviewed patterns to high-value OfRoot moments and reject mismatched effects.", "status": "completed", "dependencies": ["N2"], "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign", "registry:mengto/animation-systems"], "acceptanceCriteria": [{"id":"AC-3","required":true,"status":"passed","evidenceRefs":["E-3"]}], "inputs": ["E-1", "E-2"], "outputs": ["layout plan", "component plan", "motion acceptance criteria"], "evidenceRefs": ["E-3"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "low", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:11:00Z", "updatedAt": "2026-08-10T07:13:00Z"
+    },
+    {
+      "id": "N4", "type": "task", "title": "Implement the homepage motion system", "objective": "Add tokens, progressive reveals, hero sequencing, and interaction feedback without adding dependencies.", "status": "completed", "dependencies": ["N3"], "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign", "registry:mengto/animation-systems"], "acceptanceCriteria": [{"id":"AC-4","required":true,"status":"passed","evidenceRefs":["E-4"]}], "inputs": ["bounded motion plan", "existing RevealObserver", "existing homepage"], "outputs": ["scoped source changes", "focused tests"], "evidenceRefs": ["E-4"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "medium", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:13:33Z", "updatedAt": "2026-08-10T07:18:30Z"
+    },
+    {
+      "id": "N5", "type": "validation", "title": "Validate motion, accessibility, and performance", "objective": "Prove source, automated, build, desktop, mobile, reduced-motion, and console behavior.", "status": "completed", "dependencies": ["N4"], "requiredSkills": ["graph-loop-engineering", "premium-marketing-redesign"], "acceptanceCriteria": [{"id":"AC-5","required":true,"status":"passed","evidenceRefs":["E-5"]}], "inputs": ["implemented motion system"], "outputs": ["validation evidence", "audit score"], "evidenceRefs": ["E-5"], "attemptCount": 2, "maximumAttempts": 3, "riskLevel": "medium", "approvalRequired": false, "blockingReason": null, "validation": {"requiredCommands":[{"id":"focused-tests","command":"npm test -- --runInBand __tests__/revealObserver.test.tsx __tests__/heroGrowthSystemOrbit.test.tsx","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"full-tests","command":"npm test -- --runInBand","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"typecheck","command":"npx tsc --noEmit","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"lint","command":"npm run lint","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"build","command":"NEXT_DISABLE_BUILD_CACHE=true NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8002 npm run build","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]},{"id":"runtime","command":"Desktop, mobile, reduced-motion, no-JavaScript fallback, and console browser checks","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-5"]}],"runtimeVerification":"performed"}, "createdAt": "2026-08-10T07:13:33Z", "updatedAt": "2026-08-10T07:23:30Z"
+    },
+    {
+      "id": "N6", "type": "completion_review", "title": "Reconcile the completed motion system", "objective": "Inspect the final diff, run Graph Loop consistency, and record truthful completion state.", "status": "completed", "dependencies": ["N5"], "requiredSkills": ["graph-loop-engineering"], "acceptanceCriteria": [{"id":"AC-6","required":true,"status":"passed","evidenceRefs":["E-6"]}], "inputs": ["implementation and validation evidence"], "outputs": ["consistent feature record", "completed run"], "evidenceRefs": ["E-6"], "attemptCount": 1, "maximumAttempts": 3, "riskLevel": "low", "approvalRequired": false, "blockingReason": null, "createdAt": "2026-08-10T07:13:33Z", "updatedAt": "2026-08-10T07:25:28Z"
+    }
+  ],
+  "edges": [
+    {"from":"N2","to":"N1","type":"depends_on"},
+    {"from":"N3","to":"N2","type":"depends_on"},
+    {"from":"N4","to":"N3","type":"depends_on"},
+    {"from":"N5","to":"N4","type":"depends_on"},
+    {"from":"N6","to":"N5","type":"depends_on"}
+  ],
+  "events": [
+    {"timestamp":"2026-08-10T07:10:00Z","nodeId":"N1","summary":"Current OfRoot motion and production reference patterns audited","evidenceRefs":["E-1"]},
+    {"timestamp":"2026-08-10T07:11:00Z","nodeId":"N2","summary":"skill_selected: repository frontend guidance, premium-marketing-redesign, and registry mengto/animation-systems","evidenceRefs":["E-2"]},
+    {"timestamp":"2026-08-10T07:13:00Z","nodeId":"N3","summary":"Bounded motion system selected; mismatched continuous and library-heavy patterns rejected","evidenceRefs":["E-3"]},
+    {"timestamp":"2026-08-10T07:13:33Z","nodeId":"N4","summary":"Homepage motion implementation started","evidenceRefs":[]},
+    {"timestamp":"2026-08-10T07:18:30Z","nodeId":"N4","summary":"Scoped CSS-first motion system and focused tests implemented","evidenceRefs":["E-4"]},
+    {"timestamp":"2026-08-10T07:23:30Z","nodeId":"N5","summary":"Automated, build, responsive, reduced-motion, fallback, and console validation passed","evidenceRefs":["E-5"]},
+    {"timestamp":"2026-08-10T07:23:31Z","nodeId":"N6","summary":"Completion review started","evidenceRefs":[]},
+    {"timestamp":"2026-08-10T07:25:28Z","nodeId":"N6","summary":"Final diff and Graph Loop records reconciled","evidenceRefs":["E-6"]}
+  ]
+}
