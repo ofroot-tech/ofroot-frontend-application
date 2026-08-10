@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Clock3 } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { SITE, CANONICAL_SITE_URL } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
 import { api } from '@/app/lib/api';
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide';
+import { insights } from '@/app/lib/insights-content';
 import { TrackedLink } from '@/components/growth/Analytics';
 
 export const dynamic = 'force-dynamic';
@@ -91,7 +92,7 @@ export default async function BlogPage() {
 
       <section className="bg-white px-6 py-16 sm:px-8 sm:py-24" aria-labelledby="latest-notes">
         <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#9A4D00]">From the archive</p><h2 id="latest-notes" className="text-4xl font-black">More OfRoot field notes.</h2></div><Link href="/insights" className="font-semibold text-[#8F4700] hover:underline">Explore structured insights</Link></div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#9A4D00]">{items.length ? 'From the archive' : 'Continue exploring'}</p><h2 id="latest-notes" className="text-4xl font-black">{items.length ? 'More OfRoot field notes.' : 'Choose the next question.'}</h2></div><Link href="/insights" className="font-semibold text-[#8F4700] hover:underline">Explore all insights</Link></div>
           {items.length ? (
             <div className="mt-10 grid gap-6 md:grid-cols-2">
               {items.map((post, index) => {
@@ -100,7 +101,25 @@ export default async function BlogPage() {
               })}
             </div>
           ) : (
-            <div className="mt-10 rounded-3xl border border-dashed border-slate-300 bg-[#f7f6f2] p-8"><Clock3 className="h-6 w-6 text-[#9A4D00]" /><h3 className="mt-4 text-xl font-black">More field notes are being prepared.</h3><p className="mx-0 mt-2 text-slate-600">Start with the featured guide above or explore the current structured insights.</p></div>
+            <div className="mt-10 divide-y divide-slate-200 border-y border-slate-200">
+              {insights.map((insight, index) => (
+                <Link
+                  href={`/insights/${insight.slug}`}
+                  key={insight.slug}
+                  className="group grid gap-5 py-7 transition-colors hover:bg-[#f7f6f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#B55B00] sm:grid-cols-[9rem_1fr_auto] sm:items-center sm:px-5 motion-reduce:transition-none"
+                >
+                  <div>
+                    <p className="mx-0 text-xs font-bold uppercase tracking-[.15em] text-[#9A4D00]">Structured insight {String(index + 1).padStart(2, '0')}</p>
+                    <p className="mx-0 mt-2 text-sm text-slate-500">{insight.category}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-balance text-2xl font-black group-hover:text-[#8F4700]">{insight.title}</h3>
+                    <p className="mx-0 mt-3 max-w-3xl text-sm text-slate-600">{insight.description}</p>
+                  </div>
+                  <span className="inline-flex items-center gap-2 font-semibold text-[#8F4700]">Open insight<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" /></span>
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       </section>
