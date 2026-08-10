@@ -1,7 +1,7 @@
 # Feature: Marketing navigation refresh
 
 ## Status
-Completed and locally verified — 2026-08-10. The prior release remains verified in canonical production; this CTA refinement is not published.
+Completed and verified in canonical production — 2026-08-10. The navbar CTA refinement is published through the reviewed Git-to-Vercel path.
 
 ## Objective
 Modernize the public marketing logo, navigation, and homepage CTA spacing on desktop and mobile while preserving routes, CTA intent, and analytics source attribution.
@@ -124,12 +124,14 @@ Modernize the public marketing logo, navigation, and homepage CTA spacing on des
 - Release verification: PR #24 merged as `6758900`; matching Vercel production deployment `dpl_3Ntvm4fbQGYA97a5oMvCGbDf3x8b` reached `READY` with the canonical aliases attached.
 - Canonical verification: the homepage, shared SVG, desktop/mobile navigation, all target CTA measurements, mobile focus/scroll behavior, hero coexistence, console health, and sampled navigation destinations passed on `www.ofroot.technology`.
 - CTA refinement follow-up: diff, focused and repository lint, TypeScript, the 168-page Turbopack build, and production-like browser checks passed. At 1440px and 1024px the desktop CTA measures 44px high with 14px type and no overflow; at 390px the mobile dialog remains visible, closes with Escape, restores focus, and restores body scrolling.
+- CTA release verification: PR #28 passed GitGuardian and Vercel checks; exact preview deployment `dpl_3V2ncMT5ySdBcg2qtXFtKFQFN64F` matched head `ac93c125`; squash merge `11345031099a72b8aecad72114416972a025cf74` mapped to READY production deployment `dpl_DqScFF8gRjT7L7xw3d8zrrVWUgfB` with both canonical aliases attached.
+- Canonical CTA verification: `www.ofroot.technology` returned HTTP 200 for `/` and `/book`; desktop at 1440px and 1024px retained the exact 65px / 44px / 14px contract with no overflow, and the 390px mobile menu retained its 48px CTA, scroll lock, Escape close, focus restoration, and no overflow.
 
 ## Remaining uncertainty
-The CTA refinement is verified only in the clean local worktree. Its GitHub preview, merge ancestry, provider deployment, and canonical production behavior are not yet observed. The previous navbar release remains the verified production state.
+Delivery and canonical runtime behavior are verified. The remaining uncertainty is product impact: deployment evidence does not prove improved audit-booking conversion, which requires normal analytics observation over time.
 
 ## Next bounded action
-Review the local screenshot. Publish only after separate authorization and the required pre-push grill, preview, merge, provider, and canonical verification gates.
+Monitor normal analytics and runtime errors; make no further design change without new evidence or user direction.
 
 ## Last reviewed
 2026-08-10
