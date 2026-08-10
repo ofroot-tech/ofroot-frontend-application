@@ -71,3 +71,11 @@
 - Result: The user approved commit, push, preview verification, squash merge to `main`, production publication, and canonical verification. The branch starts exactly at current `origin/main` (`b8237d5`), GitHub authentication is active as `ofroot-tech`, and `www.ofroot.technology` resolves to the healthy Vercel `main-website` production project.
 - Exit status: 0
 - Remaining uncertainty: Preview and post-merge production behavior remain unverified until the branch is published.
+
+## Evidence: E-8 — pull request and preview verification
+- Date: 2026-08-10
+- Graph nodes: N7, N8
+- Command or verification method: Git commit and push readback; GitHub PR #23 and required checks; `vercel inspect` for deployment `dpl_3ep1qEeXDKz2CyV6A6qt4eKx1pFR`; browser verification on the exact branch alias.
+- Result: Commit `62b3514` was pushed on `update/hero-circulation` and PR #23 opened against `main`. GitGuardian, Vercel Preview Comments, and Vercel all passed. Vercel reported the preview Ready at `https://main-website-git-update-hero-circulation-ofroot-techs-projects.vercel.app/`. The deployed figure exposed the intended accessible label, ran `heroGrowthOrbit` for 18 seconds, changed position over a 1.2-second sample, used inverse track and label transforms to keep labels upright, switched to `data-animate=false` and `animation-play-state: paused` off-screen, and emitted no browser warnings or errors.
+- Exit status: 0
+- Remaining uncertainty: The preview is not canonical production; merge and post-deploy verification remain required.

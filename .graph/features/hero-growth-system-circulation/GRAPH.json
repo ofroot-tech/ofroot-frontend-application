@@ -147,13 +147,13 @@
       "type": "task",
       "title": "Publish the reviewed branch",
       "objective": "Stage the isolated feature, commit it, push the branch, and open a ready pull request to main.",
-      "status": "in_progress",
+      "status": "completed",
       "dependencies": ["N6"],
       "requiredSkills": ["graph-loop-engineering", "grill-me", "github:yeet"],
-      "acceptanceCriteria": [{"id":"AC-7","required":true,"status":"pending","evidenceRefs":[]}],
+      "acceptanceCriteria": [{"id":"AC-7","required":true,"status":"passed","evidenceRefs":["E-8"]}],
       "inputs": ["E-6", "E-7", "user production authorization"],
       "outputs": ["commit", "remote branch", "pull request"],
-      "evidenceRefs": ["E-7"],
+      "evidenceRefs": ["E-7", "E-8"],
       "attemptCount": 1,
       "maximumAttempts": 3,
       "riskLevel": "high",
@@ -161,28 +161,28 @@
       "approvalRefs": ["E-7"],
       "blockingReason": null,
       "createdAt": "2026-08-10T06:42:30Z",
-      "updatedAt": "2026-08-10T06:42:30Z"
+      "updatedAt": "2026-08-10T06:50:20Z"
     },
     {
       "id": "N8",
       "type": "validation",
       "title": "Verify the pull request preview",
       "objective": "Wait for required checks and validate the orbit on the exact Vercel preview artifact.",
-      "status": "pending",
+      "status": "verified",
       "dependencies": ["N7"],
       "requiredSkills": ["graph-loop-engineering", "vercel:deployments-cicd", "vercel:verification"],
-      "acceptanceCriteria": [{"id":"AC-8","required":true,"status":"pending","evidenceRefs":[]}],
+      "acceptanceCriteria": [{"id":"AC-8","required":true,"status":"passed","evidenceRefs":["E-8"]}],
       "inputs": ["pull request", "Vercel preview"],
       "outputs": ["preview deployment proof", "merge readiness"],
-      "evidenceRefs": [],
-      "attemptCount": 0,
+      "evidenceRefs": ["E-8"],
+      "attemptCount": 1,
       "maximumAttempts": 3,
       "riskLevel": "high",
       "approvalRequired": false,
       "blockingReason": null,
-      "validation": {"requiredCommands":[{"id":"pr-checks","command":"gh pr checks <number> --watch","required":true,"outcome":"not_run","exitStatus":null,"evidenceRefs":[]},{"id":"preview-runtime","command":"Vercel inspect and browser orbit verification on exact preview URL","required":true,"outcome":"not_run","exitStatus":null,"evidenceRefs":[]}],"runtimeVerification":"not_performed"},
+      "validation": {"requiredCommands":[{"id":"pr-checks","command":"gh pr checks <number> --watch","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]},{"id":"preview-runtime","command":"Vercel inspect and browser orbit verification on exact preview URL","required":true,"outcome":"passed","exitStatus":0,"evidenceRefs":["E-8"]}],"runtimeVerification":"verified"},
       "createdAt": "2026-08-10T06:42:30Z",
-      "updatedAt": "2026-08-10T06:42:30Z"
+      "updatedAt": "2026-08-10T06:50:20Z"
     },
     {
       "id": "N9",
@@ -249,6 +249,8 @@
     {"timestamp":"2026-08-10T06:34:10Z","nodeId":"N6","summary":"Completion consistency review started","evidenceRefs":[]},
     {"timestamp":"2026-08-10T06:36:00Z","nodeId":"N6","summary":"Local consistency passed with no issues","evidenceRefs":["E-6"]},
     {"timestamp":"2026-08-10T06:42:30Z","nodeId":"N7","summary":"approval_received: user authorized preview-verified squash merge and production publication","evidenceRefs":["E-7"]},
-    {"timestamp":"2026-08-10T06:42:30Z","nodeId":"N7","summary":"Release publication node started","evidenceRefs":["E-7"]}
+    {"timestamp":"2026-08-10T06:42:30Z","nodeId":"N7","summary":"Release publication node started","evidenceRefs":["E-7"]},
+    {"timestamp":"2026-08-10T06:50:20Z","nodeId":"N7","summary":"Commit 62b3514 pushed and ready PR #23 opened against main","evidenceRefs":["E-8"]},
+    {"timestamp":"2026-08-10T06:50:20Z","nodeId":"N8","summary":"Required checks and the exact Vercel preview runtime passed","evidenceRefs":["E-8"]}
   ]
 }

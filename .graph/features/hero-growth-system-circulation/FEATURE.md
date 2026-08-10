@@ -1,7 +1,7 @@
 # Feature: Hero growth-system circulation
 
 ## Status
-Production publication authorized; branch publication in progress
+Pull request #23 and its Vercel preview are verified; production merge is in progress.
 
 ## Objective
 Animate the three homepage hero system labels so they circulate around the existing central message without changing hero copy, CTA hierarchy, or layout.
@@ -46,7 +46,7 @@ Animate the three homepage hero system labels so they circulate around the exist
 - AC-6: The Graph Loop record is consistent and accurately reflects local-only completion.
 
 ## Next bounded action
-Stage the isolated feature, commit it, push the branch, and open the reviewed pull request.
+Squash-merge the verified pull request, prove the production deployment, and verify the canonical homepage runtime.
 
 ## Last reviewed
 2026-08-10
