@@ -16,6 +16,8 @@
 
 2026-08-10 — Unlayered legacy rules in `app/globals.css` set fluid type on every anchor and `6px 2px` padding on every navigation anchor. Navbar controls that need exact dimensions must override that cascade at the component boundary; the scoped CTA-refinement contract is a 65px rendered header, 44px desktop audit target, 14px navigation type, and preserved booking attribution.
 
+2026-08-10 — The navbar CTA refinement was released through PR #28. Merge `11345031099a72b8aecad72114416972a025cf74` maps to READY Vercel production deployment `dpl_DqScFF8gRjT7L7xw3d8zrrVWUgfB`; `www.ofroot.technology` and `ofroot.technology` were attached and canonical desktop/mobile runtime checks passed.
+
 ## Relevant conventions
 - `docs/BRAND_GUIDE.md` identifies `public/ofroot-logo.png` as the circular logo and permits teal for primary actions/focus accents.
 - Public navigation is high visibility. Preserve exact routes and CTA source tags unless a task explicitly changes them.

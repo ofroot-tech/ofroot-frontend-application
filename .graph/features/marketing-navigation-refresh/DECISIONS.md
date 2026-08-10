@@ -76,3 +76,10 @@
 - Context: The user screenshot showed a visually oversized CTA. Production measurement found the component's intended `text-sm` and `px-4` values were not reaching the browser because unlayered `p, li, span, a` and `nav a` rules override Tailwind's layered utilities. Browser zoom and Retina scaling did not explain the CSS measurements.
 - Decision: Do not change the broad legacy stylesheet in this narrow follow-up. Restore exact pixel dimensions inside `Navbar.tsx`, remove the decorative divider, keep a 44px pointer target, and use a quiet 24px arrow surface to improve internal hierarchy. Preserve all routes, labels, analytics fields, focus behavior, and mobile-menu mechanics.
 - Evidence: Canonical before measurement, scoped source inspection, clean-worktree production build, and desktop/mobile production-like browser measurements recorded in E16.
+
+## Decision: Honor the explicit grill waiver while preserving release proof gates
+- Date: 2026-08-10
+- Status: accepted and completed
+- Context: The user instructed “publish bypass gate,” which explicitly waived the repository's pre-push grill. The instruction did not remove the need to distinguish reviewed source, preview, merge, provider deployment, and canonical runtime state.
+- Decision: Skip only the grill interview. Refresh `origin/main`, commit with the `ofroot-tech` identity, publish an isolated review branch, verify the exact protected preview, merge PR #28, wait for the matching READY production deployment, and verify the public canonical desktop/mobile runtime. Use Vercel's temporary expiring share-link mechanism instead of changing project-wide deployment protection.
+- Evidence: E17 records PR #28, preview `dpl_3V2ncMT5ySdBcg2qtXFtKFQFN64F`, merge `11345031099a72b8aecad72114416972a025cf74`, production `dpl_DqScFF8gRjT7L7xw3d8zrrVWUgfB`, canonical HTTP/browser checks, and cleanup of the empty accidental CLI project.

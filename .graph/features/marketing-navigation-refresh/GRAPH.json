@@ -5,8 +5,8 @@
   "objective": "Modernize the OfRoot Technology public logo, marketing navigation, and homepage CTA spacing while preserving routes and CTA attribution.",
   "status": "completed",
   "createdAt": "2026-07-27T00:00:00-05:00",
-  "updatedAt": "2026-08-10T12:32:40Z",
-  "iterationCount": 16,
+  "updatedAt": "2026-08-10T12:55:14Z",
+  "iterationCount": 17,
   "maximumIterations": 25,
   "rootNodeIds": ["N1"],
   "nodes": [
@@ -377,6 +377,41 @@
         ],
         "runtimeVerification": "passed"
       }
+    },
+    {
+      "id": "N15",
+      "type": "release",
+      "title": "Publish and verify the navbar CTA refinement",
+      "objective": "Deliver the verified CTA refinement through reviewed Git and prove the matching provider and canonical runtime state.",
+      "status": "verified",
+      "dependencies": ["N14"],
+      "requiredSkills": ["graph-loop-engineering", "github:yeet", "vercel-deploy", "vercel:verification", "chrome:control-chrome"],
+      "acceptanceCriteria": [
+        {"id": "AC-1", "required": true, "status": "passed", "evidenceRefs": ["E17"]},
+        {"id": "AC-2", "required": true, "status": "passed", "evidenceRefs": ["E17"]},
+        {"id": "AC-3", "required": true, "status": "passed", "evidenceRefs": ["E17"]},
+        {"id": "AC-4", "required": true, "status": "passed", "evidenceRefs": ["E17"]}
+      ],
+      "inputs": ["N14 outputs", "explicit user publication authorization and grill waiver", "current origin/main", "Vercel main-website project"],
+      "outputs": ["merged PR #28", "READY production deployment", "canonical desktop/mobile runtime evidence"],
+      "evidenceRefs": ["E17"],
+      "attemptCount": 1,
+      "maximumAttempts": 3,
+      "riskLevel": "high",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-08-10T12:35:00Z",
+      "updatedAt": "2026-08-10T12:55:14Z",
+      "validation": {
+        "requiredCommands": [
+          {"id": "github", "command": "GitHub PR and check inspection with exact head SHA", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E17"]},
+          {"id": "preview", "command": "exact protected-preview browser checks at 1440px, 1024px, and 390px", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E17"]},
+          {"id": "provider", "command": "Vercel exact production deployment readback", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E17"]},
+          {"id": "canonical", "command": "canonical HTTP and desktop/mobile runtime checks", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E17"]},
+          {"id": "graph-consistency", "command": "validate_graph_consistency.py", "required": true, "outcome": "passed", "exitStatus": 0, "evidenceRefs": ["E17"]}
+        ],
+        "runtimeVerification": "passed"
+      }
     }
   ],
   "edges": [
@@ -392,7 +427,8 @@
     {"from": "N10", "to": "N11", "type": "depends_on"},
     {"from": "N11", "to": "N12", "type": "depends_on"},
     {"from": "N12", "to": "N13", "type": "depends_on"},
-    {"from": "N13", "to": "N14", "type": "depends_on"}
+    {"from": "N13", "to": "N14", "type": "depends_on"},
+    {"from": "N14", "to": "N15", "type": "depends_on"}
   ],
   "events": [
     {"timestamp": "2026-07-27T00:00:00-05:00", "nodeId": "N1", "summary": "Graph created after brand, source, route, and baseline-state inspection.", "type": "graph_created", "evidenceRefs": ["E1"]},
@@ -424,6 +460,10 @@
     {"timestamp": "2026-08-10T12:10:00Z", "nodeId": "N14", "summary": "Feature reopened in a clean origin/main worktree for a bounded navbar CTA treatment follow-up.", "type": "graph_updated", "evidenceRefs": []},
     {"timestamp": "2026-08-10T12:13:00Z", "nodeId": "N14", "summary": "Repository, installed, and live-registry UI guidance selected and reconciled for a compact navbar treatment.", "type": "skill_selected", "evidenceRefs": ["E16"]},
     {"timestamp": "2026-08-10T12:32:40Z", "nodeId": "N14", "summary": "Scoped cascade repair, static gates, production build, and desktop/mobile runtime checks passed.", "type": "validation_passed", "evidenceRefs": ["E16"]},
-    {"timestamp": "2026-08-10T12:32:40Z", "nodeId": "N14", "summary": "Graph completed with local validation only; no publication action occurred.", "type": "graph_completed", "evidenceRefs": ["E16"]}
+    {"timestamp": "2026-08-10T12:32:40Z", "nodeId": "N14", "summary": "Graph completed with local validation only; no publication action occurred.", "type": "graph_completed", "evidenceRefs": ["E16"]},
+    {"timestamp": "2026-08-10T12:35:00Z", "nodeId": "N15", "summary": "User authorized publication and explicitly waived the pre-push grill; preview, merge, provider, and canonical proof gates remained required.", "type": "approval_received", "evidenceRefs": []},
+    {"timestamp": "2026-08-10T12:50:30Z", "nodeId": "N15", "summary": "PR #28 checks and the exact protected preview passed desktop, compact-desktop, and mobile runtime verification.", "type": "validation_passed", "evidenceRefs": ["E17"]},
+    {"timestamp": "2026-08-10T12:51:44Z", "nodeId": "N15", "summary": "PR #28 squash-merged to main as 11345031099a72b8aecad72114416972a025cf74.", "type": "artifact_published", "evidenceRefs": ["E17"]},
+    {"timestamp": "2026-08-10T12:55:14Z", "nodeId": "N15", "summary": "Matching production deployment reached READY and canonical HTTP, desktop, compact-desktop, and mobile checks passed.", "type": "graph_completed", "evidenceRefs": ["E17"]}
   ]
 }
