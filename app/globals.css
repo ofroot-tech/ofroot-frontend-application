@@ -832,3 +832,62 @@ body.ofroot-nav-fading .promo-banner {
   animation: spin 900ms linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* Homepage hero: circulate the connected outcomes while keeping every label upright. */
+.hero-growth-orbit__track,
+.hero-growth-orbit__label {
+  animation-duration: 18s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-play-state: paused;
+}
+
+.hero-growth-orbit__track {
+  animation-name: heroGrowthOrbit;
+  transform-origin: 50% 50%;
+}
+
+.hero-growth-orbit__label {
+  animation-name: heroGrowthOrbitCounter;
+}
+
+.hero-growth-orbit[data-animate='true'] .hero-growth-orbit__track,
+.hero-growth-orbit[data-animate='true'] .hero-growth-orbit__label {
+  animation-play-state: running;
+  will-change: transform;
+}
+
+.hero-growth-orbit__item {
+  position: absolute;
+}
+
+.hero-growth-orbit__item--discover {
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.hero-growth-orbit__item--convert {
+  bottom: 12%;
+  right: 0;
+}
+
+.hero-growth-orbit__item--operate {
+  bottom: 12%;
+  left: 0;
+}
+
+@keyframes heroGrowthOrbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heroGrowthOrbitCounter {
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-growth-orbit__track,
+  .hero-growth-orbit__label {
+    animation: none;
+  }
+}
