@@ -57,7 +57,7 @@ function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
       <Image
         src="/ofroot-tech-logo.svg"
         alt=""
-        width={144}
+        width={174}
         height={48}
         priority
         className="h-[32px] w-auto transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
