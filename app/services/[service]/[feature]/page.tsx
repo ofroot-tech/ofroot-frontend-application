@@ -17,18 +17,20 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const feature = getFeature(service, slug);
   if (!feature) return {};
   const path = featurePath(feature);
+  const title = feature.seoTitle || `${feature.eyebrow} Services`;
+  const description = feature.seoDescription || feature.description;
   return {
-    title: `${feature.eyebrow} Services`,
-    description: feature.description,
+    title,
+    description,
     alternates: { canonical: path },
     openGraph: {
       type: 'website',
       url: `${SITE_URL}${path}`,
-      title: `${feature.eyebrow} Services · OfRoot`,
-      description: feature.description,
+      title: `${title} · OfRoot`,
+      description,
       images: [{ url: `${SITE_URL}/og.jpg`, width: 1200, height: 630, alt: `OfRoot ${feature.eyebrow}` }],
     },
-    twitter: { card: 'summary_large_image', title: `${feature.eyebrow} Services · OfRoot`, description: feature.description, images: [`${SITE_URL}/og.jpg`] },
+    twitter: { card: 'summary_large_image', title: `${title} · OfRoot`, description, images: [`${SITE_URL}/og.jpg`] },
   };
 }
 

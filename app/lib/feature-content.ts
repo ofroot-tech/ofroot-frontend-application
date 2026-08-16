@@ -7,6 +7,8 @@ export type FeatureContent = {
   eyebrow: string;
   title: string;
   description: string;
+  seoTitle?: string;
+  seoDescription?: string;
   directAnswer: string;
   buyerQuestion: string;
   outcomes: Array<{ title: string; body: string }>;
@@ -706,6 +708,8 @@ export const featurePages: FeatureContent[] = [
     slug: 'response-automation', eyebrow: 'Response automation',
     title: 'Acknowledge, inform, and escalate inquiries at the right speed.',
     description: 'Response automation sends context-aware acknowledgements and next steps while preserving human ownership for sensitive or complex conversations.',
+    seoTitle: 'Response Automation for Qualified Lead Inquiries',
+    seoDescription: 'Response automation for qualified inquiries: acknowledge the request, preserve context and consent, assign an owner, and escalate missed response windows.',
     directAnswer: 'Response automation triggers an appropriate message or task after a defined event. It should confirm what happened, set an honest expectation, preserve consent and context, and escalate when automation cannot safely answer.',
     buyerQuestion: 'What should happen in the first minutes after a qualified inquiry arrives?',
     outcomes: [
