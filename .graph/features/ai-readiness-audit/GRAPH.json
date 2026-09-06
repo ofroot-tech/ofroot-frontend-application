@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "1.1",
+  "graphId": "ai-readiness-audit",
+  "featureId": "ai-readiness-audit",
+  "objective": "Deploy free provider-backed readiness scan with OfRoot fix-plan lead capture",
+  "status": "incomplete",
+  "createdAt": "2026-09-06T12:19:42.291464+00:00",
+  "updatedAt": "2026-09-06T12:19:42.291464+00:00",
+  "iterationCount": 0,
+  "maximumIterations": 25,
+  "rootNodeIds": [
+    "N1"
+  ],
+  "nodes": [
+    {
+      "id": "N1",
+      "type": "task",
+      "title": "Research and design",
+      "objective": "Research and design",
+      "status": "in_progress",
+      "dependencies": [],
+      "requiredSkills": [],
+      "acceptanceCriteria": [
+        {
+          "id": "AC1",
+          "required": true,
+          "status": "pending",
+          "evidenceRefs": []
+        }
+      ],
+      "inputs": [],
+      "outputs": [],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-09-06T12:19:42.291464+00:00",
+      "updatedAt": "2026-09-06T12:19:42.291464+00:00"
+    },
+    {
+      "id": "N2",
+      "type": "task",
+      "title": "Provider integration and conversion UI",
+      "objective": "Provider integration and conversion UI",
+      "status": "pending",
+      "dependencies": [
+        "N1"
+      ],
+      "requiredSkills": [
+        "frontend-design",
+        "ibelick/fixing-accessibility"
+      ],
+      "acceptanceCriteria": [
+        {
+          "id": "AC2",
+          "required": true,
+          "status": "pending",
+          "evidenceRefs": []
+        }
+      ],
+      "inputs": [],
+      "outputs": [],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-09-06T12:19:42.291464+00:00",
+      "updatedAt": "2026-09-06T12:19:42.291464+00:00"
+    },
+    {
+      "id": "N3",
+      "type": "validation",
+      "title": "Tests and browser verification",
+      "objective": "Tests and browser verification",
+      "status": "pending",
+      "dependencies": [
+        "N2"
+      ],
+      "requiredSkills": [],
+      "acceptanceCriteria": [
+        {
+          "id": "AC3",
+          "required": true,
+          "status": "pending",
+          "evidenceRefs": []
+        }
+      ],
+      "inputs": [],
+      "outputs": [],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-09-06T12:19:42.291464+00:00",
+      "updatedAt": "2026-09-06T12:19:42.291464+00:00"
+    },
+    {
+      "id": "N4",
+      "type": "validation",
+      "title": "Release and live verification",
+      "objective": "Release and live verification",
+      "status": "pending",
+      "dependencies": [
+        "N3"
+      ],
+      "requiredSkills": [],
+      "acceptanceCriteria": [
+        {
+          "id": "AC4",
+          "required": true,
+          "status": "pending",
+          "evidenceRefs": []
+        }
+      ],
+      "inputs": [],
+      "outputs": [],
+      "evidenceRefs": [],
+      "attemptCount": 0,
+      "maximumAttempts": 3,
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "blockingReason": null,
+      "createdAt": "2026-09-06T12:19:42.291464+00:00",
+      "updatedAt": "2026-09-06T12:19:42.291464+00:00"
+    }
+  ],
+  "edges": [],
+  "events": [
+    {
+      "type": "skill_selected",
+      "timestamp": "2026-09-06T12:19:42.291464+00:00",
+      "summary": "frontend-design and ibelick/fixing-accessibility loaded; OfRoot navy, orange, teal; native labeled forms and inline results"
+    }
+  ]
+}

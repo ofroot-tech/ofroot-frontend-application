@@ -37,6 +37,7 @@ const groups: NavigationGroup[] = [
 ];
 
 const links: NavigationLink[] = [
+  { label: 'Free AI Audit', href: '/services/ai-audit' },
   { label: 'Results', href: '/results' },
   { label: 'Insights', href: '/insights' },
   { label: 'Security', href: '/security' },
