@@ -4,6 +4,7 @@ import { Pool } from 'pg';
 import { createClient } from '@supabase/supabase-js';
 import type { CreateLeadInput, Lead, User } from '@/app/lib/api';
 import { derivePlatformAccess } from '@/app/lib/platform-access';
+import { getTemporaryOwnerFromSession } from '@/app/lib/temporary-owner-access';
 
 const SESSION_TTL_DAYS = 30;
 
@@ -828,6 +829,8 @@ export async function createSessionForUser(userId: number): Promise<string> {
 }
 
 export async function getUserFromSessionToken(token: string): Promise<User | null> {
+  const temporaryOwner = getTemporaryOwnerFromSession(token);
+  if (temporaryOwner) return temporaryOwner;
   await ensureSchema();
   const pool = getPool();
 
