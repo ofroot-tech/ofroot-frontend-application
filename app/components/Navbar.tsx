@@ -52,17 +52,18 @@ function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
       href="/"
       onClick={onNavigate}
       className="group inline-flex min-h-[44px] items-center rounded-xl pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]"
-      aria-label="OfRoot Tech home"
+      aria-label="OfRoot home"
     >
       <Image
-        src="/ofroot-tech-logo.svg"
+        src="/ofroot-root-mark.svg"
         alt=""
-        width={174}
-        height={48}
+        width={40}
+        height={40}
         priority
-        className="h-[32px] w-auto transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
+        className="size-8 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
         aria-hidden="true"
       />
+      <span className="ml-2 text-[20px] font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
     </Link>
   );
 }

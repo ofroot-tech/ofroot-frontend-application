@@ -4,9 +4,9 @@ export const SITE = {
   name: 'OfRoot',
   url: CANONICAL_SITE_URL,
   logo: {
-    url: `${CANONICAL_SITE_URL}/favicon.ico`,
-    width: 64,
-    height: 64,
+    url: `${CANONICAL_SITE_URL}/ofroot-root-mark.svg`,
+    width: 100,
+    height: 100,
   },
   socials: [
     'https://www.linkedin.com/company/ofroot',

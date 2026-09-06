@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/ofroot-root-mark.svg',
   },
 }
 

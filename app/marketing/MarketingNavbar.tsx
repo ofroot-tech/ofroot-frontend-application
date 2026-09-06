@@ -104,15 +104,10 @@ export default function MarketingNavbar() {
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 h-full">
         <div className="flex items-center">
           <Link href="/" aria-label="OfRoot Marketing homepage">
-            <Image
-              src="/ofroot-tech-logo.svg"
-              alt=""
-              width={144}
-              height={48}
-              priority
-              className="h-7 w-auto transition-transform duration-150 ease-out hover:scale-[1.02] active:scale-[0.99] motion-reduce:transition-none"
-              aria-hidden="true"
-            />
+            <span className="inline-flex items-center gap-2 transition-transform duration-150 ease-out hover:scale-[1.02] active:scale-[0.99] motion-reduce:transition-none">
+              <Image src="/ofroot-root-mark.svg" alt="" width={40} height={40} priority className="size-8" aria-hidden="true" />
+              <span className="text-[20px] font-semibold tracking-tight text-slate-950">Of<span className="text-[#2457E6]">Root</span></span>
+            </span>
           </Link>
         </div>
         <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
