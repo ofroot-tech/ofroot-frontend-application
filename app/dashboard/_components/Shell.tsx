@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar, FileText, Star, Route } from 'lucide-react';
+import { Home, Users, Building2, CreditCard, UserCog, Wand2, Activity as ActivityIcon, Tag, LogOut, Book, NotebookPen, ClipboardList, BadgeDollarSign, Workflow, Radar, FileText, Star, Route, Target } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { hasEditionAccess } from '@/app/lib/platform-access';
@@ -17,6 +17,7 @@ const paymentsNavItem = { href: '/dashboard/payments', label: 'Payments', icon: 
 const reviewsNavItem = { href: '/dashboard/reviews', label: 'Reviews', icon: Star };
 const competitiveAnalysisNavItem = { href: '/dashboard/competitive-analysis', label: 'Competitive Analysis', icon: Radar };
 export const aiProcessNavItem = { href: '/dashboard/ai-process', label: 'AI Process', icon: Route };
+const prospectingNavItem = { href: '/dashboard/prospecting', label: 'Prospecting', icon: Target };
 export const baseNav = [
 	{ href: '/dashboard/overview', label: 'Overview', icon: Home },
 	helprNavItem,
@@ -26,6 +27,7 @@ export const baseNav = [
 	paymentsNavItem,
 	reviewsNavItem,
 	aiProcessNavItem,
+	prospectingNavItem,
 	{ href: '/dashboard/automation-build', label: 'Automation Build', icon: Wand2 },
 	{ href: '/dashboard/activity', label: 'Activity', icon: ActivityIcon },
 	competitiveAnalysisNavItem,
