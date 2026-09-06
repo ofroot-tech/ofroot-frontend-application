@@ -16,6 +16,7 @@ import {
   isSupabasePasswordAuthConfigured,
   upsertUserFromSupabaseAuth,
 } from '@/app/lib/supabase-store';
+import { authenticateTemporaryOwner, createTemporaryOwnerSession } from '@/app/lib/temporary-owner-access';
 
 export async function POST(req: NextRequest) {
   // Support both form-encoded and JSON payloads
@@ -39,6 +40,15 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const temporaryOwner = authenticateTemporaryOwner(email, password);
+    if (temporaryOwner) {
+      const token = createTemporaryOwnerSession();
+      if (!token) return fail('Temporary dashboard access is not configured.', 503);
+      const res = ok({});
+      setAuthCookie(res, token);
+      logger.info('auth.login.temporary_owner_success', { email });
+      return res;
+    }
     if (!isSupabaseStoreConfigured()) {
       return fail('Database is not configured. Please contact support.', 503);
     }
