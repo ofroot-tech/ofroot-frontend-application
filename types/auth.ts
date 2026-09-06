@@ -5,7 +5,9 @@ import { z } from 'zod';
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  // Existing temporary access uses a four-character password. Registration
+  // remains stricter below; this only permits that account to sign in.
+  password: z.string().min(4),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
