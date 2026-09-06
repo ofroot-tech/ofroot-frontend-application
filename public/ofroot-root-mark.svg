@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title description">
+  <title id="title">OfRoot mark</title>
+  <desc id="description">A cobalt blue rounded square containing a stepped white square mark.</desc>
+  <rect width="100" height="100" rx="18" fill="#2457E6"/>
+  <rect x="25" y="24" width="52" height="52" fill="#FFFFFF"/>
+  <path fill="#2457E6" d="M39 37h21v12h11v22H49V60H39V37Z"/>
+</svg>
