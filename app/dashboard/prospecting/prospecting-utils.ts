@@ -128,7 +128,7 @@ export function normalizeProspect(raw: Partial<Prospect>): Prospect | null {
     verifiedFacts: raw.verifiedFacts || '',
     inferredNeed: raw.inferredNeed || '',
     outreachStatus: statuses.includes(raw.outreachStatus as OutreachStatus) ? raw.outreachStatus as OutreachStatus : 'uncontacted',
-    nextAction: raw.nextAction || '',
+    nextAction: raw.nextAction || (raw.sourceId?.startsWith('tdlr-acr:') ? 'Find website and contact route' : ''),
     nextActionAt: raw.nextActionAt || '',
     lastContactedAt: raw.lastContactedAt || '',
     outreachOutcome: outcomes.includes(raw.outreachOutcome as OutreachOutcome) ? raw.outreachOutcome as OutreachOutcome : 'not_set',
