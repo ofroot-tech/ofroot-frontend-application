@@ -115,7 +115,9 @@ export function ProspectingDesk() {
       const response = await fetch('/api/prospecting/discover/houston-hvac');
       const payload = await response.json().catch(() => ({})) as {ok?: boolean; data?: {prospects?: Prospect[]; availableCount?: number}; error?: {message?: string}};
       if (!response.ok || !payload.ok || !Array.isArray(payload.data?.prospects)) throw new Error(payload.error?.message || 'Discovery failed.');
-      const incoming = payload.data.prospects.map((item) => normalizeProspect(item)).filter((item): item is Prospect => Boolean(item));
+      const incoming = payload.data.prospects
+        .map((item) => normalizeProspect({...item, nextAction: item.nextAction || 'Find website and contact route'}))
+        .filter((item): item is Prospect => Boolean(item));
       setProspects((existing) => {
         const merged = mergeDiscoveredProspects(existing, incoming);
         const firstNew = merged.prospects[existing.length];
