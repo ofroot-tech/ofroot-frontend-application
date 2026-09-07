@@ -2,7 +2,7 @@
 
 import {type ChangeEvent, type ReactNode, useEffect, useMemo, useState} from 'react';
 import {CalendarClock, Check, ClipboardCopy, Download, ExternalLink, FileUp, Filter, Loader2, Mail, PhoneCall, Search, Upload, X} from 'lucide-react';
-import {buildProspects, callScript, emailDraft, normalizeProspect, parseCsv, scoreProspect, scoreReasons, uniqueProspects, type OutreachOutcome, type OutreachStatus, type Prospect} from './prospecting-utils';
+import {buildProspects, callScript, emailDraft, mergeDiscoveredProspects, normalizeProspect, parseCsv, scoreProspect, scoreReasons, uniqueProspects, type OutreachOutcome, type OutreachStatus, type Prospect} from './prospecting-utils';
 
 const STORAGE_KEY = 'ofroot.prospecting-desk.v1';
 
@@ -117,13 +117,14 @@ export function ProspectingDesk() {
       if (!response.ok || !payload.ok || !Array.isArray(payload.data?.prospects)) throw new Error(payload.error?.message || 'Discovery failed.');
       const incoming = payload.data.prospects.map((item) => normalizeProspect(item)).filter((item): item is Prospect => Boolean(item));
       setProspects((existing) => {
-        const unique = uniqueProspects(existing, incoming);
-        if (unique[0]) setSelectedId(unique[0].id);
+        const merged = mergeDiscoveredProspects(existing, incoming);
+        const firstNew = merged.prospects[existing.length];
+        if (firstNew) setSelectedId(firstNew.id);
         setVertical('HVAC');
         setMarket('Houston / Harris County');
         setQueueView('needs_planning');
-        setReport(`${unique.length} licensed HVAC business${unique.length === 1 ? '' : 'es'} added; ${incoming.length - unique.length} duplicate${incoming.length - unique.length === 1 ? '' : 's'} skipped. ${payload.data?.availableCount || incoming.length} current Harris County records are available; this batch is capped at ${incoming.length}.`);
-        return [...existing, ...unique];
+        setReport(`${merged.added} licensed HVAC business${merged.added === 1 ? '' : 'es'} added; ${merged.refreshed} existing record${merged.refreshed === 1 ? '' : 's'} refreshed. ${payload.data?.availableCount || incoming.length} current Harris County records are available; this batch is capped at ${incoming.length}.`);
+        return merged.prospects;
       });
     } catch (error) {
       setReport(error instanceof Error ? error.message : 'Texas licensing data could not be reached.');
