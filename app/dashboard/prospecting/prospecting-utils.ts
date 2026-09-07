@@ -195,6 +195,41 @@ export function uniqueProspects(existing: Prospect[], incoming: Prospect[]) {
   return unique;
 }
 
+export function mergeDiscoveredProspects(existing: Prospect[], incoming: Prospect[]) {
+  const prospects = [...existing];
+  let added = 0;
+  let refreshed = 0;
+
+  for (const candidate of incoming) {
+    const candidateKeys = new Set(prospectKeys(candidate));
+    const index = prospects.findIndex((item) => prospectKeys(item).some((key) => candidateKeys.has(key)));
+    if (index < 0) {
+      prospects.push(candidate);
+      added += 1;
+      continue;
+    }
+
+    const current = prospects[index];
+    if (!candidate.sourceId || candidate.sourceId !== current.sourceId) continue;
+    const updated = {
+      ...current,
+      source: candidate.source,
+      sourceUrl: candidate.sourceUrl,
+      sourceUpdatedAt: candidate.sourceUpdatedAt,
+      licenseNumber: candidate.licenseNumber,
+      licenseExpiresAt: candidate.licenseExpiresAt,
+      verifiedFacts: candidate.verifiedFacts,
+      contactName: current.contactName || candidate.contactName,
+      contactTitle: current.contactTitle || candidate.contactTitle,
+      nextAction: current.nextAction || candidate.nextAction,
+    };
+    prospects[index] = {...updated, score: scoreProspect(updated)};
+    refreshed += 1;
+  }
+
+  return {prospects, added, refreshed};
+}
+
 export function emailDraft(prospect: Prospect) {
   const offer = ['plumbing', 'hvac', 'roofing'].includes(prospect.vertical.toLowerCase()) ? 'lead capture, routing, and follow-up' : 'automation and reliable growth operations';
   const greeting = prospect.contactName.trim().split(/\s+/)[0] || 'there';

@@ -74,3 +74,12 @@
 - Exit status: 0
 - Rollback: Revert merge commit `42b7ce2332424176907511b6e70a5af41a443030` and allow the Vercel Git integration to redeploy.
 - Remaining uncertainty: Website, phone, and email enrichment are not yet connected; records remain in the operator's browser storage.
+
+
+## Evidence: Source refresh preservation repair
+- Date: 2026-09-07
+- Graph nodes: N11, N12
+- Commands or verification method: `./node_modules/.bin/jest --runInBand __tests__/prospecting-utils.test.ts`; `./node_modules/.bin/tsc --noEmit`; `NEXT_PUBLIC_API_BASE_URL=https://ofroot-leads.onrender.com/api npm run build`; `git diff --check`.
+- Result: Repeated discovery now refreshes TDLR-controlled evidence, expiration, source date, and a missing contact-research action while preserving operator-entered email, notes, and outreach state. Seven focused tests, TypeScript, diff validation, and the production build passed.
+- Exit status: 0
+- Remaining uncertainty: Canonical refresh behavior remains pending until the repair deployment is READY.

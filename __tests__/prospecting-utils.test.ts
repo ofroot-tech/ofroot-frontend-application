@@ -1,4 +1,4 @@
-import {normalizeProspect, prospectKey, scoreProspect, uniqueProspects} from '../app/dashboard/prospecting/prospecting-utils';
+import {mergeDiscoveredProspects, normalizeProspect, prospectKey, scoreProspect, uniqueProspects} from '../app/dashboard/prospecting/prospecting-utils';
 import {buildTdlrProspects} from '../app/dashboard/prospecting/tdlr-discovery';
 
 describe('prospecting utilities', () => {
@@ -35,6 +35,16 @@ describe('TDLR discovery', () => {
   it('deduplicates source records even when later contact data differs', () => {
     const [prospect] = buildTdlrProspects([{business_name: 'Current Air LLC', license_number: '1234', license_expiration_date_mmddccyy: '12/31/2027'}], '2026-09-07T12:00:00.000Z', '2026-09-07');
     expect(uniqueProspects([prospect], [{...prospect, id: 'second', phone: '713-555-0100'}])).toEqual([]);
+  });
+
+  it('refreshes source evidence without overwriting operator contact work', () => {
+    const [prospect] = buildTdlrProspects([{business_name: 'Current Air LLC', license_number: '1234', owner_name: 'DOE, JANE', license_expiration_date_mmddccyy: '12/31/2027'}], '2026-09-07T12:00:00.000Z', '2026-09-07');
+    const existing = {...prospect, email: 'owner@current-air.example', notes: 'Called Monday', nextAction: ''};
+    const incoming = {...prospect, sourceUpdatedAt: '2026-09-14T12:00:00.000Z', licenseExpiresAt: '2028-12-31', verifiedFacts: 'Updated license evidence'};
+    const result = mergeDiscoveredProspects([existing], [incoming]);
+
+    expect(result).toMatchObject({added: 0, refreshed: 1});
+    expect(result.prospects[0]).toMatchObject({email: 'owner@current-air.example', notes: 'Called Monday', nextAction: 'Find website and contact route', sourceUpdatedAt: '2026-09-14T12:00:00.000Z', licenseExpiresAt: '2028-12-31', verifiedFacts: 'Updated license evidence'});
   });
 });
 

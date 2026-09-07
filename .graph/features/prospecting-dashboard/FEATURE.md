@@ -1,7 +1,7 @@
 # Feature: Prospecting dashboard
 
 ## Status
-Released and verified in production
+Refresh repair validated; release pending
 
 ## Objective
 
