@@ -83,3 +83,13 @@
 - Result: Repeated discovery now refreshes TDLR-controlled evidence, expiration, source date, and a missing contact-research action while preserving operator-entered email, notes, and outreach state. The client import boundary supplies the research-action default when a cached or older discovery payload omits it, browser-record normalization recognizes both saved TDLR schemas, and the queue derives a visible `Find contact route` instruction directly from license evidence. Eight focused tests, TypeScript, diff validation, and the production build passed.
 - Exit status: 0
 - Remaining uncertainty: Canonical refresh behavior remains pending until the repair deployment is READY.
+
+
+## Evidence: Source refresh repair canonical verification
+- Date: 2026-09-07
+- Graph node: N12
+- Commands or verification method: PR #45, #46, #47, #48, and #49 merge readback; Vercel deployment inspection; canonical alias inspection; authenticated fresh-tab browser verification at `https://www.ofroot.technology/dashboard/prospecting`.
+- Result: Source-aware refresh, payload fallback, saved-record migration, legacy-license recognition, and the derived queue instruction are merged. Production deployment `dpl_Hh6k7gfxJVsXNCucHANkAdQJAAri` reached READY at the canonical domain. A fresh authenticated tab rendered five licensed businesses with `Find website and contact route` in every queue row and in the selected record's action field.
+- Exit status: 0
+- Rollback: Revert the merge chain from `377bcb3b2bbe8f30dd68c5db8f121ad20eeb344c` through `21deb007aebe9b8ac844e0221c4bf09454e7436c` and redeploy.
+- Remaining uncertainty: TDLR provides licensing evidence but no email, phone, or website; contact enrichment remains the next bounded stage.
