@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-09-07T12:14:22.214135+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow/.graph-runs/active/20260907-prospecting-daily-workflow/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow",
+  "repositoryBytes": 6698138,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow/.graph-runs/active/20260907-prospecting-daily-workflow",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 4265779200
+}

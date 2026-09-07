@@ -1,7 +1,7 @@
 # Feature: Prospecting dashboard
 
 ## Status
-Implementation and local runtime verified — daily-workflow release awaiting production verification
+Released and verified in production
 
 ## Objective
 
@@ -24,7 +24,7 @@ Give an authenticated operator one private workspace to import business prospect
 
 ## Next bounded action
 
-Merge the verified daily-workflow release, then verify the authenticated canonical production route and record the deployment and rollback commit.
+Connect one governed business-discovery source behind a saved targeting profile without weakening evidence labels or stop rules.
 
 ## Last reviewed
 2026-09-07
