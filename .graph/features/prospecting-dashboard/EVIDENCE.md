@@ -23,3 +23,12 @@
 - Result: TypeScript passed. The production build passed with pre-existing lint warnings. Parsing, mapping, dedupe key, and scoring passed. The protected route returned `307` to `/auth/login?next=/dashboard/prospecting` with `no-store` cache control.
 - Exit status: 0
 - Remaining uncertainty: The local worktree has no database/session configuration, so the authenticated desktop and mobile interface could not be exercised.
+
+
+## Evidence: Action queue and score boundary
+- Date: 2026-09-06
+- Graph node: N4
+- Command or verification method: `./node_modules/.bin/tsc --noEmit`, `npm test -- --runInBand __tests__/prospecting-utils.test.ts`, and `git diff --check`.
+- Result: TypeScript and the three focused utility tests passed. The score does not change when only an inferred need changes; equivalent website variants deduplicate; older browser-local records receive safe action defaults.
+- Exit status: 0
+- Remaining uncertainty: An isolated full build could not run because the workstation ran out of disk while installing the worktree's dependencies. The complete repository suite retains one unrelated canonical-logo expectation failure.

@@ -1,4 +1,5 @@
 export type OutreachStatus = 'uncontacted' | 'researched' | 'email_drafted' | 'call_queued' | 'contacted';
+export type OutreachOutcome = 'not_set' | 'positive' | 'no_response' | 'not_a_fit' | 'do_not_contact';
 
 export type Prospect = {
   id: string;
@@ -14,10 +15,17 @@ export type Prospect = {
   inferredNeed: string;
   score: number;
   outreachStatus: OutreachStatus;
+  nextAction: string;
+  nextActionAt: string;
+  lastContactedAt: string;
+  outreachOutcome: OutreachOutcome;
   notes: string;
 };
 
 type CsvRow = Record<string, string>;
+
+const statuses: OutreachStatus[] = ['uncontacted', 'researched', 'email_drafted', 'call_queued', 'contacted'];
+const outcomes: OutreachOutcome[] = ['not_set', 'positive', 'no_response', 'not_a_fit', 'do_not_contact'];
 
 const aliases: Record<string, string[]> = {
   businessName: ['business', 'business_name', 'company', 'company_name', 'name'],
@@ -67,10 +75,45 @@ export function parseCsv(text: string): CsvRow[] {
   }, {}));
 }
 
-export function scoreProspect(prospect: Pick<Prospect, 'vertical' | 'website' | 'email' | 'phone' | 'verifiedFacts' | 'inferredNeed'>) {
+type ScoreableProspect = Pick<Prospect, 'vertical' | 'website' | 'email' | 'phone' | 'verifiedFacts'>;
+
+export function scoreProspect(prospect: ScoreableProspect) {
   const verticalFit = ['plumbing', 'hvac', 'roofing'].includes(prospect.vertical.toLowerCase()) ? 35 : 15;
   const contactability = [prospect.website, prospect.email, prospect.phone].filter(Boolean).length * 12;
-  return Math.min(100, verticalFit + contactability + (prospect.verifiedFacts ? 18 : 0) + (prospect.inferredNeed ? 11 : 0));
+  return Math.min(100, verticalFit + contactability + (prospect.verifiedFacts ? 18 : 0));
+}
+
+export function scoreReasons(prospect: ScoreableProspect) {
+  const reasons = [
+    ['plumbing', 'hvac', 'roofing'].includes(prospect.vertical.toLowerCase()) ? 'target vertical' : 'other vertical',
+    ...(['website', 'email', 'phone'] as const).filter((field) => Boolean(prospect[field])).map((field) => `${field} available`),
+  ];
+  if (prospect.verifiedFacts) reasons.push('verified evidence');
+  return reasons;
+}
+
+export function normalizeProspect(raw: Partial<Prospect>): Prospect | null {
+  if (!raw.id || !raw.businessName) return null;
+  const draft = {
+    id: raw.id,
+    businessName: raw.businessName,
+    vertical: raw.vertical || 'Unclassified',
+    market: raw.market || 'Unspecified market',
+    website: raw.website || '',
+    email: raw.email || '',
+    phone: raw.phone || '',
+    source: raw.source || 'Previous browser import',
+    importedAt: raw.importedAt || new Date().toISOString(),
+    verifiedFacts: raw.verifiedFacts || '',
+    inferredNeed: raw.inferredNeed || '',
+    outreachStatus: statuses.includes(raw.outreachStatus as OutreachStatus) ? raw.outreachStatus as OutreachStatus : 'uncontacted',
+    nextAction: raw.nextAction || '',
+    nextActionAt: raw.nextActionAt || '',
+    lastContactedAt: raw.lastContactedAt || '',
+    outreachOutcome: outcomes.includes(raw.outreachOutcome as OutreachOutcome) ? raw.outreachOutcome as OutreachOutcome : 'not_set',
+    notes: raw.notes || '',
+  };
+  return {...draft, score: scoreProspect(draft)};
 }
 
 export function buildProspects(rows: CsvRow[], source: string): Prospect[] {
@@ -84,15 +127,25 @@ export function buildProspects(rows: CsvRow[], source: string): Prospect[] {
       market: valueFor(row, 'market') || 'Unspecified market',
       website: valueFor(row, 'website'), email: valueFor(row, 'email'), phone: valueFor(row, 'phone'),
       source, importedAt, verifiedFacts: valueFor(row, 'verifiedFacts'), inferredNeed: valueFor(row, 'inferredNeed'),
-      outreachStatus: 'uncontacted' as const, notes: '',
+      outreachStatus: 'uncontacted' as const, nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set' as const, notes: '',
     };
     return {...draft, score: scoreProspect(draft)};
   }).filter((prospect) => Boolean(prospect.businessName));
 }
 
+export function normalizedWebsite(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  try {
+    return new URL(/^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`).hostname.toLowerCase().replace(/^www\./, '');
+  } catch {
+    return trimmed.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
+  }
+}
+
 export function prospectKey(prospect: Pick<Prospect, 'website' | 'email' | 'phone' | 'businessName' | 'market'>) {
   const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return clean(prospect.website) || clean(prospect.email) || clean(prospect.phone) || `${clean(prospect.businessName)}-${clean(prospect.market)}`;
+  return normalizedWebsite(prospect.website) || clean(prospect.email) || clean(prospect.phone) || `${clean(prospect.businessName)}-${clean(prospect.market)}`;
 }
 
 export function emailDraft(prospect: Prospect) {
