@@ -80,6 +80,6 @@
 - Date: 2026-09-07
 - Graph nodes: N11, N12
 - Commands or verification method: `./node_modules/.bin/jest --runInBand __tests__/prospecting-utils.test.ts`; `./node_modules/.bin/tsc --noEmit`; `NEXT_PUBLIC_API_BASE_URL=https://ofroot-leads.onrender.com/api npm run build`; `git diff --check`.
-- Result: Repeated discovery now refreshes TDLR-controlled evidence, expiration, source date, and a missing contact-research action while preserving operator-entered email, notes, and outreach state. The client import boundary supplies the research-action default when a cached or older discovery payload omits it, and browser-record normalization repairs already-saved TDLR rows on page load. Eight focused tests, TypeScript, diff validation, and the production build passed.
+- Result: Repeated discovery now refreshes TDLR-controlled evidence, expiration, source date, and a missing contact-research action while preserving operator-entered email, notes, and outreach state. The client import boundary supplies the research-action default when a cached or older discovery payload omits it, browser-record normalization recognizes both saved TDLR schemas, and the queue derives a visible `Find contact route` instruction directly from license evidence. Eight focused tests, TypeScript, diff validation, and the production build passed.
 - Exit status: 0
 - Remaining uncertainty: Canonical refresh behavior remains pending until the repair deployment is READY.
