@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-09-07T12:46:36.426311+00:00",
+  "ownedTemporaryBytes": 0,
+  "policy": {
+    "autoClean": [
+      "/Users/ofroot/.codex/worktrees/houston-hvac-discovery/.graph-runs/active/20260907T190000Z-houston-hvac-discovery/tmp"
+    ],
+    "reviewOnly": [
+      ".next",
+      ".turbo",
+      ".cache",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules",
+      "target",
+      ".venv",
+      "venv"
+    ]
+  },
+  "repository": "/Users/ofroot/.codex/worktrees/houston-hvac-discovery",
+  "repositoryBytes": 6725333,
+  "runDirectory": "/Users/ofroot/.codex/worktrees/houston-hvac-discovery/.graph-runs/active/20260907T190000Z-houston-hvac-discovery",
+  "sharedArtifacts": {},
+  "volumeFreeBytes": 2437398528
+}

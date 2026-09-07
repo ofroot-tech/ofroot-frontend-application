@@ -12,6 +12,11 @@ export type Prospect = {
   contactName: string;
   contactTitle: string;
   source: string;
+  sourceId: string;
+  sourceUrl: string;
+  sourceUpdatedAt: string;
+  licenseNumber: string;
+  licenseExpiresAt: string;
   importedAt: string;
   verifiedFacts: string;
   inferredNeed: string;
@@ -40,6 +45,11 @@ const aliases: Record<string, string[]> = {
   contactTitle: ['contact_title', 'title', 'job_title', 'role'],
   verifiedFacts: ['verified_facts', 'evidence', 'facts', 'notes'],
   inferredNeed: ['inferred_need', 'need', 'likely_need', 'opportunity'],
+  sourceId: ['source_id', 'external_id'],
+  sourceUrl: ['source_url'],
+  sourceUpdatedAt: ['source_updated_at'],
+  licenseNumber: ['license_number', 'license'],
+  licenseExpiresAt: ['license_expires_at', 'license_expiration_date'],
 };
 
 function valueFor(row: CsvRow, field: keyof typeof aliases) {
@@ -109,6 +119,11 @@ export function normalizeProspect(raw: Partial<Prospect>): Prospect | null {
     contactName: raw.contactName || '',
     contactTitle: raw.contactTitle || '',
     source: raw.source || 'Previous browser import',
+    sourceId: raw.sourceId || '',
+    sourceUrl: raw.sourceUrl || '',
+    sourceUpdatedAt: raw.sourceUpdatedAt || raw.importedAt || '',
+    licenseNumber: raw.licenseNumber || '',
+    licenseExpiresAt: raw.licenseExpiresAt || '',
     importedAt: raw.importedAt || new Date().toISOString(),
     verifiedFacts: raw.verifiedFacts || '',
     inferredNeed: raw.inferredNeed || '',
@@ -134,6 +149,8 @@ export function buildProspects(rows: CsvRow[], source: string): Prospect[] {
       website: valueFor(row, 'website'), email: valueFor(row, 'email'), phone: valueFor(row, 'phone'),
       contactName: valueFor(row, 'contactName'), contactTitle: valueFor(row, 'contactTitle'),
       source, importedAt, verifiedFacts: valueFor(row, 'verifiedFacts'), inferredNeed: valueFor(row, 'inferredNeed'),
+      sourceId: valueFor(row, 'sourceId'), sourceUrl: valueFor(row, 'sourceUrl'), sourceUpdatedAt: valueFor(row, 'sourceUpdatedAt'),
+      licenseNumber: valueFor(row, 'licenseNumber'), licenseExpiresAt: valueFor(row, 'licenseExpiresAt'),
       outreachStatus: 'uncontacted' as const, nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set' as const, notes: '',
     };
     return {...draft, score: scoreProspect(draft)};
@@ -153,6 +170,29 @@ export function normalizedWebsite(value: string) {
 export function prospectKey(prospect: Pick<Prospect, 'website' | 'email' | 'phone' | 'businessName' | 'market'>) {
   const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
   return normalizedWebsite(prospect.website) || clean(prospect.email) || clean(prospect.phone) || `${clean(prospect.businessName)}-${clean(prospect.market)}`;
+}
+
+export function prospectKeys(prospect: Pick<Prospect, 'sourceId' | 'website' | 'email' | 'phone' | 'businessName' | 'market'>) {
+  const clean = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return [
+    prospect.sourceId ? `source:${clean(prospect.sourceId)}` : '',
+    normalizedWebsite(prospect.website) ? `domain:${normalizedWebsite(prospect.website)}` : '',
+    prospect.email ? `email:${clean(prospect.email)}` : '',
+    prospect.phone ? `phone:${clean(prospect.phone)}` : '',
+    `name-market:${clean(prospect.businessName)}-${clean(prospect.market)}`,
+  ].filter(Boolean);
+}
+
+export function uniqueProspects(existing: Prospect[], incoming: Prospect[]) {
+  const keys = new Set(existing.flatMap(prospectKeys));
+  const unique: Prospect[] = [];
+  for (const prospect of incoming) {
+    const candidateKeys = prospectKeys(prospect);
+    if (candidateKeys.some((key) => keys.has(key))) continue;
+    unique.push(prospect);
+    candidateKeys.forEach((key) => keys.add(key));
+  }
+  return unique;
 }
 
 export function emailDraft(prospect: Prospect) {

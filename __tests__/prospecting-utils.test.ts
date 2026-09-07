@@ -1,4 +1,5 @@
-import {normalizeProspect, prospectKey, scoreProspect} from '../app/dashboard/prospecting/prospecting-utils';
+import {normalizeProspect, prospectKey, scoreProspect, uniqueProspects} from '../app/dashboard/prospecting/prospecting-utils';
+import {buildTdlrProspects} from '../app/dashboard/prospecting/tdlr-discovery';
 
 describe('prospecting utilities', () => {
   const base = {vertical: 'HVAC', website: 'https://example.com', email: 'team@example.com', phone: '555-0100', verifiedFacts: ''};
@@ -14,8 +15,26 @@ describe('prospecting utilities', () => {
 
   it('migrates earlier browser records with actionable defaults', () => {
     const prospect = normalizeProspect({id: 'old-row', businessName: 'Example HVAC', ...base, source: 'Existing browser import', importedAt: '2026-09-06T00:00:00.000Z', inferredNeed: 'Could need follow-up', outreachStatus: 'researched', notes: ''});
-    expect(prospect).toMatchObject({nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set'});
+    expect(prospect).toMatchObject({sourceId: '', licenseNumber: '', nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set'});
     expect(prospect?.score).toBe(scoreProspect(base));
+  });
+});
+
+describe('TDLR discovery', () => {
+  it('keeps current licenses, converts public owner names, and excludes expired rows', () => {
+    const prospects = buildTdlrProspects([
+      {business_name: 'Current Air LLC', license_number: '1234', business_county: 'HARRIS', owner_name: 'DOE, JANE Q', license_subtype: 'AE', license_expiration_date_mmddccyy: '12/31/2027'},
+      {business_name: 'Old Air LLC', license_number: '5678', business_county: 'HARRIS', license_expiration_date_mmddccyy: '01/01/2025'},
+    ], '2026-09-07T12:00:00.000Z', '2026-09-07');
+
+    expect(prospects).toHaveLength(1);
+    expect(prospects[0]).toMatchObject({businessName: 'Current Air LLC', contactName: 'JANE Q DOE', contactTitle: 'TDLR license owner', licenseNumber: '1234', nextAction: 'Find website and contact route'});
+    expect(prospects[0].verifiedFacts).toContain('Texas TDLR A/C Contractor license 1234');
+  });
+
+  it('deduplicates source records even when later contact data differs', () => {
+    const [prospect] = buildTdlrProspects([{business_name: 'Current Air LLC', license_number: '1234', license_expiration_date_mmddccyy: '12/31/2027'}], '2026-09-07T12:00:00.000Z', '2026-09-07');
+    expect(uniqueProspects([prospect], [{...prospect, id: 'second', phone: '713-555-0100'}])).toEqual([]);
   });
 });
 
