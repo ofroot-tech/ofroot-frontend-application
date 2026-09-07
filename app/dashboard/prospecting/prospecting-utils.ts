@@ -9,6 +9,8 @@ export type Prospect = {
   website: string;
   email: string;
   phone: string;
+  contactName: string;
+  contactTitle: string;
   source: string;
   importedAt: string;
   verifiedFacts: string;
@@ -34,6 +36,8 @@ const aliases: Record<string, string[]> = {
   website: ['website', 'url', 'domain'],
   email: ['email', 'email_address'],
   phone: ['phone', 'phone_number', 'telephone'],
+  contactName: ['contact_name', 'contact', 'full_name', 'decision_maker', 'first_name'],
+  contactTitle: ['contact_title', 'title', 'job_title', 'role'],
   verifiedFacts: ['verified_facts', 'evidence', 'facts', 'notes'],
   inferredNeed: ['inferred_need', 'need', 'likely_need', 'opportunity'],
 };
@@ -102,6 +106,8 @@ export function normalizeProspect(raw: Partial<Prospect>): Prospect | null {
     website: raw.website || '',
     email: raw.email || '',
     phone: raw.phone || '',
+    contactName: raw.contactName || '',
+    contactTitle: raw.contactTitle || '',
     source: raw.source || 'Previous browser import',
     importedAt: raw.importedAt || new Date().toISOString(),
     verifiedFacts: raw.verifiedFacts || '',
@@ -126,6 +132,7 @@ export function buildProspects(rows: CsvRow[], source: string): Prospect[] {
       vertical: valueFor(row, 'vertical') || 'Unclassified',
       market: valueFor(row, 'market') || 'Unspecified market',
       website: valueFor(row, 'website'), email: valueFor(row, 'email'), phone: valueFor(row, 'phone'),
+      contactName: valueFor(row, 'contactName'), contactTitle: valueFor(row, 'contactTitle'),
       source, importedAt, verifiedFacts: valueFor(row, 'verifiedFacts'), inferredNeed: valueFor(row, 'inferredNeed'),
       outreachStatus: 'uncontacted' as const, nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set' as const, notes: '',
     };
@@ -150,9 +157,11 @@ export function prospectKey(prospect: Pick<Prospect, 'website' | 'email' | 'phon
 
 export function emailDraft(prospect: Prospect) {
   const offer = ['plumbing', 'hvac', 'roofing'].includes(prospect.vertical.toLowerCase()) ? 'lead capture, routing, and follow-up' : 'automation and reliable growth operations';
-  return `Subject: A question about ${prospect.businessName}'s ${offer}\n\nHi {{first_name}},\n\nI came across ${prospect.businessName}${prospect.verifiedFacts ? ` and noticed ${prospect.verifiedFacts}` : ''}. We help ${prospect.vertical.toLowerCase()} teams remove the gaps between a new inquiry, a fast response, and a booked conversation.\n\nWould it be useful to compare how your team currently handles ${offer}? I can share a short, practical view of what we would check first.\n\nBest,\nDimitri`;
+  const greeting = prospect.contactName.trim().split(/\s+/)[0] || 'there';
+  return `Subject: A question about ${prospect.businessName}'s ${offer}\n\nHi ${greeting},\n\nI came across ${prospect.businessName}${prospect.verifiedFacts ? ` and noticed ${prospect.verifiedFacts}` : ''}. We help ${prospect.vertical.toLowerCase()} teams remove the gaps between a new inquiry, a fast response, and a booked conversation.\n\nWould it be useful to compare how your team currently handles ${offer}? I can share a short, practical view of what we would check first.\n\nBest,\nDimitri`;
 }
 
 export function callScript(prospect: Prospect) {
-  return `Opening\nHi {{first_name}}, this is Dimitri with OfRoot. We work with ${prospect.vertical.toLowerCase()} teams on lead response and follow-up systems. Is now an okay time for one quick question?\n\nDiscovery\n• When a new lead comes in, who owns the first response?\n• Where do inquiries tend to wait or get lost?\n• What would a reliable handoff or follow-up look like for your team?\n\nLikely concern to test\n${prospect.inferredNeed || 'Ask what is slowing lead response or growth operations before proposing a solution.'}\n\nIf they say “we already have software”\nThat makes sense. We usually look at the handoffs between the tools and the people using them, then decide whether any change is warranted.\n\nNext step\nOffer a 20-minute working session to map the current flow and identify the smallest useful improvement.`;
+  const greeting = prospect.contactName.trim().split(/\s+/)[0] || 'there';
+  return `Opening\nHi ${greeting}, this is Dimitri with OfRoot. We work with ${prospect.vertical.toLowerCase()} teams on lead response and follow-up systems. Is now an okay time for one quick question?\n\nDiscovery\n• When a new lead comes in, who owns the first response?\n• Where do inquiries tend to wait or get lost?\n• What would a reliable handoff or follow-up look like for your team?\n\nLikely concern to test\n${prospect.inferredNeed || 'Ask what is slowing lead response or growth operations before proposing a solution.'}\n\nIf they say “we already have software”\nThat makes sense. We usually look at the handoffs between the tools and the people using them, then decide whether any change is warranted.\n\nNext step\nOffer a 20-minute working session to map the current flow and identify the smallest useful improvement.`;
 }

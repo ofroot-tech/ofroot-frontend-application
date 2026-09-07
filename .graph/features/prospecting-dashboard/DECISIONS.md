@@ -28,3 +28,8 @@
 - Context: A ranked list without a due action is not a daily execution queue, and an inferred need is a hypothesis rather than evidence.
 - Decision: Track each prospect's next step, due date, last contact date, and outcome in browser-local state. Default the queue to work due today. Score only target vertical, available contact detail, and verified facts; preserve the internal inference solely as a research prompt.
 - Evidence: `app/dashboard/prospecting/ProspectingDesk.tsx`, `app/dashboard/prospecting/prospecting-utils.ts`, and `__tests__/prospecting-utils.test.ts`.
+
+## Decision: Preserve contact context and browser-local recovery
+- Date: 2026-09-06
+- Status: accepted
+- Decision: Import and edit contact name/title fields, use a known first name in copy, show per-source recency and reachable counts, and allow a local JSON export. No provider data is claimed or transmitted.
