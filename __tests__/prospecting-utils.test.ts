@@ -18,6 +18,11 @@ describe('prospecting utilities', () => {
     expect(prospect).toMatchObject({sourceId: '', licenseNumber: '', nextAction: '', nextActionAt: '', lastContactedAt: '', outreachOutcome: 'not_set'});
     expect(prospect?.score).toBe(scoreProspect(base));
   });
+
+  it('repairs the research action on a saved TDLR record', () => {
+    const prospect = normalizeProspect({id: 'tdlr-acr-1234', businessName: 'Current Air LLC', sourceId: 'tdlr-acr:1234', vertical: 'HVAC', market: 'Houston / Harris County', nextAction: ''});
+    expect(prospect?.nextAction).toBe('Find website and contact route');
+  });
 });
 
 describe('TDLR discovery', () => {
