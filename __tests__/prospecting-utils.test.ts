@@ -18,3 +18,9 @@ describe('prospecting utilities', () => {
     expect(prospect?.score).toBe(scoreProspect(base));
   });
 });
+
+it('imports a named contact and uses it in draft outreach', () => {
+  const [prospect] = require('../app/dashboard/prospecting/prospecting-utils').buildProspects(require('../app/dashboard/prospecting/prospecting-utils').parseCsv('company,first_name,title,email\nAcme HVAC,Avery,Owner,avery@acme.example'), 'CSV import');
+  expect(prospect).toMatchObject({contactName: 'Avery', contactTitle: 'Owner'});
+  expect(require('../app/dashboard/prospecting/prospecting-utils').emailDraft(prospect)).toContain('Hi Avery,');
+});
