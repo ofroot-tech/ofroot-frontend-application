@@ -64,3 +64,13 @@
 - Result: The official dataset exposed 3,037 Harris County A/C contractor rows and no populated contact fields. The implementation filters expired licenses, maps public license evidence, deduplicates source and business identities, caps imports at 100, protects the API with the existing session, and gives every imported record an explicit contact-research action. Six focused tests, TypeScript, diff validation, and the production build passed. The unauthenticated API returned 401.
 - Exit status: 0
 - Remaining uncertainty: Authenticated provider retrieval and the rendered import interaction require a configured deployment because the local database/session configuration is unavailable. No email, website, or phone enrichment is included.
+
+
+## Evidence: Houston HVAC production release and canonical import
+- Date: 2026-09-07
+- Graph nodes: N9, N10
+- Commands or verification method: PR #43 merge readback; Vercel deployment inspection; canonical alias inspection; authenticated browser interaction at `https://www.ofroot.technology/dashboard/prospecting`.
+- Result: PR #43 merged at `42b7ce2332424176907511b6e70a5af41a443030`. Production deployment `dpl_9GnaBLPEo38JoLxFtTBWQBVJ4Ltc` reached READY and the canonical domain resolved to it. The authenticated route rendered the collector, imported 100 current licensed businesses from 2,415 available records, showed 0 reachable because TDLR provides no contact fields, preserved source date and license evidence, and a repeated discovery added 0 while skipping 100 duplicates.
+- Exit status: 0
+- Rollback: Revert merge commit `42b7ce2332424176907511b6e70a5af41a443030` and allow the Vercel Git integration to redeploy.
+- Remaining uncertainty: Website, phone, and email enrichment are not yet connected; records remain in the operator's browser storage.

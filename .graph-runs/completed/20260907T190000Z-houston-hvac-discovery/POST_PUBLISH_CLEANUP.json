@@ -1,0 +1,35 @@
+{
+  "autoRemoved": [
+    {
+      "bytes": 0,
+      "path": "/Users/ofroot/.codex/worktrees/houston-hvac-discovery/.graph-runs/active/20260907T190000Z-houston-hvac-discovery/tmp"
+    }
+  ],
+  "completedAt": "2026-09-07T12:57:08.431976+00:00",
+  "preserved": [
+    "application and untracked user files",
+    ".git and .graph durable records",
+    "Graph Loop evidence outside the owned tmp directory",
+    "dependencies and shared build caches",
+    "Git worktrees, branches, stashes, and sessions"
+  ],
+  "publishedEvidence": "PR #43 merge 42b7ce2332424176907511b6e70a5af41a443030; Vercel dpl_9GnaBLPEo38JoLxFtTBWQBVJ4Ltc READY; canonical authenticated import verified",
+  "reclaimedBytes": 0,
+  "repository": "/Users/ofroot/.codex/worktrees/houston-hvac-discovery",
+  "repositoryDeltaBeforeCleanupBytes": 1127807930,
+  "reviewOnlySharedArtifacts": {
+    ".next": {
+      "baselineBytes": 0,
+      "currentBytes": 213625537,
+      "deltaBytes": 213625537
+    },
+    "node_modules": {
+      "baselineBytes": 0,
+      "currentBytes": 910989410,
+      "deltaBytes": 910989410
+    }
+  },
+  "runDirectory": "/Users/ofroot/.codex/worktrees/houston-hvac-discovery/.graph-runs/active/20260907T190000Z-houston-hvac-discovery",
+  "status": "completed",
+  "volumeFreeDeltaAfterCleanupBytes": -9277440
+}
