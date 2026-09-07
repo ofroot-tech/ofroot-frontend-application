@@ -1,7 +1,7 @@
 # Feature: Prospecting dashboard
 
 ## Status
-Implemented — action-queue update awaiting production verification
+Implementation and local runtime verified — daily-workflow release awaiting production verification
 
 ## Objective
 
@@ -14,6 +14,8 @@ Give an authenticated operator one private workspace to import business prospect
 - The queue defaults to work due today and separates overdue, upcoming, and unplanned follow-up. Scores use only vertical fit, available contact detail, and verified evidence.
 - Email and call drafts are editable by copying into a manual workflow; the application does not send messages or place calls.
 - Empty and import-result states accurately distinguish no connected directory from browser-local imports.
+- The default worklist shows at most five actionable prospects, ordered by urgency and score, while future follow-ups and stopped prospects stay out of the immediate queue.
+- Email, phone, and website routes are directly actionable, and common outcomes update contact state and advance the worklist in one click.
 
 ## Non-goals
 
@@ -22,7 +24,7 @@ Give an authenticated operator one private workspace to import business prospect
 
 ## Next bounded action
 
-Verify the updated action queue in production with an authenticated session, then record the deployment and rollback commit.
+Merge the verified daily-workflow release, then verify the authenticated canonical production route and record the deployment and rollback commit.
 
 ## Last reviewed
-2026-09-06
+2026-09-07
