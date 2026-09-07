@@ -1,7 +1,7 @@
 # Feature: Prospecting dashboard
 
 ## Status
-Released and verified in production
+Implementation validated; release pending
 
 ## Objective
 
@@ -16,15 +16,17 @@ Give an authenticated operator one private workspace to import business prospect
 - Empty and import-result states accurately distinguish no connected directory from browser-local imports.
 - The default worklist shows at most five actionable prospects, ordered by urgency and score, while future follow-ups and stopped prospects stay out of the immediate queue.
 - Email, phone, and website routes are directly actionable, and common outcomes update contact state and advance the worklist in one click.
+- An authenticated operator can import a bounded batch of current Harris County A/C contractor licenses from Texas TDLR in one click.
+- TDLR imports preserve license evidence and source recency, exclude expired records, and never imply that a contact route has been found.
 
 ## Non-goals
 
-- Connecting a business directory, sending email, placing calls, or storing prospect data remotely.
+- Paid contact enrichment, automated sending or calling, and remote prospect persistence.
 - Altering existing authentication accounts or credentials.
 
 ## Next bounded action
 
-Connect one governed business-discovery source behind a saved targeting profile without weakening evidence labels or stop rules.
+Connect a governed website and contact-enrichment provider for the highest-priority licensed businesses; enrich only a bounded batch and preserve field-level provenance.
 
 ## Last reviewed
 2026-09-07

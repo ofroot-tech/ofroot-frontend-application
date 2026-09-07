@@ -55,3 +55,12 @@
 - Exit status: 0
 - Rollback: Revert merge commit `9248f9c4f2283448b11f0f092ae0aa308f11f3d2` and allow the existing Vercel Git integration to redeploy.
 - Remaining uncertainty: Contact discovery and remote persistence are still intentionally absent; prospect data remains browser-local.
+
+
+## Evidence: Houston HVAC discovery implementation
+- Date: 2026-09-07
+- Graph nodes: N8, N9
+- Commands or verification method: Texas Open Data metadata and SODA API inspection; `./node_modules/.bin/jest --runInBand __tests__/prospecting-utils.test.ts`; `./node_modules/.bin/tsc --noEmit`; `NEXT_PUBLIC_API_BASE_URL=https://ofroot-leads.onrender.com/api npm run build`; local unauthenticated API request; `git diff --check`.
+- Result: The official dataset exposed 3,037 Harris County A/C contractor rows and no populated contact fields. The implementation filters expired licenses, maps public license evidence, deduplicates source and business identities, caps imports at 100, protects the API with the existing session, and gives every imported record an explicit contact-research action. Six focused tests, TypeScript, diff validation, and the production build passed. The unauthenticated API returned 401.
+- Exit status: 0
+- Remaining uncertainty: Authenticated provider retrieval and the rendered import interaction require a configured deployment because the local database/session configuration is unavailable. No email, website, or phone enrichment is included.

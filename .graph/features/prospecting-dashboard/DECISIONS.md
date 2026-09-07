@@ -47,3 +47,11 @@
 - Context: Requiring status, outcome, last-contact date, next action, and due date separately slows a short outreach session.
 - Decision: One-click outcomes set contacted state and last-contact date. No answer schedules two business days, interested schedules the next business day, and stop outcomes clear follow-up and leave the worklist. Direct email, telephone, and website links remain manual operator actions.
 - Evidence: `app/dashboard/prospecting/ProspectingDesk.tsx` and authenticated local runtime verification.
+
+
+## Decision: Use Texas TDLR as the first governed discovery source
+- Date: 2026-09-07
+- Status: accepted
+- Context: The public TDLR dataset provides official A/C contractor licensing records for Harris County but omits business address, phone, website, and email fields. Public Overpass instances discourage use as a commercial application backend.
+- Decision: Fetch TDLR weekly through an authenticated server route, import at most 100 current unique businesses per click, label license details as verified facts, and make contact research the next action. Keep records browser-local until a verified persistent store is deliberately added.
+- Evidence: Texas Open Data dataset `7358-krk7`, the source mapper, API route, focused tests, and production build.
