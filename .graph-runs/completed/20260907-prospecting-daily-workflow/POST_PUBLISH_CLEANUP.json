@@ -1,0 +1,35 @@
+{
+  "autoRemoved": [
+    {
+      "bytes": 1771,
+      "path": "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow/.graph-runs/active/20260907-prospecting-daily-workflow/tmp"
+    }
+  ],
+  "completedAt": "2026-09-07T12:28:08.622671+00:00",
+  "preserved": [
+    "application and untracked user files",
+    ".git and .graph durable records",
+    "Graph Loop evidence outside the owned tmp directory",
+    "dependencies and shared build caches",
+    "Git worktrees, branches, stashes, and sessions"
+  ],
+  "publishedEvidence": "PR #41 merge 9248f9c; Vercel production dpl_JCeaGuttWQmMSe2BC9j6nKntvF6t READY; canonical authenticated route verified",
+  "reclaimedBytes": 1771,
+  "repository": "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow",
+  "repositoryDeltaBeforeCleanupBytes": 1127625148,
+  "reviewOnlySharedArtifacts": {
+    ".next": {
+      "baselineBytes": 0,
+      "currentBytes": 213406963,
+      "deltaBytes": 213406963
+    },
+    "node_modules": {
+      "baselineBytes": 0,
+      "currentBytes": 910989410,
+      "deltaBytes": 910989410
+    }
+  },
+  "runDirectory": "/Users/ofroot/.codex/worktrees/prospecting-daily-workflow/.graph-runs/active/20260907-prospecting-daily-workflow",
+  "status": "completed",
+  "volumeFreeDeltaAfterCleanupBytes": 294912
+}

@@ -46,3 +46,12 @@
 - Result: TypeScript, four focused tests, diff validation, and the production build passed. The browser rendered a five-item worklist from six prospects, exposed email, telephone, and website links, recorded No answer in one click, scheduled two business days, removed the handled prospect from immediate work, and advanced to the next business. Desktop and mobile layouts showed no observed horizontal overflow.
 - Exit status: 0
 - Remaining uncertainty: Canonical production runtime remains unverified until the pull request is merged and the deployment reaches READY.
+
+## Evidence: Production release and canonical readback
+- Date: 2026-09-07
+- Graph node: N7
+- Commands or verification method: GitHub PR #41 merge readback; GitHub commit-status readback for merge `9248f9c4f2283448b11f0f092ae0aa308f11f3d2`; `vercel inspect` for production deployment `dpl_JCeaGuttWQmMSe2BC9j6nKntvF6t`; authenticated browser verification at `https://www.ofroot.technology/dashboard/prospecting`.
+- Result: PR #41 is merged, the production deployment is READY and aliased to both canonical domains, and the authenticated canonical route renders “Your next five conversations,” the Next five default, expanded search, compact metrics, and the truthful empty state.
+- Exit status: 0
+- Rollback: Revert merge commit `9248f9c4f2283448b11f0f092ae0aa308f11f3d2` and allow the existing Vercel Git integration to redeploy.
+- Remaining uncertainty: Contact discovery and remote persistence are still intentionally absent; prospect data remains browser-local.
