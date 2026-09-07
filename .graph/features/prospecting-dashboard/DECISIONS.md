@@ -33,3 +33,17 @@
 - Date: 2026-09-06
 - Status: accepted
 - Decision: Import and edit contact name/title fields, use a known first name in copy, show per-source recency and reachable counts, and allow a local JSON export. No provider data is claimed or transmitted.
+
+## Decision: Center the dashboard on five immediate conversations
+- Date: 2026-09-07
+- Status: accepted
+- Context: The prior default could show an empty due-today queue after a successful import and required several manual fields to close one outreach attempt.
+- Decision: Default to a five-prospect worklist ordered by overdue, due-today, and unscheduled priority. Exclude future follow-ups, not-a-fit records, and do-not-contact records from immediate work. Keep complete queue filters available.
+- Evidence: Authenticated local browser verification with six synthetic prospects.
+
+## Decision: Convert common outcomes into deterministic follow-up state
+- Date: 2026-09-07
+- Status: accepted
+- Context: Requiring status, outcome, last-contact date, next action, and due date separately slows a short outreach session.
+- Decision: One-click outcomes set contacted state and last-contact date. No answer schedules two business days, interested schedules the next business day, and stop outcomes clear follow-up and leave the worklist. Direct email, telephone, and website links remain manual operator actions.
+- Evidence: `app/dashboard/prospecting/ProspectingDesk.tsx` and authenticated local runtime verification.
