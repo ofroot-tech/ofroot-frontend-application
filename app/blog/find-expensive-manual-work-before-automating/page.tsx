@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: AI_PROCESS_GUIDE.title,
   description: AI_PROCESS_GUIDE.description,
   alternates: { canonical: AI_PROCESS_GUIDE.href },
-  openGraph: { title: AI_PROCESS_GUIDE.title, description: AI_PROCESS_GUIDE.description, url: `${CANONICAL_SITE_URL}${AI_PROCESS_GUIDE.href}`, type: 'article', publishedTime: `${AI_PROCESS_GUIDE.publishedAt}T08:00:00-05:00`, authors: ['OfRoot Technology'] },
-  twitter: { card: 'summary_large_image', title: AI_PROCESS_GUIDE.title, description: AI_PROCESS_GUIDE.description },
+  openGraph: { title: AI_PROCESS_GUIDE.title, description: AI_PROCESS_GUIDE.description, url: `${CANONICAL_SITE_URL}${AI_PROCESS_GUIDE.href}`, type: 'article', publishedTime: `${AI_PROCESS_GUIDE.publishedAt}T08:00:00-05:00`, authors: ['OfRoot Technology'], images: [{ url: `${CANONICAL_SITE_URL}/og.jpg`, width: 1200, height: 630, alt: AI_PROCESS_GUIDE.title }] },
+  twitter: { card: 'summary_large_image', title: AI_PROCESS_GUIDE.title, description: AI_PROCESS_GUIDE.description, images: [`${CANONICAL_SITE_URL}/og.jpg`] },
 };
 
 const scoringFactors = [

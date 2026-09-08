@@ -132,7 +132,7 @@ export default function MakeZapierAutomationPage() {
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <Link href="/hubspot-integration" className="underline font-semibold">HubSpot integrations</Link>
             <Link href="/meta-conversions-api" className="underline font-semibold">Meta Conversions API</Link>
-            <Link href="/services/automation" className="underline font-semibold">Workflow automation service</Link>
+            <Link href="/services/workflow-automation" className="underline font-semibold">Workflow automation service</Link>
           </div>
         </section>
       </div>

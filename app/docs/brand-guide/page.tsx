@@ -9,8 +9,16 @@ import path from 'node:path';
 import { notFound } from 'next/navigation';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE } from '@/app/config/site';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
+
+export const metadata: Metadata = {
+  title: 'Brand and UI Design Guide',
+  description: 'Internal OfRoot brand and interface guidance.',
+  alternates: { canonical: '/docs/brand-guide' },
+  robots: { index: false, follow: true },
+};
 
 // Minimal Markdown to HTML converter for our guide (headings, lists, code, paragraphs)
 function mdToHtml(source: string) {

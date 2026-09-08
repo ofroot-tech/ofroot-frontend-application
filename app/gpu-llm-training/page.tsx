@@ -133,8 +133,8 @@ export default function GpuLlmTrainingPage() {
           <h2 className="text-2xl font-bold">Related</h2>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <Link href="/agent-integrations" className="underline font-semibold">Agent integrations</Link>
-            <Link href="/services/development-automation" className="underline font-semibold">Pipelines + delivery automation</Link>
-            <Link href="/services/stability" className="underline font-semibold">Reliability and data sanity</Link>
+            <Link href="/services/workflow-automation" className="underline font-semibold">Pipelines + delivery automation</Link>
+            <Link href="/services/automation-systems" className="underline font-semibold">Reliability and data sanity</Link>
           </div>
         </section>
       </div>

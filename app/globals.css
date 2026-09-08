@@ -407,7 +407,7 @@ html, body {
   background: #111827;
   color: white;
   border-radius: 6px;
-  z-index: 1000;
+  z-index: 100000;
 }
 
 /* Zebra rows for data tables */

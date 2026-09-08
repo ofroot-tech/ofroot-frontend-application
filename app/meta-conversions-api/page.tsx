@@ -102,7 +102,7 @@ export default function MetaConversionsApiPage() {
               Book a Meta CAPI call
             </Link>
             <Link
-              href="/services/integration"
+              href="/services/hubspot-meta-integrations"
               className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               HubSpot + Meta integrations

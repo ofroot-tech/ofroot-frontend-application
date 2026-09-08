@@ -2,11 +2,13 @@
 import Link from 'next/link';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE } from '@/app/config/site';
+import { growthMetadata } from '@/app/lib/growth-content';
 
-export const metadata = {
-  title: 'Automation Services | OfRoot',
-  description: 'Choose your automation integration pillar: HubSpot + Meta, workflow automation, pipeline data sanity, and LLM agent integrations.',
-};
+export const metadata = growthMetadata(
+  'Automation Services',
+  'Choose your automation integration pillar: HubSpot + Meta, workflow automation, pipeline data sanity, and AI agent integrations.',
+  '/services',
+);
 
 const cards = [
   {
@@ -25,7 +27,7 @@ const cards = [
     desc: 'Fix duplicates, dropped events, and bad mappings so your CRM and reporting are trustworthy.',
   },
   {
-    href: '/services/llm-agent-integrations',
+    href: '/agent-integrations',
     title: 'LLM + Agent Integrations',
     desc: 'Deploy agent workflows with approvals and safe data access for real operations impact.',
   },

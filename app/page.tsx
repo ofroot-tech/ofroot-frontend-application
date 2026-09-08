@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   title: 'AI Growth Systems for Visibility, Conversion, and Operations',
   description: 'OfRoot builds connected systems that help companies get discovered, convert demand, and operate faster with automation and private company AI.',
   alternates: { canonical: '/' },
-  openGraph: { title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.', url: SITE_URL, type: 'website' },
-  twitter: { card: 'summary_large_image', title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.' },
+  openGraph: { title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.', url: SITE_URL, type: 'website', images: [{ url: `${SITE_URL}/og.jpg`, width: 1200, height: 630, alt: 'OfRoot — AI growth systems' }] },
+  twitter: { card: 'summary_large_image', title: 'OfRoot — AI Growth Systems', description: 'Turn visibility, automation, and company knowledge into growth.', images: [`${SITE_URL}/og.jpg`] },
 };
 
 const motionDelay = (index: number) => ({ '--motion-delay': `${index * 70}ms` } as CSSProperties);

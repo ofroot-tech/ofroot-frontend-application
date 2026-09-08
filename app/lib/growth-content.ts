@@ -3,6 +3,13 @@ import { CANONICAL_SITE_URL } from '@/app/config/site';
 
 export const SITE_URL = CANONICAL_SITE_URL;
 
+const SOCIAL_IMAGE = {
+  url: `${SITE_URL}/og.jpg`,
+  width: 1200,
+  height: 630,
+  alt: 'OfRoot — AI growth systems',
+};
+
 export type GrowthPageContent = {
   path: string;
   eyebrow: string;
@@ -30,8 +37,19 @@ export function growthMetadata(
     title,
     description,
     alternates: { canonical: path },
-    openGraph: { title, description, url: `${SITE_URL}${path}`, type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}${path}`,
+      type: 'website',
+      images: [SOCIAL_IMAGE],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [SOCIAL_IMAGE.url],
+    },
   };
 }
 

@@ -12,7 +12,7 @@ describe('public canonical host contract', () => {
   it('uses the live redirect destination as the shared site URL', () => {
     expect(CANONICAL_SITE_URL).toBe('https://www.ofroot.technology');
     expect(SITE.url).toBe(CANONICAL_SITE_URL);
-    expect(SITE.logo.url).toBe(`${CANONICAL_SITE_URL}/favicon.ico`);
+    expect(SITE.logo.url).toBe(`${CANONICAL_SITE_URL}/ofroot-root-mark.svg`);
   });
 
   it('publishes only www URLs in crawl discovery documents', () => {

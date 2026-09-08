@@ -189,13 +189,13 @@ export default function AutomationsPage() {
             Use these if you want to go deeper on implementation details, integrations, and pricing.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-            <Link href="/services/automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/workflow-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               Workflow automation service
             </Link>
-            <Link href="/services/integration" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               HubSpot + Meta integrations
             </Link>
-            <Link href="/services/marketing-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               HubSpot workflows and routing
             </Link>
             <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
@@ -220,13 +220,13 @@ export default function AutomationsPage() {
           </ul>
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Link
-              href="/services/automation"
+              href="/services/workflow-automation"
               className="inline-flex items-center justify-center rounded-lg bg-white text-gray-900 px-5 py-3 font-semibold shadow-sm hover:bg-gray-100 transition-colors"
             >
               Workflow automation
             </Link>
             <Link
-              href="/services/integration"
+              href="/services/hubspot-meta-integrations"
               className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/5 px-5 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
             >
               HubSpot + Meta integrations

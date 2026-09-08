@@ -30,33 +30,45 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
-  async rewrites() {
-    // Vanity paths for marketing-friendly URLs
-    const vanity = [
-      // keep /marketing as a dedicated page; add /mktg for service vanity
-      { source: '/mktg', destination: '/services/marketing-automation' },
-      { source: '/development', destination: '/services/development-automation' },
-      { source: '/dev', destination: '/services/development-automation' },
-      { source: '/audit', destination: '/services/ai-audit' },
-      { source: '/addons', destination: '/services/add-ons' },
-      { source: '/webdev', destination: '/services/website-app-development' },
-      { source: '/sites', destination: '/services/website-app-development' },
-      { source: '/ai', destination: '/services/ai-development-integrations' },
-      { source: '/ai-dev', destination: '/services/ai-development-integrations' },
-      // Niche landings
-      { source: '/plumbers', destination: '/landing/plumbers' },
-      { source: '/hvac', destination: '/landing/hvac' },
-      { source: '/roofers', destination: '/landing/roofers' },
-      // CTO offer
-      { source: '/cto', destination: '/landing/cto' },
-    ];
+  async redirects() {
+    return [
+      // Retired service URLs. Keep one permanent, indexable URL per intent.
+      { source: '/services/automation', destination: '/services/workflow-automation', permanent: true },
+      { source: '/services/integration', destination: '/services/hubspot-meta-integrations', permanent: true },
+      { source: '/services/ai-audit', destination: '/services/data-pipeline-sanity', permanent: true },
+      { source: '/services/ai-development-integrations', destination: '/agent-integrations', permanent: true },
+      { source: '/services/llm-agent-integrations', destination: '/agent-integrations', permanent: true },
+      { source: '/services/marketing-automation', destination: '/services/hubspot-meta-integrations', permanent: true },
+      { source: '/services/development-automation', destination: '/services/workflow-automation', permanent: true },
+      { source: '/services/website-app-development', destination: '/services', permanent: true },
+      { source: '/services/stability', destination: '/services/automation-systems', permanent: true },
+      { source: '/services/growth-systems', destination: '/', permanent: true },
+      { source: '/helpr', destination: '/platform?edition=helpr', permanent: true },
+      { source: '/ontask', destination: '/platform?edition=ontask', permanent: true },
 
+      // Marketing-friendly URLs should redirect instead of exposing rewritten duplicates.
+      { source: '/mktg', destination: '/services/hubspot-meta-integrations', permanent: true },
+      { source: '/development', destination: '/services/workflow-automation', permanent: true },
+      { source: '/dev', destination: '/services/workflow-automation', permanent: true },
+      { source: '/audit', destination: '/services/data-pipeline-sanity', permanent: true },
+      { source: '/addons', destination: '/services/add-ons', permanent: true },
+      { source: '/webdev', destination: '/services', permanent: true },
+      { source: '/sites', destination: '/services', permanent: true },
+      { source: '/ai', destination: '/agent-integrations', permanent: true },
+      { source: '/ai-dev', destination: '/agent-integrations', permanent: true },
+      { source: '/plumbers', destination: '/landing/plumbers', permanent: true },
+      { source: '/hvac', destination: '/landing/hvac', permanent: true },
+      { source: '/roofers', destination: '/landing/roofers', permanent: true },
+      { source: '/cto', destination: '/landing/cto', permanent: true },
+    ];
+  },
+  async rewrites() {
     // Support /subscribe/:product -> /subscribe?product=:product
     const subscribe = [
       { source: '/subscribe/:product', destination: '/subscribe?product=:product' },
     ];
 
-    return [...vanity, ...subscribe];
+    return subscribe;
   },
   async headers() {
     // Allow disabling CSP in case of issues via env toggle

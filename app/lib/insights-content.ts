@@ -1,12 +1,51 @@
 export type Insight = {
   slug: string; title: string; description: string; category: string; updated: string;
-  directAnswer: string; outline: Array<{ title: string; points: string[] }>;
+  seoTitle?: string; published?: string; modified?: string; introduction?: string[];
+  directAnswer: string; outline: Array<{ title: string; body?: string[]; points: string[] }>;
   faq: Array<{ question: string; answer: string }>;
   sources: Array<{ label: string; href: string }>;
   relatedService: { label: string; href: string };
 };
 
 export const insights: Insight[] = [
+  {
+    slug: 'is-your-business-ai-agent-ready',
+    title: 'Is Your Business AI-Agent Ready? A Practical Readiness Test',
+    seoTitle: 'Is Your Business AI-Agent Ready? A Practical Test',
+    category: 'Technical implementation',
+    updated: 'September 8, 2026',
+    published: '2026-09-08',
+    modified: '2026-09-08',
+    description: 'Use this practical AI-agent readiness test to evaluate workflows, data, permissions, human approvals, monitoring, ownership, and business value.',
+    directAnswer: 'An AI-agent-ready business has at least one defined workflow where an agent can access approved information, use limited tools, follow explicit rules, request human approval, fail safely, and produce evidence that the work completed correctly.',
+    introduction: [
+      'Most companies asking about AI agents start with the model. The better question is whether the business is ready to let an agent do useful work.',
+      'If ownership is unclear, data is unreliable, permissions are broad, or exceptions only exist in someone’s head, adding an agent will not fix the workflow. It may simply make the failure move faster. Agent readiness makes the workflow understandable, controlled, measurable, and safe enough to automate.',
+    ],
+    outline: [
+      { title: 'Define one specific workflow', body: ['“Improve operations with AI” is not a workflow. A strong first use case has a clear trigger, defined outcome, visible owner, known systems, and a manageable exception path. The team should be able to draw the current process before asking an agent to operate inside it.'], points: ['Name what begins the work and what proves completion.', 'Separate rules from decisions that require judgment.', 'Assign an owner for exceptions and recovery.'] },
+      { title: 'Measure the business value', body: ['An agent should change a business outcome, not only produce an impressive demo. Record the current baseline before implementation so the team can distinguish activity from value.'], points: ['Measure recurring manual effort, delay, error, or rework.', 'Connect the workflow to revenue, capacity, service, or risk.', 'Choose the smallest use case with a result the business can verify.'] },
+      { title: 'Approve the sources of truth', body: ['An agent needs to know where reliable information comes from. For each source, define its owner, freshness, access rules, and what should happen when information is missing or sources disagree.'], points: ['Use only approved sources for the task.', 'Apply the user’s existing permissions before retrieval.', 'Link important answers to the evidence used.'] },
+      { title: 'Limit tool permissions', body: ['Reading a record is different from changing it. Give the agent only the systems, records, fields, actions, and frequency limits required for its defined job.'], points: ['Use least-privilege access.', 'Validate inputs before writes.', 'Keep unrelated and destructive actions out of scope.'] },
+      { title: 'Set human approval boundaries', body: ['Retrieving a policy or drafting an internal response does not carry the same risk as messaging a customer, changing a financial record, granting access, or making an external commitment. Decide which actions require a person before launch.'], points: ['Separate read-only, reversible, external, and high-impact actions.', 'Ask for approval at the moment it matters.', 'Show the reviewer what the agent proposes and why.'] },
+      { title: 'Design safe failure and recovery', body: ['Credentials expire, APIs rate-limit, events duplicate, and inputs arrive malformed. A production workflow defines how those failures are contained, made visible, and recovered.'], points: ['Retry only operations that are safe to repeat.', 'Use validation and deduplication controls.', 'Stop and route an exception when required context is missing.'] },
+      { title: 'Evaluate real behavior', body: ['Models, prompts, sources, integrations, and real-world inputs can all change behavior. Build an evaluation set from representative tasks before release and continue using it after launch.'], points: ['Test normal cases, edge cases, missing data, and denied actions.', 'Track completion, accuracy, policy compliance, latency, and cost.', 'Expand scope only after the narrow workflow is reliable.'] },
+      { title: 'Make operation observable', body: ['Operators need to see what triggered a run, which sources and tools were used, what changed, whether approval occurred, and where the workflow stopped.'], points: ['Keep useful logs and traceable tool actions.', 'Alert on failures that affect business completion.', 'Maintain a runbook for common recovery paths.'] },
+      { title: 'Name the owners', body: ['An agent is not finished when it ships. The business needs owners for workflow policy, source quality, permissions, technical operation, evaluations, and outcome measurement.'], points: ['Name who reviews failed runs.', 'Define who can change permissions or expand scope.', 'Keep a clear pause and rollback path.'] },
+    ],
+    faq: [
+      { question: 'What does AI-agent ready mean?', answer: 'It means a workflow has approved data, limited tool access, explicit rules, human approval boundaries, safe failure handling, evaluations, monitoring, and accountable owners.' },
+      { question: 'Does a company need perfect data before using AI agents?', answer: 'No. It needs data that is sufficiently accurate, current, permissioned, and owned for one defined workflow. Begin with a narrow scope and make missing information visible.' },
+      { question: 'What is the difference between an AI agent and a chatbot?', answer: 'A chatbot primarily answers questions. An agent can retrieve information and use connected tools to complete defined workflow steps under permission and approval rules.' },
+      { question: 'What is a good first AI agent use case?', answer: 'Choose a recurring workflow with clear inputs, a measurable outcome, limited system access, manageable exceptions, and an owner. Avoid starting with a broad mandate to automate an entire department.' },
+      { question: 'How do you know whether an AI agent is working?', answer: 'Measure task completion, accuracy, exception rate, latency, cost, policy compliance, and the business outcome the workflow is supposed to improve. Compare results with a pre-launch baseline.' },
+    ],
+    sources: [
+      { label: 'NIST AI Risk Management Framework', href: 'https://www.nist.gov/itl/ai-risk-management-framework' },
+      { label: 'OWASP Top 10 for LLM Applications', href: 'https://owasp.org/www-project-top-10-for-large-language-model-applications/' },
+    ],
+    relatedService: { label: 'AI Agent Integration Services', href: '/agent-integrations' },
+  },
   {
     slug: 'what-is-ai-discoverability', title: 'What Is AI Discoverability?', category: 'AI discoverability', updated: 'July 22, 2026',
     description: 'A practical outline for making a company easier to find, understand, and cite across search and AI-generated answers.',

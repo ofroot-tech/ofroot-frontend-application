@@ -1,5 +1,4 @@
 import type { MetadataRoute } from 'next'
-import landing from '@/app/landing/manifest.json'
 import { CANONICAL_SITE_URL } from '@/app/config/site'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
@@ -7,64 +6,55 @@ import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
-  const now = new Date().toISOString()
-  // Static top-level routes; dynamic can be added later from CMS/API
-  const routes = [
-    '',
-    '/automations',
-    '/ai-process',
-    '/hubspot-integration',
-    '/meta-conversions-api',
-    '/make-zapier-automation',
-    '/agent-integrations',
-    '/gpu-llm-training',
-    '/services',
-    '/services/hubspot-meta-integrations',
-    '/services/workflow-automation',
-    '/services/data-pipeline-sanity',
-    '/services/llm-agent-integrations',
-    '/services/automation',
-    '/services/integration',
-    '/services/ai-audit',
-    '/services/ai-development-integrations',
-    '/services/marketing-automation',
-    '/services/development-automation',
-    '/services/website-app-development',
-    '/services/stability',
-    '/services/growth-systems',
-    '/services/ai-discoverability',
-    '/services/automation-systems',
-    '/services/private-company-ai',
-    '/clinic-success',
-    '/solutions/generate-demand',
-    '/solutions/convert-more-leads',
-    '/solutions/unlock-company-knowledge',
-    '/results',
-    '/pricing',
-    '/security',
-    '/insights',
-    '/book',
-    '/demo/private-ai',
-    '/blog',
-    AI_PROCESS_GUIDE.href,
-    '/case-studies/home-services-mvp',
-    '/case-studies/crm-erp-sync',
-    '/case-studies/healthcare-ai-automation',
-    '/docs/brand-guide',
-    '/platform',
-    '/helpr',
-    '/ontask',
+  // Dates reflect substantive source changes and must be updated intentionally.
+  const routes: Array<{ path: string; lastModified: string }> = [
+    { path: '', lastModified: '2026-09-06' },
+    { path: '/automations', lastModified: '2026-08-07' },
+    { path: '/ai-process', lastModified: '2026-08-07' },
+    { path: '/hubspot-integration', lastModified: '2026-02-09' },
+    { path: '/meta-conversions-api', lastModified: '2026-02-09' },
+    { path: '/make-zapier-automation', lastModified: '2026-02-09' },
+    { path: '/agent-integrations', lastModified: '2026-09-08' },
+    { path: '/gpu-llm-training', lastModified: '2026-02-11' },
+    { path: '/services', lastModified: '2026-03-05' },
+    { path: '/services/hubspot-meta-integrations', lastModified: '2026-03-05' },
+    { path: '/services/workflow-automation', lastModified: '2026-03-05' },
+    { path: '/services/data-pipeline-sanity', lastModified: '2026-03-05' },
+    { path: '/services/ai-discoverability', lastModified: '2026-08-07' },
+    { path: '/services/automation-systems', lastModified: '2026-08-07' },
+    { path: '/services/private-company-ai', lastModified: '2026-08-07' },
+    { path: '/clinic-success', lastModified: '2026-08-16' },
+    { path: '/solutions/generate-demand', lastModified: '2026-08-07' },
+    { path: '/solutions/convert-more-leads', lastModified: '2026-08-07' },
+    { path: '/solutions/unlock-company-knowledge', lastModified: '2026-08-07' },
+    { path: '/results', lastModified: '2026-07-22' },
+    { path: '/pricing', lastModified: '2026-07-22' },
+    { path: '/security', lastModified: '2026-07-22' },
+    { path: '/insights', lastModified: '2026-07-22' },
+    { path: '/book', lastModified: '2026-07-22' },
+    { path: '/demo/private-ai', lastModified: '2026-07-22' },
+    { path: '/blog', lastModified: '2026-08-09' },
+    { path: AI_PROCESS_GUIDE.href, lastModified: AI_PROCESS_GUIDE.publishedAt },
+    { path: '/case-studies/home-services-mvp', lastModified: '2026-07-22' },
+    { path: '/case-studies/crm-erp-sync', lastModified: '2026-07-22' },
+    { path: '/case-studies/healthcare-ai-automation', lastModified: '2026-08-16' },
+    { path: '/platform', lastModified: '2026-04-06' },
   ]
 
-  const landingSlugs = Object.keys((landing as any).pages || {});
-  for (const slug of landingSlugs) routes.push(`/landing/${slug}`);
-  for (const insight of insights) routes.push(`/insights/${insight.slug}`);
-  for (const feature of featurePages) routes.push(featurePath(feature));
+  for (const insight of insights) {
+    routes.push({
+      path: `/insights/${insight.slug}`,
+      lastModified: insight.modified ?? insight.published ?? '2026-07-22',
+    })
+  }
+  for (const feature of featurePages) {
+    routes.push({ path: featurePath(feature), lastModified: '2026-08-16' })
+  }
 
-  const uniqueRoutes = Array.from(new Set(routes));
-  return uniqueRoutes.map((path) => ({
+  const uniqueRoutes = Array.from(new Map(routes.map((route) => [route.path, route])).values())
+  return uniqueRoutes.map(({ path, lastModified }) => ({
     url: `${base}${path}`,
-    lastModified: now,
+    lastModified,
     changeFrequency: 'weekly',
     priority: path === '' ? 1 : 0.7,
   }))

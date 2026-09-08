@@ -85,10 +85,9 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#FFFFFF" />
-        <meta name="robots" content="index,follow" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <a href="#main-content" className="sr-only z-[100000] rounded bg-white px-4 py-3 font-semibold text-slate-950 focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to main content</a>
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         <AuthProvider>
           <Toaster />
           <ExitIntentPrompt />

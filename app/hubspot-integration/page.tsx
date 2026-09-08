@@ -103,7 +103,7 @@ export default function HubSpotIntegrationPage() {
               Book a HubSpot integration call
             </Link>
             <Link
-              href="/services/marketing-automation"
+              href="/services/hubspot-meta-integrations"
               className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               HubSpot workflows service
@@ -132,7 +132,7 @@ export default function HubSpotIntegrationPage() {
           <h2 className="text-2xl font-bold">Related</h2>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <Link href="/automations" className="underline font-semibold">Automations overview</Link>
-            <Link href="/services/integration" className="underline font-semibold">HubSpot + Meta integrations</Link>
+            <Link href="/services/hubspot-meta-integrations" className="underline font-semibold">HubSpot + Meta integrations</Link>
             <Link href="/make-zapier-automation" className="underline font-semibold">Make and Zapier automations</Link>
           </div>
         </section>

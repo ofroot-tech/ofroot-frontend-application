@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   description,
   keywords: ['AI process audit', 'business process automation', 'AI implementation', 'automation ROI', 'workflow audit'],
   alternates: { canonical: '/ai-process' },
-  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/ai-process`, type: 'website' },
-  twitter: { card: 'summary_large_image', title, description },
+  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/ai-process`, type: 'website', images: [{ url: `${CANONICAL_SITE_URL}/og.jpg`, width: 1200, height: 630, alt: 'OfRoot AI Process Audit' }] },
+  twitter: { card: 'summary_large_image', title, description, images: [`${CANONICAL_SITE_URL}/og.jpg`] },
 };
 
 const problems = [

@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: '/blog' },
-  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/blog`, type: 'website' },
-  twitter: { card: 'summary_large_image', title, description },
+  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/blog`, type: 'website', images: [{ url: `${CANONICAL_SITE_URL}/og.jpg`, width: 1200, height: 630, alt: 'OfRoot field notes on AI and automation' }] },
+  twitter: { card: 'summary_large_image', title, description, images: [`${CANONICAL_SITE_URL}/og.jpg`] },
 };
 
 function formatDate(input?: string | null) {
