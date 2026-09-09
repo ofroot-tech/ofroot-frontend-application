@@ -1,5 +1,6 @@
 import { SITE_URL } from '@/app/lib/growth-content';
 import { featurePages, featurePath } from '@/app/lib/feature-content';
+import { insights } from '@/app/lib/insights-content';
 
 export function GET() {
   const featureGroups = [
@@ -13,6 +14,10 @@ export function GET() {
       .join('\n');
     return `## ${heading}\n${links}`;
   }).join('\n\n');
+
+  const insightLinks = insights
+    .map(insight => `- [${insight.title}](${SITE_URL}/insights/${insight.slug}): ${insight.directAnswer}`)
+    .join('\n');
 
   const text = `# OfRoot Technology
 
@@ -41,6 +46,9 @@ ${featureGroups}
 - [Insights](${SITE_URL}/insights)
 - [Growth Systems Audit](${SITE_URL}/book)
 - [Engagements and starting ranges](${SITE_URL}/pricing)
+
+## Practical insight library
+${insightLinks}
 
 OfRoot does not guarantee rankings or inclusion in specific AI-generated answers. Security controls and certifications must be validated against the selected customer architecture.`;
   return new Response(text, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });

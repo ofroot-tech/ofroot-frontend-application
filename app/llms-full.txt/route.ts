@@ -1,5 +1,6 @@
 import { SITE_URL } from '@/app/lib/growth-content';
 import { featurePages, featurePath } from '@/app/lib/feature-content';
+import { insights } from '@/app/lib/insights-content';
 
 export function GET() {
   const featureDetails = [
@@ -13,6 +14,10 @@ export function GET() {
       .join('\n\n');
     return `## ${heading}\n${pages}`;
   }).join('\n\n');
+
+  const insightDetails = insights
+    .map(insight => `### ${insight.title}\nCanonical page: ${SITE_URL}/insights/${insight.slug}\nDirect answer: ${insight.directAnswer}`)
+    .join('\n\n');
 
   const text = `# OfRoot Technology: AI Growth Systems
 
@@ -50,6 +55,9 @@ The Clinic Success Platform pilot is a Technology service for clinic growth, ref
 Canonical page: ${SITE_URL}/clinic-success
 
 ${featureDetails}
+
+## Practical insight library
+${insightDetails}
 
 ## Proof boundary
 OfRoot preserves existing anonymized case studies at ${SITE_URL}/results. Capability statements should not be interpreted as independently verified customer metrics unless a case study provides supporting evidence.

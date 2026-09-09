@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/results', lastModified: '2026-07-22' },
     { path: '/pricing', lastModified: '2026-07-22' },
     { path: '/security', lastModified: '2026-07-22' },
-    { path: '/insights', lastModified: '2026-07-22' },
+    { path: '/insights', lastModified: '2026-09-09' },
     { path: '/book', lastModified: '2026-07-22' },
     { path: '/demo/private-ai', lastModified: '2026-07-22' },
     { path: '/blog', lastModified: '2026-08-09' },

@@ -5,6 +5,7 @@ import { generateMetadata as generateLandingMetadata } from '@/app/landing/[slug
 import { GET as getLlms } from '@/app/llms.txt/route';
 import { GET as getLlmsFull } from '@/app/llms-full.txt/route';
 import { metadata as servicesMetadata } from '@/app/services/page';
+import { insights } from '@/app/lib/insights-content';
 
 const retiredOrNonIndexablePaths = [
   '/services/automation',
@@ -44,6 +45,24 @@ describe('SEO indexing contract', () => {
 
     expect(matches).toHaveLength(1);
     expect(String(matches[0].lastModified)).toBe('2026-09-08');
+  });
+
+  it('publishes the complete insight cluster with unique slugs', () => {
+    const slugs = insights.map((insight) => insight.slug);
+    const sitemapUrls = new Set(sitemap().map((entry) => entry.url));
+    const newGuides = [
+      'ai-discoverability-audit-checklist',
+      'how-to-get-mentioned-in-ai-answers',
+      'private-ai-assistant-security-requirements',
+      'workflow-automation-roi-guide',
+      'hubspot-ai-agent-integration-guide',
+    ];
+
+    expect(new Set(slugs).size).toBe(slugs.length);
+    expect(insights).toHaveLength(9);
+    for (const slug of newGuides) {
+      expect(sitemapUrls.has(`${CANONICAL_SITE_URL}/insights/${slug}`)).toBe(true);
+    }
   });
 
   it('uses intentional, stable sitemap modification dates', () => {
@@ -92,6 +111,9 @@ describe('SEO indexing contract', () => {
       expect(output).toContain(`${CANONICAL_SITE_URL}/agent-integrations`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/insights/is-your-business-ai-agent-ready`);
       expect(output).not.toContain(`${CANONICAL_SITE_URL}/services/llm-agent-integrations`);
+      for (const insight of insights) {
+        expect(output).toContain(`${CANONICAL_SITE_URL}/insights/${insight.slug}`);
+      }
     }
   });
 });
