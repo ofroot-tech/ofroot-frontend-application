@@ -48,6 +48,14 @@ OfRoot designs production agent workflows around a specific business process, ap
 
 Canonical service: ${SITE_URL}/agent-integrations
 Readiness guide: ${SITE_URL}/insights/is-your-business-ai-agent-ready
+Interactive assessment: ${SITE_URL}/ai-agent-readiness-assessment
+Scoring methodology: ${SITE_URL}/research/ai-agent-readiness-methodology
+
+## Editorial and research standards
+OfRoot attributes practical guidance to the OfRoot Technology Editorial Team until a named contributor has reviewed and approved publication under their own public profile. The published standards cover primary sourcing, evidence boundaries, AI assistance, corrections, substantive updates, research methods, and commercial transparency.
+
+Editorial standards: ${SITE_URL}/about/editorial-standards
+Author profile: ${SITE_URL}/authors/ofroot-technology
 
 ## Clinic Success Platform Appointment Preparation Pilot
 The Clinic Success Platform pilot is a Technology service for clinic growth, referral links, and aggregate operations. It gives a clinic a focused referral path and agreed aggregate reporting to support operational review around appointment preparation. Health owns patient data, patient records, clinical workflows, and care decisions. Technology does not receive Health patient data automatically; any proposed Health-data access requires a separate documented approval and architecture conversation.

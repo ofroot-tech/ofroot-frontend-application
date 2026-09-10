@@ -65,6 +65,18 @@ describe('SEO indexing contract', () => {
     }
   });
 
+  it('publishes the assessment, transparent method, author, and editorial standards', () => {
+    const urls = new Set(sitemap().map(entry => entry.url));
+    for (const path of [
+      '/ai-agent-readiness-assessment',
+      '/research/ai-agent-readiness-methodology',
+      '/authors/ofroot-technology',
+      '/about/editorial-standards',
+    ]) {
+      expect(urls.has(`${CANONICAL_SITE_URL}${path}`)).toBe(true);
+    }
+  });
+
   it('uses intentional, stable sitemap modification dates', () => {
     const entries = sitemap();
     const dates = entries.map((entry) => String(entry.lastModified));
@@ -110,6 +122,9 @@ describe('SEO indexing contract', () => {
     for (const output of [summary, full]) {
       expect(output).toContain(`${CANONICAL_SITE_URL}/agent-integrations`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/insights/is-your-business-ai-agent-ready`);
+      expect(output).toContain(`${CANONICAL_SITE_URL}/ai-agent-readiness-assessment`);
+      expect(output).toContain(`${CANONICAL_SITE_URL}/research/ai-agent-readiness-methodology`);
+      expect(output).toContain(`${CANONICAL_SITE_URL}/about/editorial-standards`);
       expect(output).not.toContain(`${CANONICAL_SITE_URL}/services/llm-agent-integrations`);
       for (const insight of insights) {
         expect(output).toContain(`${CANONICAL_SITE_URL}/insights/${insight.slug}`);

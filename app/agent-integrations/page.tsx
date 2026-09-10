@@ -125,7 +125,7 @@ export default function AgentIntegrationsPage() {
               Book an agent integration call
             </Link>
             <Link
-              href="/insights/is-your-business-ai-agent-ready"
+              href="/ai-agent-readiness-assessment"
               className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               Check your AI-agent readiness
@@ -173,8 +173,8 @@ export default function AgentIntegrationsPage() {
               </div>
             ))}
           </div>
-          <Link href="/insights/is-your-business-ai-agent-ready" className="inline-flex font-semibold text-violet-900 underline underline-offset-4">
-            Use the nine-part AI-agent readiness test
+          <Link href="/ai-agent-readiness-assessment" className="inline-flex font-semibold text-violet-900 underline underline-offset-4">
+            Take the 12-question AI-agent readiness assessment
           </Link>
         </section>
 
@@ -198,6 +198,7 @@ export default function AgentIntegrationsPage() {
             <Link href="/services/integration" className="underline font-semibold">HubSpot + Meta integrations</Link>
             <Link href="/security" className="underline font-semibold">Security approach</Link>
             <Link href="/insights/is-your-business-ai-agent-ready" className="underline font-semibold">AI-agent readiness guide</Link>
+            <Link href="/research/ai-agent-readiness-methodology" className="underline font-semibold">Readiness scoring methodology</Link>
           </div>
         </section>
       </div>

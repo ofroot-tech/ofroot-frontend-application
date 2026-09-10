@@ -30,8 +30,9 @@ export function getActiveVariant(slug: string): string | undefined {
   return match ? decodeURIComponent(match.split('=')[1]) : undefined;
 }
 
-/** Generic event dispatcher. Uses Vercel Analytics if available. */
+/** Generic event dispatcher. Sends the same taxonomy to Vercel Analytics and GA4 when available. */
 export function track(event: AbEvent) {
+  let dispatched = false;
   try {
     const anyWindow = window as any;
     if (typeof anyWindow.va === 'function') {
@@ -41,14 +42,27 @@ export function track(event: AbEvent) {
       if (res && typeof res.then === 'function') {
         (res as Promise<unknown>).catch(() => {});
       }
-      return;
+      dispatched = true;
+    }
+  } catch (_) {
+    // ignored — continue to the independent GA4 dispatcher
+  }
+  try {
+    const anyWindow = window as any;
+    if (typeof anyWindow.gtag === 'function') {
+      anyWindow.gtag('event', event.action, {
+        event_category: event.category,
+        event_label: event.label,
+        value: event.value,
+        ...event.meta,
+      });
+      dispatched = true;
     }
   } catch (_) {
     // ignored — we will log below as a fallback
   }
   // Fallback to console for local insight
-   
-  console.log('[ab.track]', event);
+  if (!dispatched) console.log('[ab.track]', event);
 }
 
 /** Track an exposure (variant shown). Call once per view. */

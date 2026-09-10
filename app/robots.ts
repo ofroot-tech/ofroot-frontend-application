@@ -16,6 +16,11 @@ export default function robots(): MetadataRoute.Robots {
           '/intro-letters',
         ],
       },
+      {
+        userAgent: ['OAI-SearchBot', 'ChatGPT-User'],
+        allow: '/',
+        disallow: ['/dashboard', '/api/', '/auth/', '/debug/', '/intro-letters'],
+      },
     ],
     sitemap: `${base}/sitemap.xml`,
     host: base,
