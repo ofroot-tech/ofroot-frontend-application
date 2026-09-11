@@ -26,7 +26,7 @@ const packages = [
     cadence: 'one-time starting scope',
     bestFor: 'Teams with one visible conversion or automation bottleneck that needs a production-ready fix.',
     outcome: 'A scoped build connecting demand capture, routing, follow-up, reporting, or another priority workflow.',
-    points: ['Current-state workflow and ownership map', 'One priority production implementation path', 'Validation, failure handling, and monitoring', 'Launch checklist and operator handoff'],
+    points: ['Current workflow and ownership map', 'One priority production implementation path', 'Validation, failure handling, and monitoring', 'Launch checklist, team training, and handoff'],
     cta: 'Scope a Growth Systems Build',
     href: '/book?focus=automation&source=pricing',
     featured: true,
@@ -47,7 +47,7 @@ const packages = [
     cadence: 'per month',
     bestFor: 'Teams operating multiple acquisition, automation, or AI workflows that need continuous ownership.',
     outcome: 'A measured operating cadence for improving visibility, conversion, reliability, and company-AI adoption.',
-    points: ['Prioritized monthly implementation roadmap', 'Monitoring and workflow reliability', 'Content, conversion, and automation optimization', 'Weekly operator review and evidence tracking'],
+    points: ['Prioritized monthly improvement roadmap', 'Monitoring and workflow reliability', 'Content, conversion, and automation optimization', 'Weekly performance review and progress tracking'],
     cta: 'Discuss Ongoing Ownership',
     href: '/book?focus=ongoing-optimization&source=pricing',
   },
@@ -91,7 +91,7 @@ export default function PricingPage() {
 
       <TrackedSection className="px-6 py-20 sm:px-8">
         <div id="engagements" className="mx-auto max-w-6xl scroll-mt-24">
-          <div className="mb-10 grid gap-6 lg:grid-cols-[.75fr_1.25fr]"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Starting points</p><h2 className="text-3xl font-black sm:text-4xl">Clear enough to budget. Flexible enough to fit the system.</h2></div><p className="mx-0 text-lg text-slate-600">Published ranges are starting anchors, not fixed bids. The audit establishes dependencies, implementation risk, and the measurable result before final scope.</p></div>
+          <div className="mb-10 grid gap-6 lg:grid-cols-[.75fr_1.25fr]"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Starting points</p><h2 className="text-3xl font-black sm:text-4xl">Clear enough to budget. Flexible enough to fit the system.</h2></div><p className="mx-0 text-lg text-slate-600">Published ranges are starting prices, not fixed bids. The audit identifies dependencies, implementation risk, and the measurable result before final scope.</p></div>
           <div className="grid gap-5 lg:grid-cols-2">
             {packages.map((item) => (
               <article key={item.name} className={`relative flex flex-col rounded-3xl border p-7 ${item.featured ? 'border-[#FF9312] bg-[#071225] text-white shadow-[0_20px_70px_rgba(7,18,37,.18)]' : 'border-slate-200 bg-white'}`}>

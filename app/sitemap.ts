@@ -25,15 +25,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/services/hubspot-meta-integrations', lastModified: '2026-03-05' },
     { path: '/services/workflow-automation', lastModified: '2026-03-05' },
     { path: '/services/data-pipeline-sanity', lastModified: '2026-03-05' },
-    { path: '/services/ai-discoverability', lastModified: '2026-08-07' },
-    { path: '/services/automation-systems', lastModified: '2026-08-07' },
-    { path: '/services/private-company-ai', lastModified: '2026-08-07' },
+    { path: '/services/ai-discoverability', lastModified: '2026-09-11' },
+    { path: '/services/automation-systems', lastModified: '2026-09-11' },
+    { path: '/services/private-company-ai', lastModified: '2026-09-11' },
     { path: '/clinic-success', lastModified: '2026-08-16' },
-    { path: '/solutions/generate-demand', lastModified: '2026-08-07' },
-    { path: '/solutions/convert-more-leads', lastModified: '2026-08-07' },
-    { path: '/solutions/unlock-company-knowledge', lastModified: '2026-08-07' },
-    { path: '/results', lastModified: '2026-07-22' },
-    { path: '/pricing', lastModified: '2026-07-22' },
+    { path: '/solutions/generate-demand', lastModified: '2026-09-11' },
+    { path: '/solutions/convert-more-leads', lastModified: '2026-09-11' },
+    { path: '/solutions/unlock-company-knowledge', lastModified: '2026-09-11' },
+    { path: '/results', lastModified: '2026-09-11' },
+    { path: '/pricing', lastModified: '2026-09-11' },
     { path: '/security', lastModified: '2026-07-22' },
     { path: '/insights', lastModified: '2026-09-09' },
     { path: '/book', lastModified: '2026-07-22' },
@@ -53,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   }
   for (const feature of featurePages) {
-    routes.push({ path: featurePath(feature), lastModified: '2026-08-16' })
+    routes.push({ path: featurePath(feature), lastModified: '2026-09-11' })
   }
 
   const uniqueRoutes = Array.from(new Map(routes.map((route) => [route.path, route])).values())

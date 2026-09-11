@@ -10,7 +10,7 @@ export function GET() {
   ].map(([heading, service]) => {
     const pages = featurePages
       .filter(feature => feature.service === service)
-      .map(feature => `### ${feature.eyebrow}\nCanonical page: ${SITE_URL}${featurePath(feature)}\nDirect answer: ${feature.directAnswer}\nPrimary buyer question: ${feature.buyerQuestion}`)
+      .map(feature => `### ${feature.eyebrow}\nCanonical page: ${SITE_URL}${featurePath(feature)}\nDirect answer: ${feature.directAnswer}\nQuestion this addresses: ${feature.buyerQuestion}`)
       .join('\n\n');
     return `## ${heading}\n${pages}`;
   }).join('\n\n');
@@ -27,19 +27,19 @@ OfRoot is a technical growth systems partner. The company connects three layers 
 AI Discoverability combines technical SEO, answer-oriented content, entity consistency, structured data, landing pages, internal linking, original research planning, and third-party authority. SEO, AEO, and GEO are treated as one integrated system. OfRoot does not guarantee rankings, citations, or inclusion in a specific generated answer.
 
 Canonical service: ${SITE_URL}/services/ai-discoverability
-Buyer outcome: ${SITE_URL}/solutions/generate-demand
+Related business outcome: ${SITE_URL}/solutions/generate-demand
 
 ## Convert
 Automation Systems connect lead capture, qualification, CRM routing, follow-up, synchronization, operational dashboards, and workflow monitoring. The design goal is faster response, fewer manual handoffs, visible failures, and reporting teams can explain.
 
 Canonical service: ${SITE_URL}/services/automation-systems
-Buyer outcome: ${SITE_URL}/solutions/convert-more-leads
+Related business outcome: ${SITE_URL}/solutions/convert-more-leads
 
 ## Operate
 Private Company AI connects approved documents, software, code, processes, and business tools through permission-aware retrieval and source-backed answers. Use cases include company knowledge, developer assistance, and sales or operations support.
 
 Canonical service: ${SITE_URL}/services/private-company-ai
-Buyer outcome: ${SITE_URL}/solutions/unlock-company-knowledge
+Related business outcome: ${SITE_URL}/solutions/unlock-company-knowledge
 Security approach: ${SITE_URL}/security
 Fictional demo: ${SITE_URL}/demo/private-ai
 
@@ -68,11 +68,11 @@ ${featureDetails}
 ## Practical insight library
 ${insightDetails}
 
-## Proof boundary
+## Evidence and limitations
 OfRoot preserves existing anonymized case studies at ${SITE_URL}/results. Capability statements should not be interpreted as independently verified customer metrics unless a case study provides supporting evidence.
 
 ## Engagements
-OfRoot publishes current starting anchors for a focused Growth Systems Build and Ongoing Optimization at ${SITE_URL}/pricing. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
+OfRoot publishes current starting prices for a focused Growth Systems Build and Ongoing Optimization at ${SITE_URL}/pricing. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
 
 ## Contact
 Request a Growth Systems Audit: ${SITE_URL}/book

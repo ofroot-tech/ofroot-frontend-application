@@ -6,7 +6,7 @@ import { growthMetadata } from '@/app/lib/growth-content';
 
 export const metadata = growthMetadata(
   'AI Growth and Automation Services',
-  'Explore OfRoot services for AI discoverability, revenue automation, and private company AI—organized around measurable buyer outcomes.',
+  'Explore OfRoot services for AI discoverability, revenue automation, and private company AI—organized around measurable business outcomes.',
   '/services',
 );
 
@@ -85,7 +85,7 @@ export default function ServicesIndexPage() {
       <section className="py-16" aria-labelledby="service-lines">
         <div className="grid gap-6 lg:grid-cols-[.72fr_1.28fr]">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">What we sell</p>
+            <p className="text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">How we can help</p>
             <h2 id="service-lines" className="mt-3 text-3xl font-black sm:text-4xl">A clear offer for each operating problem.</h2>
           </div>
           <p className="text-lg text-slate-600">Each engagement starts with the desired business outcome, then defines the systems, evidence, ownership, and safeguards required to produce it.</p>
@@ -111,7 +111,7 @@ export default function ServicesIndexPage() {
 
       <section className="rounded-3xl bg-[#efece5] px-6 py-12 sm:px-10" aria-labelledby="qualification">
         <div className="grid gap-6 lg:grid-cols-[.72fr_1.28fr]">
-          <div><p className="text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Buyer qualification</p><h2 id="qualification" className="mt-3 text-3xl font-black">Know where to start.</h2></div>
+          <div><p className="text-sm font-bold uppercase tracking-[.16em] text-[#B55B00]">Choose your starting point</p><h2 id="qualification" className="mt-3 text-3xl font-black">Know where to start.</h2></div>
           <div className="space-y-4">{buyingSignals.map(([title, body]) => <div key={title} className="rounded-2xl bg-white p-6"><h3 className="font-black">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{body}</p></div>)}</div>
         </div>
       </section>
@@ -127,7 +127,7 @@ export default function ServicesIndexPage() {
       </section>
 
       <section className="rounded-3xl bg-[#071225] px-6 py-12 text-white sm:px-10">
-        <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-sm font-bold uppercase tracking-[.16em] text-[#FFC46B]">Sales conversation</p><h2 className="mt-3 max-w-3xl text-3xl font-black text-white">Bring the bottleneck. We will identify the smallest useful engagement.</h2></div><Link href="/book?source=services-final" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit <ArrowRight className="h-4 w-4" /></Link></div>
+        <div className="flex flex-col gap-7 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-sm font-bold uppercase tracking-[.16em] text-[#FFC46B]">Start with your priority</p><h2 className="mt-3 max-w-3xl text-3xl font-black text-white">Bring the bottleneck. We will identify the smallest useful engagement.</h2></div><Link href="/book?source=services-final" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit <ArrowRight className="h-4 w-4" /></Link></div>
       </section>
     </main>
   );

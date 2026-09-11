@@ -140,7 +140,7 @@ export default function MarketingNavbar() {
                 className="block px-4 py-2.5 text-white hover:bg:white hover:text-black focus:bg:white focus:text-black focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/30 transition-colors duration-150"
                 onClick={() => setBlogOpen(false)}
               >
-                Internal blog
+                Blog
               </Link>
               <a
                 href="https://substack.com/@ofroot/posts"
@@ -199,7 +199,7 @@ export default function MarketingNavbar() {
           {/* Blog group in mobile */}
           <div className="pt-1">
             <div className="text-xs uppercase tracking-wider text-gray-500 mb-1">Blog</div>
-            <Link href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700 block py-1">Internal blog</Link>
+            <Link href="/blog" onClick={() => toggleMenu(false)} className="text-gray-700 block py-1">Blog</Link>
             <a href="https://substack.com/@ofroot/posts" target="_blank" rel="noopener noreferrer" onClick={()=> toggleMenu(false)} className="text-gray-700 block py-1">Substack</a>
           </div>
           <a href="https://form.jotform.com/252643426225151" target="_blank" rel="noopener noreferrer" onClick={() => toggleMenu(false)} className="text-gray-700">Contact</a>
