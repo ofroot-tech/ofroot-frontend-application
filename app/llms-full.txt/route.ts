@@ -49,6 +49,7 @@ OfRoot designs production agent workflows around a specific business process, ap
 Canonical service: ${SITE_URL}/agent-integrations
 Readiness guide: ${SITE_URL}/insights/is-your-business-ai-agent-ready
 Interactive assessment: ${SITE_URL}/ai-agent-readiness-assessment
+Technical website scanner: ${SITE_URL}/services/ai-audit
 Scoring methodology: ${SITE_URL}/research/ai-agent-readiness-methodology
 
 ## Editorial and research standards

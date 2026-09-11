@@ -35,7 +35,6 @@ const nextConfig: NextConfig = {
       // Retired service URLs. Keep one permanent, indexable URL per intent.
       { source: '/services/automation', destination: '/services/workflow-automation', permanent: true },
       { source: '/services/integration', destination: '/services/hubspot-meta-integrations', permanent: true },
-      { source: '/services/ai-audit', destination: '/services/data-pipeline-sanity', permanent: true },
       { source: '/services/ai-development-integrations', destination: '/agent-integrations', permanent: true },
       { source: '/services/llm-agent-integrations', destination: '/agent-integrations', permanent: true },
       { source: '/services/marketing-automation', destination: '/services/hubspot-meta-integrations', permanent: true },
@@ -50,7 +49,7 @@ const nextConfig: NextConfig = {
       { source: '/mktg', destination: '/services/hubspot-meta-integrations', permanent: true },
       { source: '/development', destination: '/services/workflow-automation', permanent: true },
       { source: '/dev', destination: '/services/workflow-automation', permanent: true },
-      { source: '/audit', destination: '/services/data-pipeline-sanity', permanent: true },
+      { source: '/audit', destination: '/services/ai-audit', permanent: true },
       { source: '/addons', destination: '/services/add-ons', permanent: true },
       { source: '/webdev', destination: '/services', permanent: true },
       { source: '/sites', destination: '/services', permanent: true },
