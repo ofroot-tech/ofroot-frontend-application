@@ -78,7 +78,7 @@ export default function FeaturePage({ content }: { content: FeatureContent }) {
           <div>
             <p className="mx-0 text-balance text-xl font-semibold leading-relaxed text-slate-800 sm:text-2xl">{content.directAnswer}</p>
             <div className="mt-7 rounded-2xl border border-[#FF9312]/30 bg-white p-5">
-              <p className="mx-0 text-sm font-bold uppercase tracking-[.14em] text-[#B55B00]">The buyer question</p>
+              <p className="mx-0 text-sm font-bold uppercase tracking-[.14em] text-[#B55B00]">The question this solves</p>
               <p className="mx-0 mt-2 text-lg font-semibold text-slate-900">{content.buyerQuestion}</p>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function FeaturePage({ content }: { content: FeatureContent }) {
       <section className="border-y border-slate-200 bg-white px-6 py-20 sm:px-8" aria-labelledby="evidence">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
           <div><FileCheck2 className="mb-5 h-7 w-7 text-[#C96800]" aria-hidden="true" /><h2 id="evidence" className="text-2xl font-black">Evidence used</h2><p className="mx-0 mt-3 text-sm text-slate-600">Direct system behavior, source records, analytics, tests, and approved business definitions take priority over assumptions.</p></div>
-          <div><ShieldCheck className="mb-5 h-7 w-7 text-[#C96800]" aria-hidden="true" /><h3 className="text-xl font-bold">Claim boundary</h3><p className="mx-0 mt-3 text-sm text-slate-600">Capabilities are not presented as customer outcomes. Results require a defined baseline, implementation record, and verified measurement.</p></div>
+          <div><ShieldCheck className="mb-5 h-7 w-7 text-[#C96800]" aria-hidden="true" /><h3 className="text-xl font-bold">How we measure success</h3><p className="mx-0 mt-3 text-sm text-slate-600">We define the starting point, document what changes, and verify the result before presenting it as an outcome.</p></div>
           <div><CheckCircle2 className="mb-5 h-7 w-7 text-[#C96800]" aria-hidden="true" /><h3 className="text-xl font-bold">Completion proof</h3><p className="mx-0 mt-3 text-sm text-slate-600">A release is complete only after its intended output is observed in the target environment and a rollback or correction path is understood.</p></div>
         </div>
       </section>

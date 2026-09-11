@@ -51,7 +51,7 @@ export default function ResultsPage() {
 
       <section className="border-y border-slate-200 bg-white px-6 py-20 sm:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-7 lg:grid-cols-[.75fr_1.25fr]"><h2 className="text-3xl font-black sm:text-4xl">How OfRoot presents evidence.</h2><p className="mx-0 text-lg text-slate-600">The evidence label tells you how much weight a statement can carry before a deeper customer reference or measurement review.</p></div>
+          <div className="grid gap-7 lg:grid-cols-[.75fr_1.25fr]"><h2 className="text-3xl font-black sm:text-4xl">How to read our results.</h2><p className="mx-0 text-lg text-slate-600">Each result explains whether it is a documented outcome, an anonymized project example, or a capability that still needs to be validated for your business.</p></div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">{evidenceStandards.map(([title, body]) => <article key={title} className="rounded-2xl bg-[#f7f6f2] p-6"><CheckCircle2 className="mb-5 h-5 w-5 text-[#C96800]" /><h3 className="text-xl font-bold">{title}</h3><p className="mx-0 mt-3 text-sm text-slate-600">{body}</p></article>)}</div>
         </div>
       </section>

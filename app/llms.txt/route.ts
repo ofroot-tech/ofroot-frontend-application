@@ -38,7 +38,7 @@ export function GET() {
 
 ${featureGroups}
 
-## Buyer outcomes
+## Business outcomes
 - [Generate Demand](${SITE_URL}/solutions/generate-demand)
 - [Convert More Leads](${SITE_URL}/solutions/convert-more-leads)
 - [Unlock Company Knowledge](${SITE_URL}/solutions/unlock-company-knowledge)

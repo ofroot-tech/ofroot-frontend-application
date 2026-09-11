@@ -51,7 +51,7 @@ export default function GrowthPage({ content, kind }: { content: GrowthPageConte
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-6 lg:grid-cols-[.7fr_1.3fr]">
               <div><p className="text-sm font-bold uppercase tracking-[0.16em] text-[#B55B00]">Explore the system</p><h2 id="feature-capabilities" className="mt-3 text-3xl font-black sm:text-4xl">Each capability has one clear job.</h2></div>
-              <p className="mx-0 max-w-2xl text-lg text-slate-600">Choose the specific problem you need to understand. Every page explains the buyer question, implementation boundary, measures, and next step in plain language.</p>
+              <p className="mx-0 max-w-2xl text-lg text-slate-600">Choose the specific problem you need to understand. Every page explains the challenge, what the work includes, how progress is measured, and the next step in plain language.</p>
             </div>
             <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {features.map(feature => (

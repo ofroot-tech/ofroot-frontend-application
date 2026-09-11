@@ -102,7 +102,7 @@ export default function AiAudit() {
             <h3 className="text-xl font-semibold">Turn this report into progress.</h3>
             <p className="mt-4 text-slate-600">{view.fixes.length ? `Your report includes ${view.fixes.length} prioritized opportunities. OfRoot can review what applies, implement the right fixes, and rescan to measure the change.` : 'Keep the good foundation. OfRoot can review your next step and help maintain readiness as your site changes.'}</p>
             <button onClick={() => { document.getElementById('fix-plan')?.scrollIntoView({ behavior: 'instant', block: 'center' }); nameRef.current?.focus({ preventScroll: true }); }} className={`${button} mt-6`}>Get My Fix Plan <ArrowRight size={18} aria-hidden="true" /></button>
-            <p className="mt-3 text-xs text-slate-500">A scoped implementation conversation. Your report is already free.</p>
+            <p className="mt-3 text-xs text-slate-500">A focused conversation about the right fixes for your site. Your report is already free.</p>
           </div>
         </div>
 
