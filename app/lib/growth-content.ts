@@ -94,6 +94,7 @@ export const growthPages: Record<string, GrowthPageContent> = {
     ],
     related: [
       { label: 'Generate Demand', href: '/solutions/generate-demand' },
+      { label: 'Scan your website readiness', href: '/services/ai-audit' },
       { label: 'Read AI discoverability insights', href: '/insights' },
     ],
   },

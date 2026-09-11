@@ -34,11 +34,17 @@ const groups: NavigationGroup[] = [
       { label: 'Unlock Company Knowledge', href: '/solutions/unlock-company-knowledge' },
     ],
   },
+  {
+    label: 'Free Tools',
+    links: [
+      { label: 'Website Readiness Scanner', href: '/services/ai-audit' },
+      { label: 'Business AI Assessment', href: '/ai-agent-readiness-assessment' },
+    ],
+  },
 ];
 
 const links: NavigationLink[] = [
   { label: 'Results', href: '/results' },
-  { label: 'Assessment', href: '/ai-agent-readiness-assessment' },
   { label: 'Insights', href: '/insights' },
   { label: 'Security', href: '/security' },
 ];

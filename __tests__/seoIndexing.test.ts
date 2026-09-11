@@ -10,7 +10,6 @@ import { insights } from '@/app/lib/insights-content';
 const retiredOrNonIndexablePaths = [
   '/services/automation',
   '/services/integration',
-  '/services/ai-audit',
   '/services/ai-development-integrations',
   '/services/llm-agent-integrations',
   '/services/marketing-automation',
@@ -69,6 +68,7 @@ describe('SEO indexing contract', () => {
     const urls = new Set(sitemap().map(entry => entry.url));
     for (const path of [
       '/ai-agent-readiness-assessment',
+      '/services/ai-audit',
       '/research/ai-agent-readiness-methodology',
       '/authors/ofroot-technology',
       '/about/editorial-standards',
@@ -123,6 +123,7 @@ describe('SEO indexing contract', () => {
       expect(output).toContain(`${CANONICAL_SITE_URL}/agent-integrations`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/insights/is-your-business-ai-agent-ready`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/ai-agent-readiness-assessment`);
+      expect(output).toContain(`${CANONICAL_SITE_URL}/services/ai-audit`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/research/ai-agent-readiness-methodology`);
       expect(output).toContain(`${CANONICAL_SITE_URL}/about/editorial-standards`);
       expect(output).not.toContain(`${CANONICAL_SITE_URL}/services/llm-agent-integrations`);

@@ -32,6 +32,7 @@ export function GET() {
 - [How to Find the Manual Work Worth Automating First](${SITE_URL}/blog/find-expensive-manual-work-before-automating): A practical guide to mapping work, calculating cost, scoring opportunities, and measuring results.
 - [Is Your Business AI-Agent Ready?](${SITE_URL}/insights/is-your-business-ai-agent-ready): A practical readiness test for workflows, data, permissions, approvals, monitoring, ownership, and business value.
 - [AI Agent Readiness Assessment](${SITE_URL}/ai-agent-readiness-assessment): A free 12-question assessment with a transparent score and six-dimension breakdown.
+- [AI Website Readiness Scanner](${SITE_URL}/services/ai-audit): A free Ora-powered technical scan showing whether agents can find, read, and use a public website, with evidence and prioritized fixes.
 - [AI Agent Readiness Scoring Methodology](${SITE_URL}/research/ai-agent-readiness-methodology): Versioned questions, equal weights, thresholds, limitations, and benchmark policy.
 - [Clinic Success Platform Appointment Preparation Pilot](${SITE_URL}/clinic-success): A clinic-facing referral-link and aggregate-operations pilot. Technology does not receive Health patient data automatically.
 
