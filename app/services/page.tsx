@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, SearchCheck, Network, Bot, Wrench } from 'lucide-react';
+import { ArrowRight, CheckCircle2, SearchCheck, Network, Bot, Factory, Wrench } from 'lucide-react';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE } from '@/app/config/site';
 import { growthMetadata } from '@/app/lib/growth-content';
 
 export const metadata = growthMetadata(
   'AI Growth and Automation Services',
-  'Explore OfRoot services for AI discoverability, revenue automation, and private company AI—organized around measurable business outcomes.',
+  'Explore OfRoot services for AI discoverability, revenue automation, industrial systems, and private company AI—organized around measurable business outcomes.',
   '/services',
 );
 
@@ -41,12 +41,23 @@ const services = [
     includes: ['Knowledge and system connections', 'Access rules, citations, and approvals', 'Branded assistants, evaluation, and usage measurement'],
     startingPoint: 'Custom scope',
   },
+  {
+    href: '/services/industrial-systems',
+    icon: Factory,
+    stage: 'Connect',
+    title: 'Industrial Systems',
+    problem: 'Field observations, physical assets, and operational data remain disconnected from the software teams use to make decisions.',
+    outcome: 'Turn information from physical environments into structured, traceable operational data.',
+    includes: ['Computer vision and edge-processing workflows', 'Offline-resilient field capture and verification', 'Asset, API, notification, and enterprise integrations'],
+    startingPoint: 'Custom scope',
+  },
 ];
 
 const buyingSignals = [
   ['Choose AI Discoverability when…', 'Relevant buyers cannot consistently find you, search impressions are not turning into clicks, or your company is absent from AI-generated answers.'],
   ['Choose Automation Systems when…', 'Lead response is slow, CRM data is unreliable, staff copy information between tools, or pipeline handoffs fail silently.'],
   ['Choose Private Company AI when…', 'Employees lose time finding internal answers, knowledge is scattered, or teams need controlled AI assistance grounded in company sources.'],
+  ['Choose Industrial Systems when…', 'Field data, physical assets, or operational workflows need a reliable software layer connecting capture, verification, and enterprise systems.'],
 ];
 
 export default function ServicesIndexPage() {
@@ -73,8 +84,8 @@ export default function ServicesIndexPage() {
       />
 
       <header className="rounded-3xl bg-[#071225] px-6 py-14 text-white sm:px-10 sm:py-20">
-        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#FFC46B]">Discover → Convert → Operate</p>
-        <h1 className="mt-4 max-w-4xl text-balance text-4xl font-black text-white sm:text-6xl">Three services tied to the way your business grows.</h1>
+        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#FFC46B]">Digital systems → Physical operations</p>
+        <h1 className="mt-4 max-w-4xl text-balance text-4xl font-black text-white sm:text-6xl">Four services tied to how your business grows and operates.</h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">OfRoot fixes the system between visibility, revenue conversion, and company execution. Start with the bottleneck that has the clearest cost; expand only when the evidence supports it.</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/book?source=services-hero" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit <ArrowRight className="h-4 w-4" /></Link>

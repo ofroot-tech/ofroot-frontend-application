@@ -23,6 +23,7 @@ const groups: NavigationGroup[] = [
     links: [
       { label: 'AI Discoverability', href: '/services/ai-discoverability' },
       { label: 'Automation Systems', href: '/services/automation-systems' },
+      { label: 'Industrial Systems', href: '/services/industrial-systems' },
       { label: 'Private Company AI', href: '/services/private-company-ai' },
     ],
   },
