@@ -38,12 +38,12 @@ export function generatePricingSchema() {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: 'OfRoot AI Growth Systems',
-    description: 'AI discoverability, revenue automation, private company AI, and ongoing growth-system optimization.',
+    description: 'AI discoverability, revenue automation, private company AI, and ongoing systems ownership.',
     offers: [
       {
         '@type': 'Offer',
         name: 'Growth Systems Build',
-        description: 'A focused production build for one priority conversion or automation workflow.',
+        description: 'One tightly scoped production workflow with validation, launch support, and handoff.',
         price: '3500',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
@@ -52,8 +52,8 @@ export function generatePricingSchema() {
       },
       {
         '@type': 'Offer',
-        name: 'Ongoing Optimization',
-        description: 'Ongoing implementation, monitoring, and growth-system optimization.',
+        name: 'Ongoing Systems Partnership',
+        description: 'Ongoing implementation, monitoring, and accountable ownership across multiple live systems.',
         price: '6000',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
