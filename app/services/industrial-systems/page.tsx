@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonLd from '@/components/seo/JsonLd';
+import { PageView, TrackedLink } from '@/components/growth/Analytics';
 import { SITE } from '@/app/config/site';
 
 export const metadata: Metadata = {
-  title: 'Industrial Software & AI Systems | OfRoot Technology',
+  title: 'Industrial Software & AI Systems',
   description:
     'OfRoot Technology builds industrial software connecting field operations, physical assets, computer vision, AI, edge processing, and enterprise systems.',
   alternates: { canonical: '/services/industrial-systems' },
@@ -105,6 +106,7 @@ export default function IndustrialSystemsPage() {
           serviceType: 'Industrial software engineering',
         }}
       />
+      <PageView kind="service" name="industrial_systems" />
 
       <header className="relative overflow-hidden bg-[#071225] px-6 pb-20 pt-24 text-white sm:px-8 sm:pb-24 sm:pt-28">
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -123,9 +125,9 @@ export default function IndustrialSystemsPage() {
             OfRoot builds software that connects field operations, physical assets, operational data, AI, and enterprise systems.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link href="/book?source=industrial-systems-hero" className="inline-flex min-h-12 items-center justify-center rounded-md bg-[#FF9312] px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#FFB14A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFC46B]">
+            <TrackedLink href="/book?source=industrial-systems-hero" source="industrial-systems:hero" className="inline-flex min-h-12 items-center justify-center rounded-md bg-[#FF9312] px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#FFB14A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFC46B]">
               Talk to OfRoot
-            </Link>
+            </TrackedLink>
             <Link href="#capabilities" className="inline-flex min-h-12 items-center justify-center rounded-md border border-white/30 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
               Explore our capabilities
             </Link>
@@ -133,7 +135,7 @@ export default function IndustrialSystemsPage() {
         </div>
       </header>
 
-      <main>
+      <main id="main-content">
         <section className="px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="blind-spots-heading">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
@@ -236,9 +238,9 @@ export default function IndustrialSystemsPage() {
               <h2 id="industrial-cta-heading" className="mt-3 max-w-3xl text-3xl font-black text-white sm:text-4xl">Map the simplest software solution.</h2>
               <p className="mt-4 max-w-3xl text-slate-300">Have an operational problem involving field data, assets, AI, integrations, or physical systems? Let&apos;s map the simplest software solution.</p>
             </div>
-            <Link href="/book?source=industrial-systems-final" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-md bg-[#FF9312] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#FFB14A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFC46B]">
+            <TrackedLink href="/book?source=industrial-systems-final" source="industrial-systems:final" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-md bg-[#FF9312] px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#FFB14A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFC46B]">
               Talk to OfRoot
-            </Link>
+            </TrackedLink>
           </div>
         </section>
       </main>
