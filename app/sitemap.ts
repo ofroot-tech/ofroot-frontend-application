@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/services/data-pipeline-sanity', lastModified: '2026-03-05' },
     { path: '/services/ai-discoverability', lastModified: '2026-09-11' },
     { path: '/services/automation-systems', lastModified: '2026-09-11' },
+    { path: '/services/industrial-systems', lastModified: '2026-09-12' },
     { path: '/services/private-company-ai', lastModified: '2026-09-11' },
     { path: '/clinic-success', lastModified: '2026-08-16' },
     { path: '/solutions/generate-demand', lastModified: '2026-09-11' },
