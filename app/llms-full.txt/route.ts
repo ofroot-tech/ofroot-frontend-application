@@ -72,7 +72,7 @@ ${insightDetails}
 OfRoot preserves existing anonymized case studies at ${SITE_URL}/results. Capability statements should not be interpreted as independently verified customer metrics unless a case study provides supporting evidence.
 
 ## Engagements
-OfRoot publishes current starting prices for a focused Growth Systems Build and Ongoing Optimization at ${SITE_URL}/pricing. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
+OfRoot publishes current starting prices for a focused Growth Systems Build and an Ongoing Systems Partnership at ${SITE_URL}/pricing. The focused build can end with launch support and handoff; the monthly partnership is for continued implementation and ownership across multiple live systems. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
 
 ## Contact
 Request a Growth Systems Audit: ${SITE_URL}/book

@@ -5,7 +5,7 @@ import { PageView, TrackedLink, TrackedSection } from '@/components/growth/Analy
 
 export const metadata = growthMetadata(
   'AI Growth Systems Engagements and Pricing',
-  'Review OfRoot engagement models for AI discoverability, revenue automation, private company AI, and ongoing growth-system optimization.',
+  'Review OfRoot engagement models for AI discoverability, revenue automation, private company AI, and ongoing systems ownership.',
   '/pricing',
 );
 
@@ -42,13 +42,13 @@ const packages = [
     href: '/book?focus=private-ai&source=pricing',
   },
   {
-    name: 'Ongoing Optimization',
+    name: 'Ongoing Systems Partnership',
     price: 'From $6,000',
-    cadence: 'per month',
-    bestFor: 'Teams operating multiple acquisition, automation, or AI workflows that need continuous ownership.',
-    outcome: 'A measured operating cadence for improving visibility, conversion, reliability, and company-AI adoption.',
-    points: ['Prioritized monthly improvement roadmap', 'Monitoring and workflow reliability', 'Content, conversion, and automation optimization', 'Weekly performance review and progress tracking'],
-    cta: 'Discuss Ongoing Ownership',
+    cadence: 'monthly operating partnership',
+    bestFor: 'Teams with multiple live acquisition, automation, or AI systems that need regular engineering capacity and accountable ownership.',
+    outcome: 'A measured operating cadence for maintaining live systems and shipping prioritized improvements across visibility, conversion, reliability, and company AI.',
+    points: ['Prioritized monthly delivery roadmap', 'Monitoring, failure review, and workflow reliability', 'Ongoing implementation and system iteration', 'Weekly performance review and delivery tracking'],
+    cta: 'Discuss an Ongoing Partnership',
     href: '/book?focus=ongoing-optimization&source=pricing',
   },
 ];
@@ -56,7 +56,7 @@ const packages = [
 const faq = [
   {
     question: 'Why is only some pricing published?',
-    answer: 'The existing entry points are a focused build starting at $3,500 and ongoing ownership starting at $6,000 per month. Discoverability and private company AI depend more heavily on source quality, access rules, content volume, and implementation complexity, so those are scoped after the audit.',
+    answer: 'The published prices are budget anchors for two defined engagement shapes: one tightly scoped production workflow starting at $3,500, or hands-on ownership across multiple live systems starting at $6,000 per month. Discoverability and private company AI depend more heavily on source quality, access rules, content volume, and implementation complexity, so those are scoped after the audit.',
   },
   {
     question: 'Can we start with one layer?',
@@ -68,7 +68,7 @@ const faq = [
   },
   {
     question: 'What happens after launch?',
-    answer: 'A focused build can end with documentation and handoff, or continue through ongoing optimization when the system needs monitoring, iteration, and operational ownership.',
+    answer: 'A focused build can end with launch support, documentation, and handoff. The monthly partnership is for teams that need continued implementation and accountable ownership across multiple live systems; it is not required for every build.',
   },
 ];
 
@@ -84,7 +84,7 @@ export default function PricingPage() {
         <div className="relative mx-auto max-w-6xl">
           <p className="mb-5 text-sm font-bold uppercase tracking-[.18em] text-[#FFC46B]">Engagements</p>
           <h1 className="max-w-5xl text-balance text-4xl font-black text-white sm:text-6xl">Choose the smallest engagement that can change the business outcome.</h1>
-          <p className="mx-0 mt-6 max-w-3xl text-lg text-slate-200">Start with a focused foundation, a production build, a company intelligence system, or ongoing optimization. Final scope follows the system complexity and evidence required.</p>
+          <p className="mx-0 mt-6 max-w-3xl text-lg text-slate-200">Start with a focused foundation, a production build, a company intelligence system, or ongoing systems ownership. Final scope follows the system complexity and evidence required.</p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row"><TrackedLink href="/book?source=pricing-hero" source="pricing:hero" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FF9312] px-6 py-3 font-semibold text-slate-950">Book a Growth Systems Audit<ArrowRight className="h-4 w-4" /></TrackedLink><TrackedLink href="#engagements" source="pricing:compare" event="secondary_cta_clicked" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-6 py-3 font-semibold text-white">Compare engagements</TrackedLink></div>
         </div>
       </section>

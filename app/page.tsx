@@ -26,9 +26,9 @@ const outcomes = [
 
 const models = [
   { title: 'AI Visibility Foundation', price: 'Scoped after audit', body: 'Focused assessment and a technical implementation plan for discoverability.' },
-  { title: 'Growth Systems Build', price: 'From $3,500', body: 'A production build for one priority conversion or automation workflow.' },
+  { title: 'Growth Systems Build', price: 'From $3,500 · one-time', body: 'One tightly scoped production workflow, with validation, launch support, and handoff.' },
   { title: 'Company Intelligence System', price: 'Custom scope', body: 'Private company AI connected to approved knowledge and workflows.' },
-  { title: 'Ongoing Optimization', price: 'From $6,000/month', body: 'Continuous measurement, implementation, automation, and AI-system improvement.' },
+  { title: 'Ongoing Systems Partnership', price: 'From $6,000/month', body: 'Hands-on ownership across multiple live systems, with monitoring, prioritized implementation, and weekly review.' },
 ];
 
 const primaryCtaClass = 'inline-flex min-h-[48px] items-center justify-center gap-[9px] rounded-full bg-[#FF9312] px-[20px] py-[10px] !text-[15px] font-semibold !leading-none text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none sm:px-[22px] sm:!text-[16px]';
