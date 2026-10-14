@@ -21,10 +21,9 @@ const groups: NavigationGroup[] = [
   {
     label: 'Services',
     links: [
-      { label: 'AI Discoverability', href: '/services/ai-discoverability' },
-      { label: 'Automation Systems', href: '/services/automation-systems' },
-      { label: 'Industrial Systems', href: '/services/industrial-systems' },
-      { label: 'Private Company AI', href: '/services/private-company-ai' },
+      { label: 'Websites & Growth', href: '/services/ai-discoverability' },
+      { label: 'Integrations & Tools', href: '/services/automation-systems' },
+      { label: 'AI & Deployment', href: '/services/private-company-ai' },
     ],
   },
   {
@@ -45,7 +44,7 @@ const groups: NavigationGroup[] = [
 ];
 
 const links: NavigationLink[] = [
-  { label: 'Results', href: '/results' },
+  { label: 'Capabilities', href: '/results' },
   { label: 'Insights', href: '/insights' },
   { label: 'Security', href: '/security' },
 ];

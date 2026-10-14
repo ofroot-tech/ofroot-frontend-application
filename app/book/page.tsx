@@ -2,13 +2,13 @@ import Link from 'next/link';
 import GrowthAuditForm from '@/components/growth/GrowthAuditForm';
 import { growthMetadata, SITE_URL } from '@/app/lib/growth-content';
 
-export const metadata = growthMetadata('Book a Growth Systems Audit', 'Identify the highest-impact opportunity across discoverability, conversion, automation, company knowledge, private AI, and reporting.', '/book');
+export const metadata = growthMetadata('Discuss Your Project', 'Tell OfRoot about your website, integrations, internal tools, AI system, or reporting needs.', '/book');
 
 export default function BookPage() {
   const schema = { '@context': 'https://schema.org', '@type': 'Service', name: 'Growth Systems Audit', provider: { '@type': 'Organization', name: 'OfRoot', url: SITE_URL }, areaServed: 'US', description: 'A focused review of discoverability, lead conversion, automation, internal knowledge, private AI, and reporting opportunities.' };
   const steps = [
     ['1. Send the request', 'Share four required answers so we can understand the business and the bottleneck.'],
-    ['2. We review the context', 'We check whether the audit is the right next step before asking you to schedule time.'],
+    ['2. We review the context', 'We review your goal and whether we can help before asking you to schedule time.'],
     ['3. Continue by email', 'We reply with the recommended next step and scheduling details when there is a useful fit.'],
   ];
 
@@ -21,11 +21,11 @@ export default function BookPage() {
         </nav>
         <div className="grid gap-12 lg:grid-cols-[.75fr_1.25fr]">
           <div>
-            <p className="mb-4 text-sm font-bold uppercase tracking-[.18em] text-[#B55B00]">Growth Systems Audit</p>
-            <h1 className="text-balance text-4xl font-black sm:text-6xl">Find the bottleneck worth fixing first.</h1>
-            <p className="mx-0 mt-6 text-lg text-slate-600">The audit helps identify the highest-impact opportunity across discoverability, lead conversion, automation, internal knowledge, private AI, and reporting.</p>
+            <p className="mb-4 text-sm font-bold uppercase tracking-[.18em] text-[#B55B00]">Start a conversation</p>
+            <h1 className="text-balance text-4xl font-black sm:text-6xl">What should work better?</h1>
+            <p className="mx-0 mt-6 text-lg text-slate-600">Tell us about your website, the tools your team uses, or an AI idea you want to make practical. We review your goal and recommend a useful next step.</p>
             <div className="mt-8 rounded-2xl border border-[#FF9312]/30 bg-[#fff8ee] p-5">
-              <p className="mx-0 font-bold text-slate-950">This form starts a request—not a paid engagement.</p>
+              <p className="mx-0 font-bold text-slate-950">This form starts a project conversation.</p>
               <p className="mx-0 mt-2 text-sm text-slate-600">No payment is collected here. We review the context first, then reply by email with the most useful next step.</p>
             </div>
             <ol className="mt-9 space-y-5 border-l-2 border-[#FF9312] pl-5">
@@ -36,7 +36,7 @@ export default function BookPage() {
                 </li>
               ))}
             </ol>
-            <p className="mx-0 mt-9 text-sm text-slate-500">Already booked through the existing consulting flow? <Link href="/consulting/book" className="font-semibold text-[#8F4700] hover:underline">Open the calendar page.</Link></p>
+
           </div>
           <GrowthAuditForm />
         </div>

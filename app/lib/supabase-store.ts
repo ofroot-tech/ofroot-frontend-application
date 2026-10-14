@@ -100,6 +100,12 @@ export type SalesInquiryRecord = {
   created_at: string;
 };
 
+export type SalesInquiryPipelineUpdate = {
+  stage: 'new' | 'contacted' | 'discovery' | 'audit_proposed' | 'audit_won' | 'build_won' | 'retainer_won' | 'lost';
+  next_action?: string | null;
+  next_action_at?: string | null;
+};
+
 export type FeatureRequestRecord = {
   id: number;
   user_id: number;
@@ -235,7 +241,7 @@ function normalizeEmail(email: string): string {
 
 function inferRoleSlugForEmail(emailInput: string): 'owner' | 'admin' | 'client' {
   const normalizedEmail = normalizeEmail(emailInput);
-  const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || 'dimitri.mcdaniel@gmail.com')
+  const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || '')
     .trim()
     .toLowerCase();
   const adminEmails = (process.env.ADMIN_EMAILS || '')
@@ -243,7 +249,7 @@ function inferRoleSlugForEmail(emailInput: string): 'owner' | 'admin' | 'client'
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
 
-  if (normalizedEmail === ownerEmail) return 'owner';
+  if (ownerEmail && normalizedEmail === ownerEmail) return 'owner';
   if (adminEmails.includes(normalizedEmail)) return 'admin';
   return 'client';
 }
@@ -1204,6 +1210,47 @@ export async function createSalesInquiryRecord(input: {
   );
 
   return mapSalesInquiry(result.rows[0]);
+}
+
+export async function listRecentSalesInquiries(params?: { limit?: number }): Promise<SalesInquiryRecord[]> {
+  await ensureSchema();
+  const pool = getPool();
+  const limit = Math.max(1, Math.min(500, Math.floor(params?.limit || 100)));
+
+  const result = await pool.query<DbSalesInquiryRow>(
+    `
+      SELECT id, name, email, business_name, business_formation_status, llc_upsell_opportunity, payload, created_at
+      FROM ofroot_sales_inquiries
+      ORDER BY created_at DESC, id DESC
+      LIMIT $1
+    `,
+    [limit]
+  );
+
+  return result.rows.map(mapSalesInquiry);
+}
+
+export async function updateSalesInquiryPipeline(id: number, update: SalesInquiryPipelineUpdate): Promise<SalesInquiryRecord | null> {
+  await ensureSchema();
+  const pool = getPool();
+  const pipeline = {
+    stage: update.stage,
+    nextAction: String(update.next_action || '').trim() || null,
+    nextActionAt: update.next_action_at || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const result = await pool.query<DbSalesInquiryRow>(
+    `
+      UPDATE ofroot_sales_inquiries
+      SET payload = COALESCE(payload, '{}'::jsonb) || $2::jsonb
+      WHERE id = $1
+      RETURNING id, name, email, business_name, business_formation_status, llc_upsell_opportunity, payload, created_at
+    `,
+    [id, JSON.stringify({ pipeline })]
+  );
+
+  return result.rows[0] ? mapSalesInquiry(result.rows[0]) : null;
 }
 
 export async function listRecentLlcUpsellOpportunities(params?: { limit?: number }): Promise<SalesInquiryRecord[]> {

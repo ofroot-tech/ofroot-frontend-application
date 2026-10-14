@@ -3,9 +3,9 @@ import { TrackedLink } from './Analytics';
 import styles from './HomeHero.module.css';
 
 const systems = [
-  { stage: 'Discover', title: 'Be the answer.', detail: 'Search & AI visibility', href: '/services/ai-discoverability' },
-  { stage: 'Convert', title: 'Follow through.', detail: 'Connected revenue workflows', href: '/services/automation-systems' },
-  { stage: 'Operate', title: 'Move with clarity.', detail: 'Private company AI', href: '/services/private-company-ai' },
+  { stage: 'Attract', title: 'Make a strong first impression.', detail: 'Websites · SEO / AEO / GEO · Ads', href: '/services/ai-discoverability' },
+  { stage: 'Connect', title: 'Make the work flow.', detail: 'Integrations · Internal tools · Reporting', href: '/services/automation-systems' },
+  { stage: 'Enable', title: 'Put AI to practical use.', detail: 'AI systems · Evaluation · Deployment', href: '/services/private-company-ai' },
 ];
 
 /** A service illustration, not a live dashboard or a claim of client results. */
@@ -45,20 +45,20 @@ export default function HomeHero() {
       <div className={styles.inner}>
         <div className={styles.layout}>
           <div className={styles.copy}>
-            <p className={styles.eyebrow}><span aria-hidden="true" />AI growth systems & engineering</p>
-            <h1 id="home-hero-heading" className={styles.title}>Growth deserves{' '}<br /><span>better systems.</span></h1>
-            <p className={styles.description}>Get found. Follow through. Move work forward. We connect AI search, automation, and company knowledge to help your business do all three.</p>
+            <p className={styles.eyebrow}><span aria-hidden="true" />Websites, software & AI engineering</p>
+            <h1 id="home-hero-heading" className={styles.title}>Your next stage.{' '}<br /><span>Built on better systems.</span></h1>
+            <p className={styles.description}>Marketing websites that explain your value. Connected tools that move work forward. AI systems built around a useful task. OfRoot brings the design and engineering together.</p>
             <div className={styles.actions}>
-              <TrackedLink href="/book?source=homepage-hero" source="homepage:hero" className={styles.primary}>Book a Growth Systems Audit<ArrowRight size={18} aria-hidden="true" /></TrackedLink>
-              <TrackedLink href="#systems" source="homepage:explore" event="secondary_cta_clicked" className={styles.secondary}>Explore our systems<ArrowDown size={16} aria-hidden="true" /></TrackedLink>
+              <TrackedLink href="/book?source=homepage-hero" source="homepage:hero" className={styles.primary}>Discuss your project<ArrowRight size={18} aria-hidden="true" /></TrackedLink>
+              <TrackedLink href="#systems" source="homepage:explore" event="secondary_cta_clicked" className={styles.secondary}>Explore our services<ArrowDown size={16} aria-hidden="true" /></TrackedLink>
             </div>
-            <p className={styles.assurance}>A clear starting point. A practical plan. An engineering partner.</p>
+            <p className={styles.assurance}>Founder-led. 11 years in technology. Clear scope from the first conversation.</p>
           </div>
           <ConnectedSystems />
         </div>
         <div className={styles.footer}>
-          <p>From the first opportunity to the work that follows.</p>
-          <TrackedLink href="/results" source="homepage:hero:work" event="secondary_cta_clicked" className={styles.workLink}>See the work behind the promise<ArrowUpRight size={16} aria-hidden="true" /></TrackedLink>
+          <p>For service businesses, founders, and growing teams.</p>
+          <TrackedLink href="/results" source="homepage:hero:work" event="secondary_cta_clicked" className={styles.workLink}>Explore what we can build<ArrowUpRight size={16} aria-hidden="true" /></TrackedLink>
         </div>
       </div>
     </section>
