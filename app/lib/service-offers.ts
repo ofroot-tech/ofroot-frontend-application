@@ -1,0 +1,36 @@
+/** Shared public offer copy for the homepage and service index. */
+export const serviceOffers = [
+  {
+    id: 'marketing',
+    step: 'Attract',
+    title: 'Marketing Websites & Growth',
+    shortTitle: 'Websites & growth',
+    href: '/services/ai-discoverability',
+    description: 'A clear website, useful content, and connected campaigns. Bring design, SEO, AEO, GEO, and ads into one practical plan.',
+    problem: 'Your offer is difficult to find, understand, or act on online.',
+    outcome: 'A clear digital presence with a measurable path from discovery to inquiry.',
+    includes: ['Responsive marketing websites and landing pages', 'SEO, answer engine optimization, and generative engine optimization', 'Ad campaign setup, landing pages, and conversion measurement'],
+  },
+  {
+    id: 'operations',
+    step: 'Connect',
+    title: 'Integrations & Internal Tools',
+    shortTitle: 'Integrations & tools',
+    href: '/services/automation-systems',
+    description: 'Connect the software you use and build the tools you are missing. Turn scattered records and manual handoffs into usable workflows.',
+    problem: 'Teams copy data between tools, reconcile conflicting reports, or work around software that does not fit.',
+    outcome: 'Connected records, visible ownership, and operational software built around your process.',
+    includes: ['API integrations, automation, and background jobs', 'Case, job, and operational workflow applications', 'Multi-source reporting, reconciliation, and dashboards'],
+  },
+  {
+    id: 'ai',
+    step: 'Enable',
+    title: 'AI Systems & Deployment',
+    shortTitle: 'AI & deployment',
+    href: '/services/private-company-ai',
+    description: 'Put AI to work on a specific business task, with approved sources, useful interfaces, evaluation, and a considered path to production.',
+    problem: 'AI experiments are disconnected from your knowledge, workflows, or production requirements.',
+    outcome: 'Task-specific AI assistance with explicit access, review, and operational boundaries.',
+    includes: ['Knowledge search, summarization, and AI-assisted tools', 'Model and API integration with evaluation and human review', 'Cloud deployment, CI/CD, monitoring, and handoff'],
+  },
+] as const;

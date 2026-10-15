@@ -8,6 +8,7 @@ import { metadata as servicesMetadata } from '@/app/services/page';
 import { insights } from '@/app/lib/insights-content';
 
 const retiredOrNonIndexablePaths = [
+  '/services/industrial-systems',
   '/services/automation',
   '/services/integration',
   '/services/ai-development-integrations',
@@ -55,10 +56,11 @@ describe('SEO indexing contract', () => {
       'private-ai-assistant-security-requirements',
       'workflow-automation-roi-guide',
       'hubspot-ai-agent-integration-guide',
+      'hvac-lead-follow-up-audit-checklist',
     ];
 
     expect(new Set(slugs).size).toBe(slugs.length);
-    expect(insights).toHaveLength(9);
+    expect(insights).toHaveLength(10);
     for (const slug of newGuides) {
       expect(sitemapUrls.has(`${CANONICAL_SITE_URL}/insights/${slug}`)).toBe(true);
     }

@@ -20,7 +20,7 @@ export function generateOrganizationSchema() {
     name: 'OfRoot',
     url: CANONICAL_SITE_URL,
     logo: `${CANONICAL_SITE_URL}/ofroot-root-mark.svg`,
-    description: 'AI-powered growth and operations systems for visibility, conversion, and company knowledge.',
+    description: 'Marketing websites and growth, integrations and internal tools, and AI systems and deployment.',
     sameAs: [
       'https://twitter.com/ofroot_tech',
       'https://www.linkedin.com/company/106671711',
@@ -38,12 +38,12 @@ export function generatePricingSchema() {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: 'OfRoot AI Growth Systems',
-    description: 'AI discoverability, revenue automation, private company AI, and ongoing systems ownership.',
+    description: 'AI discoverability, revenue automation, private company AI, and ongoing growth-system optimization.',
     offers: [
       {
         '@type': 'Offer',
         name: 'Growth Systems Build',
-        description: 'One tightly scoped production workflow with validation, launch support, and handoff.',
+        description: 'A focused production build for one priority conversion or automation workflow.',
         price: '3500',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
@@ -52,8 +52,8 @@ export function generatePricingSchema() {
       },
       {
         '@type': 'Offer',
-        name: 'Ongoing Systems Partnership',
-        description: 'Ongoing implementation, monitoring, and accountable ownership across multiple live systems.',
+        name: 'Ongoing Optimization',
+        description: 'Ongoing implementation, monitoring, and growth-system optimization.',
         price: '6000',
         priceCurrency: 'USD',
         priceValidUntil: '2026-12-31',
@@ -137,8 +137,7 @@ export function generateServiceSchema() {
     url: `${CANONICAL_SITE_URL}/consulting`,
     areaServed: 'US',
     availableLanguage: ['en'],
-    telephone: '+1-XXX-XXX-XXXX',
-    email: 'hello@ofroot.technology',
+    email: 'communications@ofroot.technology',
     serviceType: [
       'Architecture Consulting',
       'Engineering Automation',

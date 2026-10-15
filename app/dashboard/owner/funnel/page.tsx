@@ -7,6 +7,7 @@ import {
   getAutomationFunnelSummary,
   getUserFromSessionToken,
   listRecentLlcUpsellOpportunities,
+  listRecentSalesInquiries,
   listRecentAutomationAbandonments,
   listRecentAutomationOnboardingLeads,
 } from '@/app/lib/supabase-store';
@@ -15,8 +16,8 @@ import {
   isAutomationCatalogId,
   type AutomationCatalogId,
 } from '@/app/lib/automation-catalog';
+import SalesInquiryQueue from './SalesInquiryQueue';
 
-const OWNER_EMAIL_FALLBACK = 'dimitri.mcdaniel@gmail.com';
 
 function canViewOwnerFunnel(email?: string | null) {
   const normalized = String(email || '').trim().toLowerCase();
@@ -27,7 +28,7 @@ function canViewOwnerFunnel(email?: string | null) {
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
 
-  const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || OWNER_EMAIL_FALLBACK).trim().toLowerCase();
+  const ownerEmail = String(process.env.COMPANY_OWNER_EMAIL || '').trim().toLowerCase();
   return normalized === ownerEmail || allow.includes(normalized);
 }
 
@@ -56,6 +57,23 @@ function formatSelectedAutomations(meta: Record<string, unknown> | null | undefi
   return selected.map((id) => getAutomationCatalogItem(id).label).join(', ');
 }
 
+function pipelineStage(item: { payload: Record<string, unknown> }) {
+  const pipeline = (item.payload?.pipeline || {}) as Record<string, unknown>;
+  return String(pipeline.stage || 'new');
+}
+
+function pipelineNeedsAttention(item: { payload: Record<string, unknown> }) {
+  const pipeline = (item.payload?.pipeline || {}) as Record<string, unknown>;
+  if (pipeline.stage === 'lost' || pipeline.stage === 'retainer_won') return false;
+  const nextAction = String(pipeline.nextAction || '').trim();
+  const nextActionAt = String(pipeline.nextActionAt || '').trim();
+  return !nextAction || !nextActionAt || Number.isNaN(Date.parse(nextActionAt)) || Date.parse(nextActionAt) <= Date.now();
+}
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+}
+
 export default async function OwnerFunnelPage() {
   const store = await cookies();
   const token = store.get(TOKEN_COOKIE_NAME)?.value || store.get(LEGACY_COOKIE_NAME)?.value;
@@ -66,13 +84,23 @@ export default async function OwnerFunnelPage() {
     redirect('/dashboard/overview');
   }
 
-  const [summary, leads, abandonments, llcUpsells, featureRequests] = await Promise.all([
+  const [summary, leads, abandonments, llcUpsells, featureRequests, salesInquiries] = await Promise.all([
     getAutomationFunnelSummary(),
     listRecentAutomationOnboardingLeads({ limit: 100 }),
     listRecentAutomationAbandonments({ limit: 100 }),
     listRecentLlcUpsellOpportunities({ limit: 100 }),
     listRecentFeatureRequests({ limit: 100 }),
+    listRecentSalesInquiries({ limit: 100 }),
   ]);
+  const stageCounts = salesInquiries.reduce<Record<string, number>>((counts, item) => {
+    const stage = pipelineStage(item);
+    counts[stage] = (counts[stage] || 0) + 1;
+    return counts;
+  }, {});
+  const monthlyRevenueTarget = 1_000_000 / 12;
+  const plannedRetainerMrr = (stageCounts.retainer_won || 0) * 8_500;
+  const remainingMrr = Math.max(0, monthlyRevenueTarget - plannedRetainerMrr);
+  const inquiriesDueNow = salesInquiries.filter(pipelineNeedsAttention).length;
 
   return (
     <div className="space-y-6">
@@ -96,6 +124,41 @@ export default async function OwnerFunnelPage() {
           </CardBody>
         </Card>
       </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <Card><CardBody><p className="text-xs uppercase text-gray-500">Planned retainer MRR</p><p className="mt-1 text-2xl font-semibold">{formatCurrency(plannedRetainerMrr)}</p><p className="mt-1 text-xs text-gray-500">$8,500 per retainer win</p></CardBody></Card>
+        <Card><CardBody><p className="text-xs uppercase text-gray-500">Monthly target</p><p className="mt-1 text-2xl font-semibold">{formatCurrency(monthlyRevenueTarget)}</p><p className="mt-1 text-xs text-gray-500">$1M annualized run rate</p></CardBody></Card>
+        <Card><CardBody><p className="text-xs uppercase text-gray-500">Remaining MRR gap</p><p className="mt-1 text-2xl font-semibold">{formatCurrency(remainingMrr)}</p><p className="mt-1 text-xs text-gray-500">Based on retainer-won records</p></CardBody></Card>
+      </div>
+
+      <Card>
+        <CardBody>
+          <p className="text-xs uppercase text-gray-500">Inquiries due now</p>
+          <p className="mt-1 text-2xl font-semibold">{inquiriesDueNow}</p>
+          <p className="mt-1 text-xs text-gray-500">New or active records without a future next action</p>
+        </CardBody>
+      </Card>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          ['New', 'new'],
+          ['Discovery', 'discovery'],
+          ['Audits proposed', 'audit_proposed'],
+          ['Won', 'retainer_won'],
+        ].map(([label, stage]) => (
+          <Card key={stage}><CardBody><p className="text-xs uppercase text-gray-500">{label}</p><p className="mt-1 text-2xl font-semibold">{stage === 'retainer_won' ? (stageCounts.audit_won || 0) + (stageCounts.build_won || 0) + (stageCounts.retainer_won || 0) : stageCounts[stage] || 0}</p></CardBody></Card>
+        ))}
+      </div>
+
+      <Card>
+        <CardBody className="space-y-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-sm font-semibold text-gray-900">Growth-system audit requests (latest 100)</h2>
+            <span className="text-xs text-gray-500">{salesInquiries.length} captured</span>
+          </div>
+          <SalesInquiryQueue initialItems={salesInquiries} />
+        </CardBody>
+      </Card>
 
       <Card>
         <CardBody className="space-y-3">

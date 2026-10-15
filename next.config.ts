@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Keep the unreleased industrial page out of this public release while retaining its source.
+      { source: '/services/industrial-systems', destination: '/services/automation-systems', permanent: false },
       // Retired service URLs. Keep one permanent, indexable URL per intent.
       { source: '/services/automation', destination: '/services/workflow-automation', permanent: true },
       { source: '/services/integration', destination: '/services/hubspot-meta-integrations', permanent: true },
@@ -131,8 +133,11 @@ export default withSentryConfig(nextConfig, {
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+  // This release does not publish source maps or build telemetry to Sentry.
+  // Runtime SDK initialization and error monitoring remain unchanged.
+  sourcemaps: { disable: true },
+  telemetry: false,
+  release: { name: '', create: false, finalize: false },
 
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,

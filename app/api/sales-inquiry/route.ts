@@ -28,6 +28,7 @@ export async function POST(req: Request) {
     // Log for visibility in dev
     console.log('[sales-inquiry]', { name, email, message, at: new Date().toISOString() });
 
+    const capturedAt = new Date().toISOString();
     await createSalesInquiryRecord({
       name: String(name),
       email: String(email),
@@ -37,6 +38,12 @@ export async function POST(req: Request) {
       payload: {
         message: String(message || ''),
         form: payload && typeof payload === 'object' ? payload : {},
+        pipeline: {
+          stage: 'new',
+          nextAction: 'Review inquiry and reply by email',
+          nextActionAt: capturedAt,
+          updatedAt: capturedAt,
+        },
       },
     });
 
@@ -54,6 +61,28 @@ export async function POST(req: Request) {
             to: [TO_EMAIL],
             subject: 'New sales inquiry',
             text: `Name: ${name}\nEmail: ${email}\nMessage: ${message || '-'}\nTime: ${new Date().toISOString()}`,
+          }),
+        });
+
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${RESEND_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: `${FROM_NAME} <${FROM_EMAIL}>`,
+            to: [String(email)],
+            subject: 'We received your workflow audit request',
+            text: [
+              `Hi ${String(name).trim()},`,
+              '',
+              'Thanks for reaching out to OfRoot. We received your workflow-audit request and will review it personally.',
+              '',
+              'You can expect a reply by email within one business day with either a short fit-check question or a link to schedule a conversation.',
+              '',
+              '— OfRoot Technology',
+            ].join('\n'),
           }),
         });
       } catch (e) {

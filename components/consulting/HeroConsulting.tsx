@@ -23,11 +23,11 @@ export default function HeroConsulting() {
         </p>
 
         <div className="mt-6">
-          <PrimaryCta href="/consulting/book">Book a Strategy Call</PrimaryCta>
+          <PrimaryCta href="/book?source=consulting-hero">Discuss your project</PrimaryCta>
         </div>
 
         <p className="mt-3 text-sm text-gray-500">
-          8+ years building and stabilizing platforms for high-growth teams across healthcare systems, energy, and SaaS.
+          Founder-led engineering, informed by 11 years in technology across full-stack development, integrations, and solutions architecture.
         </p>
       </div>
     </section>

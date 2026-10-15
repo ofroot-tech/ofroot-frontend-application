@@ -19,24 +19,24 @@ export function GET() {
     .map(insight => `### ${insight.title}\nCanonical page: ${SITE_URL}/insights/${insight.slug}\nDirect answer: ${insight.directAnswer}`)
     .join('\n\n');
 
-  const text = `# OfRoot Technology: AI Growth Systems
+  const text = `# OfRoot Technology: Websites, Integrations, and AI Systems
 
-OfRoot is a technical growth systems partner. The company connects three layers of business performance: discovery, conversion, and operations.
+OfRoot provides three connected offers: marketing websites and growth; integrations and internal tools; and AI systems and deployment. Its founder brings 11 years in technology. Home-service companies are one audience alongside founders, service businesses, and operational teams.
 
-## Discover
-AI Discoverability combines technical SEO, answer-oriented content, entity consistency, structured data, landing pages, internal linking, original research planning, and third-party authority. SEO, AEO, and GEO are treated as one integrated system. OfRoot does not guarantee rankings, citations, or inclusion in a specific generated answer.
+## Marketing websites and growth
+Marketing websites, landing pages, ad campaign setup and management, and conversion measurement connect with technical SEO, AEO, and GEO. AI Discoverability combines technical SEO, answer-oriented content, entity consistency, structured data, landing pages, internal linking, original research planning, and third-party authority. SEO, AEO, and GEO are treated as one integrated system. OfRoot does not guarantee rankings, citations, or inclusion in a specific generated answer.
 
 Canonical service: ${SITE_URL}/services/ai-discoverability
 Related business outcome: ${SITE_URL}/solutions/generate-demand
 
-## Convert
-Automation Systems connect lead capture, qualification, CRM routing, follow-up, synchronization, operational dashboards, and workflow monitoring. The design goal is faster response, fewer manual handoffs, visible failures, and reporting teams can explain.
+## Integrations and internal tools
+Internal applications, multi-source reporting and reconciliation, APIs, background jobs, and workflow automation help teams connect their work. Automation Systems connect lead capture, qualification, CRM routing, follow-up, synchronization, operational dashboards, and workflow monitoring. The design goal is faster response, fewer manual handoffs, visible failures, and reporting teams can explain.
 
 Canonical service: ${SITE_URL}/services/automation-systems
 Related business outcome: ${SITE_URL}/solutions/convert-more-leads
 
-## Operate
-Private Company AI connects approved documents, software, code, processes, and business tools through permission-aware retrieval and source-backed answers. Use cases include company knowledge, developer assistance, and sales or operations support.
+## AI systems and deployment
+AI-assisted tools are scoped around approved data, evaluation, human review, hosting, monitoring, and operating documentation. Private Company AI connects approved documents, software, code, processes, and business tools through permission-aware retrieval and source-backed answers. Use cases include company knowledge, developer assistance, and sales or operations support.
 
 Canonical service: ${SITE_URL}/services/private-company-ai
 Related business outcome: ${SITE_URL}/solutions/unlock-company-knowledge
@@ -69,13 +69,13 @@ ${featureDetails}
 ${insightDetails}
 
 ## Evidence and limitations
-OfRoot preserves existing anonymized case studies at ${SITE_URL}/results. Capability statements should not be interpreted as independently verified customer metrics unless a case study provides supporting evidence.
+OfRoot publishes five illustrative capability examples at ${SITE_URL}/results: reporting and reconciliation, operational workflow applications, integrations and automation, AI-assisted tools, and marketing websites. These are potential engineering scopes, not client case studies or claims of measured outcomes. Existing case-study URL paths are retained for continuity.
 
 ## Engagements
-OfRoot publishes current starting prices for a focused Growth Systems Build and an Ongoing Systems Partnership at ${SITE_URL}/pricing. The focused build can end with launch support and handoff; the monthly partnership is for continued implementation and ownership across multiple live systems. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
+OfRoot publishes current starting prices for a focused Growth Systems Build and Ongoing Optimization at ${SITE_URL}/pricing. Discoverability and private company AI are scoped after the audit because source quality, access rules, content volume, and implementation complexity materially affect the work.
 
 ## Contact
-Request a Growth Systems Audit: ${SITE_URL}/book
+Discuss your project: ${SITE_URL}/book
 Email: communications@ofroot.technology`;
   return new Response(text, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
 }
