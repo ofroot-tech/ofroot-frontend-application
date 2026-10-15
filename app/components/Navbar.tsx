@@ -79,7 +79,16 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
   const active = group.links.some(link => isCurrentPath(pathname, link.href));
 
   return (
-    <details className="group relative">
+    <details
+      className="group relative"
+      onKeyDown={event => {
+        if (event.key !== 'Escape' || !event.currentTarget.open) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.currentTarget.open = false;
+        event.currentTarget.querySelector<HTMLElement>('summary')?.focus();
+      }}
+    >
       <summary
         className={`flex min-h-[40px] cursor-pointer list-none items-center gap-[6px] rounded-xl px-[12px] py-[8px] text-[14px] font-medium leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] [&::-webkit-details-marker]:hidden ${
           active
