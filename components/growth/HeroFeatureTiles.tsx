@@ -23,7 +23,9 @@ export default function HeroFeatureTiles({ children }: { children: ReactNode }) 
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={row} className={styles.heroTiles} data-entry={entry} onFocusCapture={() => setEntry('settled')}>
+  return <div ref={row} className={styles.heroTiles} data-entry={entry} onFocusCapture={event => {
+    if (event.target instanceof HTMLElement && event.target.matches(':focus-visible')) setEntry('settled');
+  }}>
     {children}
   </div>;
 }
