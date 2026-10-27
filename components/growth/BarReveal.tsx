@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import styles from './ApprovedHome.module.css';
 
-export default function HeroFeatureTiles({ children }: { children: ReactNode }) {
+export default function BarReveal({ children, className }: { children: ReactNode; className: string }) {
   const row = useRef<HTMLDivElement>(null);
   const [entry, setEntry] = useState('initial');
 
@@ -23,7 +22,7 @@ export default function HeroFeatureTiles({ children }: { children: ReactNode }) 
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={row} className={styles.heroTiles} data-entry={entry} onFocusCapture={event => {
+  return <div ref={row} className={className} data-entry={entry} onFocusCapture={event => {
     if (event.target instanceof HTMLElement && event.target.matches(':focus-visible')) setEntry('settled');
   }}>
     {children}
