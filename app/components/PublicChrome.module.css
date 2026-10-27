@@ -15,3 +15,5 @@
 @media(hover:hover) and (pointer:fine){.homeDesktop .homeCta:hover{background:#faf9fc;color:#17141f;border-color:#faf9fc;transform:none}.homeDesktop>a:hover{color:#fff}}
 @media(max-width:1100px){.homeNav{gap:20px}.homeDesktop{gap:16px}.homeDesktop summary,.homeDesktop>a{font-size:13px}.homeDesktop .homeCta{padding-inline:15px;gap:12px;font-size:12px}.footerLine{display:none}}
 @media(max-width:760px){.homeNav{height:75px}.homeDesktop{display:none}.homeToggle{display:inline-flex}.footerShell{gap:18px}.footerIdentity{width:100%;justify-content:space-between;gap:16px}.footerLine{display:block;width:100%;font-size:11px}.footerLinks{width:100%;gap:22px}.footerLinks a{font-size:10px}}
+/* Keep the wider approved wordmark and enquiry action clear on tablets. */
+@media(min-width:761px) and (max-width:900px){.homeDesktop{display:none}.homeToggle{display:inline-flex}}
