@@ -8,7 +8,7 @@ import Link from 'next/link';
 const columns = [
   { title: 'Services', links: [['Websites & Growth', '/services/ai-discoverability'], ['Integrations & Tools', '/services/automation-systems'], ['AI & Deployment', '/services/private-company-ai']] },
   { title: 'Solutions', links: [['Generate Demand', '/solutions/generate-demand'], ['Convert More Leads', '/solutions/convert-more-leads'], ['Unlock Company Knowledge', '/solutions/unlock-company-knowledge']] },
-  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Capabilities', '/results'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Book an Audit', '/book']] },
+  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Capabilities', '/results'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Discuss your project', '/book'], ['Pricing', '/pricing'], ['Security', '/security']] },
 ];
 
 export default function Footer() {
@@ -21,8 +21,8 @@ export default function Footer() {
     </div></footer>
   );
   return (
-    <footer className="border-t border-white/10 bg-[#17141f] px-6 py-14 text-white sm:px-8">
-      <div className="mx-auto max-w-6xl">
+    <footer className={`${styles.homeFooter} ${styles.publicFooter}`}>
+      <div className={styles.publicFooterShell}>
         <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
           <div>
             <SiteBrand />
@@ -32,7 +32,7 @@ export default function Footer() {
           <div className="grid gap-8 sm:grid-cols-3">
             {columns.map(column => (
               <div key={column.title}>
-                <h2 className="!text-xs font-bold uppercase tracking-[.15em] text-[#FFC46B]">{column.title}</h2>
+                <h2 className="!text-xs font-bold uppercase tracking-[.15em] text-[#c3afe1]">{column.title}</h2>
                 <ul className="mt-4 space-y-3">{column.links.map(([label, href]) => <li key={href}><Link href={href} className="text-sm text-slate-300 hover:text-white">{label}</Link></li>)}</ul>
               </div>
             ))}

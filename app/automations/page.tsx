@@ -1,3 +1,4 @@
+import publicStyles from '@/components/growth/PublicPage.module.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonLd from '@/components/seo/JsonLd';
@@ -116,15 +117,15 @@ export default function AutomationsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-gray-900`}>
       <JsonLd data={[breadcrumbs, service, faqs]} />
 
       <div className="mx-auto max-w-6xl px-6 py-20 space-y-10">
         <header className="space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900">
+          <div className="inline-flex items-center gap-2 rounded-[2px] border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900">
             Automations and integrations
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight">
             Automations that turn leads into booked meetings.
           </h1>
           <p className="text-lg sm:text-xl text-gray-700 max-w-3xl">
@@ -144,13 +145,13 @@ export default function AutomationsPage() {
             </Link>
             <Link
               href="/landing/social-comment-dm-automation"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               See the social automation landing
             </Link>
             <Link
               href="/hubspot-integration"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               HubSpot integrations
             </Link>
@@ -158,21 +159,21 @@ export default function AutomationsPage() {
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Make.com and Zapier builds</h2>
             <p className="text-sm text-gray-700">
               Automations for lead capture, routing, notifications, and reporting. Use the right tool,
               avoid brittle chains, and document ownership.
             </p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">HubSpot lead workflows</h2>
             <p className="text-sm text-gray-700">
               Properties, lifecycle stages, assignment rules, sequences, and meeting-booking handoffs that
               raise qualified-meeting rate.
             </p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Meta API and CAPI</h2>
             <p className="text-sm text-gray-700">
               Event pipelines, validation, dedupe, and monitoring so attribution stays accurate and
@@ -183,34 +184,34 @@ export default function AutomationsPage() {
 
         <HowWeWork />
 
-        <section className="rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-card space-y-4">
+        <section className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-8 shadow-card space-y-4">
           <h2 className="text-2xl font-bold">Related pages</h2>
           <p className="text-sm text-gray-700 max-w-3xl">
             Use these if you want to go deeper on implementation details, integrations, and pricing.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-            <Link href="/services/workflow-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/workflow-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               Workflow automation service
             </Link>
-            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               HubSpot + Meta integrations
             </Link>
-            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               HubSpot workflows and routing
             </Link>
-            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               Pricing
             </Link>
-            <Link href="/ai-process" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/ai-process" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               AI Process Audit
             </Link>
-            <Link href="/blog/find-expensive-manual-work-before-automating" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/blog/find-expensive-manual-work-before-automating" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
               Find what to automate first
             </Link>
           </div>
         </section>
 
-        <section className="rounded-2xl border border-gray-200 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-8 shadow-card space-y-4">
+        <section className="rounded-[2px] border border-gray-200 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-8 shadow-card space-y-4">
           <h2 className="text-2xl font-bold text-white tracking-tight">Common problems we fix</h2>
           <ul className="list-disc pl-5 space-y-2 text-sm text-gray-100">
             <li>Dropped, duplicated, or delayed leads across forms, Meta, and HubSpot.</li>
@@ -221,13 +222,13 @@ export default function AutomationsPage() {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Link
               href="/services/workflow-automation"
-              className="inline-flex items-center justify-center rounded-lg bg-white text-gray-900 px-5 py-3 font-semibold shadow-sm hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg bg-[#211c2c] text-gray-900 px-5 py-3 font-semibold shadow-sm hover:bg-gray-100 transition-colors"
             >
               Workflow automation
             </Link>
             <Link
               href="/services/hubspot-meta-integrations"
-              className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/5 px-5 py-3 font-semibold text-white hover:bg-white/10 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-[#211c2c]/5 px-5 py-3 font-semibold text-white hover:bg-[#211c2c]/10 transition-colors"
             >
               HubSpot + Meta integrations
             </Link>

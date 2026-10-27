@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import GrowthAuditForm from '@/components/growth/GrowthAuditForm';
 import { growthMetadata, SITE_URL } from '@/app/lib/growth-content';
+import publicStyles from '@/components/growth/PublicPage.module.css';
+import styles from '@/components/growth/GrowthAuditForm.module.css';
 
 export const metadata = growthMetadata('Discuss Your Project', 'Tell OfRoot about your website, integrations, internal tools, AI system, or reporting needs.', '/book');
 
@@ -13,26 +15,26 @@ export default function BookPage() {
   ];
 
   return (
-    <main id="main-content" className="bg-[#f7f6f2] px-6 py-16 text-slate-950 sm:px-8 sm:py-24">
+    <main id="main-content" className={publicStyles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <div className="mx-auto max-w-6xl">
-        <nav aria-label="Breadcrumb" className="mb-10 text-sm text-slate-500">
-          <Link href="/">Home</Link> <span aria-hidden="true">/</span> <span className="text-slate-950">Book</span>
+      <div className={`${publicStyles.shell} ${styles.bookingShell}`}>
+        <nav aria-label="Breadcrumb" className={`${publicStyles.breadcrumb} ${styles.bookingBreadcrumb}`}>
+          <Link href="/">Home</Link> <span aria-hidden="true">/</span> <span aria-current="page">Discuss your project</span>
         </nav>
-        <div className="grid gap-12 lg:grid-cols-[.75fr_1.25fr]">
+        <div className={styles.bookingLayout}>
           <div>
-            <p className="mb-4 text-sm font-bold uppercase tracking-[.18em] text-[#B55B00]">Start a conversation</p>
-            <h1 className="text-balance text-4xl font-black sm:text-6xl">What should work better?</h1>
-            <p className="mx-0 mt-6 text-lg text-slate-600">Tell us about your website, the tools your team uses, or an AI idea you want to make practical. We review your goal and recommend a useful next step.</p>
-            <div className="mt-8 rounded-2xl border border-[#FF9312]/30 bg-[#fff8ee] p-5">
-              <p className="mx-0 font-bold text-slate-950">This form starts a project conversation.</p>
-              <p className="mx-0 mt-2 text-sm text-slate-600">No payment is collected here. We review the context first, then reply by email with the most useful next step.</p>
+            <p className={publicStyles.eyebrow}>Start a conversation</p>
+            <h1 className={`${publicStyles.title} ${styles.bookingTitle}`}>What should work better?</h1>
+            <p className={`${publicStyles.description} ${styles.bookingDescription}`}>Tell us about your website, the tools your team uses, or an AI idea you want to make practical. We review your goal and recommend a useful next step.</p>
+            <div className={styles.nextStepNote}>
+              <p>This form starts a project conversation.</p>
+              <p>No payment is collected here. We review the context first, then reply by email with the most useful next step.</p>
             </div>
-            <ol className="mt-9 space-y-5 border-l-2 border-[#FF9312] pl-5">
+            <ol className={styles.nextSteps}>
               {steps.map(([title, body]) => (
                 <li key={title}>
-                  <h2 className="text-base font-bold">{title}</h2>
-                  <p className="mx-0 mt-1 text-sm text-slate-600">{body}</p>
+                  <h2>{title}</h2>
+                  <p>{body}</p>
                 </li>
               ))}
             </ol>

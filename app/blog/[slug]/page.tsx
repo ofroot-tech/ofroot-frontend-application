@@ -1,3 +1,4 @@
+import publicStyles from '@/components/growth/PublicPage.module.css';
 import { api } from '@/app/lib/api';
 import { SITE } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
@@ -111,7 +112,7 @@ export default async function BlogPostPage({ params, searchParams }: { params: R
   return (
     <>
       <JsonLd data={jsonLd as any} />
-      <main className="min-h-screen bg-white text-gray-900 pt-24 pb-20 px-4">
+      <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-gray-900 pt-24 pb-20 px-4`}>
         <article className="prose prose-lg max-w-3xl mx-auto">
           <h1 className="mb-2">{post.title}</h1>
           {(post.published_at || post.created_at) ? (

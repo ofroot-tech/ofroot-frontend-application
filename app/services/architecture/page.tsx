@@ -18,7 +18,7 @@ export default function ArchitecturePage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We define pragmatic, risk-aware architectures that support product velocity and long-term maintainability. Our work includes cloud strategy, domain modeling, data flows, and API/topology design.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We define pragmatic, risk-aware architectures that support product velocity and long-term maintainability. Our work includes cloud strategy, domain modeling, data flows, and API/topology design.</p>
       </section>
 
       <ServiceProof logos={['/images/logos/acme.svg']} quotes={[{ quote: 'Clear architecture removed costly rewrites and accelerated delivery by months.' }]} />

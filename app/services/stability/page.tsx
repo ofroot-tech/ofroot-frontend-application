@@ -18,7 +18,7 @@ export default function StabilityPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We improve monitoring, SLOs, testing coverage, and operational readiness so your product stays healthy under load.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We improve monitoring, SLOs, testing coverage, and operational readiness so your product stays healthy under load.</p>
       </section>
 
       <ServiceProof quotes={[{ quote: 'Improved SLOs and alerts significantly lowered our mean time to recovery.' }]} />
