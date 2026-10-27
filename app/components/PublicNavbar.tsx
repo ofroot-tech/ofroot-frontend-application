@@ -7,7 +7,7 @@
  * Dark theme matching the main navbar for visual consistency.
  */
 
-import Image from 'next/image';
+import SiteBrand from '@/components/brand/SiteBrand';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -79,18 +79,7 @@ export default function PublicNavbar() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <Link href="/" aria-label="OfRoot homepage" className="flex items-center gap-2">
-                <Image
-                  src="/ofroot-root-mark.svg"
-                  alt=""
-                  width={40}
-                  height={40}
-                  priority
-                  className="size-8"
-                  aria-hidden="true"
-                />
-                <span className="text-[20px] font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
-              </Link>
+              <SiteBrand />
             </div>
 
             {/* Desktop Nav Links */}
@@ -183,17 +172,7 @@ export default function PublicNavbar() {
         >
           {/* Drawer Header */}
           <div className="flex items-center justify-between px-6 h-16 border-b border-gray-800/50">
-            <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
-              <Image
-                src="/ofroot-root-mark.svg"
-                alt=""
-                width={40}
-                height={40}
-                className="size-7"
-                aria-hidden="true"
-              />
-              <span className="text-lg font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
-            </Link>
+            <SiteBrand onNavigate={closeMenu} />
             <button
               type="button"
               onClick={closeMenu}

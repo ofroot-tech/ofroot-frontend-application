@@ -1,6 +1,7 @@
 'use client';
 
-import Image from 'next/image';
+import SiteBrand from '@/components/brand/SiteBrand';
+import styles from './PublicChrome.module.css';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -55,25 +56,7 @@ function isCurrentPath(pathname: string, href: string) {
 }
 
 function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
-  return (
-    <Link
-      href="/"
-      onClick={onNavigate}
-      className="group inline-flex min-h-[44px] items-center rounded-xl pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]"
-      aria-label="OfRoot home"
-    >
-      <Image
-        src="/ofroot-root-mark.svg"
-        alt=""
-        width={40}
-        height={40}
-        priority
-        className="size-8 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none"
-        aria-hidden="true"
-      />
-      <span className="ml-2 text-[20px] font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
-    </Link>
-  );
+  return <SiteBrand onNavigate={onNavigate} />;
 }
 
 function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: string }) {
@@ -91,7 +74,7 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
       }}
     >
       <summary
-        className={`flex min-h-[40px] cursor-pointer list-none items-center gap-[6px] rounded-xl px-[12px] py-[8px] text-[14px] font-medium leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] [&::-webkit-details-marker]:hidden ${
+        className={`flex min-h-[40px] cursor-pointer list-none items-center gap-[6px] rounded-xl px-[12px] py-[8px] text-[14px] font-medium leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f] [&::-webkit-details-marker]:hidden ${
           active
             ? 'bg-white/[.09] text-white'
             : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
@@ -101,8 +84,8 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
         {group.label}
         <ChevronDown className="size-[14px] text-slate-500 transition-transform duration-200 group-open:rotate-180 group-open:text-slate-300 motion-reduce:transition-none" />
       </summary>
-      <div className="absolute left-1/2 top-[calc(100%+10px)] w-72 -translate-x-1/2 rounded-2xl border border-white/[.11] bg-[#091526] p-2 shadow-[0_20px_55px_rgba(2,6,23,.42)] supports-[backdrop-filter]:bg-[#091526]/92 supports-[backdrop-filter]:backdrop-blur-2xl">
-        <div className="px-3 pb-2 pt-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#5EEAD4]">
+      <div className="absolute left-1/2 top-[calc(100%+10px)] w-72 -translate-x-1/2 rounded-2xl border border-white/[.11] bg-[#262231] p-2 shadow-[0_20px_55px_rgba(2,6,23,.42)] supports-[backdrop-filter]:bg-[#262231]/92 supports-[backdrop-filter]:backdrop-blur-2xl">
+        <div className="px-3 pb-2 pt-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#c2a9e5]">
           {group.label}
         </div>
         {group.links.map(link => {
@@ -112,14 +95,14 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
               key={link.href}
               href={link.href}
               aria-current={current ? 'page' : undefined}
-              className={`group/link flex min-h-[44px] items-center justify-between rounded-xl !px-[12px] !py-[10px] !text-[14px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+              className={`group/link flex min-h-[44px] items-center justify-between rounded-xl !px-[12px] !py-[10px] !text-[14px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffb78f] ${
                 current
                   ? 'bg-white/[.09] text-white'
                   : 'text-slate-300 hover:bg-white/[.06] hover:text-white'
               }`}
             >
               {link.label}
-              <ArrowRight className="size-[14px] text-slate-600 transition-[color,transform] duration-200 group-hover/link:translate-x-0.5 group-hover/link:text-[#5EEAD4] motion-reduce:transform-none motion-reduce:transition-none" />
+              <ArrowRight className="size-[14px] text-slate-600 transition-[color,transform] duration-200 group-hover/link:translate-x-0.5 group-hover/link:text-[#c2a9e5] motion-reduce:transform-none motion-reduce:transition-none" />
             </Link>
           );
         })}
@@ -131,6 +114,12 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
 export default function Navbar() {
   const pathname = usePathname() || '/';
   const [open, setOpen] = useState(false);
+  const home = pathname === '/';
+  const desktopLinks = home ? [
+    { label: 'Our approach', href: '/#approach' },
+    { label: 'Examples', href: '/#examples' },
+    { label: 'Company', href: '/#contact' },
+  ] : links;
   const panel = useRef<HTMLDivElement>(null);
   const shouldRender = !pathname.startsWith('/landing') && !pathname.startsWith('/dashboard');
 
@@ -179,22 +168,22 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[9999] border-b border-white/[.08] bg-[#071225] text-white shadow-[0_1px_0_rgba(255,255,255,.025)]">
-        <div className="mx-auto flex h-[64px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+      <header className={`${styles.header} ${home ? styles.homeHeader : ''} sticky top-0 z-[9999] border-b border-white/[.08] text-white shadow-[0_1px_0_rgba(255,255,255,.025)]`}>
+        <div className={home ? `${styles.homeNav} flex items-center` : "mx-auto flex h-[64px] max-w-7xl items-center px-4 sm:px-6 lg:px-8"}>
           <BrandLink />
 
-          <nav className="ml-auto hidden items-center gap-[8px] lg:flex" aria-label="Primary navigation">
-            {groups.map(group => (
+          <nav className={`${home ? styles.homeDesktop : 'hidden gap-[8px] lg:flex'} ml-auto items-center`} aria-label="Primary navigation">
+            {(home ? groups.slice(0, 1) : groups).map(group => (
               <DesktopGroup key={group.label} group={group} pathname={pathname} />
             ))}
-            {links.map(link => {
+            {desktopLinks.map(link => {
               const current = isCurrentPath(pathname, link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   aria-current={current ? 'page' : undefined}
-                  className={`inline-flex min-h-[40px] items-center rounded-xl !px-[12px] !py-[8px] !text-[14px] font-medium !leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] ${
+                  className={`inline-flex min-h-[40px] items-center rounded-xl !px-[12px] !py-[8px] !text-[14px] font-medium !leading-none transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f] ${
                     current
                       ? 'bg-white/[.09] text-white'
                       : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
@@ -209,12 +198,12 @@ export default function Navbar() {
               onClick={() =>
                 track({ category: 'cta', action: 'audit_cta_clicked', label: 'nav', meta: { path: pathname } })
               }
-              className="group/audit ml-2 inline-flex min-h-[44px] items-center gap-[10px] whitespace-nowrap rounded-full bg-[#FF9312] !py-[6px] !pl-[16px] !pr-[8px] !text-[14px] font-semibold !leading-none text-slate-950 shadow-sm ring-1 ring-inset ring-white/25 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
+              className={`${home ? styles.homeCta : ''} group/audit ml-2 inline-flex min-h-[44px] items-center gap-[10px] whitespace-nowrap rounded-full bg-[#FF9312] !py-[6px] !pl-[16px] !pr-[8px] !text-[14px] font-semibold !leading-none text-slate-950 shadow-sm ring-1 ring-inset ring-white/25 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17141f] motion-reduce:transform-none motion-reduce:transition-none`}
             >
-              Book an audit
+              Discuss your project
               <span
                 aria-hidden="true"
-                className="inline-flex size-[24px] items-center justify-center rounded-full bg-slate-950/[.10] transition-colors duration-200 group-hover/audit:bg-slate-950/[.16] motion-reduce:transition-none"
+                className={home ? styles.homeCtaArrow : "inline-flex size-[24px] items-center justify-center rounded-full bg-slate-950/[.10] transition-colors duration-200 group-hover/audit:bg-slate-950/[.16] motion-reduce:transition-none"}
               >
                 <ArrowRight className="size-[14px] transition-transform duration-200 group-hover/audit:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
               </span>
@@ -224,7 +213,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 text-white transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] lg:hidden"
+            className={`${home ? styles.homeToggle : ''} ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 text-white transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f] lg:hidden`}
             aria-label="Open navigation"
             aria-expanded={open}
             aria-controls="mobile-navigation"
@@ -248,14 +237,14 @@ export default function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
-            className="absolute inset-y-3 right-3 flex w-[calc(100%_-_1.5rem)] max-w-[25rem] flex-col overflow-hidden rounded-3xl border border-white/[.11] bg-[#071225] p-4 text-white shadow-[-20px_0_70px_rgba(2,6,23,.45)] supports-[backdrop-filter]:bg-[#071225]/94 supports-[backdrop-filter]:backdrop-blur-2xl sm:p-5"
+            className={`${home ? styles.homePanel : ''} absolute inset-y-3 right-3 flex w-[calc(100%_-_1.5rem)] max-w-[25rem] flex-col overflow-hidden rounded-3xl border border-white/[.11] bg-[#17141f] p-4 text-white shadow-[-20px_0_70px_rgba(2,6,23,.45)] supports-[backdrop-filter]:bg-[#17141f]/94 supports-[backdrop-filter]:backdrop-blur-2xl sm:p-5`}
           >
             <div className="flex items-center justify-between border-b border-white/[.09] pb-4">
               <BrandLink onNavigate={close} />
               <button
                 type="button"
                 onClick={close}
-                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/[.12] bg-white/[.055] p-2 transition-colors hover:bg-white/[.11] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f]"
                 aria-label="Close navigation"
               >
                 <X className="h-5 w-5" />
@@ -265,7 +254,7 @@ export default function Navbar() {
             <nav className="mt-3 flex-1 overflow-y-auto pr-1" aria-label="Mobile navigation">
               {groups.map(group => (
                 <section key={group.label} className="border-b border-white/[.08] py-4">
-                  <div className="px-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#5EEAD4]">
+                  <div className="px-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#c2a9e5]">
                     {group.label}
                   </div>
                   <div className="mt-1.5">
@@ -277,7 +266,7 @@ export default function Navbar() {
                           href={link.href}
                           onClick={close}
                           aria-current={current ? 'page' : undefined}
-                          className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+                          className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffb78f] ${
                             current
                               ? 'bg-white/[.09] text-white'
                               : 'text-slate-200 hover:bg-white/[.06] hover:text-white'
@@ -301,7 +290,7 @@ export default function Navbar() {
                       href={link.href}
                       onClick={close}
                       aria-current={current ? 'page' : undefined}
-                      className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#37FFE0] ${
+                      className={`flex min-h-[44px] items-center justify-between rounded-xl !px-[8px] !py-[10px] !text-[15px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffb78f] ${
                         current
                           ? 'bg-white/[.09] text-white'
                           : 'text-slate-200 hover:bg-white/[.06] hover:text-white'
@@ -321,9 +310,9 @@ export default function Navbar() {
                 close();
                 track({ category: 'cta', action: 'audit_cta_clicked', label: 'mobile_nav', meta: { path: pathname } });
               }}
-              className="group/audit mt-3 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#FF9312] px-5 py-3 !text-[16px] font-bold !leading-none text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225] motion-reduce:transform-none motion-reduce:transition-none"
+              className={`${home ? styles.homeMobileCta : ''} group/audit mt-3 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#FF9312] px-5 py-3 !text-[16px] font-bold !leading-none text-slate-950 transition-[background-color,transform] duration-200 hover:-translate-y-px hover:bg-[#ffad42] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fff0d7] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17141f] motion-reduce:transform-none motion-reduce:transition-none`}
             >
-              Book a Growth Systems Audit
+              Discuss your project
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/audit:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
             </Link>
           </div>

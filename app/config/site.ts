@@ -4,7 +4,7 @@ export const SITE = {
   name: 'OfRoot',
   url: CANONICAL_SITE_URL,
   logo: {
-    url: `${CANONICAL_SITE_URL}/ofroot-root-mark.svg`,
+    url: `${CANONICAL_SITE_URL}/ofroot-monogram.svg`,
     width: 100,
     height: 100,
   },

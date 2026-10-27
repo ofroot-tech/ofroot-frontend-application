@@ -4,11 +4,11 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'OfRoot Technology',
     short_name: 'OfRoot',
-    description: 'AI growth systems for visibility, conversion, and operations.',
+    description: 'Software, automation, and practical AI for growing businesses.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#071225',
-    theme_color: '#071225',
-    icons: [{ src: '/ofroot-root-mark.svg', sizes: 'any', type: 'image/svg+xml' }],
+    background_color: '#17141f',
+    theme_color: '#17141f',
+    icons: [{ src: '/ofroot-monogram.svg', sizes: 'any', type: 'image/svg+xml' }],
   };
 }

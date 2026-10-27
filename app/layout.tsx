@@ -22,10 +22,10 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-YMTYCJ
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} · AI Growth Systems`,
+    default: `${SITE.name} · Software, Automation & Practical AI`,
     template: `%s · ${SITE.name}`,
   },
-  description: 'AI-powered growth and operations systems that help companies get discovered, convert demand, and operate faster.',
+  description: 'Software, automation, and practical AI that help growing businesses connect their tools and reduce manual work.',
   alternates: {
     canonical: '/',
   },
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} · AI Growth Systems`,
-    description: 'Turn visibility, automation, and company knowledge into growth.',
+    title: `${SITE.name} · Software, Automation & Practical AI`,
+    description: 'Less manual work. More time to grow.',
     images: [
       {
-        url: `${SITE.url}/og.jpg`,
+        url: `${SITE.url}/opengraph-image`,
         width: 1200,
         height: 630,
-        alt: `${SITE.name} — AI growth systems`,
+        alt: `${SITE.name} — Less manual work. More time to grow.`,
       },
     ],
   },
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@ofroot_tech',
     creator: '@ofroot_tech',
-    title: `${SITE.name} · AI Growth Systems`,
-    description: 'Turn visibility, automation, and company knowledge into growth.',
-    images: [`${SITE.url}/og.jpg`],
+    title: `${SITE.name} · Software, Automation & Practical AI`,
+    description: 'Less manual work. More time to grow.',
+    images: [`${SITE.url}/opengraph-image`],
   },
   robots: {
     index: true,
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/ofroot-root-mark.svg',
+    icon: '/ofroot-monogram.svg',
   },
 }
 
@@ -87,7 +87,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#FFFFFF" />
+        <meta name="theme-color" content="#17141f" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <a href="#main-content" className="skip-link">Skip to main content</a>

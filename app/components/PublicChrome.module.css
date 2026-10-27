@@ -1,0 +1,19 @@
+.header{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;background:#17141f}
+.homeHeader{position:relative;border-bottom:1px solid rgba(210,202,235,.16);box-shadow:none}
+.homeNav{max-width:1600px;height:89px;margin-inline:auto;padding-inline:clamp(24px,5.5vw,104px);gap:40px}
+.homeDesktop{display:flex;gap:30px;font-size:14px}
+.homeDesktop summary,.homeDesktop>a{min-height:44px;padding:0;border-radius:0;font-size:14px;line-height:1.5;font-weight:400;color:#d7d3df}
+.homeDesktop details>div{background:#262231;border-color:#51455f;border-radius:4px}
+.homeDesktop .homeCta{margin-left:10px;padding:14px 20px;border:1px solid #aaa0b9;border-radius:4px;gap:17px;font-size:13px;font-weight:600;color:#faf9fc;background:transparent;box-shadow:none;white-space:nowrap;min-height:48px}
+.homeCta .homeCtaArrow{display:flex;background:none;width:17px;height:17px;padding:0}
+.homeToggle{display:none}
+.homePanel{background:#241e30;border-color:#51455f;border-radius:4px}
+.homePanel .homeMobileCta{background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356);color:#faf9fc;border:1px solid #9b7f9e;border-radius:0;font-weight:600}
+.homeFooter{font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif;color:#faf9fc;background:#17141f;border-top:1px solid rgba(210,202,235,.16)}
+.footerShell{max-width:1600px;margin-inline:auto;padding:28px clamp(24px,5.5vw,104px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:30px}
+.footerIdentity{display:flex;align-items:center;gap:24px}.copyright{font-size:10px;line-height:1.5;white-space:nowrap;color:#a99eb7}.footerLine{font-size:11px;line-height:1.5;color:#b4a7c4}.footerLinks{display:flex;align-items:center;gap:24px;flex-wrap:wrap}.footerLinks a{min-height:44px;display:flex;align-items:center;font-size:11px;line-height:1.5;color:#c3b7d1;text-decoration:none}.footerLinks a:focus-visible{outline:2px solid #ffb78f;outline-offset:6px}
+@media(hover:hover) and (pointer:fine){.homeDesktop .homeCta:hover{background:#faf9fc;color:#17141f;border-color:#faf9fc;transform:none}.homeDesktop>a:hover{color:#fff}}
+@media(max-width:1100px){.homeNav{gap:20px}.homeDesktop{gap:16px}.homeDesktop summary,.homeDesktop>a{font-size:13px}.homeDesktop .homeCta{padding-inline:15px;gap:12px;font-size:12px}.footerLine{display:none}}
+@media(max-width:760px){.homeNav{height:75px}.homeDesktop{display:none}.homeToggle{display:inline-flex}.footerShell{gap:18px}.footerIdentity{width:100%;justify-content:space-between;gap:16px}.footerLine{display:block;width:100%;font-size:11px}.footerLinks{width:100%;gap:22px}.footerLinks a{font-size:10px}}
+/* Keep the wider approved wordmark and enquiry action clear on tablets. */
+@media(min-width:761px) and (max-width:900px){.homeDesktop{display:none}.homeToggle{display:inline-flex}}

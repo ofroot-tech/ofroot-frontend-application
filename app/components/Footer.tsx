@@ -1,4 +1,8 @@
-import Image from 'next/image';
+'use client';
+
+import { usePathname } from 'next/navigation';
+import SiteBrand from '@/components/brand/SiteBrand';
+import styles from './PublicChrome.module.css';
 import Link from 'next/link';
 
 const columns = [
@@ -8,16 +12,21 @@ const columns = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname === '/') return (
+    <footer className={styles.homeFooter}><div className={styles.footerShell}>
+      <div className={styles.footerIdentity}><SiteBrand compact /><span className={styles.copyright}>© {new Date().getFullYear()} OfRoot</span></div>
+      <span className={styles.footerLine}>Software, automation &amp; practical AI.</span>
+      <div className={styles.footerLinks}><Link href="/book?source=footer">Discuss your project</Link><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link></div>
+    </div></footer>
+  );
   return (
-    <footer className="border-t border-white/10 bg-[#050d1b] px-6 py-14 text-white sm:px-8">
+    <footer className="border-t border-white/10 bg-[#17141f] px-6 py-14 text-white sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
           <div>
-            <Link href="/" aria-label="OfRoot home" className="inline-flex items-center gap-3">
-              <Image src="/ofroot-root-mark.svg" alt="" width={40} height={40} className="size-9" aria-hidden="true" />
-              <span className="text-2xl font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
-            </Link>
-            <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">Marketing websites, connected internal tools, and practical AI systems. Founder-led design and engineering for the next stage of your business.</p>
+            <SiteBrand />
+            <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">Workflow automation, connected software, and practical AI. Hands-on design and engineering for growing businesses.</p>
             <a href="mailto:communications@ofroot.technology" className="mt-6 inline-block text-sm font-semibold text-slate-200 hover:text-white">communications@ofroot.technology</a>
           </div>
           <div className="grid gap-8 sm:grid-cols-3">

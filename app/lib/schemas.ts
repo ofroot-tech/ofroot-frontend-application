@@ -19,7 +19,7 @@ export function generateOrganizationSchema() {
     '@type': 'Organization',
     name: 'OfRoot',
     url: CANONICAL_SITE_URL,
-    logo: `${CANONICAL_SITE_URL}/ofroot-root-mark.svg`,
+    logo: `${CANONICAL_SITE_URL}/ofroot-monogram.svg`,
     description: 'Marketing websites and growth, integrations and internal tools, and AI systems and deployment.',
     sameAs: [
       'https://twitter.com/ofroot_tech',
