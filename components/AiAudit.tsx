@@ -78,7 +78,7 @@ export default function AiAudit() {
               </select>
               <button type="submit" className={`${button} mt-5 w-full`} disabled={busy}>{busy ? <LoaderCircle aria-hidden="true" size={18} className="animate-spin motion-reduce:animate-none" /> : <Search aria-hidden="true" size={18} />}{busy ? 'Checking your website…' : 'Scan My Website'}</button>
               <p id="audit-help" className="mt-4 text-xs leading-relaxed text-[#c0b5cc]">Your public domain is sent to <a href="https://ora.ai/docs" target="_blank" rel="noreferrer" className="underline">Ora</a> to run the scan. Provider reports may be public. Recent results may be reused.</p>
-              <div id="audit-error" role="alert">{error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800">{error} <Link className="underline" href="/book">Book an OfRoot review</Link></p>}</div>
+              <div id="audit-error" role="alert">{error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-200">{error} <Link className="underline" href="/book">Book an OfRoot review</Link></p>}</div>
               <p role="status" className="mt-2 text-sm text-[#c0b5cc]">{busy ? 'Usually ready within a minute. Keep this page open.' : ''}</p>
             </form>
           </div>
@@ -117,7 +117,7 @@ export default function AiAudit() {
 
         <details className="mt-8 rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c] p-5 sm:p-7"><summary className="cursor-pointer py-2 text-lg font-semibold">Explore every check and its evidence</summary><div className="mt-5 space-y-8">{report.layers.map(layer => <section key={layer.id}><h3 className="font-semibold">{layer.name} <span className="text-sm font-normal text-[#b4a3c5]">· full audit layer {layer.score}/{layer.maxScore}</span></h3><ul className="mt-3 divide-y divide-slate-100">{layer.checks.map(check => <li key={check.id} className="py-4"><div className="flex flex-wrap items-center justify-between gap-2"><h4 className="text-sm font-medium">{check.name}</h4><span className={`rounded-[2px] px-3 py-1 text-xs ${check.status === 'pass' ? 'bg-emerald-50 text-emerald-800' : check.status === 'fail' ? 'bg-orange-50 text-orange-900' : 'bg-[#30263d] text-[#c0b5cc]'}`}>{statusLabels[check.status]}</span></div><p className="mt-2 break-words text-sm text-[#c0b5cc]">{check.details || 'No additional evidence provided.'}</p></li>)}</ul></section>)}</div></details>
 
-        <div id="fix-plan" className="mt-12 grid gap-8 rounded-[2px] bg-[#E7EEF4] p-6 sm:p-10 lg:grid-cols-2">
+        <div id="fix-plan" className="mt-12 grid gap-8 rounded-[2px] bg-[#262231] p-6 sm:p-10 lg:grid-cols-2">
           <div><p className="font-mono text-xs uppercase tracking-widest text-[#c4abe3]">From findings to fixes</p><h3 className="mt-4 text-3xl font-semibold">You run the business.<br />We’ll handle the next step.</h3><p className="mt-4 text-[#c0b5cc]">Send OfRoot your report. We’ll review the findings and discuss an implementation plan for your site.</p><ul className="mt-6 space-y-3 text-sm">{['Review which recommendations matter', 'Scope and implement the agreed fixes', 'Rescan to verify the improvement'].map(text => <li key={text} className="flex gap-3"><Check size={18} aria-hidden="true" className="shrink-0 text-[#b4a0ef]" />{text}</li>)}</ul></div>
           {leadState === 'sent' ? <div role="status" className="self-center rounded-[2px] bg-[#211c2c] p-7"><Check aria-hidden="true" className="text-emerald-700" /><h4 className="mt-4 text-xl font-semibold">Your request is with OfRoot.</h4><p className="mt-3 text-[#c0b5cc]">We have your contact details and scan summary. Our team will follow up about your fix plan.</p></div> : <form onSubmit={requestPlan} className="rounded-[2px] bg-[#211c2c] p-6" aria-busy={leadState === 'sending'}>
             <label htmlFor="plan-name" className="text-sm font-medium">Your name</label><input ref={nameRef} id="plan-name" name="name" required autoComplete="name" maxLength={100} className={input} />
@@ -127,7 +127,7 @@ export default function AiAudit() {
             <label className="mt-4 flex items-start gap-3 text-xs leading-relaxed text-[#c0b5cc]"><input name="consent" type="checkbox" required className="mt-1 h-4 w-4 shrink-0" /><span>OfRoot may contact me about this report and implementation services. <Link href="/legal/privacy" className="underline">Privacy policy</Link></span></label>
             <button disabled={leadState === 'sending' || !token} className={`${button} mt-5 w-full`}>{leadState === 'sending' ? 'Sending your report…' : 'Get My Fix Plan'}</button>
             {!token && <p className="mt-3 text-sm text-[#c0b5cc]">Online requests are temporarily unavailable. <Link href="/book" className="underline">Book an OfRoot review</Link>.</p>}
-            <div role="alert">{leadError && <p className="mt-3 text-sm text-red-800">{leadError} <Link href="/book" className="underline">Book a review</Link></p>}</div>
+            <div role="alert">{leadError && <p className="mt-3 text-sm text-red-200">{leadError} <Link href="/book" className="underline">Book a review</Link></p>}</div>
           </form>}
         </div>
         <button disabled={busy} onClick={() => void scan()} className="mt-7 min-h-11 text-sm font-medium underline underline-offset-4">Run another check (recent results may be reused)</button>
