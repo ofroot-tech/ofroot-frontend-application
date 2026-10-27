@@ -47,9 +47,13 @@
 @media(prefers-reduced-motion:reduce){.primary,.secondary{transition:none}}
 .legacy h1{font-size:clamp(40px,5.2vw,78px);font-weight:560;line-height:1.08;letter-spacing:-.05em;text-wrap:balance}
 .legacy :where(h2,h3){font-weight:510;letter-spacing:-.035em;line-height:1.18}
-.legacy>section{padding-inline:var(--gutter)}
+.legacy>section:not(.hero){padding-inline:var(--gutter)}
 .legacy :where(input,select,textarea){font-family:inherit;color:#faf9fc;color-scheme:dark}
 .legacy select option{background:#211c2c;color:#faf9fc}
 .legacy :where(a,button)[class*="bg-[#574064]"]{background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356);border:1px solid #9b7f9e;border-radius:2px;min-height:48px;color:#faf9fc}
 .legal{min-height:70vh}
+.legacy :global(.prose) :where(p,ul,ol){margin-block:20px;line-height:1.8;color:#c9bed5}
+.legacy :global(.prose) :where(h2,h3){margin-block:36px 18px;color:#faf9fc}
+.legacy :global(.prose) a{color:#dfc7f1;text-decoration:underline}
+.legacy :global(.prose) :where(pre,blockquote){padding:22px;background:#17141f;border-left:1px solid #b4a0ef;overflow-x:auto}
 .serviceLayout{background:#17141f}.serviceLayout>div:not([class]){max-width:1392px;margin-inline:auto;padding:64px clamp(24px,5.5vw,104px);color:#faf9fc;font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif}

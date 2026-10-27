@@ -1,3 +1,6 @@
+jest.mock('@/components/growth/ApprovedHome.module.css', () => ({}));
+jest.mock('@/components/growth/PublicPage.module.css', () => ({}));
+
 import sitemap from '@/app/sitemap';
 import { CANONICAL_SITE_URL } from '@/app/config/site';
 import { growthMetadata } from '@/app/lib/growth-content';

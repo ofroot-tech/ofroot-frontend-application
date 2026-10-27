@@ -78,7 +78,7 @@ const futureCapabilities = [
 
 function FlowColumn({ eyebrow, title, items, emphasized = false }: { eyebrow: string; title: string; items: string[]; emphasized?: boolean }) {
   return (
-    <div className={`relative rounded-[2px] border p-5 sm:p-6 ${emphasized ? 'border-[#b4a0ef]/50 bg-[#111D31]' : 'border-white/15 bg-[#211c2c]/[0.04]'}`}>
+    <div className={`relative rounded-[2px] border p-5 sm:p-6 ${emphasized ? 'border-[#b4a0ef]/50 bg-[#262231]' : 'border-white/15 bg-[#211c2c]/[0.04]'}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">{eyebrow}</p>
       <h3 className="mt-2 text-xl font-bold text-white">{title}</h3>
       <ul className="mt-5 flex flex-wrap gap-2" aria-label={`${title} elements`}>
@@ -112,7 +112,7 @@ export default function IndustrialSystemsPage() {
       <header className="relative overflow-hidden bg-[#211c2c] px-6 pb-20 pt-24 text-white sm:px-8 sm:pb-24 sm:pt-28">
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div className="absolute -left-28 top-0 h-96 w-96 rounded-[2px] bg-[#574064]/18 blur-3xl" />
-          <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-[2px] bg-[#37FFE0]/8 blur-3xl" />
+          <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-[2px] bg-[#b4a0ef]/8 blur-3xl" />
           <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.5)_1px,transparent_1px)] [background-size:48px_48px]" />
         </div>
         <div className="relative mx-auto max-w-6xl">
@@ -140,7 +140,7 @@ export default function IndustrialSystemsPage() {
         <section className="px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="blind-spots-heading">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B65F00]">The operational gap</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">The operational gap</p>
               <h2 id="blind-spots-heading" className="mt-3 text-3xl font-medium sm:text-4xl">Physical operations still create digital blind spots.</h2>
             </div>
             <div className="space-y-5 text-base leading-relaxed text-[#c0b5cc] sm:text-lg">
@@ -152,7 +152,7 @@ export default function IndustrialSystemsPage() {
 
         <section id="capabilities" className="scroll-mt-24 bg-[#262231] px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="capabilities-heading">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B65F00]">Capabilities</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">Capabilities</p>
             <h2 id="capabilities-heading" className="mt-3 max-w-3xl text-3xl font-medium sm:text-4xl">A software layer between field activity and operational decisions.</h2>
             <p className="mt-4 max-w-3xl text-[#c0b5cc]">These are engineering capabilities, not claims that every pattern has been deployed in every environment.</p>
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -183,7 +183,7 @@ export default function IndustrialSystemsPage() {
         <section className="px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="case-study-heading">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B65F00]">Industrial Software Engineering</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">Industrial Software Engineering</p>
               <h2 id="case-study-heading" className="mt-3 text-3xl font-medium sm:text-4xl">Industrial Field Operations</h2>
               <p className="mt-5 text-base leading-relaxed text-[#c0b5cc]">Through a direct B2B consulting engagement, OfRoot contributed software engineering expertise to technology designed for complex industrial field environments.</p>
               <p className="mt-4 text-base leading-relaxed text-[#c0b5cc]">The work focused on connecting information captured in the physical environment with structured enterprise workflows.</p>
@@ -193,7 +193,7 @@ export default function IndustrialSystemsPage() {
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                 {caseStudyConcepts.map((concept) => (
                   <li key={concept} className="flex gap-3 text-sm leading-relaxed text-[#c9bed5]">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-[2px] bg-[#E07F00]" aria-hidden="true" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-[2px] bg-[#ffb78f]" aria-hidden="true" />
                     {concept}
                   </li>
                 ))}
@@ -206,13 +206,13 @@ export default function IndustrialSystemsPage() {
         <section className="bg-[#30263d] px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="oversight-heading">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B65F00]">Human oversight</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">Human oversight</p>
               <h2 id="oversight-heading" className="mt-3 text-3xl font-medium sm:text-4xl">AI should support operators, not silently replace judgment.</h2>
               <p className="mt-5 text-base leading-relaxed text-[#c9bed5] sm:text-lg">In operational environments, confidence, traceability, and human verification can matter more than fully autonomous behavior. Systems should make uncertainty visible and preserve an accountable path to confirmation.</p>
             </div>
             <ul className="grid gap-3 sm:grid-cols-2" aria-label="Human oversight principles">
               {['Auditability', 'Confidence thresholds', 'Operator confirmation', 'Review workflows', 'Traceable records'].map((item) => (
-                <li key={item} className="rounded-[2px] border border-[#E07F00]/20 bg-[#211c2c] p-4 text-sm font-semibold text-[#e0d8e9]">{item}</li>
+                <li key={item} className="rounded-[2px] border border-[#ffb78f]/20 bg-[#211c2c] p-4 text-sm font-semibold text-[#e0d8e9]">{item}</li>
               ))}
             </ul>
           </div>
@@ -220,7 +220,7 @@ export default function IndustrialSystemsPage() {
 
         <section className="px-6 py-16 sm:px-8 sm:py-20" aria-labelledby="future-heading">
           <div className="mx-auto max-w-6xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#B65F00]">Where this leads</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#c4abe3]">Where this leads</p>
             <h2 id="future-heading" className="mt-3 max-w-3xl text-3xl font-medium sm:text-4xl">A foundation for increasingly complex physical systems.</h2>
             <p className="mt-5 max-w-4xl text-base leading-relaxed text-[#c0b5cc] sm:text-lg">We are building toward a future where software can understand and coordinate increasingly complex physical environments. That includes cameras, sensors, spatial systems, autonomous inspection, drones, and robotics.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

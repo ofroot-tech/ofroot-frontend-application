@@ -117,7 +117,7 @@ export default function AutomationsPage() {
   };
 
   return (
-    <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-gray-900`}>
+    <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-[#faf9fc]`}>
       <JsonLd data={[breadcrumbs, service, faqs]} />
 
       <div className="mx-auto max-w-6xl px-6 py-20 space-y-10">
@@ -128,13 +128,13 @@ export default function AutomationsPage() {
           <h1 className="text-4xl sm:text-6xl font-medium tracking-tight">
             Automations that turn leads into booked meetings.
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 max-w-3xl">
+          <p className="text-lg sm:text-xl text-[#c9bed5] max-w-3xl">
             If your leads live across Meta, forms, comments, DMs, and HubSpot, you are
             bleeding conversion in the handoffs. We build reliable workflows that capture,
             qualify, sync, route, and book meetings.
           </p>
-          <p className="text-sm text-gray-600 max-w-3xl">
-            Common tooling: <strong className="font-semibold text-gray-800">Make.com</strong>, <strong className="font-semibold text-gray-800">Zapier</strong>, <strong className="font-semibold text-gray-800">HubSpot</strong>, and <strong className="font-semibold text-gray-800">Meta API</strong> (including <strong className="font-semibold text-gray-800">Conversions API</strong>).
+          <p className="text-sm text-[#c0b5cc] max-w-3xl">
+            Common tooling: <strong className="font-semibold text-[#e0d8e9]">Make.com</strong>, <strong className="font-semibold text-[#e0d8e9]">Zapier</strong>, <strong className="font-semibold text-[#e0d8e9]">HubSpot</strong>, and <strong className="font-semibold text-[#e0d8e9]">Meta API</strong> (including <strong className="font-semibold text-[#e0d8e9]">Conversions API</strong>).
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
@@ -145,13 +145,13 @@ export default function AutomationsPage() {
             </Link>
             <Link
               href="/landing/social-comment-dm-automation"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-[#faf9fc] font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               See the social automation landing
             </Link>
             <Link
               href="/hubspot-integration"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-5 py-3 text-[#faf9fc] font-semibold shadow-sm hover:bg-gray-50 transition-colors"
             >
               HubSpot integrations
             </Link>
@@ -161,21 +161,21 @@ export default function AutomationsPage() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Make.com and Zapier builds</h2>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-[#c9bed5]">
               Automations for lead capture, routing, notifications, and reporting. Use the right tool,
               avoid brittle chains, and document ownership.
             </p>
           </div>
           <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">HubSpot lead workflows</h2>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-[#c9bed5]">
               Properties, lifecycle stages, assignment rules, sequences, and meeting-booking handoffs that
               raise qualified-meeting rate.
             </p>
           </div>
           <div className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Meta API and CAPI</h2>
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-[#c9bed5]">
               Event pipelines, validation, dedupe, and monitoring so attribution stays accurate and
               lead sync does not silently fail.
             </p>
@@ -186,26 +186,26 @@ export default function AutomationsPage() {
 
         <section className="rounded-[2px] border border-gray-200 bg-[#211c2c]/90 p-8 shadow-card space-y-4">
           <h2 className="text-2xl font-bold">Related pages</h2>
-          <p className="text-sm text-gray-700 max-w-3xl">
+          <p className="text-sm text-[#c9bed5] max-w-3xl">
             Use these if you want to go deeper on implementation details, integrations, and pricing.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-            <Link href="/services/workflow-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/workflow-automation" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               Workflow automation service
             </Link>
-            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               HubSpot + Meta integrations
             </Link>
-            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/services/hubspot-meta-integrations" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               HubSpot workflows and routing
             </Link>
-            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               Pricing
             </Link>
-            <Link href="/ai-process" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/ai-process" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               AI Process Audit
             </Link>
-            <Link href="/blog/find-expensive-manual-work-before-automating" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+            <Link href="/blog/find-expensive-manual-work-before-automating" className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-[#211c2c] px-4 py-2 text-sm font-semibold text-[#faf9fc] hover:bg-gray-50 transition-colors">
               Find what to automate first
             </Link>
           </div>
@@ -222,7 +222,7 @@ export default function AutomationsPage() {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Link
               href="/services/workflow-automation"
-              className="inline-flex items-center justify-center rounded-lg bg-[#211c2c] text-gray-900 px-5 py-3 font-semibold shadow-sm hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg bg-[#211c2c] text-[#faf9fc] px-5 py-3 font-semibold shadow-sm hover:bg-gray-100 transition-colors"
             >
               Workflow automation
             </Link>

@@ -1,3 +1,4 @@
+import publicStyles from '@/components/growth/PublicPage.module.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonLd from '@/components/seo/JsonLd';
@@ -81,31 +82,31 @@ export default function GpuLlmTrainingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-[#faf9fc]`}>
       <JsonLd data={[breadcrumbs, service, faqs]} />
 
       <div className="mx-auto max-w-6xl px-6 py-20 space-y-12">
         <header className="space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-semibold text-gray-900">
+          <div className="inline-flex items-center gap-2 rounded-[2px] border border-[#d2caeb]/16 bg-[#262231] px-3 py-1 text-xs font-semibold text-[#faf9fc]">
             GPU compute + training reliability
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight">
             GPU rental and custom LLM training support.
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 max-w-3xl">
+          <p className="text-lg sm:text-xl text-[#c9bed5] max-w-3xl">
             Training fails for predictable reasons: dirty datasets, leaky splits, brittle pipelines, and long runs with no recovery plan.
             We provide GPU capacity and the engineering layer that makes training repeatable and safe.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/consulting/book"
-              className="inline-flex items-center justify-center rounded-lg bg-[#0f766e] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#115e59] transition-colors"
+              className="inline-flex items-center justify-center rounded-lg bg-[#574064] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#6d4c70] transition-colors"
             >
               Book a GPU training call
             </Link>
             <Link
               href="/landing/gpu-llm-training"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-[#d2caeb]/16 bg-[#211c2c] px-5 py-3 text-[#faf9fc] font-semibold shadow-sm hover:bg-[#262231] transition-colors"
             >
               View the short landing
             </Link>
@@ -113,23 +114,23 @@ export default function GpuLlmTrainingPage() {
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">GPU capacity</h2>
-            <p className="text-sm text-gray-700">Provision compute so training is not blocked by hardware availability.</p>
+            <p className="text-sm text-[#c9bed5]">Provision compute so training is not blocked by hardware availability.</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Data cleaning</h2>
-            <p className="text-sm text-gray-700">Deduplication, normalization, QA, and leakage checks to protect model quality.</p>
+            <p className="text-sm text-[#c9bed5]">Deduplication, normalization, QA, and leakage checks to protect model quality.</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Run reliability</h2>
-            <p className="text-sm text-gray-700">Monitoring, checkpoints, and failure recovery so long runs do not end in surprises.</p>
+            <p className="text-sm text-[#c9bed5]">Monitoring, checkpoints, and failure recovery so long runs do not end in surprises.</p>
           </div>
         </section>
 
         <HowWeWork />
 
-        <section className="rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-card space-y-3">
+        <section className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-8 shadow-card space-y-3">
           <h2 className="text-2xl font-bold">Related</h2>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <Link href="/agent-integrations" className="underline font-semibold">Agent integrations</Link>
