@@ -1,3 +1,4 @@
+import publicStyles from '@/components/growth/PublicPage.module.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonLd from '@/components/seo/JsonLd';
@@ -80,30 +81,30 @@ export default function MetaConversionsApiPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-[#faf9fc]`}>
       <JsonLd data={[breadcrumbs, service, faqs]} />
 
       <div className="mx-auto max-w-6xl px-6 py-20 space-y-12">
         <header className="space-y-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-900">
+          <div className="inline-flex items-center gap-2 rounded-[2px] border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-900">
             Meta CAPI integration
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
+          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight">
             Meta Conversions API that matches reality.
           </h1>
-          <p className="text-lg sm:text-xl text-gray-700 max-w-3xl">
+          <p className="text-lg sm:text-xl text-[#c9bed5] max-w-3xl">
             We implement Meta CAPI with validation, dedupe, and monitoring so you can trust attribution and the workflows that depend on it.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/consulting/book"
-              className="inline-flex items-center justify-center rounded-lg bg-[#0f766e] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#115e59] transition-colors"
+              className="inline-flex items-center justify-center rounded-lg bg-[#574064] px-5 py-3 text-white font-semibold shadow-sm hover:bg-[#6d4c70] transition-colors"
             >
               Book a Meta CAPI call
             </Link>
             <Link
               href="/services/hubspot-meta-integrations"
-              className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-[#d2caeb]/16 bg-[#211c2c] px-5 py-3 text-[#faf9fc] font-semibold shadow-sm hover:bg-[#262231] transition-colors"
             >
               HubSpot + Meta integrations
             </Link>
@@ -111,23 +112,23 @@ export default function MetaConversionsApiPage() {
         </header>
 
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Event quality</h2>
-            <p className="text-sm text-gray-700">Validation, required fields, and consistent mapping so you are not optimizing on bad data.</p>
+            <p className="text-sm text-[#c9bed5]">Validation, required fields, and consistent mapping so you are not optimizing on bad data.</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Dedupe and retries</h2>
-            <p className="text-sm text-gray-700">Prevent duplicate conversions and recover from transient API failures.</p>
+            <p className="text-sm text-[#c9bed5]">Prevent duplicate conversions and recover from transient API failures.</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-card space-y-2">
+          <div className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-6 shadow-card space-y-2">
             <h2 className="text-lg font-semibold">Monitoring</h2>
-            <p className="text-sm text-gray-700">Dashboards and alerts so silent failures get caught before spend is wasted.</p>
+            <p className="text-sm text-[#c9bed5]">Dashboards and alerts so silent failures get caught before spend is wasted.</p>
           </div>
         </section>
 
         <HowWeWork />
 
-        <section className="rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-card space-y-3">
+        <section className="rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c]/90 p-8 shadow-card space-y-3">
           <h2 className="text-2xl font-bold">Related</h2>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <Link href="/automations" className="underline font-semibold">Automations overview</Link>

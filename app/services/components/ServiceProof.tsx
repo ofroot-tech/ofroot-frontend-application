@@ -12,7 +12,7 @@ export default function ServiceProof({ logos = [], quotes = [] }: Props) {
     <section className="mt-10 reveal-in fade-only section-pad">
       {(logos.length > 0) && (
         <div className="mb-6">
-          <div className="text-xs uppercase tracking-wider text-gray-500 mb-2">Trusted by</div>
+          <div className="text-xs uppercase tracking-wider text-[#b4a3c5] mb-2">Trusted by</div>
           <div className="flex flex-wrap items-center gap-4 opacity-80">
             {logos.map((src) => {
               // Convert image path or slug into a human-friendly label
@@ -20,7 +20,7 @@ export default function ServiceProof({ logos = [], quotes = [] }: Props) {
               const name = raw.replace(/\.(svg|png|jpg|jpeg)$/i, '').replace(/[-_]/g, ' ');
               const label = name.replace(/\b\w/g, (c) => c.toUpperCase());
               return (
-                <div key={src} className="text-sm text-gray-700">{label}</div>
+                <div key={src} className="text-sm text-[#c9bed5]">{label}</div>
               );
             })}
           </div>
@@ -29,10 +29,10 @@ export default function ServiceProof({ logos = [], quotes = [] }: Props) {
       {(quotes.length > 0) && (
   <div className="grid grid-cols-1 md:grid-cols-2 grid-gap-modern">
           {quotes.map((q) => (
-            <figure key={q.quote} className="rounded-xl border p-4 bg-white/80 backdrop-blur shadow-sm">
-              <blockquote className="text-gray-800">“{q.quote}”</blockquote>
+            <figure key={q.quote} className="rounded-[2px] border p-4 bg-[#211c2c] backdrop-blur ">
+              <blockquote className="text-[#e0d8e9]">“{q.quote}”</blockquote>
               {(q.author || q.role) && (
-                <figcaption className="mt-2 text-sm text-gray-600">{q.author}{q.role ? `, ${q.role}` : ''}</figcaption>
+                <figcaption className="mt-2 text-sm text-[#c0b5cc]">{q.author}{q.role ? `, ${q.role}` : ''}</figcaption>
               )}
             </figure>
           ))}

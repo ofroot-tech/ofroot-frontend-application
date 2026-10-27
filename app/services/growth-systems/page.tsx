@@ -18,7 +18,7 @@ export default function GrowthSystemsPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We focus on experiments, activation flows, and instrumentation that tie acquisition to retention and value.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We focus on experiments, activation flows, and instrumentation that tie acquisition to retention and value.</p>
       </section>
 
       <ServiceProof quotes={[{ quote: 'Our experiments brought a clear lift in activation and MRR.' }]} />

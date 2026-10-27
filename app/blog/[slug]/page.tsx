@@ -1,3 +1,4 @@
+import publicStyles from '@/components/growth/PublicPage.module.css';
 import { api } from '@/app/lib/api';
 import { SITE } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
@@ -111,13 +112,13 @@ export default async function BlogPostPage({ params, searchParams }: { params: R
   return (
     <>
       <JsonLd data={jsonLd as any} />
-      <main className="min-h-screen bg-white text-gray-900 pt-24 pb-20 px-4">
+      <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-[#faf9fc] pt-24 pb-20 px-4`}>
         <article className="prose prose-lg max-w-3xl mx-auto">
           <h1 className="mb-2">{post.title}</h1>
           {(post.published_at || post.created_at) ? (
-            <div className="text-gray-500 text-sm mb-6">{formatDate(post.published_at || post.created_at)}</div>
+            <div className="text-[#b4a3c5] text-sm mb-6">{formatDate(post.published_at || post.created_at)}</div>
           ) : null}
-          {post.excerpt ? <p className="text-gray-700 italic">{post.excerpt}</p> : null}
+          {post.excerpt ? <p className="text-[#c9bed5] italic">{post.excerpt}</p> : null}
           <div className="mt-6" dangerouslySetInnerHTML={{ __html: html }} />
         </article>
       </main>

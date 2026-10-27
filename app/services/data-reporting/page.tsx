@@ -18,7 +18,7 @@ export default function DataReportingPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We build tracking plans, dashboards, and reporting to help stakeholders make faster, data-driven decisions.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We build tracking plans, dashboards, and reporting to help stakeholders make faster, data-driven decisions.</p>
       </section>
 
       <ServiceProof quotes={[{ quote: 'We finally got trusted analytics across product and marketing.' }]} />

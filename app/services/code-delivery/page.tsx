@@ -18,7 +18,7 @@ export default function CodeDeliveryPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We optimize team processes, branching strategies, pull request workflows, and environment management so your team ships confidently.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We optimize team processes, branching strategies, pull request workflows, and environment management so your team ships confidently.</p>
       </section>
 
       <ServiceProof quotes={[{ quote: 'Delivery improvements led to a 2x increase in release frequency.' }]} />

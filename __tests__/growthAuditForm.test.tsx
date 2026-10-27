@@ -4,6 +4,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import GrowthAuditForm from '@/components/growth/GrowthAuditForm';
 import { track } from '@/app/lib/ab';
 
+jest.mock('@/components/growth/GrowthAuditForm.module.css', () => ({}));
+
 jest.mock('@/app/lib/ab', () => ({ track: jest.fn() }));
 
 describe('project inquiry form (all requests mocked)', () => {
