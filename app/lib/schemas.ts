@@ -20,7 +20,7 @@ export function generateOrganizationSchema() {
     name: 'OfRoot',
     url: CANONICAL_SITE_URL,
     logo: `${CANONICAL_SITE_URL}/ofroot-root-mark.svg`,
-    description: 'AI-powered growth and operations systems for visibility, conversion, and company knowledge.',
+    description: 'Marketing websites and growth, integrations and internal tools, and AI systems and deployment.',
     sameAs: [
       'https://twitter.com/ofroot_tech',
       'https://www.linkedin.com/company/106671711',
@@ -137,8 +137,7 @@ export function generateServiceSchema() {
     url: `${CANONICAL_SITE_URL}/consulting`,
     areaServed: 'US',
     availableLanguage: ['en'],
-    telephone: '+1-XXX-XXX-XXXX',
-    email: 'hello@ofroot.technology',
+    email: 'communications@ofroot.technology',
     serviceType: [
       'Architecture Consulting',
       'Engineering Automation',

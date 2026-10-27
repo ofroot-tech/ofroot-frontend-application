@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const columns = [
-  { title: 'Services', links: [['AI Discoverability', '/services/ai-discoverability'], ['Automation Systems', '/services/automation-systems'], ['Private Company AI', '/services/private-company-ai']] },
+  { title: 'Services', links: [['Websites & Growth', '/services/ai-discoverability'], ['Integrations & Tools', '/services/automation-systems'], ['AI & Deployment', '/services/private-company-ai']] },
   { title: 'Solutions', links: [['Generate Demand', '/solutions/generate-demand'], ['Convert More Leads', '/solutions/convert-more-leads'], ['Unlock Company Knowledge', '/solutions/unlock-company-knowledge']] },
-  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Results', '/results'], ['News', '/news'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Book an Audit', '/book']] },
+  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Capabilities', '/results'], ['News', '/news'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Book an Audit', '/book']] },
 ];
 
 export default function Footer() {
@@ -17,7 +17,7 @@ export default function Footer() {
               <Image src="/ofroot-root-mark.svg" alt="" width={40} height={40} className="size-9" aria-hidden="true" />
               <span className="text-2xl font-semibold tracking-tight text-white">Of<span className="text-[#5E83FF]">Root</span></span>
             </Link>
-            <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">AI-powered growth and operations systems for companies that need more visibility, faster execution, and less manual work.</p>
+            <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">Marketing websites, connected internal tools, and practical AI systems. Founder-led design and engineering for the next stage of your business.</p>
             <a href="mailto:communications@ofroot.technology" className="mt-6 inline-block text-sm font-semibold text-slate-200 hover:text-white">communications@ofroot.technology</a>
           </div>
           <div className="grid gap-8 sm:grid-cols-3">
