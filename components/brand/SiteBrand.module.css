@@ -1,0 +1,11 @@
+.brand{display:inline-flex;align-items:center;gap:13px;min-height:44px;flex-shrink:0;text-decoration:none;font-family:var(--font-geist-sans),Arial,Helvetica,sans-serif}
+.mark{display:flex;align-items:center;justify-content:center;width:43px;height:43px;flex-shrink:0;border:1px solid #625c68;background:#050505;color:#fff;font-size:17px;font-weight:800;letter-spacing:-.7px;line-height:1;padding-right:1px}
+.name{display:flex;flex-direction:column;gap:6px}
+.wordmark{color:#faf9fc;font-size:25px;font-weight:620;letter-spacing:.02em;line-height:1}
+.descriptor{color:#bcb2c9;font-family:var(--font-geist-mono),monospace;font-size:7px;letter-spacing:.24em;line-height:1}
+.brand:focus-visible{outline:2px solid #ffb78f;outline-offset:6px}
+.compact .mark{width:39px;height:39px;font-size:15px}
+.compact .wordmark{font-size:21px}
+.compact .descriptor{font-size:6px}
+@media(max-width:1100px){.mark{width:40px;height:40px;font-size:16px}.wordmark{font-size:23px}.brand{gap:11px}}
+@media(max-width:760px){.mark{width:37px;height:37px;font-size:15px;letter-spacing:-.6px}.wordmark{font-size:23px}.descriptor{font-size:6px;letter-spacing:.22em}.name{gap:5px}}

@@ -2,8 +2,11 @@
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import Navbar from '@/app/components/Navbar';
+import { usePathname } from 'next/navigation';
 
-jest.mock('next/navigation', () => ({ usePathname: () => '/' }));
+jest.mock('next/navigation', () => ({ usePathname: jest.fn(() => '/services') }));
+jest.mock('@/app/components/PublicChrome.module.css', () => ({}));
+jest.mock('@/components/brand/SiteBrand.module.css', () => ({}));
 jest.mock('@/app/lib/ab', () => ({ track: jest.fn() }));
 
 describe('navigation keyboard dismissal', () => {
@@ -11,6 +14,7 @@ describe('navigation keyboard dismissal', () => {
   let root: Root;
 
   beforeEach(() => {
+    jest.mocked(usePathname).mockReturnValue('/services');
     (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -76,6 +80,17 @@ describe('navigation keyboard dismissal', () => {
     const escape = press(summary, 'Escape');
     expect(details.open).toBe(false);
     expect(escape.defaultPrevented).toBe(false);
+  });
+
+  it('preserves homepage service disclosure dismissal after the navigation changes', () => {
+    jest.mocked(usePathname).mockReturnValue('/');
+    act(() => root.render(<Navbar />));
+    const { summary, details, link } = desktopGroup();
+    details.open = true;
+    link.focus();
+    press(link, 'Escape');
+    expect(details.open).toBe(false);
+    expect(document.activeElement).toBe(summary);
   });
 
   it('preserves mobile Escape dismissal and return focus', () => {
