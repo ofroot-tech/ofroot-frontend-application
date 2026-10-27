@@ -29,6 +29,16 @@ This keeps the default `.next` output untouched. It cannot repair offline depend
 
 The release targets Vercel team `ofroot-techs-projects`, project `main-website` (`prj_vYX0oIVtZqkm3iZKyeXgHmgNWaAp`), which owns `www.ofroot.technology`. Do not deploy this source to the unused similarly named `ofroot-frontend-application` Vercel project. Release source and review are in [PR #57](https://github.com/ofroot-tech/ofroot-frontend-application/pull/57).
 
+Neon Free database `ofroot-signal-news` is provisioned and connected to `main-website` for Production and Preview with the `NEWS` prefix and Secret settings. The connection provides `NEWS_DATABASE_URL` and `NEWS_DATABASE_URL_UNPOOLED`; connection values stay in Vercel environment settings. Resource metadata:
+
+| Resource | Identifier |
+| --- | --- |
+| Neon project | `lingering-morning-05872742` |
+| Vercel store | `store_ZLqUGxkLc423xhkD` |
+| Vercel integration configuration | `icfg_zoDI9ZpZsuw3YG3ifB934NgF` |
+
+The dedicated news connection leaves existing application authentication and its database configuration unchanged. Refresh authentication continues to use the existing `CRON_SECRET` bearer check.
+
 Configure server-only environment variables in the intended deployment environment:
 
 | Variable | Purpose |
@@ -61,4 +71,4 @@ The component was visually inspected at desktop and 390px mobile widths with no 
 
 The production build passes with 190 static pages. Nine focused suites (52 tests) and the persistence/lease harness pass after updating Next.js, Sharp, Sentry, Auth.js packages, Axios, and DOMPurify. Production dependency auditing reports zero critical findings; 14 high findings remain, including Zod/Prisma-related dependency chains whose fixes require separate major-version migrations. Two remaining full-audit critical findings are development-only build/test chains.
 
-A Vercel preview deployment is available and returns HTTP 200. At this verification stage its news response reports configured persistence unavailable, correctly displaying no fabricated stories. Dedicated Neon provisioning is waiting for the account owner to accept the provider terms. Production promotion, database-backed refresh verification, and scheduled-run verification remain pending until that setup completes.
+A Vercel preview deployment is available and returns HTTP 200. The account owner accepted the provider terms, and dedicated Neon provisioning and the Production/Preview environment connections are complete. Release verification remains pending: deploy with the new connection, confirm schema initialization and a successful database-backed refresh, promote production, and verify manual and scheduled workflow runs. Database provisioning alone does not establish that production ingestion is working.
