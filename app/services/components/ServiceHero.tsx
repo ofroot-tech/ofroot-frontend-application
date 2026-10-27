@@ -8,12 +8,12 @@ export default function ServiceHero({ title, subtitle, ctaHref, ctaLabel, second
   const secondaryHref = secondaryCtaHref || SALES_URL;
   return (
     <header className="mb-8 md:mb-12 reveal-in fade-only section-pad">
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900">{title}</h1>
-      <p className="mt-3 text-lg text-gray-700 max-w-3xl">{subtitle}</p>
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#faf9fc]">{title}</h1>
+      <p className="mt-3 text-lg text-[#c9bed5] max-w-3xl">{subtitle}</p>
       <div className="mt-6 flex items-center gap-3 flex-wrap">
         <a
           href={ctaHref}
-          className="inline-flex items-center bg-black text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-full"
+          className="inline-flex items-center bg-[#574064] text-white hover:bg-gray-900 font-semibold py-3 px-6 rounded-[2px]"
           onClick={() => {
             try {
               if (analyticsServiceId) {
@@ -37,7 +37,7 @@ export default function ServiceHero({ title, subtitle, ctaHref, ctaLabel, second
             href={secondaryHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center underline text-gray-800 hover:text-black font-semibold py-3 px-2"
+            className="inline-flex items-center underline text-[#e0d8e9] hover:text-white font-semibold py-3 px-2"
             onClick={() => {
               try { if (analyticsServiceId) track({ category: 'cta', action: 'service_cta_click', label: `secondary:${analyticsServiceId}` }); } catch {}
             }}

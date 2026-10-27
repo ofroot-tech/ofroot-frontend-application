@@ -60,13 +60,13 @@ export default function IntegrationPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We map field-level requirements, implement API sync logic, and harden data flows with retries and monitoring so lead and meeting pipelines stay accurate.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We map field-level requirements, implement API sync logic, and harden data flows with retries and monitoring so lead and meeting pipelines stay accurate.</p>
       </section>
 
       <section className="mt-6 reveal-in">
-        <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+        <div className="rounded-[2px] border p-6 bg-[#211c2c] backdrop-blur ">
           <h2 className="text-xl font-semibold mb-2">Where this fits</h2>
-          <p className="text-gray-700 text-sm max-w-3xl">
+          <p className="text-[#c9bed5] text-sm max-w-3xl">
             If you need a broad automation plan first, start at <Link href="/automations" className="underline font-semibold">Automations</Link>. If your focus is HubSpot routing and follow-ups, see <Link href="/services/marketing-automation" className="underline font-semibold">HubSpot Marketing Integrations</Link>.
           </p>
         </div>

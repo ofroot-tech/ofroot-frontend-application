@@ -6,7 +6,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import Toaster from "@/components/Toaster";
 import RevealObserver from "@/app/components/RevealObserver";
 import Footer from "@/app/components/Footer";
-import ExitIntentPrompt from "@/components/ExitIntentPrompt";
 // import ChatWidget from "@/components/ChatWidget"; // Temporarily disabled
 import { SITE } from './config/site';
 import AlphaTextReveal from "@/components/AlphaTextReveal";
@@ -93,7 +92,6 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <AuthProvider>
           <Toaster />
-          <ExitIntentPrompt />
       <AlphaTextReveal />
           {/* Render Navbar at the top-level (outside overflow/transform wrappers)
               so it stays fixed relative to the viewport and above effects */}

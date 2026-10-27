@@ -94,13 +94,13 @@ export default function AutomationPage() {
       />
 
       <section className="mt-6 reveal-in">
-        <p className="text-gray-700 max-w-3xl">We automate lead routing, follow-up triggers, scheduler handoffs, and reporting tasks so revenue teams focus on conversations instead of data cleanup.</p>
+        <p className="text-[#c9bed5] max-w-3xl">We automate lead routing, follow-up triggers, scheduler handoffs, and reporting tasks so revenue teams focus on conversations instead of data cleanup.</p>
       </section>
 
       <section className="mt-6 reveal-in">
-        <div className="rounded-xl border p-6 bg-white/80 backdrop-blur shadow-sm">
+        <div className="rounded-[2px] border p-6 bg-[#211c2c] backdrop-blur ">
           <h2 className="text-xl font-semibold mb-2">Related</h2>
-          <p className="text-gray-700 text-sm max-w-3xl">
+          <p className="text-[#c9bed5] text-sm max-w-3xl">
             Start with <Link href="/automations" className="underline font-semibold">Automations</Link> for an overview, then go deeper on <Link href="/services/integration" className="underline font-semibold">HubSpot + Meta integrations</Link> or the <Link href="/landing/social-comment-dm-automation" className="underline font-semibold">social comment and DM workflow</Link>.
           </p>
         </div>

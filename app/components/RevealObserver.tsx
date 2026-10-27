@@ -15,7 +15,7 @@ export default function RevealObserver() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const elements = Array.from(document.querySelectorAll<HTMLElement>('.reveal-in, .motion-reveal'));
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('.reveal-in, .motion-reveal, [data-motion-text="view"]'));
     const reveal = (element: HTMLElement) => element.classList.add('in-view');
 
     if (!elements.length) {

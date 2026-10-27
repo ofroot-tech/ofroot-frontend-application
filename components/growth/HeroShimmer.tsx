@@ -5,9 +5,10 @@ import { Pause, Play } from 'lucide-react';
 import styles from './ApprovedHome.module.css';
 
 type Point = { x: number; y: number; nx: number; ny: number; noise: number };
+type Props = { children: ReactNode; headingId?: string; className?: string; as?: 'section' | 'footer'; label?: string };
 
 /** One canvas loop; React state changes only for the accessible motion control. */
-export default function HeroShimmer({ children }: { children: ReactNode }) {
+export default function HeroShimmer({ children, headingId = 'home-hero-heading', className = '', as: Container = 'section', label }: Props) {
   const section = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const toggle = useRef<(() => void) | null>(null);
@@ -173,13 +174,13 @@ export default function HeroShimmer({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <section ref={section} className={styles.hero} aria-labelledby="home-hero-heading">
+    <Container ref={section} className={`${styles.hero} ${className}`} aria-labelledby={label ? undefined : headingId} aria-label={label}>
       <canvas ref={canvas} className={styles.field} aria-hidden="true" />
       {children}
       {available && <button type="button" className={styles.motionControl} onClick={() => toggle.current?.()} disabled={reduced} aria-pressed={paused || reduced} aria-label={reduced ? 'Background animation disabled by reduced motion preference' : paused ? 'Resume background animation' : 'Pause background animation'}>
         {paused && !reduced ? <Play size={12} aria-hidden="true" /> : <Pause size={12} aria-hidden="true" />}
         <span>{reduced ? 'Motion reduced' : paused ? 'Resume motion' : 'Pause motion'}</span>
       </button>}
-    </section>
+    </Container>
   );
 }

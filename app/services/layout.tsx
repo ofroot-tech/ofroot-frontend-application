@@ -1,10 +1,6 @@
-// app/services/layout.tsx
 import type { ReactNode } from 'react';
+import styles from '@/components/growth/PublicPage.module.css';
 
 export default function ServicesLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="services-layout mx-auto max-w-6xl px-4 md:px-6 section-pad reveal-in">
-      {children}
-    </div>
-  );
+  return <div className={`${styles.page} ${styles.serviceLayout}`}>{children}</div>;
 }

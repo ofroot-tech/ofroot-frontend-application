@@ -56,6 +56,29 @@ describe('homepage background motion lifecycle', () => {
   function button() { return container.querySelector('button')!; }
   function changePreference(value: boolean) { act(() => { reduced = value; preference.forEach(callback => callback()); }); }
 
+  it('labels the footer landmark without pointing to the homepage heading', () => {
+    act(() => root.render(<HeroShimmer as="footer" label="OfRoot footer"><a href="/book">Discuss your project</a></HeroShimmer>));
+    const footer = container.querySelector('footer')!;
+    expect(footer.getAttribute('aria-label')).toBe('OfRoot footer');
+    expect(footer.hasAttribute('aria-labelledby')).toBe(false);
+    expect(footer.querySelector('a')?.getAttribute('href')).toBe('/book');
+  });
+
+  it('keeps hero and footer pause controls independent', () => {
+    act(() => root.render(<><HeroShimmer><h1 id="home-hero-heading">Useful content</h1></HeroShimmer><HeroShimmer as="footer" label="OfRoot footer">Footer content</HeroShimmer></>));
+    const heroButton = container.querySelector('section button')!;
+    const footerButton = container.querySelector('footer button')!;
+    expect(frames.size).toBe(2);
+    act(() => footerButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    expect(frames.size).toBe(1);
+    expect(footerButton.getAttribute('aria-pressed')).toBe('true');
+    expect(heroButton.getAttribute('aria-pressed')).toBe('false');
+    act(() => heroButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    expect(frames.size).toBe(0);
+    act(() => footerButton.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+    expect(frames.size).toBe(1);
+  });
+
   it('cancels the scheduled loop when paused and resumes one loop', () => {
     mount();
     expect(frames.size).toBe(1);
