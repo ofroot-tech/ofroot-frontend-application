@@ -1,9 +1,6 @@
 name: Refresh Signal news
 
 on:
-  schedule:
-    # Avoid the busy top of the hour. GitHub may delay scheduled runs.
-    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
