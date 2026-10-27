@@ -45,10 +45,19 @@
 
 .audienceLink{display:inline-flex;align-items:center;min-height:44px;margin-top:19px;font-size:12px!important;line-height:1.5;color:#c8b5e1!important;text-decoration:underline!important;text-underline-offset:4px}
 
-/* Each bar travels from the left grid rail; its existing vertical step stays fixed. */
-.heroTiles .featureTile{--rail-start:-100%;animation:barFromRail calc(var(--motion-duration-section,640ms)*1.25) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) both}
-.heroTiles .featureTile:last-child{--rail-start:-200%;animation-delay:calc(var(--motion-duration-micro,180ms)*.5)}
-.heroTiles[data-entry='waiting'] .featureTile,.heroTiles[data-entry='settled'] .featureTile{animation:none;translate:none;opacity:1}
-@keyframes barFromRail{from{translate:var(--rail-start) 0;opacity:0}15%{opacity:1}to{translate:0 0;opacity:1}}
-@media(max-width:760px){.heroTiles .featureTile:first-child{--rail-start:0%}.heroTiles .featureTile:last-child{--rail-start:-100%}}
-@media(prefers-reduced-motion:reduce){.heroTiles .featureTile{animation:none;translate:none;opacity:1}}
+/* Grow the plane from its own grid line, then reveal arrow and text without scaling them. */
+.heroTiles{--bar-grow-duration:calc(var(--motion-duration-section,640ms)*2);--bar-arrow-duration:calc(var(--motion-duration-micro,180ms)*1.5);--bar-text-duration:calc(var(--motion-duration-micro,180ms)*2);--bar-stage-gap:calc(var(--motion-duration-micro,180ms)*.25)}
+.heroTiles .featureTile{--bar-delay:0ms;--bar-fill:rgba(46,41,57,.88);--bar-arrow-delay:calc(var(--bar-delay) + var(--bar-grow-duration) + var(--bar-stage-gap));--bar-text-delay:calc(var(--bar-arrow-delay) + var(--bar-arrow-duration) + var(--bar-stage-gap));position:relative;isolation:isolate;background:transparent;border-color:transparent}
+.heroTiles .featureTile:last-child{--bar-delay:calc(var(--motion-duration-micro,180ms)*.5);--bar-fill:rgba(61,53,71,.9)}
+.heroTiles .featureTile::before{content:'';position:absolute;inset:-1px 0 0;z-index:-1;background:var(--bar-fill);border-top:1px solid rgba(238,227,253,.22);transform-origin:left center;animation:barGrow var(--bar-grow-duration) var(--motion-ease-ui,cubic-bezier(.2,.8,.2,1)) var(--bar-delay) both;transition:background-color .3s}
+.heroTiles .tileArrow{animation:barContentReveal var(--bar-arrow-duration) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) var(--bar-arrow-delay) backwards}
+.heroTiles :is(.tileKicker,.tileHeading,.tileSub){animation:barContentReveal var(--bar-text-duration) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) var(--bar-text-delay) backwards}
+.heroTiles[data-entry='waiting'] .featureTile::before{animation:none;transform:scaleX(0)}
+.heroTiles[data-entry='waiting'] :is(.tileArrow,.tileKicker,.tileHeading,.tileSub){animation:none;opacity:0}
+.heroTiles[data-entry='settled'] .featureTile::before{animation:none;transform:scaleX(1)}
+.heroTiles[data-entry='settled'] :is(.tileArrow,.tileKicker,.tileHeading,.tileSub){animation:none;opacity:1}
+@keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes barContentReveal{from{opacity:0}to{opacity:1}}
+@media(hover:hover) and (pointer:fine){.heroTiles .featureTile:hover::before{background:#494052}}
+@media(max-width:760px){.heroTiles .featureTile:first-child::before{border-right:1px solid var(--line)}}
+@media(prefers-reduced-motion:reduce){.heroTiles[data-entry] .featureTile::before{animation:none;transform:scaleX(1);transition:none}.heroTiles[data-entry] :is(.tileArrow,.tileKicker,.tileHeading,.tileSub){animation:none;opacity:1}}
