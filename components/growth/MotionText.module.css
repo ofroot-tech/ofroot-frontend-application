@@ -1,0 +1,9 @@
+.text{--word-duration:calc(var(--motion-duration-section,640ms)*.8);--word-step:calc(var(--motion-duration-micro,180ms)*.25);--text-delay:0ms;font:inherit;letter-spacing:inherit}
+.word{display:inline-block;font:inherit;letter-spacing:inherit;opacity:1;transform:none;color:inherit}
+.load .word,.view:global(.in-view) .word{animation:wordEnter var(--word-duration) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) calc(var(--text-delay) + var(--word-order)*var(--word-step)) backwards}
+.bar .word{animation:barWordEnter var(--word-duration) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) calc(var(--bar-text-delay,0ms) + var(--word-order)*var(--word-step)) backwards}
+[data-entry='waiting'] .bar .word{animation:none;opacity:0;transform:none}
+[data-entry='settled'] .bar .word{animation:none;opacity:1;transform:none;color:inherit}
+@keyframes wordEnter{from{opacity:.55;transform:translate3d(0,8px,0);color:#c4b2df}to{opacity:1;transform:none;color:inherit}}
+@keyframes barWordEnter{from{opacity:0;transform:translate3d(0,6px,0)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.text[data-motion-text] .word{animation:none;opacity:1;transform:none;color:inherit}}
