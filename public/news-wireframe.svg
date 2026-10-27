@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1740" height="1480" viewBox="0 0 1740 1480" role="img" aria-labelledby="title desc">
+  <title id="title">OfRoot Signal: desktop and mobile news wireframe</title>
+  <desc id="desc">An editorial news index with topic navigation, a lead reference, source attribution, chronological feed, search, saved references, and transparent freshness. This structural wireframe contains no actual news stories.</desc>
+  <defs>
+    <style>
+      svg{fill:#111c2b}
+      text{font-family:Arial,Helvetica,sans-serif}
+      .tiny{font-size:11px;letter-spacing:1.3px;font-weight:700}
+      .small{font-size:13px}
+      .body{font-size:15px}
+      .muted{fill:#68717a}
+      .white{fill:#fff}
+      .serif{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+      .line{stroke:#dedfdc;stroke-width:1}
+      .orange{fill:#e67808}
+      .label{font-size:12px;font-weight:700;letter-spacing:1px}
+    </style>
+  </defs>
+  <rect width="1740" height="1480" fill="#e9eae6"/>
+  <text x="54" y="48" class="tiny muted">OFROOT SIGNAL / PRODUCT STRUCTURE</text>
+  <text x="54" y="86" font-size="28" font-weight="700">The news, with a clear path to its source.</text>
+  <text x="54" y="114" class="body muted">Desktop and mobile wireframes · October 27, 2026 · Structural labels, not actual headlines or live status</text>
+
+  <rect x="54" y="155" width="1160" height="1178" rx="10" fill="#f7f6f2" stroke="#cfd1cd"/>
+  <path d="M64 155H1204Q1214 155 1214 165V211H54V165Q54 155 64 155" fill="#071225"/>
+  <text x="86" y="191" font-size="23" font-weight="700" class="white">Of<tspan fill="#7998ff">Root</tspan></text>
+  <text x="658" y="189" class="small white">Services</text>
+  <text x="748" y="189" class="small white">Solutions</text>
+  <text x="845" y="189" class="small" fill="#ffb854">News</text>
+  <text x="917" y="189" class="small white">Insights</text>
+  <rect x="1034" y="168" width="147" height="31" rx="16" fill="#ff9312"/>
+  <text x="1108" y="188" text-anchor="middle" class="small" font-weight="700">Existing OfRoot nav</text>
+
+  <text x="88" y="258" font-size="27" font-weight="700">ofroot <tspan class="serif">signal</tspan><tspan fill="#ff9312">.</tspan></text>
+  <text x="838" y="252" class="small muted">Sources</text>
+  <text x="925" y="252" class="small muted">How it works</text>
+  <text x="1067" y="252" class="small muted">Saved (local)</text>
+  <line x1="88" y1="279" x2="1179" y2="279" class="line"/>
+  <text x="88" y="308" class="tiny muted">YOUR DAILY TECHNOLOGY BRIEF</text>
+  <circle cx="944" cy="304" r="4" fill="#ff9312"/>
+  <text x="958" y="308" class="small muted">Actual refresh status + timestamp</text>
+  <text x="88" y="374" font-size="54" class="serif">Stay ahead of what’s next.</text>
+  <text x="88" y="411" class="body muted">AI, integrations, healthcare startups, policy, and cybersecurity. Connected to the original reporting.</text>
+
+  <rect x="88" y="446" width="716" height="285" rx="3" fill="#111c2b"/>
+  <text x="114" y="479" class="tiny" fill="#ffb854">LATEST REFERENCE · TOPIC LABEL</text>
+  <text x="114" y="530" font-size="31" class="serif white">The newest eligible headline</text>
+  <text x="114" y="570" font-size="31" class="serif white">appears here, with attribution.</text>
+  <text x="114" y="611" class="body" fill="#bdc3ca">Publisher · Reporting / Research / Release / Advisory</text>
+  <text x="114" y="640" class="small" fill="#bdc3ca">Real publication timestamp · No article body or unlicensed image</text>
+  <rect x="114" y="670" width="161" height="36" rx="18" fill="#ff9312"/>
+  <text x="135" y="693" class="small" font-weight="700">Read at source ↗</text>
+  <text x="706" y="693" class="small white">Save +</text>
+
+  <rect x="824" y="446" width="355" height="285" rx="3" fill="#efeee9" stroke="#dedfdc"/>
+  <text x="848" y="480" class="tiny orange">ON THE RADAR</text>
+  <text x="848" y="519" font-size="22" class="serif">Five beats. One clear view.</text>
+  <line x1="848" y1="539" x2="1155" y2="539" class="line"/>
+  <text x="848" y="565" class="body">01  Artificial intelligence</text>
+  <text x="848" y="596" class="body">02  Integrations</text>
+  <text x="848" y="627" class="body">03  Healthcare startups</text>
+  <text x="848" y="658" class="body">04  Policy</text>
+  <text x="848" y="689" class="body">05  Cybersecurity</text>
+  <text x="1147" y="565" class="body muted">↗</text>
+  <text x="1147" y="596" class="body muted">↗</text>
+  <text x="1147" y="627" class="body muted">↗</text>
+  <text x="1147" y="658" class="body muted">↗</text>
+  <text x="1147" y="689" class="body muted">↗</text>
+
+  <line x1="88" y1="764" x2="1179" y2="764" class="line"/>
+  <rect x="88" y="784" width="71" height="35" rx="18" fill="#111c2b"/>
+  <text x="123" y="807" class="small white" text-anchor="middle">All news</text>
+  <text x="187" y="807" class="small">AI</text>
+  <text x="253" y="807" class="small">Integrations</text>
+  <text x="380" y="807" class="small">Healthcare startups</text>
+  <text x="570" y="807" class="small">Policy</text>
+  <text x="660" y="807" class="small">Cybersecurity</text>
+  <text x="1080" y="807" class="small muted">Saved →</text>
+
+  <text x="88" y="872" font-size="28" class="serif">The latest</text>
+  <rect x="366" y="843" width="339" height="42" rx="4" fill="#fff" stroke="#dedfdc"/>
+  <circle cx="386" cy="862" r="6" fill="none" stroke="#68717a" stroke-width="1.5"/>
+  <line x1="391" y1="867" x2="396" y2="872" stroke="#68717a" stroke-width="1.5"/>
+  <text x="409" y="869" class="small muted">Search headlines and sources</text>
+  <text x="729" y="869" class="small muted">Newest first ↓</text>
+
+  <line x1="88" y1="904" x2="804" y2="904" class="line"/>
+  <text x="88" y="932" class="tiny orange">TOPIC · ITEM KIND</text>
+  <text x="88" y="970" font-size="23" class="serif">A headline links directly to its original source.</text>
+  <text x="88" y="1001" class="small muted">Publisher name · Published date · Source label</text>
+  <text x="88" y="1027" class="small" font-weight="700">Read at source ↗</text>
+  <rect x="754" y="948" width="48" height="48" rx="24" fill="none" stroke="#dedfdc"/>
+  <text x="778" y="978" font-size="24" text-anchor="middle">+</text>
+  <line x1="88" y1="1049" x2="804" y2="1049" class="line"/>
+  <text x="88" y="1077" class="tiny orange">TOPIC · ITEM KIND</text>
+  <text x="88" y="1115" font-size="23" class="serif">Research and company claims are clearly labeled.</text>
+  <text x="88" y="1146" class="small muted">Publisher name · Published date · Source label</text>
+  <text x="88" y="1172" class="small" font-weight="700">Read at source ↗</text>
+  <rect x="754" y="1093" width="48" height="48" rx="24" fill="none" stroke="#dedfdc"/>
+  <text x="778" y="1123" font-size="24" text-anchor="middle">+</text>
+  <line x1="88" y1="1194" x2="804" y2="1194" class="line"/>
+  <text x="88" y="1227" class="small muted">More actual references, or an honest empty state for the selected filter.</text>
+
+  <rect x="841" y="843" width="338" height="184" rx="3" fill="#efeee9"/>
+  <text x="864" y="875" class="tiny orange">CLEAR SOURCES</text>
+  <text x="864" y="911" font-size="22" class="serif">Built around the original.</text>
+  <text x="864" y="941" class="small muted">Approved metadata, visible attribution,</text>
+  <text x="864" y="962" class="small muted">and links back to the publisher.</text>
+  <text x="864" y="1000" class="small" font-weight="700">Explore sources &amp; permissions →</text>
+  <text x="848" y="1070" class="tiny muted">SOURCE HEALTH</text>
+  <text x="848" y="1101" class="small muted">Last check and last success differ.</text>
+  <text x="848" y="1125" class="small muted">Partial and stale results stay visible.</text>
+  <text x="848" y="1168" class="small" font-weight="700">How the index updates →</text>
+
+  <line x1="88" y1="1268" x2="1179" y2="1268" class="line"/>
+  <text x="88" y="1301" class="small muted">OfRoot Signal</text>
+  <text x="747" y="1301" class="small muted">Methodology · Sources · Corrections · Existing footer</text>
+
+  <rect x="1260" y="155" width="426" height="1178" rx="22" fill="#f7f6f2" stroke="#cfd1cd"/>
+  <path d="M1282 155H1664Q1686 155 1686 177V218H1260V177Q1260 155 1282 155" fill="#071225"/>
+  <text x="1284" y="193" font-size="23" font-weight="700" class="white">Of<tspan fill="#7998ff">Root</tspan></text>
+  <line x1="1632" y1="180" x2="1660" y2="180" stroke="#fff" stroke-width="2"/>
+  <line x1="1632" y1="188" x2="1660" y2="188" stroke="#fff" stroke-width="2"/>
+  <line x1="1632" y1="196" x2="1660" y2="196" stroke="#fff" stroke-width="2"/>
+  <text x="1284" y="260" font-size="24" font-weight="700">ofroot <tspan class="serif">signal</tspan><tspan fill="#ff9312">.</tspan></text>
+  <text x="1606" y="256" class="small muted">Saved</text>
+  <line x1="1284" y1="281" x2="1662" y2="281" class="line"/>
+  <circle cx="1288" cy="305" r="4" fill="#ff9312"/>
+  <text x="1300" y="310" class="small muted">Actual freshness status</text>
+  <text x="1284" y="358" font-size="37" class="serif">Stay ahead of</text>
+  <text x="1284" y="399" font-size="37" class="serif">what’s next.</text>
+  <text x="1284" y="433" class="small muted">Five technology beats. Original sources.</text>
+  <rect x="1284" y="460" width="378" height="222" rx="3" fill="#111c2b"/>
+  <text x="1303" y="490" class="tiny" fill="#ffb854">LATEST REFERENCE</text>
+  <text x="1303" y="531" font-size="25" class="serif white">A clear headline,</text>
+  <text x="1303" y="562" font-size="25" class="serif white">linked to its publisher.</text>
+  <text x="1303" y="595" class="small" fill="#bdc3ca">Source · Kind · Actual publication time</text>
+  <rect x="1303" y="622" width="161" height="36" rx="18" fill="#ff9312"/>
+  <text x="1322" y="645" class="small" font-weight="700">Read at source ↗</text>
+  <text x="1609" y="645" class="small white">Save +</text>
+  <text x="1284" y="719" class="tiny orange">ON THE RADAR</text>
+  <text x="1284" y="746" class="small muted">Topic watch list stacks on small screens.</text>
+  <line x1="1284" y1="767" x2="1662" y2="767" class="line"/>
+  <rect x="1284" y="785" width="72" height="35" rx="18" fill="#111c2b"/>
+  <text x="1320" y="808" class="small white" text-anchor="middle">All news</text>
+  <rect x="1367" y="785" width="47" height="35" rx="18" fill="#efeee9"/>
+  <text x="1390" y="808" class="small" text-anchor="middle">AI</text>
+  <rect x="1425" y="785" width="115" height="35" rx="18" fill="#efeee9"/>
+  <text x="1482" y="808" class="small" text-anchor="middle">Integrations</text>
+  <rect x="1551" y="785" width="111" height="35" rx="18" fill="#efeee9"/>
+  <text x="1565" y="808" class="small">More topics →</text>
+  <text x="1284" y="843" class="small muted">Topic strip scrolls; the page never overflows.</text>
+  <text x="1284" y="888" font-size="27" class="serif">The latest</text>
+  <rect x="1284" y="908" width="378" height="43" rx="4" fill="#fff" stroke="#dedfdc"/>
+  <text x="1300" y="935" class="small muted">Search headlines and sources</text>
+  <text x="1284" y="980" class="small muted">Result count</text>
+  <text x="1570" y="980" class="small muted">Newest first</text>
+  <line x1="1284" y1="998" x2="1662" y2="998" class="line"/>
+  <text x="1284" y="1027" class="tiny orange">TOPIC · ITEM KIND</text>
+  <text x="1284" y="1066" font-size="24" class="serif">Headline wraps cleanly</text>
+  <text x="1284" y="1096" font-size="24" class="serif">across two or more lines.</text>
+  <text x="1284" y="1130" class="small muted">Publisher · Published date</text>
+  <text x="1284" y="1169" class="small" font-weight="700">Read at source ↗</text>
+  <rect x="1614" y="1139" width="48" height="48" rx="24" fill="none" stroke="#dedfdc"/>
+  <text x="1638" y="1170" font-size="24" text-anchor="middle">+</text>
+  <line x1="1284" y1="1207" x2="1662" y2="1207" class="line"/>
+  <text x="1284" y="1243" class="small muted">More references / honest empty state</text>
+  <text x="1284" y="1294" class="small" font-weight="700">Sources · How it works · Corrections</text>
+
+  <text x="54" y="1385" class="label">READING RULE</text>
+  <text x="54" y="1415" class="body muted">Headline → source + kind + time → read original. No article bodies, invented headlines, fabricated dates, or unlicensed publisher imagery.</text>
+  <text x="1260" y="1385" class="label">UPDATE RULE</text>
+  <text x="1260" y="1415" class="small muted">Approved feed → validated metadata → cache → UI.</text>
+  <text x="1260" y="1439" class="small muted">Visible failures; persistent suppression for removals.</text>
+</svg>

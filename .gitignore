@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-news-preview*/
 /out/
 
 # production
@@ -33,6 +34,7 @@ yarn-error.log*
 
 # local artifacts
 /tmp/lh-*.json
+/tmp/news-*
 /.codex/
 work context/
 

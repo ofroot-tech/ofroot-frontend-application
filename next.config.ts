@@ -25,6 +25,9 @@ function buildCsp() {
 }
 
 const nextConfig: NextConfig = {
+  // A separate disposable output keeps preview work clear of OneDrive's offline
+  // placeholders in an older build. Normal builds retain Next's default path.
+  distDir: process.env.OFROOT_PREVIEW_DIST_DIR || '.next',
   /* config options here */
   // Silence workspace root inference warning by declaring the project root explicitly
   turbopack: {

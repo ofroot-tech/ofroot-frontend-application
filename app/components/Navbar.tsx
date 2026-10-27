@@ -46,6 +46,7 @@ const groups: NavigationGroup[] = [
 
 const links: NavigationLink[] = [
   { label: 'Capabilities', href: '/results' },
+  { label: 'News', href: '/news' },
   { label: 'Insights', href: '/insights' },
   { label: 'Security', href: '/security' },
 ];

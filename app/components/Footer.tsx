@@ -8,7 +8,7 @@ import Link from 'next/link';
 const columns = [
   { title: 'Services', links: [['Websites & Growth', '/services/ai-discoverability'], ['Integrations & Tools', '/services/automation-systems'], ['AI & Deployment', '/services/private-company-ai']] },
   { title: 'Solutions', links: [['Generate Demand', '/solutions/generate-demand'], ['Convert More Leads', '/solutions/convert-more-leads'], ['Unlock Company Knowledge', '/solutions/unlock-company-knowledge']] },
-  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Capabilities', '/results'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Book an Audit', '/book']] },
+  { title: 'Company', links: [['Website Readiness Scanner', '/services/ai-audit'], ['Business AI Assessment', '/ai-agent-readiness-assessment'], ['Capabilities', '/results'], ['News', '/news'], ['Insights', '/insights'], ['Editorial Standards', '/about/editorial-standards'], ['Book an Audit', '/book']] },
 ];
 
 export default function Footer() {

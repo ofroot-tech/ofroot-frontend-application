@@ -1,0 +1,59 @@
+name: Refresh Signal news
+
+on:
+  schedule:
+    # Avoid the busy top of the hour. GitHub may delay scheduled runs.
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signal-news-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      NEWS_REFRESH_URL: https://www.ofroot.technology/api/news/refresh
+      CRON_SECRET: ${{ secrets.OFROOT_NEWS_CRON_SECRET }}
+    steps:
+      - name: Refresh the persistent news index
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          if (!process.env.CRON_SECRET) {
+            console.error('The OFROOT_NEWS_CRON_SECRET repository secret is not configured.');
+            process.exit(1);
+          }
+          for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+              const response = await fetch(process.env.NEWS_REFRESH_URL, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` },
+                signal: AbortSignal.timeout(55_000),
+                redirect: 'error',
+              });
+              const result = await response.json();
+              console.log(JSON.stringify({
+                httpStatus: response.status,
+                status: result.status,
+                refreshState: result.refreshState,
+                articleCount: result.articleCount,
+                storage: result.storage,
+                checkedAt: result.checkedAt,
+                lastSuccessfulAt: result.lastSuccessfulAt,
+              }));
+              if (response.status === 202 && result.refreshState === 'in_progress') break;
+              if (response.ok && result.refreshState === 'completed' && result.storage === 'postgres') break;
+              if (response.status === 401 || response.status === 403 || attempt === 2) process.exit(1);
+            } catch {
+              console.error(`News refresh attempt ${attempt} failed to return a successful response.`);
+              if (attempt === 2) process.exit(1);
+            }
+            await new Promise(resolve => setTimeout(resolve, 10_000));
+          }
+          JS

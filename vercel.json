@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci",
+  "crons": [
+    {
+      "path": "/api/news/refresh",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}
