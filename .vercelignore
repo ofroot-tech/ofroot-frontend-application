@@ -12,6 +12,7 @@ tmp
 customer_prospects.txt
 *.tar
 *.tgz
+production-audit.json
 coverage
 playwright-report
 test-results
