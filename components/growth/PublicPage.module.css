@@ -47,6 +47,16 @@
 @media(prefers-reduced-motion:reduce){.primary,.secondary{transition:none}}
 .legacy h1{font-size:clamp(40px,5.2vw,78px);font-weight:560;line-height:1.08;letter-spacing:-.05em;text-wrap:balance}
 .legacy :where(h2,h3){font-weight:510;letter-spacing:-.035em;line-height:1.18}
+/* Keep the existing content scale explicit above the site's older global text rules. */
+.legacy :global(.text-xs){font-size:12px;line-height:1.6}
+.legacy :global(.text-sm){font-size:14px;line-height:1.7}
+.legacy :global(.text-base){font-size:16px;line-height:1.7}
+.legacy :global(.text-lg){font-size:18px;line-height:1.65}
+.legacy :global(.text-xl){font-size:20px;line-height:1.5}
+.legacy :global(.text-2xl):not(h1){font-size:26px;line-height:1.2}
+.legacy :global(.text-3xl):not(h1){font-size:32px;line-height:1.18}
+.legacy :global(.text-4xl):not(h1){font-size:40px;line-height:1.15}
+.legacy :where(p,span,div)[class*="uppercase"]{font-family:var(--font-geist-mono),monospace;font-size:11px;line-height:1.6;letter-spacing:.1em}
 .legacy>section:not(.hero){padding-inline:var(--gutter)}
 .legacy :where(input,select,textarea){font-family:inherit;color:#faf9fc;color-scheme:dark}
 .legacy select option{background:#211c2c;color:#faf9fc}
