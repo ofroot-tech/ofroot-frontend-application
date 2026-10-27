@@ -9,3 +9,5 @@
 .compact .descriptor{font-size:6px}
 @media(max-width:1100px){.mark{width:40px;height:40px;font-size:16px}.wordmark{font-size:23px}.brand{gap:11px}}
 @media(max-width:760px){.mark{width:37px;height:37px;font-size:15px;letter-spacing:-.6px}.wordmark{font-size:23px}.descriptor{font-size:6px;letter-spacing:.22em}.name{gap:5px}}
+
+.light .wordmark{color:#17141f}.light .descriptor{color:#6b6274}

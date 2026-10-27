@@ -4,7 +4,7 @@ import { CANONICAL_SITE_URL } from '@/app/config/site';
 export const SITE_URL = CANONICAL_SITE_URL;
 
 const SOCIAL_IMAGE = {
-  url: `${SITE_URL}/og.jpg`,
+  url: `${SITE_URL}/opengraph-image`,
   width: 1200,
   height: 630,
   alt: 'OfRoot — websites, integrations, and AI systems',
