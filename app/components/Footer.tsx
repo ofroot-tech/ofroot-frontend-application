@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import SiteBrand from '@/components/brand/SiteBrand';
+import HeroShimmer from '@/components/growth/HeroShimmer';
 import styles from './PublicChrome.module.css';
 import Link from 'next/link';
 
@@ -14,14 +15,18 @@ const columns = [
 export default function Footer() {
   const pathname = usePathname();
   if (pathname === '/') return (
-    <footer className={styles.homeFooter}><div className={styles.footerShell}>
-      <div className={styles.footerIdentity}><SiteBrand compact /><span className={styles.copyright}>© {new Date().getFullYear()} OfRoot</span></div>
-      <span className={styles.footerLine}>Software, automation &amp; practical AI.</span>
-      <div className={styles.footerLinks}><Link href="/book?source=footer">Discuss your project</Link><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link></div>
-    </div></footer>
+    <HeroShimmer as="footer" label="OfRoot footer" className={`${styles.homeFooter} ${styles.footerMotion}`}>
+      <div className={styles.footerGrid} aria-hidden="true"><span /><span /><span /></div>
+      <div className={styles.footerShell}>
+        <div className={styles.footerIdentity}><SiteBrand compact /><span className={styles.copyright}>© {new Date().getFullYear()} OfRoot</span></div>
+        <span className={styles.footerLine}>Software, automation &amp; practical AI.</span>
+        <div className={styles.footerLinks}><Link href="/book?source=footer">Discuss your project</Link><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link></div>
+      </div>
+    </HeroShimmer>
   );
   return (
-    <footer className={`${styles.homeFooter} ${styles.publicFooter}`}>
+    <HeroShimmer as="footer" label="OfRoot footer" className={`${styles.homeFooter} ${styles.publicFooter} ${styles.footerMotion}`}>
+      <div className={styles.footerGrid} aria-hidden="true"><span /><span /><span /></div>
       <div className={styles.publicFooterShell}>
         <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
           <div>
@@ -43,6 +48,6 @@ export default function Footer() {
           <div className="flex gap-5"><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link><a href="https://www.linkedin.com/company/ofroot" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
         </div>
       </div>
-    </footer>
+    </HeroShimmer>
   );
 }
