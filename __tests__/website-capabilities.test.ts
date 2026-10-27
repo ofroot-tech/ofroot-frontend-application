@@ -66,7 +66,7 @@ describe('public website offer and evidence contract', () => {
     expect(growthPages.homeServicesAutomation.primaryCta.href).toContain('focus=home-services-automation');
     expect(growthPages.hvacLeadFollowUp.path).toBe('/solutions/hvac-lead-follow-up-automation');
     expect(JSON.stringify(growthPages.homeServicesAutomation)).not.toContain('launched in 30 days');
-    expect(read('components/growth/HomeHero.tsx')).toContain('11 years in technology');
+    expect(read('app/page.tsx')).toContain('11 years in technology');
     expect(read('components/consulting/HeroConsulting.tsx')).not.toContain('8+ years');
   });
 

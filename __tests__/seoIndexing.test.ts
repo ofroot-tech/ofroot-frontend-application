@@ -92,10 +92,10 @@ describe('SEO indexing contract', () => {
 
     expect(metadata.openGraph).toMatchObject({
       url: `${CANONICAL_SITE_URL}/example`,
-      images: [expect.objectContaining({ url: `${CANONICAL_SITE_URL}/og.jpg` })],
+      images: [expect.objectContaining({ url: `${CANONICAL_SITE_URL}/opengraph-image` })],
     });
     expect(metadata.twitter).toMatchObject({
-      images: [`${CANONICAL_SITE_URL}/og.jpg`],
+      images: [`${CANONICAL_SITE_URL}/opengraph-image`],
     });
   });
 
