@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import { TrackedLink } from './Analytics';
 import HeroShimmer from './HeroShimmer';
+import HeroFeatureTiles from './HeroFeatureTiles';
 import styles from './ApprovedHome.module.css';
 
 export default function HomeHero() {
@@ -18,10 +19,10 @@ export default function HomeHero() {
               <div className={styles.trust}>Tell us where work gets stuck.<br />We’ll review it and reply by email with a practical next step.</div>
             </div>
           </div>
-          <div className={styles.heroTiles}>
+          <HeroFeatureTiles>
             <TrackedLink href="/services/automation-systems" source="homepage:hero:connect" event="service_cta_clicked" className={styles.featureTile}><span className={styles.tileKicker}>Connected workflows</span><div><span className={styles.tileTitle}>Connect your tools.<ArrowRight className={styles.arrow} aria-hidden="true" /></span><p className={styles.tileSub}>CRM · Reporting · Internal software</p></div></TrackedLink>
             <TrackedLink href="/services/private-company-ai" source="homepage:hero:ai" event="service_cta_clicked" className={styles.featureTile}><span className={styles.tileKicker}>Practical AI</span><div><span className={styles.tileTitle}>Put AI to work.<ArrowRight className={styles.arrow} aria-hidden="true" /></span><p className={styles.tileSub}>Setup · Company knowledge · Team workflows</p></div></TrackedLink>
-          </div>
+          </HeroFeatureTiles>
           <div className={styles.heroNote}>One connected system. <strong>One accountable partner.</strong></div>
         </div>
       </HeroShimmer>

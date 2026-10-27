@@ -44,3 +44,11 @@
 @media(prefers-reduced-motion:reduce){.page :where(a,button),.primary:before,.arrow,.featureTile{transition:none}.primary:hover .arrow,.featureTile:hover .arrow,.bridgeInner a:hover .arrow,.serviceRow>a:hover .arrow{transform:none}}
 
 .audienceLink{display:inline-flex;align-items:center;min-height:44px;margin-top:19px;font-size:12px!important;line-height:1.5;color:#c8b5e1!important;text-decoration:underline!important;text-underline-offset:4px}
+
+/* Each bar travels from the left grid rail; its existing vertical step stays fixed. */
+.heroTiles .featureTile{--rail-start:-100%;animation:barFromRail calc(var(--motion-duration-section,640ms)*1.25) var(--motion-ease-out,cubic-bezier(.16,1,.3,1)) both}
+.heroTiles .featureTile:last-child{--rail-start:-200%;animation-delay:calc(var(--motion-duration-micro,180ms)*.5)}
+.heroTiles[data-entry='waiting'] .featureTile,.heroTiles[data-entry='settled'] .featureTile{animation:none;translate:none;opacity:1}
+@keyframes barFromRail{from{translate:var(--rail-start) 0;opacity:0}15%{opacity:1}to{translate:0 0;opacity:1}}
+@media(max-width:760px){.heroTiles .featureTile:first-child{--rail-start:0%}.heroTiles .featureTile:last-child{--rail-start:-100%}}
+@media(prefers-reduced-motion:reduce){.heroTiles .featureTile{animation:none;translate:none;opacity:1}}
