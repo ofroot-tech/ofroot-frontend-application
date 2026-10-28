@@ -1,6 +1,6 @@
 # OfRoot Signal: news hub plan
 
-Prepared October 27, 2026. Product route: `/news`. Structural wireframe: [`public/news-wireframe.svg`](../public/news-wireframe.svg).
+Prepared October 27, 2026; visual direction updated October 28, 2026. Product route: `/news`. The [original October 27 wireframe](../public/news-wireframe.svg) is a historical structure reference; its cream/green styling and ordering are superseded by the current implementation described below. Current production infrastructure and verification are recorded in [news operations](news-operations.md).
 
 ## Product decision
 
@@ -27,25 +27,27 @@ These are pattern references, not content suppliers or endorsements. Screens and
 - `/api/news`: public read endpoint returning a sanitized cached snapshot; no arbitrary feed URL input.
 - Refresh endpoint or job: authenticated ingestion only, with a single bounded allowlist of sources. Do not expose privileged refresh to browsers.
 
-Keep OfRoot's existing site navigation and footer. Add a visible News entry so this is discoverable without replacing the existing consulting homepage or insights library. Keep externally published news distinct from OfRoot-authored insights.
+Keep OfRoot's existing site navigation and footer. The newsroom's own publication bar links the index, source directory, and methodology. Broader global-navigation discoverability can be reviewed separately without replacing the consulting homepage or insights library. Keep externally published news distinct from OfRoot-authored insights.
 
-## Desktop wireframe
+## Current desktop structure
 
 1. Existing dark OfRoot navigation.
-2. Signal masthead: wordmark, Source directory, How it works, and Saved references.
-3. Date and truthful freshness line: last check, last successful refresh, and partial/stale/error state when applicable.
-4. Editorial introduction: “Stay ahead of what's next.” with a short description of the five beats.
-5. Lead area: newest eligible item with source name, item kind, publication date, headline, and a prominent “Read at source” link. A topic watch panel supplies useful navigation and explains gaps without inventing coverage.
-6. Five horizontally arranged topic filters plus an All view. Active filter is clear by shape and contrast as well as color.
+2. Compact Signal publication bar: wordmark, The latest, Our sources, and How it works.
+3. Compact editorial hero: “Stay ahead. Read the source.” with a short description of the five beats, a link to the latest stream, and a secondary methodology link. A restrained information plane shows beat, feed, and index counts on larger screens.
+4. Date and truthful source-status line immediately below the hero. Refresh health can indicate delayed checks or partially unavailable sources; the source directory holds detailed last-check and last-success records.
+5. Five topic-filter cells before the highlights. Each uses an icon, mono number, topic name, and short explanation. Active selection has a contrasting surface and an accent rule; selecting it again clears the topic.
+6. Lead area: newest eligible item with source name, item kind, publication date, complete headline, and a prominent direct source link. A short list shows the next three items in the same chronological order.
 7. Latest stream: search input, visible result count, ordering control where supported, and story rows. Each row shows topic, headline, source, item kind, publication time or “Date unavailable,” save control, and direct source link.
 8. Secondary rail: source coverage and aggregation explanation. Put source health details in the directory, keeping the reading screen focused.
 9. Footer: methodology, source directory, rights/corrections contact, and existing OfRoot links.
 
-Use warm white (`#F7F6F2`), ink (`#111C2B`), muted gray, and OfRoot orange (`#FF9312`). A larger editorial serif headline can sit alongside the existing clear sans-serif interface. Use borders and whitespace to establish hierarchy. Publisher photos, logos, and article-body excerpts are absent until their specific reuse permissions have been recorded.
+Use the current public site's dark plum (`#17141f`) foundation, off-white (`#faf9fc`) type, restrained lavender surfaces and rules, lavender (`#b4a0ef`) details, and peach (`#ffb78f`) accents. Geist Sans carries headlines and reading text; Geist Mono carries small uppercase labels, dates, and counts. Match the public site's 1600-pixel maximum shell, responsive gutters, tight large headings, flat rectangular planes, and thin borders. Keep green/amber for actual source-status meaning. Publisher photos, logos, and article-body excerpts remain absent until their specific reuse permissions have been recorded.
+
+The rationale is continuity with OfRoot's redesigned public site while retaining a clear reading hierarchy. Shared `HeroShimmer` and `MotionText` provide the existing bounded hero animation and static heading reveals, including reduced-motion behavior. Live publisher headlines remain stable when the index is checked. The implementation is the current visual reference: [Newsroom.tsx](../app/news/Newsroom.tsx), [news.module.css](../app/news/news.module.css), and [SignalHeader.tsx](../app/news/SignalHeader.tsx), aligned with [ApprovedHome.module.css](../components/growth/ApprovedHome.module.css) and [PublicPage.module.css](../components/growth/PublicPage.module.css). Source and methodology pages use the same newsroom styles and shared heading motion.
 
 ## Mobile behavior and accessibility
 
-Stack the lead and topic watch panel. Keep search full width. Topic chips scroll horizontally inside their own container, with the page itself fitting the viewport. Story titles wrap; source metadata can wrap to a second line. A saved control remains at least 44 pixels in its target area. Direct source links describe their destination.
+Stack the highlights and reading layout, and hide the supplementary hero information plane on smaller screens. Keep search full width. Show all five topic cells in a wrapping mobile grid rather than a horizontally scrolling strip, so every beat remains discoverable and the page fits the viewport. Story titles and source metadata wrap. Controls and saved buttons retain at least 44-pixel target areas. Direct source links describe their destination.
 
 Maintain semantic headings, a single page `h1`, visible focus styles, labeled controls, and clear selected states. Announce updated result counts politely without repeatedly interrupting reading. Show a stable publication timestamp alongside relative time when available. Apply reduced-motion preferences. Saved references stay on this device in browser storage; make that scope clear.
 
@@ -105,9 +107,11 @@ Use latest-first as the launch ranking rule. Do not label this “trending” or
 
 Fetch only allowlisted endpoints, reject unapproved redirects and URL schemes, bound response size and time, and treat all feed text as untrusted data. Render text, not publisher-supplied HTML. Do not let a feed or article supply application instructions.
 
-## Implemented foundation and remaining production setup
+## Original foundation and production checklist (October 27)
 
-The responsive `/news` index, `/news/sources` directory, `/news/methodology`, source registry, metadata ingestion, normalization, exact deduplication, visible source health, in-process cache, and public `/api/news` read endpoint are implemented. Browser polling checks the cached index every 60 seconds while the page is visible; an “Update view” control lets the reader choose when new records enter the stream. Search, topic/source filters, chronological ordering, and local saved references are part of this foundation. This plan and the SVG remain structural design documentation; actual runtime verification is a separate check.
+The following architecture and setup notes record the original implementation stage. Subsequent database connection, scheduler activation, and deployment verification are documented in [news operations](news-operations.md); these historical setup notes are not the current production status. The October 28 redesign changes presentation, not ingestion or scheduling.
+
+The responsive `/news` index, `/news/sources` directory, `/news/methodology`, source registry, metadata ingestion, normalization, exact deduplication, visible source health, in-process cache, and public `/api/news` read endpoint are implemented. Browser polling checks the cached index every 60 seconds while the page is visible; an “Update view” control lets the reader choose when new records enter the stream. Search, topic/source filters, chronological ordering, and local saved references are part of this foundation. The original SVG documents the initial design only; the current UI source files above supersede its visual treatment and ordering. Actual runtime verification is a separate check.
 
 The implementation supports an **optional Postgres archive** using server-side `DATABASE_URL` or `DIRECT_URL`. Successful ingestion creates news-owned item and latest-snapshot tables and upserts permitted metadata. The active index is bounded to 500 items. When no database is configured, or the database fails, it serves its memory cache and exposes the storage limitation. Database connectivity and table creation in a deployed environment still need verification; the existence of this adapter is not evidence that a production archive is connected.
 

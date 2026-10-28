@@ -43,6 +43,7 @@
 /* HeroShimmer's home module calls its background --ink. Signal uses --ink
    for reading text, so make the shared canvas plane explicit at this boundary. */
 .news .hero { background:radial-gradient(ellipse at 80% 54%,#252033 0,transparent 58%),var(--paper); border-bottom:1px solid var(--line); }
+.news .hero > button { min-height:44px; font:10px/1.5 var(--font-geist-mono),monospace; }
 .heroGrid { position:absolute; inset:0 var(--gutter); max-width:calc(1600px - var(--gutter)*2); margin:auto; pointer-events:none; border-inline:1px solid var(--line); display:grid; grid-template-columns:repeat(3,1fr); z-index:-1; }
 .heroGrid span+span { border-left:1px solid var(--line); }
 .intro { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 310px; align-items:end; gap:clamp(32px,5vw,80px); padding-block:64px 86px; }
@@ -290,7 +291,7 @@
   .introCopy { font-size:18px!important; }
   .heroActions { align-items:start; flex-direction:column; gap:14px; margin-top:26px; }
   .heroActions .primary { width:100%; }
-  .edition { font-size:9px; }
+  .edition { font-size:10px; }
   .edition > span:first-child { display:flex; flex-direction:column; gap:5px; }
   .editionDivider { display:none; }
   .topicGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
