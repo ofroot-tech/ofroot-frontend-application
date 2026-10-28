@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/security', lastModified: '2026-07-22' },
     { path: '/insights', lastModified: '2026-09-09' },
     { path: '/news', lastModified: '2026-10-27' },
+    { path: '/news/briefs', lastModified: '2026-10-28' },
     { path: '/news/sources', lastModified: '2026-10-27' },
     { path: '/news/methodology', lastModified: '2026-10-27' },
     { path: '/book', lastModified: '2026-10-14' },
