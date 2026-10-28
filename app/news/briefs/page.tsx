@@ -6,6 +6,7 @@ import { getBriefCollection } from '@/app/lib/signal-briefs';
 import { abridgeAbstract } from '@/app/lib/signal-briefs/compose';
 import MotionText from '@/components/growth/MotionText';
 import SignalHeader from '../SignalHeader';
+import SubscribeCTA from '../subscriptions/SubscribeCTA';
 import { formatPublished, topics } from '../presentation';
 import news from '../news.module.css';
 import styles from './briefs.module.css';
@@ -37,5 +38,6 @@ export default async function BriefsPage({ searchParams }: { searchParams: Promi
       <p className={styles.note}>This collection shows the latest available primary-source digests in the current index. The Signal mark on any news reference opens its brief or explains the evidence gap. Digests are assembled automatically from approved records; they are not original reporting or full-paper reviews. <Link href="/news/methodology#briefs">How briefs are made →</Link></p>
     </section>
     <section className={styles.insights}><div><p className={news.eyebrow}>MORE FROM OFROOT</p><h2>A deeper look at<br />the work behind the tools.</h2><p>Explore OfRoot-authored guides on practical AI, connected systems, and the decisions behind useful software.</p></div><Link href="/insights" className={news.primary}>Read OfRoot Insights <ArrowUpRight size={18} /></Link></section>
+    <SubscribeCTA topic={topic?.id} />
   </div></main>;
 }

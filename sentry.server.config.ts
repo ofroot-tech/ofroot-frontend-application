@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import { isPrivateSignalRoute } from './app/lib/signal-subscriptions/privacy';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -20,6 +21,7 @@ Sentry.init({
 
   // Scrub sensitive headers defensively
   beforeSend(event) {
+    if (isPrivateSignalRoute(event.request?.url)) return null;
     if (event.request && event.request.headers) {
       const h = event.request.headers as Record<string, unknown>;
       delete (h as any).cookie;
@@ -27,4 +29,5 @@ Sentry.init({
     }
     return event;
   },
+  beforeSendTransaction: event => isPrivateSignalRoute(event.request?.url) ? null : event,
 });

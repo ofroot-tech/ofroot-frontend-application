@@ -34,7 +34,7 @@
 .wordmark > svg { color:var(--accent); }
 .wordmark strong { font-size:27px; line-height:1; font-weight:550; letter-spacing:-1px; }
 .byline { border-left:1px solid var(--line); margin-left:10px; padding-left:18px; color:var(--muted); font:10px/1.5 var(--font-geist-mono),monospace!important; letter-spacing:.08em; }
-.masthead nav { display:flex; gap:30px; font-size:13px; }
+.masthead nav { display:flex; flex-wrap:wrap; gap:12px 24px; font-size:13px; }
 .masthead nav a { display:flex; align-items:center; gap:6px; min-height:44px; padding-block:8px; }
 .masthead nav a[aria-current=page] { color:var(--accent); }
 
@@ -293,7 +293,7 @@
   .masthead { align-items:start; flex-direction:column; gap:12px; padding-block:22px 12px; }
   .wordmark strong { font-size:25px; }
   .byline { display:inline; font-size:9px!important; }
-  .masthead nav { width:100%; justify-content:space-between; gap:12px; font-size:12px; }
+  .masthead nav { width:100%; justify-content:flex-start; gap:4px 20px; font-size:12px; }
   .masthead nav a { min-height:44px; }
   .masthead nav svg { display:none; }
   .intro { padding-block:36px 76px; }
