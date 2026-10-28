@@ -93,6 +93,7 @@
 .lead > p { color:var(--muted); font-size:15px; line-height:1.75; margin-bottom:24px; }
 .leadBottom { display:flex; align-items:end; justify-content:space-between; gap:18px; margin-top:auto; }
 .leadBottom > div { display:grid; gap:7px; min-width:0; }
+.leadBottom > .articleActions { display:flex; gap:10px; }
 .leadBottom > div > span { font-size:13px; font-weight:500; }
 .leadBottom small { color:#c2b5ce; font-size:11px; line-height:1.7; }
 .leadArrow { display:grid; place-items:center; min-width:44px; min-height:44px; border:1px solid #887294; }
@@ -148,6 +149,16 @@
 .articleBottom { display:flex; align-items:center; justify-content:space-between; gap:20px; font-size:12px; line-height:1.8; color:var(--muted); }
 .articleBottom strong { color:#e2d6ec; font-weight:500; }
 .articleBottom > a { display:flex; align-items:center; gap:6px; min-height:44px; flex-shrink:0; font-size:12px; color:#ddc6ef; }
+.articleBottom > span { min-width:0; }
+.articleActions { display:flex; align-items:center; flex-wrap:wrap; gap:12px; flex-shrink:0; }
+.articleActions > a { display:inline-flex; align-items:center; gap:6px; min-height:44px; font-size:12px; color:#ddc6ef; }
+/* Use the publication's existing mark as the second story action. A visible
+   wordmark and accessible name make it more discoverable than an unlabeled icon. */
+.news .signalBriefLink { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:44px; padding:8px 12px; border:1px solid #806684; border-radius:2px; background:#2b2235; color:#faf9fc; text-decoration:none; flex-shrink:0; }
+.signalBriefLink > svg { color:var(--accent); }
+.signalBriefLink > strong { font-size:16px; font-weight:550; letter-spacing:-.04em; line-height:1; }
+.news .signalBriefLink:hover { border-color:var(--accent); background:#3a2b43; }
+.shortItem > .signalBriefLink { margin-top:23px; }
 .author { display:block; font-size:11px!important; color:var(--muted); margin-top:5px; line-height:1.7!important; }
 .loadMore { width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:14px; border:1px solid #675873; min-height:54px; padding:13px 18px; margin-top:28px; font-size:13px; }
 .loadMore:hover { background:#2d2538; }
@@ -311,6 +322,10 @@
   .shortItem { gap:13px; }
   .shortItem h3 { font-size:18px; }
   .shortItem > svg { display:none; }
+  .shortItem { display:grid; grid-template-columns:20px minmax(0,1fr); }
+  .shortItem > .signalBriefLink { grid-column:2; justify-self:start; margin-top:0; }
+  .leadBottom { align-items:start; flex-direction:column; }
+  .masthead nav { font-size:11px; gap:10px; }
   .streamTitle .eyebrow { font-size:9px!important; }
   .streamTitle > span { font-size:10px; }
   .streamTabs > div { gap:20px; }
