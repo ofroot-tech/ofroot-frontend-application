@@ -1,6 +1,11 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+// These server-render checks exercise page content and links; Next builds the
+// growth components' CSS modules separately from Jest's Node module loader.
+jest.mock('@/components/growth/ApprovedHome.module.css', () => ({}));
+jest.mock('@/components/growth/PublicPage.module.css', () => ({}));
+
 jest.mock('@/app/lib/api', () => ({
   api: {
     publicListBlogPosts: jest.fn().mockResolvedValue({ data: { items: [] } }),

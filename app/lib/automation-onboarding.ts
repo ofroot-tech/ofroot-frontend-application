@@ -21,18 +21,27 @@ export type AutomationOnboardingStartInput = z.infer<typeof automationOnboarding
 export const automationOnboardingTriggerTypeSchema = z.enum(['comments', 'inbound_dm', 'keyword', 'form_submit']);
 export const automationCatalogIdSchema = z.enum(AUTOMATION_CATALOG_IDS);
 
+// An intake selects from finite catalogs and asks a short qualification sequence.
+// With patched Zod, these bounds reject oversized collections before their
+// elements are parsed, preventing one validation issue per attacker-supplied item.
 export const automationOnboardingCompleteSchema = z.object({
   phone: z.string().trim().min(1, 'Phone is required'),
   zip: z.string().trim().min(1, 'ZIP is required'),
   target_service_outcome: z.string().trim().min(1, 'Target service outcome is required'),
-  selected_automations: z.array(automationCatalogIdSchema).min(1, 'Choose at least one automation'),
+  selected_automations: z.array(automationCatalogIdSchema)
+    .min(1, 'Choose at least one automation')
+    .max(AUTOMATION_CATALOG_IDS.length, `Choose no more than ${AUTOMATION_CATALOG_IDS.length} automations`),
   csv_capture_enabled: z.boolean().default(true),
   auto_response_enabled: z.boolean().default(false),
   instagram_handle: z.string().trim().optional().or(z.literal('')),
   facebook_page: z.string().trim().optional().or(z.literal('')),
-  trigger_types: z.array(automationOnboardingTriggerTypeSchema).default([]),
+  trigger_types: z.array(automationOnboardingTriggerTypeSchema)
+    .max(automationOnboardingTriggerTypeSchema.options.length, 'Choose no more than four trigger types')
+    .default([]),
   dm_template: z.string().trim().optional().or(z.literal('')),
-  qualification_questions: z.array(z.string().trim().min(1)).default([]),
+  qualification_questions: z.array(z.string().trim().min(1))
+    .max(20, 'Use no more than 20 qualification questions')
+    .default([]),
   escalation_destination: z.enum(['email', 'slack', 'manual_follow_up']),
 }).superRefine((val, ctx) => {
   if (val.auto_response_enabled && !val.dm_template?.trim()) {

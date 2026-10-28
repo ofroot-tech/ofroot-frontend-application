@@ -1,0 +1,20 @@
+{
+  "name": "deepmerge",
+  "version": "4.3.1",
+  "private": true,
+  "description": "Vendored deepmerge 4.3.1 with explicit prototype-poisoning security backport",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "license.txt",
+    "README.md"
+  ],
+  "ofrootSecurityBackport": {
+    "upstreamVersion": "4.3.1",
+    "advisory": "GHSA-gcqx-w48m-w2h4",
+    "originalTarballIntegrity": "sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A=="
+  }
+}

@@ -1,0 +1,7 @@
+# Keep the optional pnpm install on the same reviewed security resolutions as npm.
+packages:
+  - .
+
+overrides:
+  next>postcss: 8.5.32
+  deepmerge: file:./vendor/deepmerge-4.3.1.tgz
