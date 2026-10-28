@@ -9,6 +9,7 @@ import MotionText from '@/components/growth/MotionText';
 import styles from './news.module.css';
 import SignalHeader from './SignalHeader';
 import SignalBriefLink from './SignalBriefLink';
+import SubscribeCTA from './subscriptions/SubscribeCTA';
 import { formatPublished, topics } from './presentation';
 const kindLabels: Record<NewsArticle['kind'], string> = { reporting: 'Reporting', research: 'Research', release: 'Release', policy: 'Policy update', advisory: 'Security advisory' };
 const savedKey = 'ofroot-signal-saved-v1';
@@ -143,6 +144,7 @@ export default function Newsroom({ initialSnapshot }: { initialSnapshot: NewsSna
         </section>
 
         <aside className={styles.rail} aria-label="Newsroom information">
+          <SubscribeCTA compact />
           <div className={styles.radar}><span className={styles.railEyebrow}><span /> ON THE RADAR</span><h2>Follow the<br />bigger picture.</h2><p>Five connected worlds.<br />Every perspective matters.</p>{topics.map(topic => <button key={topic.id} onClick={() => chooseCategory(topic.id)} aria-pressed={category === topic.id}><topic.icon size={16} /><span>{topic.label}</span><small>{counts[topic.id]}</small><ChevronRight size={14} /></button>)}</div>
           <div className={styles.sourcePanel}><span className={styles.railEyebrow}>FROM THE ORIGINALS</span><h2>Visible sources.<br />A direct path back.</h2><p>We bring the discovery.<br />The publishers bring the story.</p><div className={styles.sourceBadges}>{snapshot.sources.filter(item => item.enabled).slice(0, 4).map(item => <span key={item.id}>{item.name}</span>)}</div><Link href="/news/sources">Meet our sources <ArrowUpRight size={15} /></Link><span className={styles.sourceStatus}><i className={healthyCount ? styles.greenDot : styles.amberDot} />{healthyCount} of {activeCount} feeds available at last check</span></div>
           <div className={styles.methodPanel}><CircleHelp size={22} strokeWidth={1.3} /><h2>Built to inform.<br />Designed to give credit.</h2><p>Original headlines lead to their publishers. Signal briefs add clearly cited digests from permitted primary records, with coverage limits shown.</p><Link href="/news/methodology">Our approach <ArrowRight size={15} /></Link></div>

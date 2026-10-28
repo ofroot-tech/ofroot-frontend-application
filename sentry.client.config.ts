@@ -2,6 +2,7 @@
 // Sentry (browser) — careful and concise.
 
 import * as Sentry from '@sentry/nextjs';
+import { isPrivateSignalBrowser, isPrivateSignalRoute } from './app/lib/signal-subscriptions/privacy';
 
 Sentry.init({
   // Browser DSN is public by design. Use NEXT_PUBLIC_SENTRY_DSN (set in Vercel).
@@ -16,6 +17,7 @@ Sentry.init({
     'AbortError: The user aborted a request',
   ],
   beforeSend(event) {
+    if (isPrivateSignalBrowser() || isPrivateSignalRoute(event.request?.url)) return null;
     // Scrub sensitive data defensively
     if (event.request) {
       if (event.request.headers) {
@@ -25,4 +27,6 @@ Sentry.init({
     }
     return event;
   },
+  beforeSendTransaction: event => isPrivateSignalBrowser() || isPrivateSignalRoute(event.request?.url) ? null : event,
+  beforeBreadcrumb: breadcrumb => isPrivateSignalBrowser() || [breadcrumb.data?.url, breadcrumb.data?.from, breadcrumb.data?.to].some(value => typeof value === 'string' && isPrivateSignalRoute(value)) ? null : breadcrumb,
 });
