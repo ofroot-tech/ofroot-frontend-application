@@ -56,7 +56,9 @@
 .controls { border-top:1px solid var(--line); padding-top:14px; margin-top:28px; }
 .controls button { display:flex; align-items:center; gap:12px; width:100%; min-height:48px; padding-block:12px; font-size:12px; color:#dfc7f1; text-align:left; }
 .honeypot { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
-.cta { display:flex; align-items:center; justify-content:space-between; gap:30px; border:1px solid var(--line); border-top-color:#8b7191; background:#211c2c; padding:32px; margin-block:36px; }
+/* The same invitation can sit in Signal or an OfRoot article without inheriting
+   the public page's dark --ink token as its text color. */
+.cta { --ink:#faf9fc; --muted:#c0b5cc; --lavender:#c3afe1; color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:30px; border:1px solid var(--line); border-top-color:#8b7191; background:#211c2c; padding:32px; margin-block:36px; }
 .cta h2 { font-size:31px; font-weight:510; line-height:1.2; letter-spacing:-.035em; margin-block:15px; }
 .cta p:last-child { max-width:650px; font-size:15px; color:var(--muted); line-height:1.8; }
 .cta .primary { margin-top:0; flex-shrink:0; }
