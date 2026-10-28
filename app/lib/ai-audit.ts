@@ -14,7 +14,8 @@ export const oraReportSchema = z.object({
   essentials: z.object({
     score: z.number().min(0).max(100).nullable(), label: z.string(), issues: z.array(z.string()),
     activeSurfaces: z.array(z.object({ id: z.string(), label: z.string(), score: z.number().nullable(), passing: z.number(), total: z.number() })).default([]),
-    checks: z.record(z.object({ tier: z.string(), bonus: z.boolean(), recommendation: z.string().optional() })),
+    // Provider check identifiers are open-ended strings rather than a fixed enum.
+    checks: z.record(z.string(), z.object({ tier: z.string(), bonus: z.boolean(), recommendation: z.string().optional() })),
   }).optional(),
 });
 export type AuditReport = z.infer<typeof oraReportSchema>;
