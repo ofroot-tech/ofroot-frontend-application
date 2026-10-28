@@ -49,8 +49,11 @@ export default function SubscriptionClient({ mode }: { mode: Mode }) {
   }, []);
   useEffect(() => {
     if (mode === 'subscribe') {
-      const requested = new URLSearchParams(window.location.search).get('topic');
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get('topic');
       if (signalTopics.some(topic => topic.id === requested)) setSelectedTopics([requested as NewsCategory]);
+      const requestedContent = params.get('content');
+      if (requestedContent === 'briefs' || requestedContent === 'insights' || requestedContent === 'both') setContent(requestedContent);
       return;
     }
     const key = `${mode}:${window.location.pathname}`;
