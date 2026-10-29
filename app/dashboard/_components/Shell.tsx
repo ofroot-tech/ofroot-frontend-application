@@ -148,6 +148,7 @@ export default function DashboardShell({ children, authed = false }: Props) {
 			...((hasBlogAddon || isSuperAdmin) ? ([{ href: '/dashboard/blog', label: 'Blog', icon: NotebookPen }] as const) : ([] as const)),
 			...(isSuperAdmin ? ([{ href: '/dashboard/docs', label: 'Docs', icon: Book }] as const) : ([] as const)),
       ...(canViewOwnerFunnel ? ([{ href: '/dashboard/owner/funnel', label: 'Owner Funnel', icon: ClipboardList }] as const) : ([] as const)),
+      ...(canViewOwnerFunnel ? ([{ href: '/dashboard/owner/signal', label: 'Signal Operations', icon: Radar }] as const) : ([] as const)),
 		]
       .filter((item) => {
         if (item.href === helprNavItem.href) return canUseHelpr;

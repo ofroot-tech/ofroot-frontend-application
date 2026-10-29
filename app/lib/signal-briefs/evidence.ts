@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import type { NewsArticle } from '@/app/lib/news/types';
 import { parseNewsDate } from '@/app/lib/news/normalize';
 import type { BriefEvidence, EvidenceResult } from './types';
+import { briefIdentity as identity } from './availability';
 
 /** Discovery and evidence have different permissions. An article can point us
  * to an exact public record, but its headline alone can never support a brief.
@@ -11,7 +12,6 @@ const MAX_BYTES = 4 * 1024 * 1024;
 const CATALOG_TTL = 15 * 60_000;
 const FDA_FEED = 'https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/press-releases/rss.xml';
 const KEV_FEED = 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json';
-type Identity = { kind: 'arxiv' | 'federal-register' | 'cisa' | 'fda'; id: string; url: string };
 type Retrieved = { body: string; fetchedAt: string };
 const catalogs = new WeakMap<typeof fetch, { expiresAt: number; pending: Promise<Retrieved> }>();
 const HTML_TAGS = new Set('a abbr address area article aside audio b base bdi bdo blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd label legend li link main map mark menu meta meter nav noscript object ol optgroup option output p picture pre progress q rp rt ruby s samp script search section select slot small source span strong style sub summary sup table tbody td template textarea tfoot th thead time title tr track u ul var video wbr'.split(' '));
@@ -53,33 +53,6 @@ function calendarDate(value: unknown): string | null {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const timestamp = Date.parse(`${value}T00:00:00Z`);
   return Number.isFinite(timestamp) && new Date(timestamp).toISOString().slice(0, 10) === value ? value : null;
-}
-
-function identity(article: NewsArticle): Identity | null {
-  try {
-    const url = new URL(article.url);
-    if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash) return null;
-    if ((article.sourceId === 'arxiv' || article.sourceId === 'arxiv-integrations') && article.kind === 'research' && url.hostname === 'arxiv.org' && !url.search) {
-      // Version-specific and legacy identifiers need their own adapter; never
-      // silently substitute a different version of a paper for the linked one.
-      const match = url.pathname.match(/^\/abs\/(\d{4}\.\d{4,5})$/);
-      return match ? { kind: 'arxiv', id: match[1], url: url.href } : null;
-    }
-    if (article.sourceId === 'federal-register' && article.kind === 'policy' && url.hostname === 'www.federalregister.gov' && !url.search) {
-      const match = url.pathname.match(/^\/documents\/\d{4}\/\d{2}\/\d{2}\/(\d{4}-\d{4,7})\/[a-z0-9-]+\/?$/);
-      return match ? { kind: 'federal-register', id: match[1], url: url.href.replace(/\/$/, '') } : null;
-    }
-    if (article.sourceId === 'cisa' && article.kind === 'advisory' && url.hostname === 'www.cisa.gov' && url.pathname === '/known-exploited-vulnerabilities-catalog') {
-      const id = url.searchParams.get('search_api_fulltext');
-      const keys = Array.from(url.searchParams.keys());
-      return id && /^CVE-\d{4}-\d{4,9}$/.test(id) && keys.length === 1 && keys[0] === 'search_api_fulltext' && article.title.startsWith(`${id}:`)
-        ? { kind: 'cisa', id, url: url.href } : null;
-    }
-    if (article.sourceId === 'fda' && article.kind === 'release' && url.hostname === 'www.fda.gov' && !url.search && /^\/news-events\/press-announcements\/[a-z0-9-]+\/?$/.test(url.pathname)) {
-      return { kind: 'fda', id: url.pathname, url: url.href.replace(/\/$/, '') };
-    }
-    return null;
-  } catch { return null; }
 }
 
 export function supportsBrief(article: NewsArticle): boolean { return identity(article) !== null; }

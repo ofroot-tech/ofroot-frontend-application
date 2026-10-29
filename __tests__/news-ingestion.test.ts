@@ -94,4 +94,29 @@ describe('news discovery metadata safety', () => {
     expect(parseSourceBody(source, JSON.stringify({ results: [unrelated, relevant] }), now)).toHaveLength(1);
     expect(parseSourceBody(source, JSON.stringify({ results: [relevant] }), now)[0].title).toBe('Notice: Artificial Intelligence and Data Privacy Standards');
   });
+
+  test('reads approved NIST technology metadata but excludes events and keeps source fields', () => {
+    const source = NEWS_SOURCES.find(item => item.id === 'nist')!;
+    const body = '<rss><channel><item><title>New Software and Agentic AI Identity Report</title><link>https://www.nist.gov/news-events/news/2026/10/identity</link><pubDate>Mon, 26 Oct 2026 12:00:00 GMT</pubDate><description>Never copied</description></item><item><title>Identity workshop</title><link>https://www.nist.gov/news-events/events/2026/10/workshop</link><pubDate>Mon, 26 Oct 2026 12:00:00 GMT</pubDate></item></channel></rss>';
+    expect(parseSourceBody(source, body, now)).toHaveLength(1);
+    expect(parseSourceBody(source, body, now)[0]).toMatchObject({ category: 'ai', kind: 'release', title: 'New Software and Agentic AI Identity Report' });
+    expect(JSON.stringify(parseSourceBody(source, body, now))).not.toContain('Never copied');
+  });
+
+  test('normalizes CMS malformed anchor links and timezone-free dates without broadening allowed origins', () => {
+    const source = NEWS_SOURCES.find(item => item.id === 'cms')!;
+    const item = (path: string) => `<item><title><a href="${path}">Technology-enabled healthcare program</a></title><link>https://www.cms.gov/${encodeURIComponent(`<a href="${path}" hreflang="en">Technology-enabled healthcare program</a>`)}</link><pubDate>Mon, 10/26/2026 - 08:28</pubDate><description>Not copied</description></item>`;
+    const body = `<rss><channel>${item('/newsroom/press-releases/program')}${item('//evil.test/newsroom/program')}</channel></rss>`;
+    const result = parseSourceBody(source, body, now);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({ title: 'Technology-enabled healthcare program', url: 'https://www.cms.gov/newsroom/press-releases/program', publishedAt: '2026-10-26', category: 'healthcare' });
+    expect(result[0].author).toBeUndefined();
+    expect(JSON.stringify(result)).not.toContain('Not copied');
+    expect(source.rights).toMatchObject({ web: 'metadata-only', email: 'metadata-only' });
+  });
+
+  test('promotions in an otherwise valid commercial feed yield an honest empty selection', () => {
+    const source = NEWS_SOURCES.find(item => item.id === 'techcrunch-healthcare')!;
+    expect(parseSourceBody(source, '<rss><channel><item><title>7 days until Founder Summit: Save up to $100 on your pass</title><link>https://techcrunch.com/2026/10/26/promo/</link><pubDate>Mon, 26 Oct 2026 12:00:00 GMT</pubDate></item></channel></rss>', now)).toEqual([]);
+  });
 });

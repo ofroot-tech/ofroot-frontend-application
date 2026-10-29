@@ -56,4 +56,29 @@ describe('news update and failure behavior', () => {
     expect(publicSnapshot(snapshot).articles).toHaveLength(1);
     expect(publicSnapshot(snapshot).articles[0].category).toBe('cybersecurity');
   });
+
+  test('a fresh shared index missing a newly enabled source is checked once, even when that source fails', async () => {
+    global.fetch = jest.fn().mockResolvedValue(new Response('', { status: 503 }));
+    const first = await getNewsSnapshot();
+    first.sourceHealth = first.sourceHealth.filter(health => health.sourceId !== 'nist');
+    const previousCalls = (global.fetch as jest.Mock).mock.calls.length;
+    const refreshed = await getNewsSnapshot();
+    expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(previousCalls);
+    expect(refreshed.sourceHealth.find(health => health.sourceId === 'nist')?.status).toBe('error');
+    const afterRefresh = (global.fetch as jest.Mock).mock.calls.length;
+    await getNewsSnapshot();
+    expect((global.fetch as jest.Mock).mock.calls.length).toBe(afterRefresh);
+  });
+
+  test('a changed registry version bypasses both fresh-cache branches and never advertises full coverage', async () => {
+    global.fetch = jest.fn().mockResolvedValue(new Response('', { status: 503 }));
+    const snapshot = await getNewsSnapshot();
+    snapshot.registryVersion = 'previous-deployment';
+    snapshot.status = 'live';
+    expect(publicSnapshot(snapshot).status).toBe('partial');
+    const previousCalls = (global.fetch as jest.Mock).mock.calls.length;
+    const refreshed = await refreshNews({ force: false });
+    expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(previousCalls);
+    expect(refreshed.registryVersion).not.toBe('previous-deployment');
+  });
 });

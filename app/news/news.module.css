@@ -46,19 +46,19 @@
 .news .hero > button { min-height:44px; font:10px/1.5 var(--font-geist-mono),monospace; }
 .heroGrid { position:absolute; inset:0 var(--gutter); max-width:calc(1600px - var(--gutter)*2); margin:auto; pointer-events:none; border-inline:1px solid var(--line); display:grid; grid-template-columns:repeat(3,1fr); z-index:-1; }
 .heroGrid span+span { border-left:1px solid var(--line); }
-.intro { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 310px; align-items:end; gap:clamp(32px,5vw,80px); padding-block:64px 86px; }
+.intro { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 270px; align-items:center; gap:clamp(28px,4vw,64px); padding-block:30px 46px; }
 .eyebrow { display:flex; align-items:center; gap:10px; color:var(--lavender); font:11px/1.6 var(--font-geist-mono),monospace!important; letter-spacing:.08em; text-transform:uppercase; }
 .eyebrow > span { height:5px; width:5px; flex-shrink:0; background:var(--accent); }
-.intro h1 { margin:30px 0 27px; font-size:clamp(50px,6.1vw,88px); font-weight:560; line-height:1.06; letter-spacing:-.055em; }
-.introCopy { max-width:650px!important; font-size:20px!important; line-height:1.6!important; letter-spacing:-.02em; color:#c9c0d6; }
-.heroActions { display:flex; align-items:center; flex-wrap:wrap; gap:20px 28px; margin-top:32px; }
+.intro h1 { margin:18px 0 15px; font-size:clamp(38px,4.3vw,64px); font-weight:560; line-height:1.06; letter-spacing:-.055em; }
+.introCopy { max-width:650px!important; font-size:16px!important; line-height:1.7!important; letter-spacing:-.02em; color:#c9c0d6; }
+.heroActions { display:flex; align-items:center; flex-wrap:wrap; gap:12px 28px; margin-top:16px; }
 .primary { display:inline-flex; align-items:center; justify-content:space-between; gap:28px; min-height:56px; padding:17px 24px; background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356); border:1px solid #9b7f9e; border-radius:2px; color:var(--ink)!important; font-size:14px; font-weight:560; line-height:1.5; transition:background-color .2s,border-color .2s; }
 .primary:hover { border-color:#e1bac9; background:linear-gradient(110deg,#7b5048,#6d4b6d 58%,#49416b); }
 .heroActions > a:not(.primary) { display:inline-flex; align-items:center; gap:14px; min-height:44px; font-size:13px; color:#dfc7f1; }
-.introAside { padding:28px; background:rgba(40,33,51,.86); border:1px solid var(--line); border-top-color:#77647f; }
+.introAside { padding:18px 22px; background:rgba(40,33,51,.86); border:1px solid var(--line); border-top-color:#77647f; }
 .introAside .eyebrow { font-size:9px!important; line-height:1.7; }
 .introAside > p { margin-top:22px; font-size:25px; font-weight:510; line-height:1.2; letter-spacing:-.035em; }
-.introAside dl { margin-block:28px 12px; }
+.introAside dl { margin-block:12px 2px; }
 .introAside dl > div { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding-block:13px; }
 .introAside dt { font-size:12px; color:var(--muted); }
 .introAside dd { font:18px/1.3 var(--font-geist-mono),monospace; }
@@ -84,12 +84,12 @@
 .topicGrid button > span:last-child { display:block; font-size:12px; line-height:1.65; color:var(--muted); }
 
 /* A lead plane and ruled shortlist use original, untruncated publisher titles. */
-.highlights { display:grid; grid-template-columns:1.1fr 1fr; gap:clamp(28px,4vw,64px); padding-bottom:56px; border-bottom:1px solid var(--line); }
-.lead { position:relative; isolation:isolate; overflow:hidden; background:linear-gradient(135deg,#392a3a,#272233 75%); border:1px solid #69536f; padding:32px; min-height:390px; display:flex; flex-direction:column; }
+.highlights { display:grid; grid-template-columns:1.1fr 1fr; gap:clamp(28px,4vw,64px); padding-bottom:36px; border-bottom:1px solid var(--line); }
+.lead { position:relative; isolation:isolate; overflow:hidden; background:linear-gradient(135deg,#392a3a,#272233 75%); border:1px solid #69536f; padding:32px; min-height:340px; display:flex; flex-direction:column; }
 .leadTop { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; color:#e0c2d5; font:10px/1.6 var(--font-geist-mono),monospace; letter-spacing:.04em; }
 .leadTop > span:first-child { display:flex; align-items:center; gap:8px; }
 .leadTop > span:last-child { color:var(--accent); text-transform:uppercase; }
-.lead h2 { font-size:clamp(27px,2.5vw,37px); font-weight:510; line-height:1.2; letter-spacing:-.035em; margin-block:34px 40px; }
+.lead h2 { font-size:clamp(27px,2.5vw,37px); font-weight:510; line-height:1.2; letter-spacing:-.035em; margin-block:25px 18px; }
 .lead > p { color:var(--muted); font-size:15px; line-height:1.75; margin-bottom:24px; }
 .leadBottom { display:flex; align-items:end; justify-content:space-between; gap:18px; margin-top:auto; }
 .leadBottom > div { display:grid; gap:7px; min-width:0; }
@@ -117,7 +117,7 @@
 
 /* The reading surface keeps search, saved items, source filtering, and feed
    notices in place. Only the reader chooses when new headlines enter the list. */
-.streamLayout { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:clamp(32px,5vw,80px); padding-block:64px 72px; }
+.streamLayout { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:clamp(32px,5vw,80px); padding-block:30px 60px; }
 .streamTitle { display:flex; align-items:end; justify-content:space-between; gap:16px; }
 .streamTitle h2 { font-size:clamp(36px,3.4vw,48px); line-height:1.1; letter-spacing:-.045em; font-weight:510; margin-top:18px; }
 .streamTitle > span { display:flex; align-items:center; gap:7px; flex-shrink:0; color:var(--muted); font:11px/1.6 var(--font-geist-mono),monospace; margin-bottom:4px; }
@@ -241,9 +241,9 @@
    cells become a fully visible mobile grid, with no hidden horizontal beats. */
 @media(max-width:1100px) {
   .intro { grid-template-columns:minmax(0,1fr) 270px; gap:32px; }
-  .intro h1 { font-size:clamp(52px,6.3vw,70px); }
+  .intro h1 { font-size:clamp(36px,4.8vw,54px); }
   .introAside { padding:24px; }
-  .introCopy { font-size:18px!important; }
+  .introCopy { font-size:15px!important; }
   .topicGrid button { padding:20px 14px; }
   .topicGrid strong { font-size:13px; }
   .topicGrid button > span:last-child { font-size:11px; }
@@ -256,8 +256,8 @@
 @media(max-width:800px) {
   .masthead nav { gap:20px; font-size:12px; }
   .byline { display:none; }
-  .intro { grid-template-columns:1fr; padding-block:44px 80px; }
-  .intro h1 { font-size:clamp(48px,8.5vw,72px); }
+  .intro { grid-template-columns:1fr; padding-block:26px 42px; }
+  .intro h1 { font-size:clamp(38px,6.5vw,56px); }
   .introCopy { max-width:620px!important; }
   .introAside { display:none; }
   .heroGrid { grid-template-columns:1fr 1fr; }
@@ -296,11 +296,11 @@
   .masthead nav { width:100%; justify-content:flex-start; gap:4px 20px; font-size:12px; }
   .masthead nav a { min-height:44px; }
   .masthead nav svg { display:none; }
-  .intro { padding-block:36px 76px; }
-  .intro h1 { font-size:clamp(42px,11vw,53px); margin-block:26px 23px; }
+  .intro { padding-block:24px 40px; }
+  .intro h1 { font-size:clamp(34px,9vw,43px); margin-block:18px 14px; }
   .intro .eyebrow { font-size:9px!important; }
   .introCopy { font-size:18px!important; }
-  .heroActions { align-items:start; flex-direction:column; gap:14px; margin-top:26px; }
+  .heroActions { align-items:center; flex-direction:row; gap:8px 20px; margin-top:14px; }
   .heroActions .primary { width:100%; }
   .edition { font-size:10px; }
   .edition > span:first-child { display:flex; flex-direction:column; gap:5px; }
@@ -355,4 +355,43 @@
 }
 @media(prefers-reduced-motion:reduce) {
   .news * { animation:none!important; transition:none!important; }
+}
+
+/* A shorter masthead gets readers to the news. Stable planes enter once;
+   live headlines never animate or shift when polling discovers new items. */
+.highlightsHeading { display:flex; align-items:end; justify-content:space-between; gap:20px; padding:8px 0 24px; }
+.highlightsHeading h2 { font-size:32px; letter-spacing:-.04em; line-height:1.15; font-weight:520; margin-top:12px; }
+.highlightsHeading > a { display:flex; align-items:center; gap:9px; color:var(--muted); font-size:11px; line-height:1.7; min-height:44px; }
+.lead .selectionReason { border-left:2px solid var(--accent); padding-left:12px; font-size:12px; line-height:1.8; color:#d9c9e2; margin:0 0 25px; }
+.topicPills { display:flex; flex-wrap:wrap; gap:8px; padding-block:25px 0; }
+.topicPills button { display:flex; align-items:center; gap:9px; min-height:44px; padding:10px 14px; border:1px solid var(--line); color:var(--muted); font-size:12px; transition:background-color 180ms,border-color 180ms,color 180ms; }
+.topicPills button small { color:var(--lavender); font:10px/1.4 var(--font-geist-mono),monospace; }
+.topicPills button[aria-pressed=true] { background:#352a40; border-color:#ad8caa; color:var(--ink); }
+.topicPills button:hover { border-color:var(--accent); color:var(--ink); }
+.coverageLink { display:inline-flex; align-items:center; gap:7px; color:var(--lavender)!important; font-size:11px; line-height:1.6; min-height:38px; margin:-8px 0 13px; }
+.coverageLink:hover { color:var(--accent)!important; }
+.lead { transition:border-color 220ms; }
+.lead:hover { border-color:#c3a0b9; }
+.heroActions > a svg,.coverageLink > svg:last-child { transition:transform 180ms ease; }
+.heroActions > a:hover svg,.coverageLink:hover > svg:last-child { transform:translateX(3px); }
+.intro { animation:signalPlaneIn 500ms cubic-bezier(.16,1,.3,1) both; }
+@keyframes signalPlaneIn { from { opacity:.3; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@media(max-width:800px) {
+  .highlightsHeading { align-items:start; flex-direction:column; gap:6px; padding-bottom:18px; }
+  .highlightsHeading > a { font-size:10px; }
+  .highlightsHeading h2 { font-size:30px; }
+  .topicPills { gap:7px; padding-top:22px; }
+  .streamTabs { align-items:start; flex-wrap:wrap; gap:0 16px; }
+  .streamTabs > div { gap:16px; flex-wrap:wrap; }
+  .streamTabs select { margin-left:auto; }
+}
+@media(max-width:480px) {
+  .topicPills button { flex:1 1 auto; justify-content:center; padding:9px 10px; font-size:11px; }
+  .streamTabs > div { gap:14px; width:100%; }
+  .streamTabs button { font-size:11px; }
+  .streamTabs select { margin-block:4px; }
+  .highlightsHeading .eyebrow { font-size:9px!important; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .news * { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 }

@@ -1,0 +1,18 @@
+/* Publication cards stay stable; hover feedback reveals the onward path. */
+.note { color:var(--muted); font-size:12px; line-height:1.9; padding-bottom:28px; max-width:850px!important; }
+.note a { color:var(--lavender); }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; padding-bottom:64px; }
+.card { display:flex; flex-direction:column; padding:28px; border:1px solid var(--line); background:var(--panel); transition:border-color 200ms; }
+.card:hover { border-color:#9b7f9e; }
+.card h2 { font-size:26px; line-height:1.3; letter-spacing:-.03em; font-weight:510; margin:24px 0; overflow-wrap:anywhere; }
+.card > p:not(:first-child) { font-size:11px; line-height:1.8; color:var(--muted); margin-bottom:22px; }
+.action { display:flex; justify-content:space-between; align-items:center; gap:15px; font-size:12px; min-height:44px; border-top:1px solid var(--line); padding-top:17px; margin-top:auto; }
+.action svg { transition:transform 180ms; }
+.action:hover svg { transform:translateX(4px); }
+.empty { grid-column:1/-1; text-align:center; padding:44px 24px; border:1px solid var(--line); }
+.empty > svg { color:var(--accent); margin:auto; }
+.empty h2 { font-size:28px; line-height:1.3; margin-top:24px; font-weight:510; }
+.empty p { max-width:600px!important; margin:18px auto 24px!important; color:var(--muted); font-size:14px; line-height:1.8; }
+.empty a { display:inline-flex; align-items:center; gap:15px; min-height:44px; font-size:13px; }
+@media(max-width:800px) { .grid { grid-template-columns:1fr; } .card { padding:24px; } }
+@media(prefers-reduced-motion:reduce) { .card,.action svg { transition:none; } }

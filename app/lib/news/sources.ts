@@ -92,6 +92,26 @@ export const NEWS_SOURCES: NewsSource[] = [
     },
   },
   {
+    id: 'nist', name: 'NIST · Information technology', homepage: 'https://www.nist.gov',
+    categories: ['ai', 'integrations', 'cybersecurity'], enabled: true,
+    feedUrl: 'https://www.nist.gov/news-events/information%20technology/rss.xml',
+    rights: {
+      status: 'approved', web: 'metadata-only', email: 'metadata-only', reviewedAt: '2026-10-29',
+      basis: 'NIST permits distribution of its public information except material marked copyrighted. This official RSS adapter uses attributed headlines, dates, and NIST links only; event listings, bodies, images, and third-party materials are excluded. Website and email metadata reuse reviewed separately; this does not enable article-body digests.',
+      termsUrl: 'https://www.nist.gov/copyrights-disclaimers',
+    },
+  },
+  {
+    id: 'cms', name: 'CMS · Health technology', homepage: 'https://www.cms.gov',
+    categories: ['healthcare'], enabled: true,
+    feedUrl: 'https://www.cms.gov/newsroom/rss-feeds',
+    rights: {
+      status: 'approved', web: 'metadata-only', email: 'metadata-only', reviewedAt: '2026-10-29',
+      basis: 'CMS identifies CMS.gov as a public-domain website and permits contextual links. Only agency newsroom headlines, calendar dates, and original links concerning digital health, health data, or technology are indexed. Website and email metadata reuse reviewed separately; no third-party works, imagery, logos, or release-body digests are included.',
+      termsUrl: 'https://www.cms.gov/about-cms/web-policies-important-links/about-website/link-to-us',
+    },
+  },
+  {
     id: 'the-verge', name: 'The Verge', homepage: 'https://www.theverge.com',
     categories: ['ai', 'policy'], enabled: false,
     rights: {

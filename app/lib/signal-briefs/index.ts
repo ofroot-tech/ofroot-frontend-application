@@ -2,8 +2,9 @@ import { getNewsSnapshot, publicSnapshot } from '../news';
 import type { NewsArticle } from '../news/types';
 import { briefFingerprint, composeSignalBrief } from './compose';
 import { fetchBriefEvidence, supportsBrief } from './evidence';
-import { readArchivedBriefArticle, readStoredBrief, writeStoredBrief } from './store';
+import { readArchivedBriefArticle, readStoredBrief, readStoredBriefAvailability, writeStoredBrief } from './store';
 import type { SignalBrief } from './types';
+import { initialBriefAvailability, type BriefAvailability } from './availability';
 
 type BriefState = { cache: Map<string, { value: SignalBrief; until: number }>; inflight: Map<string, Promise<SignalBrief>> };
 declare global { var __ofrootBriefState: BriefState | undefined; }
@@ -40,6 +41,24 @@ export async function getBriefForArticle(article: NewsArticle): Promise<SignalBr
   })();
   current.inflight.set(key, pending);
   try { return await pending; } finally { current.inflight.delete(key); }
+}
+
+/** A logo is a promise about the destination. Only evidence already checked in
+ * the current cache earns Ready; adapter support by itself remains Unchecked. */
+export async function getBriefAvailability(articles: NewsArticle[]): Promise<Record<string, BriefAvailability>> {
+  const output: Record<string, BriefAvailability> = {};
+  const missing: { id: string; fingerprint: string }[] = [];
+  const current = state();
+  for (const article of articles.slice(0, 500)) {
+    output[article.id] = initialBriefAvailability(article);
+    if (output[article.id] === 'unsupported') continue;
+    const fingerprint = briefFingerprint(article);
+    const cached = current.cache.get(fingerprint);
+    if (cached && cached.until > Date.now()) output[article.id] = cached.value.status;
+    else missing.push({ id: article.id, fingerprint });
+  }
+  const stored = await readStoredBriefAvailability(missing);
+  return { ...output, ...stored };
 }
 
 /** Three workers bound primary-source traffic on a cold collection page. */
