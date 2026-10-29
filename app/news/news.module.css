@@ -46,7 +46,7 @@
 .news .hero > button { min-height:44px; font:10px/1.5 var(--font-geist-mono),monospace; }
 .heroGrid { position:absolute; inset:0 var(--gutter); max-width:calc(1600px - var(--gutter)*2); margin:auto; pointer-events:none; border-inline:1px solid var(--line); display:grid; grid-template-columns:repeat(3,1fr); z-index:-1; }
 .heroGrid span+span { border-left:1px solid var(--line); }
-.intro { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 270px; align-items:center; gap:clamp(28px,4vw,64px); padding-block:30px 46px; }
+.intro { position:relative; display:grid; grid-template-columns:minmax(0,1fr) 270px; align-items:center; gap:clamp(28px,4vw,64px); padding-block:22px 30px; }
 .eyebrow { display:flex; align-items:center; gap:10px; color:var(--lavender); font:11px/1.6 var(--font-geist-mono),monospace!important; letter-spacing:.08em; text-transform:uppercase; }
 .eyebrow > span { height:5px; width:5px; flex-shrink:0; background:var(--accent); }
 .intro h1 { margin:18px 0 15px; font-size:clamp(38px,4.3vw,64px); font-weight:560; line-height:1.06; letter-spacing:-.055em; }
@@ -55,11 +55,11 @@
 .primary { display:inline-flex; align-items:center; justify-content:space-between; gap:28px; min-height:56px; padding:17px 24px; background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356); border:1px solid #9b7f9e; border-radius:2px; color:var(--ink)!important; font-size:14px; font-weight:560; line-height:1.5; transition:background-color .2s,border-color .2s; }
 .primary:hover { border-color:#e1bac9; background:linear-gradient(110deg,#7b5048,#6d4b6d 58%,#49416b); }
 .heroActions > a:not(.primary) { display:inline-flex; align-items:center; gap:14px; min-height:44px; font-size:13px; color:#dfc7f1; }
-.introAside { padding:18px 22px; background:rgba(40,33,51,.86); border:1px solid var(--line); border-top-color:#77647f; }
+.introAside { padding:12px 18px; background:rgba(40,33,51,.86); border:1px solid var(--line); border-top-color:#77647f; }
 .introAside .eyebrow { font-size:9px!important; line-height:1.7; }
 .introAside > p { margin-top:22px; font-size:25px; font-weight:510; line-height:1.2; letter-spacing:-.035em; }
 .introAside dl { margin-block:12px 2px; }
-.introAside dl > div { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding-block:13px; }
+.introAside dl > div { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding-block:7px; }
 .introAside dt { font-size:12px; color:var(--muted); }
 .introAside dd { font:18px/1.3 var(--font-geist-mono),monospace; }
 .introAside dd span { color:var(--muted); font-size:12px; }
@@ -290,7 +290,7 @@
   .prose article h2 { font-size:29px; }
 }
 @media(max-width:480px) {
-  .masthead { align-items:start; flex-direction:column; gap:12px; padding-block:22px 12px; }
+  .masthead { align-items:start; flex-direction:column; gap:8px; padding-block:16px 8px; }
   .wordmark strong { font-size:25px; }
   .byline { display:inline; font-size:9px!important; }
   .masthead nav { width:100%; justify-content:flex-start; gap:4px 20px; font-size:12px; }
@@ -299,7 +299,7 @@
   .intro { padding-block:24px 40px; }
   .intro h1 { font-size:clamp(34px,9vw,43px); margin-block:18px 14px; }
   .intro .eyebrow { font-size:9px!important; }
-  .introCopy { font-size:18px!important; }
+  .introCopy { font-size:15px!important; }
   .heroActions { align-items:center; flex-direction:row; gap:8px 20px; margin-top:14px; }
   .heroActions .primary { width:100%; }
   .edition { font-size:10px; }
@@ -359,8 +359,8 @@
 
 /* A shorter masthead gets readers to the news. Stable planes enter once;
    live headlines never animate or shift when polling discovers new items. */
-.highlightsHeading { display:flex; align-items:end; justify-content:space-between; gap:20px; padding:8px 0 24px; }
-.highlightsHeading h2 { font-size:32px; letter-spacing:-.04em; line-height:1.15; font-weight:520; margin-top:12px; }
+.highlightsHeading { display:flex; align-items:end; justify-content:space-between; gap:20px; padding:6px 0 16px; }
+.highlightsHeading h2 { font-size:28px; letter-spacing:-.04em; line-height:1.15; font-weight:520; margin-top:8px; }
 .highlightsHeading > a { display:flex; align-items:center; gap:9px; color:var(--muted); font-size:11px; line-height:1.7; min-height:44px; }
 .lead .selectionReason { border-left:2px solid var(--accent); padding-left:12px; font-size:12px; line-height:1.8; color:#d9c9e2; margin:0 0 25px; }
 .topicPills { display:flex; flex-wrap:wrap; gap:8px; padding-block:25px 0; }
