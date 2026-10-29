@@ -4,7 +4,7 @@
 .intro h1 { max-width:1000px; font-size:clamp(40px,5vw,72px); font-weight:550; line-height:1.08; letter-spacing:-.05em; margin-block:23px; }
 .intro > p:last-child { max-width:780px; font-size:18px; line-height:1.75; color:var(--muted); }
 .eyebrow { font:10px/1.7 var(--font-geist-mono),monospace!important; letter-spacing:.08em; color:var(--lavender); }
-.layout { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:clamp(30px,5vw,80px); padding-block:44px 70px; align-items:start; }
+.layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.85fr); gap:clamp(30px,5vw,70px); padding-block:44px 70px; align-items:start; }
 .form,.accessForm { min-width:0; }
 .emailLabel { display:grid; gap:12px; font-size:14px; color:#e7dff0; }
 .emailLabel input { width:100%; min-height:54px; padding:13px 15px; font:16px/1.5 var(--font-geist-sans),Arial,sans-serif; color:var(--ink); background:#211c2c; border:1px solid #6b597a; border-radius:2px; }
@@ -65,6 +65,25 @@
 .cta.compact { display:block; padding:25px; }
 .compact h2 { font-size:26px; }
 .compact .primary { display:flex; margin-top:24px; padding:15px 18px; font-size:13px; }
+.previewColumn { display:grid; gap:24px; min-width:0; }
+/* The issue preview settles once on entry. Preference changes keep the reading
+   position stable; only the selection controls transition their surface color. */
+.preview { border:1px solid #6b597a; background:linear-gradient(155deg,#30243a,#211c2c 62%); padding:clamp(22px,3vw,34px); animation:previewEntry .5s ease-out both; }
+.previewBrand { display:flex; align-items:center; gap:10px; padding-bottom:22px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+.previewBrand svg { color:#ffb78f; }
+.previewBrand strong { font-size:23px; letter-spacing:-.04em; font-weight:550; }
+.previewBrand > span { margin-left:auto; color:var(--muted); font:9px/1.6 var(--font-geist-mono),monospace; letter-spacing:.07em; }
+.preview h2 { font-size:clamp(26px,3vw,36px); font-weight:520; line-height:1.2; letter-spacing:-.04em; margin-block:15px; }
+.previewIntro,.previewEmpty { color:var(--muted); font-size:13px; line-height:1.85; margin-bottom:20px!important; }
+.previewItem { padding-block:21px; border-top:1px solid var(--line); }
+.previewItem > span { font:9px/1.8 var(--font-geist-mono),monospace; letter-spacing:.04em; color:var(--lavender); }
+.previewItem h3 { font-size:18px; font-weight:510; line-height:1.4; letter-spacing:-.025em; margin-block:11px; }
+.previewItem p { font-size:12px; color:var(--muted); line-height:1.8; }
+.previewItem small { display:flex; align-items:center; gap:7px; color:#e0c4e8; font-size:11px; line-height:1.7; margin-top:14px; }
+.previewNote { padding-top:20px; border-top:1px solid var(--line); font-size:11px; color:var(--muted); line-height:1.85; }
+.topics label,.radios label,.frequencies label,.primary { transition:background-color .18s ease,border-color .18s ease; }
+@keyframes previewEntry { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@media(prefers-reduced-motion:reduce) { .preview { animation:none; } .topics label,.radios label,.frequencies label,.primary { transition:none; } }
 @media(max-width:950px) { .layout { grid-template-columns:minmax(0,1fr) 260px; gap:32px; } .topics { grid-template-columns:1fr; } .cta { align-items:start; flex-direction:column; } }
 @media(max-width:760px) { .intro { padding-block:36px 30px; } .intro h1 { font-size:clamp(38px,8vw,54px); } .intro > p:last-child { font-size:16px; } .layout { grid-template-columns:1fr; padding-block:32px 52px; } .topics { grid-template-columns:repeat(2,minmax(0,1fr)); } .state { padding-block:34px 54px; } .cta { padding:25px; } .cta h2 { font-size:28px; } }
 @media(max-width:480px) { .topics,.frequencies { grid-template-columns:1fr; } .primary { width:100%; padding:17px 20px; } .form .primary,.state .primary,.cta .primary { font-size:13px; } .fieldset legend { font-size:19px; } .consent { font-size:12px; } .state > p { font-size:15px; } .cta .primary { width:100%; } }

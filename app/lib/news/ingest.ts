@@ -1,8 +1,9 @@
 import { canonicalUrl, makeArticle, rssItems } from './normalize';
+import { isRelevantArticle } from './editorial';
 import type { NewsArticle, NewsCategory, NewsSource } from './types';
 
 const MAX_BYTES = 4 * 1024 * 1024;
-const ENDPOINT_HOSTS = ['api.datacite.org', 'www.federalregister.gov', 'www.fda.gov', 'www.cisa.gov', 'techcrunch.com', 'www.techcrunch.com'];
+const ENDPOINT_HOSTS = ['api.datacite.org', 'www.federalregister.gov', 'www.fda.gov', 'www.cisa.gov', 'www.nist.gov', 'www.cms.gov', 'techcrunch.com', 'www.techcrunch.com'];
 
 export async function readSourceBody(source: NewsSource, fetcher: typeof fetch = fetch): Promise<string> {
   if (!source.enabled || source.rights.status !== 'approved' || !source.feedUrl) throw new Error('Source is not approved');
@@ -43,10 +44,12 @@ function object(value: unknown): Record<string, unknown> {
 const INTEGRATION_SIGNAL = /\bapis?\b|integration|interoperabilit|\bmcp\b|model context protocol|connector|zapier|\bsdks?\b/i;
 const CYBER_TITLE_SIGNAL = /\bcyber(?:security|attack|crime)?\b|\bransomware\b|\bmalware\b|\bhackers?\b|\bhacked\b|\bhacking\b|\bdata breach\b|\bzero.day\b|\bvulnerabilit(?:y|ies)\b|\b(?:stolen|leaked|exposed) (?:customer|user|patient|personal|account|sensitive|private|financial) data\b/i;
 const CYBER_CATEGORY_SIGNAL = /^(?:security|cybersecurity|cybercrime|data breach|data breaches)$/i;
+const HEALTH_TITLE_SIGNAL = /\b(?:healthcare|health care|clinical|clinician|patient|biotech|medical|hospital|therap(?:y|ies)|drug discovery)\b/i;
 
 export function routeTechCrunchCategory(sourceId: string, title: string, categories: string[] = []): NewsCategory {
   if (sourceId === 'techcrunch-healthcare') return 'healthcare';
   if (CYBER_TITLE_SIGNAL.test(title) || categories.some(category => CYBER_CATEGORY_SIGNAL.test(category.trim()))) return 'cybersecurity';
+  if (HEALTH_TITLE_SIGNAL.test(title)) return 'healthcare';
   if (sourceId === 'techcrunch-integrations' || INTEGRATION_SIGNAL.test([title, ...categories].join(' '))) return 'integrations';
   return 'ai';
 }
@@ -60,7 +63,36 @@ export function relevantPolicyTitle(title: string): boolean {
 export function parseSourceBody(source: NewsSource, body: string, now = Date.now()): NewsArticle[] {
   if (!source.enabled || source.rights.status !== 'approved') return [];
   const articles: (NewsArticle | null)[] = [];
-  if (source.id === 'fda') {
+  if (source.id === 'nist' || source.id === 'cms') {
+    for (const item of rssItems(body)) {
+      let url = item.url;
+      let date = item.date;
+      if (source.id === 'cms') {
+        // CMS currently serializes an HTML anchor into its RSS link field. Read
+        // only that fixed-origin newsroom path; never follow arbitrary HTML URLs.
+        if (url.includes('%3C') || url.includes('%3c')) {
+          let decoded = '';
+          try { decoded = decodeURIComponent(url); } catch { continue; }
+          const path = decoded.match(/<a\s+href="(\/newsroom\/[^"<>]+)"/i)?.[1];
+          if (!path || path.startsWith('//')) continue;
+          url = `https://www.cms.gov${path}`;
+        }
+        // Its feed omits a timezone. Preserve only the supplied calendar date,
+        // rather than manufacturing an exact UTC publication timestamp.
+        const supplied = date.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+        if (supplied) date = `${supplied[3]}-${supplied[1]}-${supplied[2]}`;
+        if (!/technolog|digital|\bdata\b|prior authorization|interoperabilit|electronic|artificial intelligence|\bAI\b|cyber/i.test(item.title)) continue;
+      }
+      const category: NewsCategory = source.id === 'cms' ? 'healthcare'
+        : CYBER_TITLE_SIGNAL.test(item.title) || /\bsecurity\b|cryptograph|encryption/i.test(item.title) ? 'cybersecurity'
+          : /\bAI\b|artificial intelligence|machine learning/i.test(item.title) ? 'ai' : 'integrations';
+      // CMS's dc:creator currently repeats its date instead of naming an author.
+      // Omit that malformed value; NIST's supplied author credit remains intact.
+      articles.push(makeArticle({ title: item.title, url, date, author: source.id === 'cms' ? undefined : item.author, category, kind: 'release' }, source, source.id === 'cms' ? ['www.cms.gov'] : ['www.nist.gov'], now));
+    }
+    // Valid official feeds can contain only events or out-of-beat records.
+    return articles.filter((article): article is NewsArticle => !!article && isRelevantArticle(article));
+  } else if (source.id === 'fda') {
     for (const item of rssItems(body)) {
       // The FDA's own RSS currently publishes http links. Upgrade this exact official
       // origin to HTTPS; arbitrary HTTP URLs remain rejected by the normalizer.
@@ -107,7 +139,8 @@ export function parseSourceBody(source: NewsSource, body: string, now = Date.now
       }
     } else throw new Error('No adapter configured for source');
   }
-  const accepted = articles.filter((item): item is NewsArticle => item !== null);
+  const accepted = articles.filter((item): item is NewsArticle => item !== null && isRelevantArticle(item));
+  if (articles.length && !accepted.length && source.id.startsWith('techcrunch')) return [];
   if (!accepted.length) throw new Error('Source returned no valid metadata');
   return accepted;
 }

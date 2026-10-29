@@ -18,7 +18,7 @@ export type NewsSource = {
   homepage: string;
   categories: NewsCategory[];
   enabled: boolean;
-  rights: { status: 'approved' | 'pending'; basis: string; termsUrl: string };
+  rights: { status: 'approved' | 'pending'; basis: string; termsUrl: string; web?: 'metadata-only'; email?: 'metadata-only' | 'not-approved'; reviewedAt?: string };
   feedUrl?: string;
 };
 
@@ -40,4 +40,6 @@ export type NewsSnapshot = {
   storage: 'postgres' | 'memory';
   storageMessage?: string;
   refreshState?: 'completed' | 'in_progress' | 'failed';
+  briefAvailability?: Record<string, 'ready' | 'unsupported' | 'unavailable' | 'unchecked'>;
+  registryVersion?: string;
 };

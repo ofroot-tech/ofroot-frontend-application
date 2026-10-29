@@ -2,6 +2,12 @@
 
 Signal has its own confirmed email list. Existing customer/contact records do not become subscribers. Public entry points are `/news/subscribe`, `/news/preferences`, and the subscription invitations on the news and briefs pages.
 
+## Reading preview and operations
+
+Signup and preferences show an illustrative digest layout that responds to topic, content, and cadence choices. It is labelled as a sample rather than current news, never receives the email value, and does not fetch or send data. The actual digest selection, consent, confirmation, and delivery logic remain authoritative and unchanged.
+
+Owners and explicitly configured `ADMIN_EMAILS` can open `/dashboard/owner/signal`; the corresponding `/api/admin/signal` endpoint uses the same server-resolved session and allowlist. The desk shows aggregate source health, current-index brief evidence gaps, due-reader counts, provider acceptance, unresolved attempts, and existing sending budgets. No mailbox addresses, subscriber IDs, signing tokens, provider IDs, or secret values are returned. Both routes are private/noindex, and the API uses `private, no-store`. Delivery metrics only read existing tables; the desk performs no email actions. The existing news snapshot service may refresh a stale index as it does on public news pages. Missing metrics are shown as unavailable rather than assumed zero. A provider-accepted issue does not prove inbox delivery, and a source-reference gap does not claim independent editorial review.
+
 ## Configuration
 
 The app uses the existing Neon Postgres connection (`NEWS_DATABASE_URL`, with `DATABASE_URL`, `DIRECT_URL`, or `POSTGRES_URL` fallback) and Resend sender (`RESEND_API_KEY`, `RESEND_FROM`, `RESEND_FROM_NAME`). `SIGNAL_EMAIL_FROM` can override the formatted sender for this feature. Keep credentials in Vercel Secret variables.

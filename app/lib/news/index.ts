@@ -1,5 +1,7 @@
+import { createHash } from 'node:crypto';
 import { NEWS_CATEGORIES, NEWS_SOURCES } from './sources';
 import { deduplicateArticles } from './normalize';
+import { isRelevantArticle } from './editorial';
 import { parseSourceBody, readSourceBody, relevantPolicyTitle, routeTechCrunchCategory } from './ingest';
 import { acquireNewsRefreshLease, hasNewsDatabase, loadStoredNews, releaseNewsRefreshLease, saveStoredNews } from './store';
 import type { NewsSnapshot, NewsSourceHealth } from './types';
@@ -10,6 +12,15 @@ export type { NewsArticle, NewsCategory, NewsKind, NewsSnapshot, NewsSource, New
 
 export const NEWS_REFRESH_INTERVAL_MS = 15 * 60_000;
 const SHARED_SNAPSHOT_CHECK_MS = 60_000;
+const REGISTRY_VERSION = createHash('sha256').update(JSON.stringify(NEWS_SOURCES.filter(source => source.enabled && source.rights.status === 'approved').map(source => [source.id, source.feedUrl]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))))).digest('hex').slice(0, 16);
+
+/** A fresh timestamp alone cannot prove that a newly deployed feed was checked.
+ * Persist the endpoint registry fingerprint with the JSON snapshot. Failed
+ * attempts count as checks, so an unavailable new source cannot trigger a fetch
+ * loop on every page request during the normal fifteen-minute cache window. */
+function checkedCurrentRegistry(snapshot: NewsSnapshot): boolean {
+  return snapshot.registryVersion === REGISTRY_VERSION && NEWS_SOURCES.filter(source => source.enabled && source.rights.status === 'approved').every(source => snapshot.sourceHealth.some(health => health.sourceId === source.id && health.status !== 'pending' && Number.isFinite(Date.parse(health.checkedAt))));
+}
 
 type NewsState = {
   snapshot?: NewsSnapshot;
@@ -24,21 +35,24 @@ export function publicSnapshot(snapshot: NewsSnapshot): NewsSnapshot {
   const active = new Set(NEWS_SOURCES.filter(source => source.enabled && source.rights.status === 'approved').map(source => source.id));
   const blocked = new Set((process.env.NEWS_BLOCKED_ARTICLE_IDS || '').split(',').map(value => value.trim()).filter(value => /^[a-f0-9]{20}$/.test(value)));
   const articles = deduplicateArticles(snapshot.articles
-    .filter(article => active.has(article.sourceId) && !blocked.has(article.id) && (article.sourceId !== 'federal-register' || relevantPolicyTitle(article.title)))
+    .filter(article => active.has(article.sourceId) && !blocked.has(article.id) && isRelevantArticle(article) && (article.sourceId !== 'federal-register' || relevantPolicyTitle(article.title)))
     .map(article => {
       if (!article.sourceId.startsWith('techcrunch')) return article;
       const category = routeTechCrunchCategory(article.sourceId, article.title);
+      // A title-only AI fallback must not erase an earlier RSS Security tag.
+      // The original category tags are not stored; only positive title routes
+      // can safely refine those archived classifications.
       if (category === 'ai' || (article.category === 'cybersecurity' && category === 'integrations')) return article;
       return { ...article, category };
     }));
   const tooOld = !Number.isFinite(Date.parse(snapshot.checkedAt)) || Date.now() - Date.parse(snapshot.checkedAt) > 30 * 60_000;
-  return { ...snapshot, sources: NEWS_SOURCES, articles, status: tooOld ? articles.length ? 'stale' : 'unavailable' : snapshot.status };
+  return { ...snapshot, sources: NEWS_SOURCES, articles, status: tooOld ? articles.length ? 'stale' : 'unavailable' : snapshot.status === 'live' && !checkedCurrentRegistry(snapshot) ? 'partial' : snapshot.status };
 }
 
 function emptySnapshot(): NewsSnapshot {
   const checkedAt = new Date().toISOString();
   return {
-    articles: [], sources: NEWS_SOURCES, checkedAt, lastSuccessfulAt: null,
+    articles: [], sources: NEWS_SOURCES, checkedAt, lastSuccessfulAt: null, registryVersion: REGISTRY_VERSION,
     status: 'unavailable', storage: 'memory',
     sourceHealth: NEWS_SOURCES.map(source => ({ sourceId: source.id, status: source.enabled ? 'error' : 'pending', checkedAt, message: source.enabled ? 'No successful refresh recorded.' : source.rights.basis })),
   };
@@ -89,7 +103,7 @@ export async function refreshNews(options: { force?: boolean } = {}): Promise<Ne
     try {
       // Another process may publish between the first read and lease acquisition.
       if (persistent) await readSharedSnapshot(true);
-      if (options.force === false && current.snapshot && Date.now() - Date.parse(current.snapshot.checkedAt) < NEWS_REFRESH_INTERVAL_MS) return publicSnapshot(current.snapshot);
+      if (options.force === false && current.snapshot && checkedCurrentRegistry(current.snapshot) && Date.now() - Date.parse(current.snapshot.checkedAt) < NEWS_REFRESH_INTERVAL_MS) return publicSnapshot(current.snapshot);
       const checkedAt = new Date().toISOString();
       const previous = current.snapshot;
       const results = await Promise.all(NEWS_SOURCES.map(async source => {
@@ -109,7 +123,7 @@ export async function refreshNews(options: { force?: boolean } = {}): Promise<Ne
       const newlyFetched = deduplicateArticles(results.flatMap(result => result.articles));
       const articles = deduplicateArticles([...(previous?.articles || []), ...newlyFetched]).slice(0, 500);
       let snapshot: NewsSnapshot = {
-        articles, sources: NEWS_SOURCES, checkedAt,
+        articles, sources: NEWS_SOURCES, checkedAt, registryVersion: REGISTRY_VERSION,
         lastSuccessfulAt: successCount ? checkedAt : previous?.lastSuccessfulAt || null,
         status: successCount === enabledCount ? 'live' : successCount ? 'partial' : articles.length ? 'stale' : 'unavailable',
         sourceHealth: results.map(result => result.health), storage: 'memory', refreshState: successCount ? 'completed' : 'failed',
@@ -135,6 +149,6 @@ export async function refreshNews(options: { force?: boolean } = {}): Promise<Ne
 export async function getNewsSnapshot(): Promise<NewsSnapshot> {
   const current = state();
   await readSharedSnapshot();
-  if (current.snapshot && Date.now() - Date.parse(current.snapshot.checkedAt) < NEWS_REFRESH_INTERVAL_MS) return publicSnapshot(current.snapshot);
+  if (current.snapshot && checkedCurrentRegistry(current.snapshot) && Date.now() - Date.parse(current.snapshot.checkedAt) < NEWS_REFRESH_INTERVAL_MS) return publicSnapshot(current.snapshot);
   return refreshNews({ force: false });
 }

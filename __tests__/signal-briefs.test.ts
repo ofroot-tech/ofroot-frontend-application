@@ -1,12 +1,12 @@
 jest.mock('@/app/lib/news', () => ({ getNewsSnapshot: jest.fn(), publicSnapshot: jest.fn(value => value) }));
 jest.mock('@/app/lib/signal-briefs/evidence', () => ({ fetchBriefEvidence: jest.fn(), supportsBrief: jest.fn(() => true) }));
-jest.mock('@/app/lib/signal-briefs/store', () => ({ readStoredBrief: jest.fn(), writeStoredBrief: jest.fn(), readArchivedBriefArticle: jest.fn() }));
+jest.mock('@/app/lib/signal-briefs/store', () => ({ readStoredBrief: jest.fn(), readStoredBriefAvailability: jest.fn(), writeStoredBrief: jest.fn(), readArchivedBriefArticle: jest.fn() }));
 
 import { getNewsSnapshot, publicSnapshot } from '@/app/lib/news';
 import { abridgeAbstract, briefFingerprint, composeSignalBrief } from '@/app/lib/signal-briefs/compose';
 import { fetchBriefEvidence } from '@/app/lib/signal-briefs/evidence';
-import { getBriefArticle, getBriefCollection, getBriefForArticle } from '@/app/lib/signal-briefs';
-import { readArchivedBriefArticle, readStoredBrief, writeStoredBrief } from '@/app/lib/signal-briefs/store';
+import { getBriefArticle, getBriefAvailability, getBriefCollection, getBriefForArticle } from '@/app/lib/signal-briefs';
+import { readArchivedBriefArticle, readStoredBrief, readStoredBriefAvailability, writeStoredBrief } from '@/app/lib/signal-briefs/store';
 import type { NewsArticle } from '@/app/lib/news/types';
 import type { BriefEvidence } from '@/app/lib/signal-briefs/types';
 
@@ -17,6 +17,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   global.__ofrootBriefState = undefined;
   jest.mocked(readStoredBrief).mockResolvedValue(null);
+  jest.mocked(readStoredBriefAvailability).mockResolvedValue({});
   jest.mocked(readArchivedBriefArticle).mockResolvedValue(null);
   jest.mocked(publicSnapshot).mockImplementation(value => value);
   jest.mocked(fetchBriefEvidence).mockResolvedValue({ status: 'available', evidence });
@@ -45,6 +46,8 @@ describe('evidence-bound digest composition', () => {
     const brief = composeSignalBrief(article, { status: 'available', evidence });
     expect(brief.digest).toBe(evidence.abstract);
     expect(brief.context).toContain('does not establish production readiness');
+    expect(brief.perspective?.changed).toContain('10.48550/arxiv.2610.12345');
+    expect(brief.perspective?.basis).toContain('Prepared automatically');
     expect(brief.evidence?.retrievalUrl).toBe(evidence.retrievalUrl);
     expect(brief.introduction).toContain('rather than a review of the full paper');
   });
@@ -99,5 +102,25 @@ describe('brief resolution and caching', () => {
     const results = await getBriefCollection(articles, 100);
     expect(results).toHaveLength(12);
     expect(results.map(item => item.article.id)).toEqual(articles.slice(0, 12).map(item => item.id));
+  });
+});
+
+
+describe('truthful board availability', () => {
+  it('distinguishes unchecked adapter support from unsupported reporting without source fetches', async () => {
+    const publisher = { ...article, id: 'b'.repeat(20), sourceId: 'techcrunch-ai', kind: 'reporting' as const, url: 'https://techcrunch.com/story/' };
+    const statuses = await getBriefAvailability([article, publisher]);
+    expect(statuses).toEqual({ [article.id]: 'unchecked', [publisher.id]: 'unsupported' });
+    expect(fetchBriefEvidence).not.toHaveBeenCalled();
+    expect(readStoredBriefAvailability).toHaveBeenCalledTimes(1);
+    expect(readStoredBriefAvailability).toHaveBeenCalledWith([{ id: article.id, fingerprint: briefFingerprint(article) }]);
+  });
+  it('uses one stored status lookup and reuses evidence already fetched in this process', async () => {
+    jest.mocked(readStoredBriefAvailability).mockResolvedValue({ [article.id]: 'unavailable' });
+    expect((await getBriefAvailability([article]))[article.id]).toBe('unavailable');
+    await getBriefForArticle(article);
+    jest.mocked(readStoredBriefAvailability).mockResolvedValue({});
+    expect((await getBriefAvailability([article]))[article.id]).toBe('ready');
+    expect(fetchBriefEvidence).toHaveBeenCalledTimes(1);
   });
 });

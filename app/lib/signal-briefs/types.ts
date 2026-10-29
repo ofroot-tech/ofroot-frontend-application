@@ -19,6 +19,16 @@ export type EvidenceResult =
   | { status: 'available'; evidence: BriefEvidence }
   | { status: 'unsupported' | 'unavailable'; reason: string };
 
+/** Record-bound guidance stays distinct from the verbatim primary-source digest.
+ * The questions help a reader investigate applicability; they do not assert it. */
+export type BriefPerspective = {
+  changed: string;
+  audience: string;
+  relevance: string;
+  nextStep: string;
+  basis: string;
+};
+
 export type SignalBrief = {
   version: string;
   articleId: string;
@@ -29,5 +39,6 @@ export type SignalBrief = {
   introduction: string;
   digest: string;
   context: string;
+  perspective?: BriefPerspective;
   evidence?: BriefEvidence;
 };

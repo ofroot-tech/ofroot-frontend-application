@@ -1,0 +1,7 @@
+/* The mark stays recognizable, while a visible descriptor makes its destination
+   predictable for every reader, including touch users without hover titles. */
+.link { transition:background-color 180ms ease,border-color 180ms ease; }
+.label { font:9px/1.4 var(--font-geist-mono),monospace; text-transform:uppercase; letter-spacing:.035em; padding-left:7px; border-left:1px solid #806684; }
+.link[data-availability='ready'] .label { color:#f5b99f; }
+.link[data-availability='unsupported'] .label,.link[data-availability='unchecked'] .label,.link[data-availability='unavailable'] .label { color:#d4c4df; }
+@media(prefers-reduced-motion:reduce) { .link { transition:none; } }
