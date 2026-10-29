@@ -7,12 +7,12 @@ import styles from './subscription.module.css';
 
 /** This small reading surface responds to form choices without listening to
  * the email input. No mailbox, consent, token, or network request enters it. */
-export default function DigestPreview({ topics, content, frequency }: { topics: NewsCategory[]; content: SignalContent; frequency: SignalFrequency }) {
+export default function DigestPreview({ topics, content, frequency, headingId = 'digest-preview-title' }: { topics: NewsCategory[]; content: SignalContent; frequency: SignalFrequency; headingId?: string }) {
   const items = buildDigestPreview(topics, content);
-  return <section className={styles.preview} aria-labelledby="digest-preview-title">
+  return <section className={styles.preview} aria-labelledby={headingId}>
     <div className={styles.previewBrand}><AudioLines size={22} aria-hidden="true" /><strong>Signal</strong><span>BY OFROOT</span></div>
     <p className={styles.eyebrow}>SAMPLE LAYOUT / ILLUSTRATIVE CONTENT</p>
-    <h2 id="digest-preview-title">Your {frequency} Signal.</h2>
+    <h2 id={headingId}>Your {frequency} Signal.</h2>
     <p className={styles.previewIntro}>{frequency === 'weekly' ? 'A Monday roundup' : 'A daily digest'} for {topics.length ? topics.map(topic => topicLabels.find(item => item.id === topic)?.short).join(', ') : 'the interests you choose'}.</p>
     <div className={styles.previewItems}>
       {items.length ? items.map((item, index) => <article key={`${item.kind}:${item.topic}`} className={styles.previewItem}>

@@ -129,7 +129,7 @@ export default function Newsroom({ initialSnapshot }: { initialSnapshot: NewsSna
     <HeroShimmer headingId="news-title" className={styles.hero}>
       <div className={styles.heroGrid} aria-hidden="true"><span /><span /><span /></div>
       <div className={`${styles.container} ${styles.intro}`}>
-        <div><p className={styles.eyebrow}><span /> THE OFROOT TECHNOLOGY BRIEF</p><h1 id="news-title"><MotionText trigger="load">The news. In context.</MotionText></h1><p className={styles.introCopy}>Follow AI, connected software, healthcare, policy, and security—with the evidence and a practical next step in view.</p><div className={styles.heroActions}><a href="#highlights-title">Explore the signals <ArrowDown size={16} aria-hidden="true" /></a><Link href="/news/briefs">Read OfRoot briefs <ArrowRight size={16} aria-hidden="true" /></Link></div></div>
+        <div><p className={styles.eyebrow}><span /> THE OFROOT TECHNOLOGY BRIEF</p><h1 id="news-title"><MotionText trigger="load">The news. In context.</MotionText></h1><p className={styles.introCopy}>Five technology beats. Sources you can inspect. Context you can use.</p></div>
         <div className={styles.introAside}><span className={styles.eyebrow}>FIVE BEATS. ONE CONNECTED VIEW.</span><dl><div><dt>Feeds available</dt><dd>{healthyCount}<span> / {activeCount}</span></dd></div><div><dt>Source-linked references</dt><dd>{snapshot.articles.length}</dd></div></dl><Link href="/news/methodology#selection">How we choose highlights <ArrowUpRight size={15} aria-hidden="true" /></Link></div>
       </div>
     </HeroShimmer>
