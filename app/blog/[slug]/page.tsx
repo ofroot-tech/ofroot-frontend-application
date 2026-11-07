@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { renderBlogMarkdown } from '@/app/lib/blog-markdown';
 import type { Metadata } from 'next';
 import { cache } from 'react';
+import ArticleSignalLink from '@/components/editorial/ArticleSignalLink';
 
 // ------------------------------------------------------------
 // Force dynamic rendering to avoid build-time API failures
@@ -117,6 +118,7 @@ export default async function BlogPostPage({ params, searchParams }: { params: R
             <div className={styles.date}>{formatDate(post.published_at)}</div>
           ) : null}
           {post.excerpt ? <p className={styles.intro}>{post.excerpt}</p> : null}
+          <ArticleSignalLink sourcePath={`/blog/${post.slug}`} />
           <div className="mt-6" dangerouslySetInnerHTML={{ __html: html }} />
         </article>
       </main>

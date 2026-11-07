@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
   // Dates reflect substantive source changes and must be updated intentionally.
   const routes: Array<{ path: string; lastModified: string }> = [
-    { path: '', lastModified: '2026-10-14' },
+    { path: '', lastModified: '2026-11-07' },
     { path: '/automations', lastModified: '2026-08-07' },
     { path: '/ai-process', lastModified: '2026-08-07' },
     { path: '/hubspot-integration', lastModified: '2026-02-09' },
@@ -40,12 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/insights', lastModified: '2026-09-09' },
     { path: '/news', lastModified: '2026-10-29' },
     { path: '/news/briefs', lastModified: '2026-10-29' },
+    { path: '/news/from-ofroot', lastModified: '2026-11-07' },
     { path: '/news/stories', lastModified: '2026-10-29' },
     { path: '/news/sources', lastModified: '2026-10-29' },
     { path: '/news/methodology', lastModified: '2026-10-29' },
     { path: '/book', lastModified: '2026-10-14' },
     { path: '/demo/private-ai', lastModified: '2026-07-22' },
-    { path: '/blog', lastModified: '2026-08-09' },
+    { path: '/blog', lastModified: '2026-11-07' },
     { path: AI_PROCESS_GUIDE.href, lastModified: AI_PROCESS_GUIDE.publishedAt },
     { path: '/case-studies/home-services-mvp', lastModified: '2026-10-14' },
     { path: '/case-studies/crm-erp-sync', lastModified: '2026-10-14' },
