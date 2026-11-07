@@ -7,7 +7,7 @@
 .layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,.85fr); gap:clamp(30px,5vw,70px); padding-block:44px 70px; align-items:start; }
 .form,.accessForm { min-width:0; }
 .emailLabel { display:grid; gap:12px; font-size:14px; color:#e7dff0; }
-.emailLabel input { width:100%; min-height:54px; padding:13px 15px; font:16px/1.5 var(--font-geist-sans),Arial,sans-serif; color:var(--ink); background:#211c2c; border:1px solid #6b597a; border-radius:2px; }
+.emailLabel input { width:100%; min-height:54px; padding:13px 15px; font:16px/1.5 var(--font-geist-sans),Arial,sans-serif; color:var(--ink); background:var(--reading-panel,#211c2c); border:1px solid #6b597a; border-radius:2px; }
 .emailLabel input::placeholder { color:#b3a3c1; }
 .fieldset { border:0; padding:0; margin:32px 0 0; min-width:0; }
 .fieldset legend { padding:0; margin-bottom:13px; font-size:20px; font-weight:510; line-height:1.4; letter-spacing:-.025em; }
@@ -15,7 +15,7 @@
 .topics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 .topics label,.radios label,.frequencies label { display:flex; align-items:center; gap:12px; border:1px solid var(--line); background:var(--panel); padding:16px; min-height:60px; font-size:13px; line-height:1.6; cursor:pointer; }
 .topics label.selected,.radios label.selected,.frequencies label.selected { border-color:#9b7f9e; background:#30263a; }
-.topics input,.radios input,.frequencies input,.consent input { accent-color:#ffb78f; width:17px; height:17px; flex-shrink:0; cursor:pointer; }
+.topics input,.radios input,.frequencies input,.consent input { accent-color:var(--reading-accent,#ffb78f); width:17px; height:17px; flex-shrink:0; cursor:pointer; }
 .topics svg { color:var(--lavender); flex-shrink:0; }
 .radios { display:grid; gap:10px; }
 .radios label { align-items:start; padding:17px; }
@@ -26,8 +26,8 @@
 .frequencies { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .consent { display:flex; align-items:start; gap:13px; color:var(--muted); font-size:13px; line-height:1.8; margin-block:28px; cursor:pointer; }
 .consent input { margin-top:5px; }
-.consent a,.state p a { color:#dfc7f1; text-decoration:underline; text-underline-offset:4px; }
-.primary { display:inline-flex; align-items:center; justify-content:space-between; gap:25px; min-height:54px; padding:17px 23px; background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356); border:1px solid #9b7f9e; border-radius:2px; color:#faf9fc!important; font-size:14px; font-weight:550; line-height:1.5; text-decoration:none; margin-top:24px; }
+.consent a,.state p a { color:var(--reading-link,#dfc7f1); text-decoration:underline; text-underline-offset:4px; }
+.primary { display:inline-flex; align-items:center; justify-content:space-between; gap:25px; min-height:54px; padding:17px 23px; background:linear-gradient(110deg,#68423d,#5b3f5c 58%,#393356); border:1px solid #9b7f9e; border-radius:2px; color:var(--reading-ink,#faf9fc)!important; font-size:14px; font-weight:550; line-height:1.5; text-decoration:none; margin-top:24px; }
 .primary:hover { border-color:#e1bac9; }
 .form .primary,.state .primary,.cta .primary { font-size:14px; line-height:1.5; }
 .primary svg { flex-shrink:0; }
@@ -39,7 +39,7 @@
 .aside li { display:flex; align-items:start; gap:10px; color:var(--muted); font-size:13px; line-height:1.75; }
 .aside li svg { flex-shrink:0; margin-top:4px; color:var(--lavender); }
 .aside > p:not(.eyebrow) { font-size:13px; color:var(--muted); line-height:1.85; }
-.textLink { display:inline-flex; align-items:center; gap:14px; min-height:44px; color:#dfc7f1!important; font-size:12px; line-height:1.7; margin-top:15px; text-decoration:none; }
+.textLink { display:inline-flex; align-items:center; gap:14px; min-height:44px; color:var(--reading-link,#dfc7f1)!important; font-size:12px; line-height:1.7; margin-top:15px; text-decoration:none; }
 .textLink svg { flex-shrink:0; }
 .state { max-width:850px; padding-block:42px 72px; min-height:400px; }
 .state > svg { color:var(--accent); margin-bottom:24px; }
@@ -54,11 +54,11 @@
 .account strong { display:block; font-size:19px; font-weight:500; margin-block:12px; overflow-wrap:anywhere; }
 .account > span { font-size:12px; color:var(--muted); }
 .controls { border-top:1px solid var(--line); padding-top:14px; margin-top:28px; }
-.controls button { display:flex; align-items:center; gap:12px; width:100%; min-height:48px; padding-block:12px; font-size:12px; color:#dfc7f1; text-align:left; }
+.controls button { display:flex; align-items:center; gap:12px; width:100%; min-height:48px; padding-block:12px; font-size:12px; color:var(--reading-link,#dfc7f1); text-align:left; }
 .honeypot { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
 /* The same invitation can sit in Signal or an OfRoot article without inheriting
    the public page's dark --ink token as its text color. */
-.cta { --ink:#faf9fc; --muted:#c0b5cc; --lavender:#c3afe1; color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:30px; border:1px solid var(--line); border-top-color:#8b7191; background:#211c2c; padding:32px; margin-block:36px; }
+.cta { --ink:var(--reading-ink,#faf9fc); --muted:var(--reading-muted,#c0b5cc); --lavender:var(--reading-link,#c3afe1); color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:30px; border:1px solid var(--line); border-top-color:#8b7191; background:var(--reading-panel,#211c2c); padding:32px; margin-block:36px; }
 .cta h2 { font-size:31px; font-weight:510; line-height:1.2; letter-spacing:-.035em; margin-block:15px; }
 .cta p:last-child { max-width:650px; font-size:15px; color:var(--muted); line-height:1.8; }
 .cta .primary { margin-top:0; flex-shrink:0; }
@@ -68,22 +68,22 @@
 .previewColumn { display:grid; gap:24px; min-width:0; }
 /* A native disclosure puts the sample within reach before the mobile form,
    without adding a second always-open issue to a small reading viewport. */
-.mobilePreview { display:none; border:1px solid #6b597a; background:#211c2c; transition:border-color .18s ease; }
+.mobilePreview { display:none; border:1px solid #6b597a; background:var(--reading-panel,#211c2c); transition:border-color .18s ease; }
 .mobilePreview[open] { border-color:#b794b7; }
 .mobilePreview summary { display:flex; align-items:center; justify-content:space-between; gap:18px; min-height:76px; padding:18px 20px; cursor:pointer; list-style:none; }
 .mobilePreview summary::-webkit-details-marker { display:none; }
 .mobilePreview summary > span { display:grid; gap:5px; }
 .mobilePreview summary strong { color:#f5effa; font-size:15px; font-weight:510; }
 .mobilePreview summary small { color:var(--muted); font-size:12px; line-height:1.7; }
-.mobilePreview summary > svg { color:#ffb78f; flex-shrink:0; transition:transform .18s ease; }
+.mobilePreview summary > svg { color:var(--reading-accent,#ffb78f); flex-shrink:0; transition:transform .18s ease; }
 .mobilePreview[open] summary > svg { transform:rotate(90deg); }
-.mobilePreview summary:focus-visible { outline:2px solid #dfc7f1; outline-offset:4px; }
+.mobilePreview summary:focus-visible { outline:2px solid var(--reading-link,#dfc7f1); outline-offset:4px; }
 .mobilePreview .preview { border:0; border-top:1px solid var(--line); }
 /* The issue preview settles once on entry. Preference changes keep the reading
    position stable; only the selection controls transition their surface color. */
-.preview { border:1px solid #6b597a; background:linear-gradient(155deg,#30243a,#211c2c 62%); padding:clamp(22px,3vw,34px); animation:previewEntry .5s ease-out both; }
+.preview { border:1px solid #6b597a; background:linear-gradient(155deg,#30243a,var(--reading-panel,#211c2c) 62%); padding:clamp(22px,3vw,34px); animation:previewEntry .5s ease-out both; }
 .previewBrand { display:flex; align-items:center; gap:10px; padding-bottom:22px; margin-bottom:22px; border-bottom:1px solid var(--line); }
-.previewBrand svg { color:#ffb78f; }
+.previewBrand svg { color:var(--reading-accent,#ffb78f); }
 .previewBrand strong { font-size:23px; letter-spacing:-.04em; font-weight:550; }
 .previewBrand > span { margin-left:auto; color:var(--muted); font:9px/1.6 var(--font-geist-mono),monospace; letter-spacing:.07em; }
 .preview h2 { font-size:clamp(26px,3vw,36px); font-weight:520; line-height:1.2; letter-spacing:-.04em; margin-block:15px; }

@@ -10,6 +10,8 @@ import SubscribeCTA from '../subscriptions/SubscribeCTA';
 import { formatPublished, topics } from '../presentation';
 import news from '../news.module.css';
 import styles from './briefs.module.css';
+import JsonLd from '@/components/seo/JsonLd';
+import { readingCollection } from '@/app/lib/reading-schema';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -28,7 +30,7 @@ export default async function BriefsPage({ searchParams }: { searchParams: Promi
   const snapshot = await getNewsSnapshot();
   const articles = snapshot.articles.filter(article => (!topic || article.category === topic.id) && (!query || article.title.toLowerCase().includes(query.toLowerCase())));
   const briefs = await getBriefCollection(articles);
-  return <main id="main-content" className={news.news}><div className={news.container}>
+  return <main id="main-content" className={news.news}><JsonLd data={readingCollection('/news/briefs', 'Signal briefs', briefs.map(({article})=>({title:article.title,path:`/news/brief/${article.id}`})))}/><div className={news.container}>
     <SignalHeader current="briefs" />
     <header className={styles.intro}><p className={news.eyebrow}><AudioLines size={18} aria-hidden="true" /> SIGNAL / BRIEFS</p><h1><MotionText trigger="load">Go beyond the headline.<br />Keep the source in view.</MotionText></h1><div className={styles.introBottom}><p>Short, cited digests of research and agency records, with a separate OfRoot perspective. Built for a clear first read and a direct path to the evidence.</p><Link href="/news">Explore the news feed <ArrowUpRight size={17} aria-hidden="true" /></Link></div></header>
     <section className={styles.collection} aria-labelledby="briefs-heading">

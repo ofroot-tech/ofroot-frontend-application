@@ -5,6 +5,8 @@ import { getBriefAvailability, getBriefCollection } from '@/app/lib/signal-brief
 import { selectHighlights } from '@/app/lib/news/editorial';
 import Newsroom from './Newsroom';
 import styles from './news.module.css';
+import JsonLd from '@/components/seo/JsonLd';
+import { readingCollection } from '@/app/lib/reading-schema';
 
 export const metadata: Metadata = {
   title: 'Signal — Technology News',
@@ -20,7 +22,7 @@ async function NewsContent() {
   // A source reference must never advertise a brief that has not been retrieved.
   await getBriefCollection(selectHighlights(snapshot.articles, snapshot.sources, Date.parse(snapshot.checkedAt)), 3);
   const briefAvailability = await getBriefAvailability(snapshot.articles);
-  return <Newsroom initialSnapshot={{ ...snapshot, briefAvailability }} />;
+  return <><JsonLd data={readingCollection('/news', 'Signal — Technology News', snapshot.articles.map(article => ({ title:article.title, path:`/news/brief/${article.id}` })))}/><Newsroom initialSnapshot={{ ...snapshot, briefAvailability }} /></>;
 }
 
 export default function NewsPage() {

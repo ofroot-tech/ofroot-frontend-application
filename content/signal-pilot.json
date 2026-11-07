@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "limit": 30,
+  "basis": "Short extracts from already-published OfRoot-owned guides. No external publisher bodies or newly invented claims.",
+  "articles": [
+    {
+      "slug": "find-expensive-manual-work-before-automating",
+      "title": "How to Find the Manual Work Worth Automating First",
+      "sourcePath": "/blog/find-expensive-manual-work-before-automating",
+      "summary": "A practical method for mapping recurring work, calculating its real cost, scoring opportunities, and choosing the smallest automation with a defensible business case.",
+      "publishedAt": "2026-08-07"
+    },
+    {
+      "slug": "is-your-business-ai-agent-ready",
+      "title": "Is Your Business AI-Agent Ready? A Practical Readiness Test",
+      "sourcePath": "/insights/is-your-business-ai-agent-ready",
+      "summary": "An AI-agent-ready business has at least one defined workflow where an agent can access approved information, use limited tools, follow explicit rules, request human approval, fail safely, and produce evidence that the work completed correctly.",
+      "publishedAt": "2026-09-08"
+    },
+    {
+      "slug": "what-is-ai-discoverability",
+      "title": "What Is AI Discoverability?",
+      "sourcePath": "/insights/what-is-ai-discoverability",
+      "summary": "AI discoverability is the work of making a company’s useful knowledge easy for people, search engines, and AI systems to find, interpret, and connect to a trusted source.",
+      "publishedAt": "2026-07-22"
+    },
+    {
+      "slug": "seo-vs-aeo-vs-geo",
+      "title": "SEO vs. AEO vs. GEO: What Companies Actually Need",
+      "sourcePath": "/insights/seo-vs-aeo-vs-geo",
+      "summary": "Most companies do not need three disconnected programs. They need one discoverability system with a technically sound site, direct and useful answers, consistent company facts, credible sources, and conversion measurement.",
+      "publishedAt": "2026-07-22"
+    },
+    {
+      "slug": "build-private-company-ai-assistant",
+      "title": "How to Build a Private Company AI Assistant",
+      "sourcePath": "/insights/build-private-company-ai-assistant",
+      "summary": "A private company AI assistant connects approved knowledge to a controlled retrieval and answer workflow. The safe starting point is a narrow use case with explicit sources, access rules, source citations, auditability, and a human approval boundary.",
+      "publishedAt": "2026-07-22"
+    },
+    {
+      "slug": "ai-discoverability-audit-checklist",
+      "title": "AI Discoverability Audit Checklist",
+      "sourcePath": "/insights/ai-discoverability-audit-checklist",
+      "summary": "An AI discoverability audit checks whether priority pages can be crawled and indexed, answer meaningful buyer questions clearly, establish consistent company facts, provide credible evidence, connect through internal links, and produce measurable business actions.",
+      "publishedAt": "2026-09-09"
+    },
+    {
+      "slug": "how-to-get-mentioned-in-ai-answers",
+      "title": "How to Get Mentioned in AI-Generated Answers",
+      "sourcePath": "/insights/how-to-get-mentioned-in-ai-answers",
+      "summary": "You cannot guarantee a mention in an AI-generated answer. You can improve the probability by making useful pages indexable, answering specific questions clearly, publishing distinctive evidence, keeping company facts consistent, earning credible references, and measuring which topics generate discovery and action.",
+      "publishedAt": "2026-09-09"
+    },
+    {
+      "slug": "private-ai-assistant-security-requirements",
+      "title": "Private AI Assistant Security Requirements",
+      "sourcePath": "/insights/private-ai-assistant-security-requirements",
+      "summary": "A secure private AI assistant needs authenticated users, permission-aware retrieval, least-privilege tools, explicit data handling rules, prompt-injection defenses, verifiable outputs, safe logging, continuous evaluations, and tested incident and shutdown procedures.",
+      "publishedAt": "2026-09-09"
+    },
+    {
+      "slug": "workflow-automation-roi-guide",
+      "title": "Workflow Automation ROI: A Practical Calculation Guide",
+      "sourcePath": "/insights/workflow-automation-roi-guide",
+      "summary": "Workflow automation ROI compares verified annual benefits—time returned, faster cycle time, fewer errors, recovered opportunities, and avoided costs—with implementation and ongoing operating costs. Use conservative ranges, count only realizable value, and validate the model after launch.",
+      "publishedAt": "2026-09-09"
+    },
+    {
+      "slug": "hubspot-ai-agent-integration-guide",
+      "title": "HubSpot AI Agent Integration Guide",
+      "sourcePath": "/insights/hubspot-ai-agent-integration-guide",
+      "summary": "A reliable HubSpot AI agent integration gives the agent a narrow CRM job, maps the required objects and properties, grants least-privilege access, reacts to verified events, validates and deduplicates writes, requires approval for consequential actions, and records evidence of every completed step.",
+      "publishedAt": "2026-09-09"
+    },
+    {
+      "slug": "hvac-lead-follow-up-audit-checklist",
+      "title": "HVAC Lead Follow-Up Audit: A Practical Checklist",
+      "sourcePath": "/insights/hvac-lead-follow-up-audit-checklist",
+      "summary": "An HVAC lead follow-up audit traces each request from call or form through qualification, booking, estimate, payment, and review. The first fix should be the smallest unowned or unmeasured handoff that can be tied to recovered revenue or capacity.",
+      "publishedAt": "2026-09-15"
+    }
+  ]
+}

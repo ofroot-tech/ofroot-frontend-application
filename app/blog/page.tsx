@@ -1,127 +1,44 @@
-import PublicHero from '@/components/growth/PublicHero';
-import publicStyles from '@/components/growth/PublicPage.module.css';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, BookOpen } from 'lucide-react';
-import { SITE, CANONICAL_SITE_URL } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
 import { api } from '@/app/lib/api';
+import { CANONICAL_SITE_URL } from '@/app/config/site';
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide';
 import { insights } from '@/app/lib/insights-content';
-import { TrackedLink } from '@/components/growth/Analytics';
+import styles from '@/components/editorial/Reading.module.css';
+import SubscribeCTA from '@/app/news/subscriptions/SubscribeCTA';
 
 export const dynamic = 'force-dynamic';
-
-const title = 'OfRoot Field Notes on AI and Automation';
-const description = 'Practical field notes for finding expensive manual work, evaluating AI and automation opportunities, and building systems with measurable operating value.';
-
+const title = 'OfRoot Blog — Practical AI and Automation';
+const description = 'Clear guides to connecting your tools, reducing manual work, and using AI responsibly. Read the full article or explore source-linked technology briefs in Signal.';
 export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: '/blog' },
-  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/blog`, type: 'website', images: [{ url: `${CANONICAL_SITE_URL}/og.jpg`, width: 1200, height: 630, alt: 'OfRoot field notes on AI and automation' }] },
+  title, description, alternates: { canonical: '/blog' },
+  openGraph: { title, description, url: `${CANONICAL_SITE_URL}/blog`, type: 'website' },
   twitter: { card: 'summary_large_image', title, description, images: [`${CANONICAL_SITE_URL}/og.jpg`] },
 };
 
-function formatDate(input?: string | null) {
-  if (!input) return '';
-  try {
-    return new Date(input).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-  } catch {
-    return String(input);
-  }
+function publicationLabel(value?: string | null) {
+  if (!value || !Number.isFinite(Date.parse(value))) return 'OfRoot article';
+  return new Date(value).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric', timeZone:'UTC' });
 }
 
 export default async function BlogPage() {
   let items: Awaited<ReturnType<typeof api.publicListBlogPosts>>['data']['items'] = [];
-  try {
-    const response = await api.publicListBlogPosts({ limit: 24 });
-    items = (response.data.items || []).filter((post) => post.slug !== AI_PROCESS_GUIDE.slug);
-  } catch (error) {
-    console.error('[BlogPage] Failed to fetch posts:', error);
-  }
-
-  const listLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: title,
-    description,
-    url: `${SITE.url}/blog`,
-    mainEntity: {
-      '@type': 'ItemList',
-      itemListElement: [
-        { '@type': 'BlogPosting', position: 1, headline: AI_PROCESS_GUIDE.title, datePublished: AI_PROCESS_GUIDE.publishedAt, url: `${SITE.url}${AI_PROCESS_GUIDE.href}` },
-        ...items.map((post, index) => ({
-          '@type': 'BlogPosting',
-          position: index + 2,
-          headline: post.title,
-          datePublished: post.published_at || post.created_at,
-          url: `${SITE.url}/blog/${encodeURIComponent(post.slug)}${post.tenant_id ? `?tenant_id=${post.tenant_id}` : ''}`,
-        })),
-      ],
-    },
-  };
-
-  return (
-    <main id="main-content" className={`${publicStyles.page} ${publicStyles.legacy} bg-[#17141f] text-[#faf9fc]`}>
-      <JsonLd data={listLd} />
-            <PublicHero eyebrow="OfRoot field notes" title="Better decisions before better software." description="Practical guides for finding costly work, evaluating AI and automation opportunities, and building systems whose value can be explained after launch." breadcrumbs={[{label:'Home',href:'/'},{label:'Field notes'}]} />
-
-      <section className="px-6 py-16 sm:px-8 sm:py-24" aria-labelledby="featured-guide">
-        <div className="mx-auto max-w-6xl">
-          <p className="mb-4 text-sm font-bold uppercase tracking-[.16em] text-[#c4abe3]">Featured guide</p>
-          <Link href={AI_PROCESS_GUIDE.href} className="group grid overflow-hidden rounded-[2px] border border-[#d2caeb]/16 bg-[#211c2c] shadow-[0_22px_70px_rgba(15,23,42,.08)] lg:grid-cols-[.72fr_1.28fr] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f] focus-visible:ring-offset-4">
-            <div className="relative min-h-64 overflow-hidden bg-[#211c2c] p-8 text-white sm:p-10">
-              <div className="absolute inset-0 opacity-80 [background:radial-gradient(circle_at_30%_20%,rgba(180,160,239,.2),transparent_30%),radial-gradient(circle_at_80%_80%,rgba(255,183,143,.22),transparent_32%)]" />
-              <div className="relative flex h-full flex-col justify-between gap-14"><BookOpen className="h-9 w-9 text-[#b4a0ef]" /><div><p className="text-xs font-bold uppercase tracking-[.18em] text-[#c4abe3]">Map → Measure → Prioritize</p><p className="mt-3 text-2xl font-medium text-white">A field guide for the work hiding between systems.</p></div></div>
-            </div>
-            <div className="flex flex-col p-8 sm:p-10 lg:p-12">
-              <div className="flex flex-wrap gap-3 text-xs font-semibold text-[#b4a3c5]"><span>{AI_PROCESS_GUIDE.displayDate}</span><span aria-hidden="true">•</span><span>{AI_PROCESS_GUIDE.readingTime}</span></div>
-              <h2 id="featured-guide" className="mt-7 max-w-3xl text-balance text-3xl font-medium sm:text-5xl">{AI_PROCESS_GUIDE.title}</h2>
-              <p className="mx-0 mt-6 max-w-3xl text-lg text-[#c0b5cc]">{AI_PROCESS_GUIDE.description}</p>
-              <span className="mt-9 inline-flex items-center gap-2 font-bold text-[#e1c7f2]">Read the field guide<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" /></span>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      <section className="bg-[#211c2c] px-6 py-16 sm:px-8 sm:py-24" aria-labelledby="latest-notes">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#c4abe3]">{items.length ? 'From the archive' : 'Continue exploring'}</p><h2 id="latest-notes" className="text-4xl font-medium">{items.length ? 'More OfRoot field notes.' : 'Choose the next question.'}</h2></div><Link href="/insights" className="font-semibold text-[#e1c7f2] hover:underline">Explore all insights</Link></div>
-          {items.length ? (
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
-              {items.map((post, index) => {
-                const href = `/blog/${encodeURIComponent(post.slug)}${post.tenant_id ? `?tenant_id=${post.tenant_id}` : ''}`;
-                return <Link href={href} key={`${post.id}:${post.slug}`} className="group flex min-h-72 flex-col rounded-[2px] border border-[#d2caeb]/16 bg-[#17141f] p-7 transition hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(15,23,42,.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb78f] motion-reduce:transform-none"><div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-[.15em] text-[#c4abe3]">Field note {String(index + 2).padStart(2, '0')}</span><span className="text-xs text-[#b4a3c5]">{formatDate(post.published_at || post.created_at)}</span></div><h3 className="mt-12 text-balance text-2xl font-medium group-hover:text-[#e1c7f2]">{post.title}</h3>{post.excerpt ? <p className="mx-0 mt-4 flex-1 text-[#c0b5cc]">{post.excerpt}</p> : <div className="flex-1" />}<span className="mt-8 inline-flex items-center gap-2 font-semibold text-[#e1c7f2]">Read note<ArrowRight className="h-4 w-4" /></span></Link>;
-              })}
-            </div>
-          ) : (
-            <div className="mt-10 divide-y divide-slate-200 border-y border-[#d2caeb]/16">
-              {insights.map((insight, index) => (
-                <Link
-                  href={`/insights/${insight.slug}`}
-                  key={insight.slug}
-                  className="group grid gap-5 py-7 transition-colors hover:bg-[#17141f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffb78f] sm:grid-cols-[9rem_1fr_auto] sm:items-center sm:px-5 motion-reduce:transition-none"
-                >
-                  <div>
-                    <p className="mx-0 text-xs font-bold uppercase tracking-[.15em] text-[#c4abe3]">Structured insight {String(index + 1).padStart(2, '0')}</p>
-                    <p className="mx-0 mt-2 text-sm text-[#b4a3c5]">{insight.category}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-balance text-2xl font-medium group-hover:text-[#e1c7f2]">{insight.title}</h3>
-                    <p className="mx-0 mt-3 max-w-3xl text-sm text-[#c0b5cc]">{insight.description}</p>
-                  </div>
-                  <span className="inline-flex items-center gap-2 font-semibold text-[#e1c7f2]">Open insight<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" /></span>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="bg-[#211c2c] px-6 py-16 text-white sm:px-8 sm:py-20">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"><div><p className="mb-3 text-sm font-bold uppercase tracking-[.16em] text-[#c4abe3]">Bring the bottleneck</p><h2 className="max-w-4xl text-balance text-4xl font-medium text-white sm:text-5xl">Turn the field guide into a ranked operating roadmap.</h2></div><TrackedLink href="/book?focus=ai-process-audit&source=blog-index" source="blog-index:final" event="ai_process_audit_cta_clicked" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-[2px] bg-[#574064] px-6 py-3 font-medium text-[#faf9fc] hover:bg-[#6d4c70] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#37FFE0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#071225]">Book an AI Process Audit<ArrowRight className="h-4 w-4" /></TrackedLink></div>
-      </section>
-    </main>
-  );
+  let archiveUnavailable = false;
+  try { items = ((await api.publicListBlogPosts({ limit: 30 })).data.items || []).filter(post => post.slug !== AI_PROCESS_GUIDE.slug); }
+  catch { archiveUnavailable = true; }
+  const entries = items.length ? items.map(post => ({ title:post.title, description:post.excerpt, href:`/blog/${encodeURIComponent(post.slug)}${post.tenant_id ? `?tenant_id=${post.tenant_id}` : ''}`, label:publicationLabel(post.published_at) })) : insights.map(insight => ({ title:insight.title, description:insight.description, href:`/insights/${insight.slug}`, label:insight.category }));
+  const schema = { '@context':'https://schema.org', '@type':'CollectionPage', name:title, description, url:`${CANONICAL_SITE_URL}/blog`, mainEntity:{ '@type':'ItemList', itemListElement:[{title:AI_PROCESS_GUIDE.title,href:AI_PROCESS_GUIDE.href},...entries].map((entry,index)=>({ '@type':'ListItem', position:index+1, name:entry.title, url:`${CANONICAL_SITE_URL}${entry.href}` })) } };
+  return <main id="main-content" className={styles.page}><JsonLd data={schema}/><div className={styles.shell}>
+    <h1>Useful ideas.<br/>A practical next step.</h1>
+    <p className={styles.intro}>Clear guides to connecting your tools, reducing manual work, and using AI responsibly. Start with a question your business is trying to answer.</p>
+    <section className={styles.featured} aria-labelledby="featured-guide"><div><span className={styles.label}>Start here</span><p>Find the work worth improving before choosing the software.</p></div><div><h2 id="featured-guide">{AI_PROCESS_GUIDE.title}</h2><p>{AI_PROCESS_GUIDE.description}</p><Link className={styles.link} href={AI_PROCESS_GUIDE.href}>Read the guide →</Link></div></section>
+    <section aria-labelledby="more-articles"><div className={styles.heading}><h2 id="more-articles">{items.length ? 'More from the blog' : 'Explore our guides'}</h2><Link href="/news" className={styles.link}>What’s changing? Read Signal →</Link></div>
+      {entries.map(entry=><article className={styles.row} key={entry.href}><span className={styles.date}>{entry.label}</span><div><h3><Link href={entry.href}>{entry.title}</Link></h3>{entry.description && <p>{entry.description}</p>}<Link className={styles.link} href={entry.href}>Read the article →</Link></div></article>)}
+      {archiveUnavailable && <p className={styles.note}>The article archive is temporarily unavailable. Our published guides above are still available; please try the archive again later.</p>}
+    </section>
+    <p className={styles.note}>Our <Link className={styles.link} href="/about/editorial-standards">editorial standards</Link> explain how we choose sources, review claims and use AI. Signal keeps the source in view; the blog gives an idea more room.</p>
+    <SubscribeCTA content="both" heading="Follow what is useful to you." description="Choose the categories you care about, then get original articles and source-linked briefs in your inbox."/>
+    <div className={styles.cta}><p>Have a workflow that keeps getting in the way?</p><Link href="/book?source=blog-index" className={styles.link}>Discuss your project →</Link></div>
+  </div></main>;
 }
