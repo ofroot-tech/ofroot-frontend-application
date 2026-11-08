@@ -2,6 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { getNewsSnapshot } from '@/app/lib/news';
 import type { NewsCategory, NewsSnapshot } from '@/app/lib/news/types';
 import { insights, type Insight } from '@/app/lib/insights-content';
+import pilotManifest from '@/content/signal-pilot.json';
+import { checkedPilot, type PilotArticle } from '@/app/lib/signal-pilot';
 import { getBriefForArticle } from '@/app/lib/signal-briefs';
 import { supportsBrief } from '@/app/lib/signal-briefs/evidence';
 import { abridgeAbstract } from '@/app/lib/signal-briefs/compose';
@@ -76,15 +78,31 @@ export function chooseDigestItems(items: DigestItem[], topics: NewsCategory[], e
   return chosen;
 }
 
-export async function prepareDigestItems(subscriber: SignalSubscriber, excluded = new Set<string>(), now = new Date(), supplied?: { snapshot?: NewsSnapshot; insights?: Insight[]; deadline?: number }): Promise<DigestItem[]> {
+export async function prepareDigestItems(subscriber: SignalSubscriber, excluded = new Set<string>(), now = new Date(), supplied?: { snapshot?: NewsSnapshot; insights?: Insight[]; articles?: PilotArticle[]; deadline?: number }): Promise<DigestItem[]> {
   const candidates: DigestItem[] = [];
+  const sourceInsights = supplied?.insights || insights;
+  // Both reading surfaces use the same source-owned article list. Explicit
+  // fixture insights stay isolated unless fixture articles are supplied too.
+  const ownedArticles = checkedPilot(supplied?.articles ?? (supplied?.insights ? [] : pilotManifest.articles));
   if (subscriber.content !== 'briefs') {
-    for (const insight of supplied?.insights || insights) {
-      const topic = insightTopic(insight);
+    for (const insight of sourceInsights) {
+      const companion = ownedArticles.find(article => article.sourcePath === `/insights/${insight.slug}`);
+      const topic = insightTopic(insight) || (companion ? insightTopic({ title:insight.title, slug:insight.slug, category:companion.summary }) : null);
+      const publishedAt = insight.published || companion?.publishedAt;
       // A modification date does not make an older guide a newly published one.
-      if (!topic || !subscriber.topics.includes(topic) || !isFreshForDigest(insight.published, subscriber, now)) continue;
+      if (!topic || !subscriber.topics.includes(topic) || !isFreshForDigest(publishedAt, subscriber, now)) continue;
       candidates.push({ key: `insight:${insight.slug}`, title: insight.title, url: `${SIGNAL_SITE_URL}/insights/${insight.slug}`, excerpt: insight.description,
-        kind: 'insight', topic, publishedAt: insight.published!, source: 'OfRoot Insights', sourceUrl: `${SIGNAL_SITE_URL}/insights/${insight.slug}` });
+        kind: 'insight', topic, publishedAt: publishedAt!, source: 'OfRoot Insights', sourceUrl: `${SIGNAL_SITE_URL}/insights/${insight.slug}` });
+    }
+    for (const article of ownedArticles) {
+      // Keep existing insight keys so previously delivered guides cannot re-enter
+      // an issue under a new article key after audio or layout changes.
+      if (sourceInsights.some(insight => article.sourcePath === `/insights/${insight.slug}`)) continue;
+      const topic = insightTopic({ title:article.title, slug:article.slug, category:article.summary });
+      if (!topic || !subscriber.topics.includes(topic) || !isFreshForDigest(article.publishedAt, subscriber, now)) continue;
+      const url = `${SIGNAL_SITE_URL}${article.sourcePath}`;
+      candidates.push({ key:`article:${article.sourcePath}`, title:article.title, url, excerpt:article.summary,
+        kind:'insight', topic, publishedAt:article.publishedAt, source:'OfRoot Technology', sourceUrl:url });
     }
   }
   if (subscriber.content !== 'insights') {
