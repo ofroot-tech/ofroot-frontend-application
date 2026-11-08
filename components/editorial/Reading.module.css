@@ -28,6 +28,8 @@
 .article table { display:block; max-width:100%; overflow:auto; border-collapse:collapse; }.article :is(td,th) { padding:12px; border:1px solid var(--reading-line); }
 .audio { margin-block:36px; padding-block:24px; border-block:1px solid var(--reading-line); }
 .audio audio { display:block; width:100%; max-width:580px; margin-block:18px; }
+.audio :is(audio,button):focus-visible { outline:2px solid var(--reading-link); outline-offset:4px; }
+.audio button { min-height:44px; padding:8px 14px; color:var(--reading-link); background:var(--reading-panel); border:1px solid var(--reading-line); border-radius:4px; cursor:pointer; }
 .audio details { margin-top:20px; }.audio summary { min-height:44px; cursor:pointer; color:var(--reading-link); padding-block:10px; }
 .audio details p { white-space:pre-line; }.audio .note { margin-block:14px; }
 @media(max-width:680px) { .page { padding-top:36px; }.featured,.row { grid-template-columns:1fr; gap:20px; }.featured { padding:24px; margin-bottom:42px; }.featured > div:first-child { border-right:0; border-bottom:1px solid var(--reading-line); padding:0 0 20px; gap:12px; }.row { padding-block:26px; }.intro { font-size:17px; margin-bottom:32px; }.article :is(p,ul,ol,blockquote) { font-size:17px; } }
