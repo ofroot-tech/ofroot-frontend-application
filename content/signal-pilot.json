@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "limit": 30,
+  "basis": "Short extracts from already-published OfRoot-owned guides. No external publisher bodies or newly invented claims.",
+  "articles": [
+    {
+      "slug": "find-expensive-manual-work-before-automating",
+      "title": "How to Find the Manual Work Worth Automating First",
+      "sourcePath": "/blog/find-expensive-manual-work-before-automating",
+      "summary": "A practical method for mapping recurring work, calculating its real cost, scoring opportunities, and choosing the smallest automation with a defensible business case.",
+      "publishedAt": "2026-08-07",
+      "audio": {
+        "path": "/audio/signal-pilot/find-expensive-manual-work-before-automating-v2.mp3",
+        "transcriptHash": "6e3433274875ed7d9f49891012f30fbcb2e584a2baa862163c7f0c11800cebfb",
+        "sha256": "b37e428799a6a23ab9d791bde8b52bf0eda04a86d940368b86ad1333c3ea3323",
+        "durationSeconds": 21.6
+      }
+    },
+    {
+      "slug": "is-your-business-ai-agent-ready",
+      "title": "Is Your Business AI-Agent Ready? A Practical Readiness Test",
+      "sourcePath": "/insights/is-your-business-ai-agent-ready",
+      "summary": "An AI-agent-ready business has at least one defined workflow where an agent can access approved information, use limited tools, follow explicit rules, request human approval, fail safely, and produce evidence that the work completed correctly.",
+      "publishedAt": "2026-09-08",
+      "audio": {
+        "path": "/audio/signal-pilot/is-your-business-ai-agent-ready.mp3",
+        "transcriptHash": "a053bd8a14cd1933889db4499d80986794369a58b4f31ad5019c34fe702cffcc",
+        "sha256": "a25b39c89e95b7279166593ef0449bde3abd3fdf996e7b6df2d19e1fe947c14b",
+        "durationSeconds": 26.76
+      }
+    },
+    {
+      "slug": "what-is-ai-discoverability",
+      "title": "What Is AI Discoverability?",
+      "sourcePath": "/insights/what-is-ai-discoverability",
+      "summary": "AI discoverability is the work of making a company’s useful knowledge easy for people, search engines, and AI systems to find, interpret, and connect to a trusted source.",
+      "publishedAt": "2026-07-22",
+      "audio": {
+        "path": "/audio/signal-pilot/what-is-ai-discoverability.mp3",
+        "transcriptHash": "9338d415d94234d9dc0928dc4da53c8adb680b9cfb8d653a3a3af0ea93b5d2dc",
+        "sha256": "312a4d3b65d0a537bd8995c4e6706a4e4140fc357e55ed9e7ba36b8e5fbeec29",
+        "durationSeconds": 19.248
+      }
+    },
+    {
+      "slug": "seo-vs-aeo-vs-geo",
+      "title": "SEO vs. AEO vs. GEO: What Companies Actually Need",
+      "sourcePath": "/insights/seo-vs-aeo-vs-geo",
+      "summary": "Most companies do not need three disconnected programs. They need one discoverability system with a technically sound site, direct and useful answers, consistent company facts, credible sources, and conversion measurement.",
+      "publishedAt": "2026-07-22",
+      "audio": {
+        "path": "/audio/signal-pilot/seo-vs-aeo-vs-geo.mp3",
+        "transcriptHash": "b87cbf315b1b71b6f586869961cf888411fcfa37d08b919447842a3ace81e356",
+        "sha256": "b396be1cf2599b6eb2f570a6e5933a84580ff171e6a9290731bb7ac9ff5e7ae3",
+        "durationSeconds": 25.56
+      }
+    },
+    {
+      "slug": "build-private-company-ai-assistant",
+      "title": "How to Build a Private Company AI Assistant",
+      "sourcePath": "/insights/build-private-company-ai-assistant",
+      "summary": "A private company AI assistant connects approved knowledge to a controlled retrieval and answer workflow. The safe starting point is a narrow use case with explicit sources, access rules, source citations, auditability, and a human approval boundary.",
+      "publishedAt": "2026-07-22",
+      "audio": {
+        "path": "/audio/signal-pilot/build-private-company-ai-assistant.mp3",
+        "transcriptHash": "a4920e72a839ed7c905ef1d18debb656a980e270c67c3bb38399b38f85de2515",
+        "sha256": "b9944895731081e1822fcb8f1cee5678205070a890061369f996b68195421878",
+        "durationSeconds": 27.6
+      }
+    },
+    {
+      "slug": "ai-discoverability-audit-checklist",
+      "title": "AI Discoverability Audit Checklist",
+      "sourcePath": "/insights/ai-discoverability-audit-checklist",
+      "summary": "An AI discoverability audit checks whether priority pages can be crawled and indexed, answer meaningful buyer questions clearly, establish consistent company facts, provide credible evidence, connect through internal links, and produce measurable business actions.",
+      "publishedAt": "2026-09-09",
+      "audio": {
+        "path": "/audio/signal-pilot/ai-discoverability-audit-checklist.mp3",
+        "transcriptHash": "76a936233fbed0a50bac1dc841731199fe4e29fdc8f467956c37a087c73bcac5",
+        "sha256": "f873fa8c38f2615ec2baa5b96cb89e9293187d0e0542b0b068a7fa7d6524f6c3",
+        "durationSeconds": 26.904
+      }
+    },
+    {
+      "slug": "how-to-get-mentioned-in-ai-answers",
+      "title": "How to Get Mentioned in AI-Generated Answers",
+      "sourcePath": "/insights/how-to-get-mentioned-in-ai-answers",
+      "summary": "You cannot guarantee a mention in an AI-generated answer. You can improve the probability by making useful pages indexable, answering specific questions clearly, publishing distinctive evidence, keeping company facts consistent, earning credible references, and measuring which topics generate discovery and action.",
+      "publishedAt": "2026-09-09",
+      "audio": {
+        "path": "/audio/signal-pilot/how-to-get-mentioned-in-ai-answers.mp3",
+        "transcriptHash": "240762460c4bfce3213a2203b5a82a2f76fe8e09f9aa10d90f44009eaeedaa53",
+        "sha256": "5f7b4c0c793f09ffeec68fb668619d6d539d3c985e47b094c67f2c3aed1990a3",
+        "durationSeconds": 30.36
+      }
+    },
+    {
+      "slug": "private-ai-assistant-security-requirements",
+      "title": "Private AI Assistant Security Requirements",
+      "sourcePath": "/insights/private-ai-assistant-security-requirements",
+      "summary": "A secure private AI assistant needs authenticated users, permission-aware retrieval, least-privilege tools, explicit data handling rules, prompt-injection defenses, verifiable outputs, safe logging, continuous evaluations, and tested incident and shutdown procedures.",
+      "publishedAt": "2026-09-09",
+      "audio": {
+        "path": "/audio/signal-pilot/private-ai-assistant-security-requirements.mp3",
+        "transcriptHash": "c9b4573a6013a16f1b47155a3a3f220eab04871a1d65833c5f12899676f39ff3",
+        "sha256": "483b08ec6997930ce6fc12e98075fda1a247854141dcb34b02f208d45fe36c17",
+        "durationSeconds": 26.16
+      }
+    },
+    {
+      "slug": "workflow-automation-roi-guide",
+      "title": "Workflow Automation ROI: A Practical Calculation Guide",
+      "sourcePath": "/insights/workflow-automation-roi-guide",
+      "summary": "Workflow automation ROI compares verified annual benefits—time returned, faster cycle time, fewer errors, recovered opportunities, and avoided costs—with implementation and ongoing operating costs. Use conservative ranges, count only realizable value, and validate the model after launch.",
+      "publishedAt": "2026-09-09",
+      "audio": {
+        "path": "/audio/signal-pilot/workflow-automation-roi-guide.mp3",
+        "transcriptHash": "4d27234eff431816019fa6112ecab813493a0c7f3bb1a49d7da99b0a0777c6b6",
+        "sha256": "538c217fe91a8b556f465ef7770ed6be472a6b5aedbe54e3e1b442c17f29a0a5",
+        "durationSeconds": 31.056
+      }
+    },
+    {
+      "slug": "hubspot-ai-agent-integration-guide",
+      "title": "HubSpot AI Agent Integration Guide",
+      "sourcePath": "/insights/hubspot-ai-agent-integration-guide",
+      "summary": "A reliable HubSpot AI agent integration gives the agent a narrow CRM job, maps the required objects and properties, grants least-privilege access, reacts to verified events, validates and deduplicates writes, requires approval for consequential actions, and records evidence of every completed step.",
+      "publishedAt": "2026-09-09",
+      "audio": {
+        "path": "/audio/signal-pilot/hubspot-ai-agent-integration-guide.mp3",
+        "transcriptHash": "c7639459bd0c85f26536f8f29542776a203d33bbec2db3b8bf904e0bdc87acac",
+        "sha256": "eb38452e9e4a3d2d51b92f427f94b4a26b71f1e06beeb1dae554d87880f2b7a3",
+        "durationSeconds": 25.656
+      }
+    },
+    {
+      "slug": "hvac-lead-follow-up-audit-checklist",
+      "title": "HVAC Lead Follow-Up Audit: A Practical Checklist",
+      "sourcePath": "/insights/hvac-lead-follow-up-audit-checklist",
+      "summary": "An HVAC lead follow-up audit traces each request from call or form through qualification, booking, estimate, payment, and review. The first fix should be the smallest unowned or unmeasured handoff that can be tied to recovered revenue or capacity.",
+      "publishedAt": "2026-09-15",
+      "audio": {
+        "path": "/audio/signal-pilot/hvac-lead-follow-up-audit-checklist.mp3",
+        "transcriptHash": "d1076021d77a9a9973f0661c3502faebab956f0c44a6aea53c74704e08a4a9d3",
+        "sha256": "8f797e536eed363ada2fe8ecb52e8814e33d075ab48f854290f86734d24216d6",
+        "durationSeconds": 26.208
+      }
+    }
+  ]
+}

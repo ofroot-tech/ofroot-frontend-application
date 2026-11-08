@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "npm run test:reading && next build --turbopack",
+    "test:reading": "jest --config jest.reading.config.cjs --runInBand",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",

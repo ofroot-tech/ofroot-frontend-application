@@ -10,6 +10,8 @@ import SubscribeCTA from '../../subscriptions/SubscribeCTA';
 import { formatPublished, topics } from '../../presentation';
 import news from '../../news.module.css';
 import styles from './brief.module.css';
+import JsonLd from '@/components/seo/JsonLd';
+import { signalArticleSchema } from '@/app/lib/reading-schema';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
@@ -53,6 +55,7 @@ export default async function SignalBriefPage({ params }: Props) {
   const evidence = brief.status === 'ready' ? brief.evidence : undefined;
 
   return <main id="main-content" className={`${news.news} ${styles.page}`}>
+    {evidence && <JsonLd data={signalArticleSchema({ id:article.id, title:article.title, description:brief.introduction, generatedAt:brief.generatedAt, sourceUrl:article.url, evidenceUrl:evidence.url, evidencePublisher:evidence.publisher })} />}
     <div className={news.container}>
       <SignalHeader current="briefs" />
       <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/news">The latest</Link><span aria-hidden="true">/</span><Link href="/news/briefs">Signal briefs</Link><span aria-hidden="true">/</span><span aria-current="page">{topic}</span></nav>

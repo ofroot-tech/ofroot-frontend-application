@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { TrackedLink } from '@/components/growth/Analytics';
 import HomeHero from '@/components/growth/HomeHero';
+import HomeReading from '@/components/editorial/HomeReading';
+import JsonLd from '@/components/seo/JsonLd';
 import MotionText from '@/components/growth/MotionText';
 import styles from '@/components/growth/ApprovedHome.module.css';
 import { SITE_URL } from '@/app/lib/growth-content';
@@ -38,6 +40,7 @@ export default function HomePage() {
   return (
     <main id="main-content" className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <JsonLd data={{ '@context':'https://schema.org', '@type':'WebPage', name:title, url:SITE_URL, hasPart:[{ '@type':'Blog', name:'OfRoot Blog', url:`${SITE_URL}/blog` },{ '@type':'CollectionPage', name:'OfRoot Signal', url:`${SITE_URL}/news` }] }}/>
       <HomeHero />
       <section id="services" className={`${styles.shell} ${styles.services}`} aria-labelledby="services-heading">
         <div className={styles.sectionHeader}><div><p className={styles.sectionLabel}>Built around the work</p><h2 id="services-heading"><MotionText>Fix what slows<br />your business down.</MotionText></h2></div><p>Start with a task that costs time, creates rework, or holds back growth. We’ll help you choose a useful first fix.</p></div>
@@ -48,6 +51,7 @@ export default function HomePage() {
         <div className={styles.exampleList}>{examples.map(example => <article className={styles.exampleRow} key={example.type}><div><span className={styles.exampleType}>{example.type}</span><h3><MotionText>{example.title}</MotionText></h3><p>{example.body}</p></div><div className={styles.workflow} aria-label="Example workflow">{example.steps.map((step, index) => <span key={step}>{index > 0 && <b aria-hidden="true">→ </b>}{step}</span>)}</div></article>)}</div>
       </div></section>
       <section id="approach" className={styles.method} aria-labelledby="method-heading"><div className={`${styles.shell} ${styles.methodInner}`}><div><p className={styles.sectionLabel}>Founder-led engineering</p><h2 id="method-heading"><MotionText>One hands-on partner.<br />From first fix onward.</MotionText></h2></div><div className={styles.methodContent}><p>Work directly with Dimitri, a full-stack developer and solutions architect with 11 years in technology. Start with a defined problem, review the work as it develops, and agree on handoff or ongoing support.</p><div className={styles.steps}>{[['01 / Define', 'Agree on the scope'], ['02 / Build', 'Review the work'], ['03 / Validate', 'Launch & hand off']].map(([stage, label]) => <div className={styles.step} key={stage}><span>{stage}</span><b>{label}</b></div>)}</div><Link href="/solutions/home-services-automation" className={styles.audienceLink}>Explore a home-services workflow →</Link></div></div></section>
+      <HomeReading />
       <section className={`${styles.shell} ${styles.faq}`} aria-labelledby="faq-heading"><div className={styles.faqIntro}><p className={styles.sectionLabel}>Before we start</p><h2 id="faq-heading"><MotionText>A few useful answers.</MotionText></h2><p>You can bring one specific problem or ask for help finding the right place to start.</p></div><div className={styles.faqList}>{questions.map(item => <details key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>)}</div></section>
       <section id="contact" className={`${styles.shell} ${styles.closing}`} aria-labelledby="contact-heading"><div><h2 id="contact-heading"><MotionText>Where does the work<br />get stuck?</MotionText></h2><p className={styles.closingNote}>Share the problem and the outcome you want.<br />We’ll review the fit and recommend a practical next step.</p></div><TrackedLink href="/book?source=homepage-final" source="homepage:final" className={styles.primary}><span>Discuss your project</span><ArrowRight className={styles.arrow} aria-hidden="true" /></TrackedLink></section>
     </main>

@@ -68,6 +68,32 @@ describe('Signal digest content and preference boundaries', () => {
     expect(getNewsSnapshot).not.toHaveBeenCalled();
     expect(getBriefForArticle).not.toHaveBeenCalled();
   });
+
+  it('includes fresh owned blog articles in their chosen category without reviving old guides', async () => {
+    const owned = { slug:'owned-workflow', sourcePath:'/blog/owned-workflow', title:'A workflow guide', summary:'An invented guide to useful workflow automation.', publishedAt:'2026-10-28' };
+    const old = { ...owned, slug:'older-workflow', sourcePath:'/blog/older-workflow', publishedAt:'2026-09-01' };
+    const reader = { ...subscriber, content:'insights' as const, topics:['integrations' as const] };
+    const selected = await prepareDigestItems(reader, new Set(), now, { insights:[], articles:[owned,old] });
+    expect(selected.map(value => value.key)).toEqual(['article:/blog/owned-workflow']);
+    expect(selected[0].sourceUrl).toBe('https://www.ofroot.technology/blog/owned-workflow');
+    expect(await prepareDigestItems(reader, new Set(['article:/blog/owned-workflow']), now, { insights:[], articles:[owned] })).toEqual([]);
+    expect(await prepareDigestItems({ ...reader, content:'briefs' }, new Set(), now, { snapshot:snapshot([]), insights:[], articles:[owned] })).toEqual([]);
+    expect(sendSignalEmail).not.toHaveBeenCalled();
+  });
+  it('preserves insight identity when the same guide also has a Signal companion', async () => {
+    const owned = { slug:'practical-ai', title:'Practical AI', description:'OfRoot-authored guidance.', category:'AI', published:'2026-10-28' } as Insight;
+    const companion = { slug:owned.slug, title:owned.title, sourcePath:'/insights/practical-ai', summary:'A useful AI guide.', publishedAt:'2026-10-28' };
+    const selected = await prepareDigestItems({ ...subscriber, content:'insights' }, new Set(), now, { insights:[owned], articles:[companion] });
+    expect(selected.map(value => value.key)).toEqual(['insight:practical-ai']);
+  });
+  it('uses an owned article summary to classify a broader workflow headline', async () => {
+    const owned = { slug:'follow-up-audit', title:'A follow-up audit', description:'An owned guide.', category:'Business', published:'2026-10-28' } as Insight;
+    const companion = { slug:owned.slug, title:owned.title, sourcePath:'/insights/follow-up-audit', summary:'A guide to workflow automation and connected handoffs.', publishedAt:'2026-10-28' };
+    const selected = await prepareDigestItems({ ...subscriber, content:'insights', topics:['integrations'] }, new Set(), now, { insights:[owned], articles:[companion] });
+    expect(selected.map(value => value.topic)).toEqual(['integrations']);
+    expect(getNewsSnapshot).not.toHaveBeenCalled();
+  });
+
   it('renders escaped excerpts, separate attribution, and scoped preference links', () => {
     const message = renderSignalDigest(subscriber, [{ ...item('test'), title: '<script>alert(1)</script>', excerpt: 'Accuracy < 0.05 & limits remain.' }], 'issue-one', now);
     expect(message.html).not.toContain('<script>');

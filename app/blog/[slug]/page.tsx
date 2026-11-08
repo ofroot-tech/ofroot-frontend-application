@@ -1,9 +1,12 @@
-import publicStyles from '@/components/growth/PublicPage.module.css';
+import styles from '@/components/editorial/Reading.module.css';
 import { api } from '@/app/lib/api';
 import { SITE } from '@/app/config/site';
 import JsonLd from '@/components/seo/JsonLd';
 import { notFound } from 'next/navigation';
-import { marked } from 'marked';
+import { renderBlogMarkdown } from '@/app/lib/blog-markdown';
+import type { Metadata } from 'next';
+import { cache } from 'react';
+import ArticleSignalLink from '@/components/editorial/ArticleSignalLink';
 
 // ------------------------------------------------------------
 // Force dynamic rendering to avoid build-time API failures
@@ -12,38 +15,12 @@ import { marked } from 'marked';
 // ------------------------------------------------------------
 export const dynamic = 'force-dynamic';
 
-const fallbackPosts = [
-  {
-    id: 1,
-    title: 'The operator-led 30-day AI build',
-    slug: 'operator-led-30-day-ai-build',
-    excerpt: 'How we scope, build, and ship a revenue-grade AI workflow in 30 days with weekly demos.',
-    body: `# The operator-led 30-day AI build\n\nWe keep the promise narrow and the delivery visible. Week 1 is intake and routing design, Week 2 is integration and guardrails, Week 3 is QA with fixtures, Week 4 is rollout with a rollback plan. Every Friday ships with diffs and a short loom.`,
-    published_at: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    title: 'Pricing ladder for home services and OnTask',
-    slug: 'pricing-ladder-home-services',
-    excerpt: 'Starter $29/mo, Plus $299/mo, and a $12K 30-day pilot—why the ladder matches workload and risk.',
-    body: `# Pricing ladder for home services and OnTask\n\nStarter covers calendar, estimates → invoices, payments, and light automations. Plus unlocks integrations, higher volume, and priority chat. The 30-day pilot adds AI intake + routing with weekly demos and guardrails. Overages auto-upgrade and annual saves ~2 months.`,
-    published_at: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    title: 'OnTask Starter + Plus launch notes',
-    slug: 'ontask-starter-plus-launch',
-    excerpt: 'What ships in Starter, what unlocks in Plus, and how to move into the AI intake pilot.',
-    body: `# OnTask Starter + Plus launch notes\n\nStarter gives crews of 1–10 one calendar, fast paperwork, and Stripe payments. Plus adds integrations, higher throughput, and priority support. When the team is ready for AI intake, we scope a 30-day pilot and then move to a quarterly retainer.`,
-    published_at: new Date().toISOString(),
-  },
-] as const;
-
 function formatDate(input?: string | null) {
   if (!input) return '';
   try {
     const d = new Date(input);
-    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    if (!Number.isFinite(d.getTime())) return '';
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone:'UTC' });
   } catch {
     return String(input);
   }
@@ -52,25 +29,38 @@ function formatDate(input?: string | null) {
 type RouteParams = Promise<{ slug: string }>;
 type RouteSearchParams = Promise<{ [k: string]: string | string[] | undefined }>;
 
-export default async function BlogPostPage({ params, searchParams }: { params: RouteParams; searchParams: RouteSearchParams }) {
-  const resolvedParams = await params;
-  const resolvedSearch = await searchParams;
+function tenantId(raw: string | string[] | undefined) {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  const parsed = value && /^\d+$/.test(value) ? Number(value) : NaN;
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : undefined;
+}
 
-  const slug = decodeURIComponent(resolvedParams.slug);
-  const qTenant = Array.isArray(resolvedSearch?.tenant_id) ? resolvedSearch?.tenant_id[0] : resolvedSearch?.tenant_id;
-  const tenantFromQuery = qTenant && /^\d+$/.test(String(qTenant)) ? Number(qTenant) : undefined;
+function actualDate(value?: string | null) {
+  return value && Number.isFinite(Date.parse(value)) ? value : undefined;
+}
 
-  async function fetchWithFallback(): Promise<{
+export async function generateMetadata({ params, searchParams }: { params:RouteParams; searchParams:RouteSearchParams }):Promise<Metadata> {
+  const tenant=tenantId((await searchParams).tenant_id);
+  const post=await fetchPublicPost((await params).slug,tenant);
+  const url=`${SITE.url}/blog/${encodeURIComponent(post.slug)}${post.tenant_id != null ? `?tenant_id=${post.tenant_id}` : ''}`;
+  const title=post.meta_title || post.title;
+  const description=post.meta_description || post.excerpt || `Read ${post.title} from OfRoot Technology.`;
+  return {title,description,alternates:{canonical:url},openGraph:{type:'article',url,title,description,publishedTime:actualDate(post.published_at),modifiedTime:actualDate(post.updated_at)},twitter:{card:'summary_large_image',title,description,images:[`${SITE.url}/og.jpg`]}};
+}
+
+const fetchPublicPost = cache(async (slug:string, tenantFromQuery?:number): Promise<{
     id: number;
     title: string;
     slug: string;
     excerpt?: string | null;
+    meta_title?: string | null;
+    meta_description?: string | null;
     body: string;
     tenant_id?: number | null;
     published_at?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
-  }> {
+  }> => {
     try {
       if (typeof tenantFromQuery === 'number') {
         const r = await api.publicGetBlogPost(slug, tenantFromQuery);
@@ -90,21 +80,30 @@ export default async function BlogPostPage({ params, searchParams }: { params: R
 
       const r3 = await api.publicGetBlogPostAny(slug);
       return r3.data as any;
-    } catch {
-      const fallback = fallbackPosts.find((p) => p.slug === slug);
-      if (fallback) return fallback as any;
-      notFound();
+    } catch (error) {
+      if ((error as {status?:number}).status === 404) notFound();
+      throw error;
     }
-  }
+  });
 
-  const post = await fetchWithFallback();
-  const html = await marked.parse(post.body || '');
+export default async function BlogPostPage({ params, searchParams }: { params: RouteParams; searchParams: RouteSearchParams }) {
+  const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
+
+  const slug = resolvedParams.slug;
+  const tenantFromQuery = tenantId(resolvedSearch.tenant_id);
+  const post = await fetchPublicPost(slug,tenantFromQuery);
+  const html = await renderBlogMarkdown(post.body || '');
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
-    datePublished: post.published_at || post.created_at,
+    author: { '@type':'Organization', name:'OfRoot Technology Editorial Team', url:`${SITE.url}/authors/ofroot-technology` },
+    publisher: { '@type':'Organization', name:'OfRoot Technology', url:SITE.url },
+    dateModified: actualDate(post.updated_at),
+    isAccessibleForFree:true,
+    datePublished: actualDate(post.published_at),
     url: `${SITE.url}/blog/${encodeURIComponent(post.slug)}${post.tenant_id ? `?tenant_id=${post.tenant_id}` : ''}`,
     description: post.excerpt || undefined,
   } as const;
@@ -112,13 +111,14 @@ export default async function BlogPostPage({ params, searchParams }: { params: R
   return (
     <>
       <JsonLd data={jsonLd as any} />
-      <main className={`${publicStyles.page} ${publicStyles.legacy} min-h-screen bg-[#211c2c] text-[#faf9fc] pt-24 pb-20 px-4`}>
-        <article className="prose prose-lg max-w-3xl mx-auto">
+      <main className={styles.page}>
+        <article className={styles.article}>
           <h1 className="mb-2">{post.title}</h1>
-          {(post.published_at || post.created_at) ? (
-            <div className="text-[#b4a3c5] text-sm mb-6">{formatDate(post.published_at || post.created_at)}</div>
+          {post.published_at ? (
+            <div className={styles.date}>{formatDate(post.published_at)}</div>
           ) : null}
-          {post.excerpt ? <p className="text-[#c9bed5] italic">{post.excerpt}</p> : null}
+          {post.excerpt ? <p className={styles.intro}>{post.excerpt}</p> : null}
+          <ArticleSignalLink sourcePath={`/blog/${post.slug}`} />
           <div className="mt-6" dangerouslySetInnerHTML={{ __html: html }} />
         </article>
       </main>

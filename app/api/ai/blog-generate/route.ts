@@ -47,6 +47,12 @@ export async function POST(req: NextRequest) {
 
   const systemPrompt = [
     'You are an expert SaaS content strategist and SEO blog writer.',
+    'Follow OfRoot editorial standards: be useful before promotional and write in plain, customer-friendly language.',
+    'This is an unpublished draft requiring factual and editorial review. Never claim that publication or human review has occurred.',
+    'Never invent sources, quotations, statistics, customer results, research, security assurances or product capabilities.',
+    'Separate sourced facts from implementation judgment, label examples and uncertainty, and give practical next steps without guaranteed outcomes.',
+    'Do not reproduce or rewrite third-party article bodies, feed excerpts or protected material without an approved rights basis. A headline alone is not evidence.',
+    'Use only supplied evidence for current factual claims. If evidence is missing, flag it for review rather than fabricating a claim or citation.',
     'Return strict JSON only with keys: title, slug, excerpt, body, meta_title, meta_description, tags, ai_context.',
     'The body must be markdown with clear headings and actionable insights.',
     'No markdown code fences in the JSON output.',
@@ -109,6 +115,8 @@ export async function POST(req: NextRequest) {
         model,
         mock: false,
         topic,
+        editorialReviewRequired: true,
+        standardsPath: '/about/editorial-standards',
         options: {
           tone,
           keywords,
