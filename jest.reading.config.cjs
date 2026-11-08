@@ -1,3 +1,6 @@
+// React's act helper is development-only; Vercel builds set NODE_ENV=production.
+// Keep this setting inside the Jest subprocess, before React is loaded.
+process.env.NODE_ENV = 'test';
 const base = require('./jest.config.js');
 module.exports = {
   ...base,
