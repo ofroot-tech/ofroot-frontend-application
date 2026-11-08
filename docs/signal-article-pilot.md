@@ -8,8 +8,8 @@ This bounded pilot adds a short Signal companion to OfRoot-owned published artic
 - Use plain language, a useful next step and traceable sources. Keep facts, OfRoot commentary and examples distinct. No invented outcomes, citations or review claims.
 - The initial manifest contains short extracts from 11 existing OfRoot guides. Their original article URLs, publication dates and identity remain intact. The remaining 19 slots are for future eligible articles, not invented filler.
 - Count **30 unique articles total**, including existing articles and failed/pending narration. `checkedPilot` rejects a 31st article. Corrections or retries retain the same identity and slot.
-- `registerPilotArticle` checks enrollment; it does not publish to the CMS. A publisher must check the manifest and the actual article before enabling its companion. The remote CMS publication hook is not yet integrated.
-- Both the Codex publishing workflow and the website editor must use this one list and limit. Do not create a second counter. The build checks owned-guide coverage while slots remain, source summaries, and the actual accepted recording bytes. Website-editor integration and its real publish/readback checks remain blocked until the existing article API is reachable and its correct target is confirmed.
+- `registerPilotArticle` checks enrollment in the source-owned publishing list. The current confirmed publishing path is Codex and reviewed website source, so the public reading pages require no separate CMS API.
+- The owner confirmed that articles are currently posted through Codex. The build checks source-guide coverage while slots remain, source summaries, and actual accepted recording bytes. Future website-editor support remains a separate setup and must use this same 30-total list; do not create a second counter.
 - Release the pilot only after content, actual audio assets, complete application verification and source review pass. The count includes every enrolled article, even when audio is pending or failed.
 
 ## Audio
@@ -23,3 +23,7 @@ Use the approved OpenAI connection on the server or generation workstation. Keep
 Use the project's exact dependencies and current main. Check blog and Signal light/dark contrast, mobile layout, keyboard/focus, saved/search state, audio interaction, sources, canonical URLs, metadata and JSON-LD. Include only enabled, actually published pilot routes in the sitemap, with real publication/update dates. Cosmetic theme changes do not reset article dates.
 
 Local component checks are separate from a full Next.js build, the external CMS, actual narration and canonical production verification.
+
+## Next articles through Codex
+
+For each new owned article, review its facts and source rights, register one identity in this list, prepare its short Signal and exact transcript, generate and verify its saved narration, then update its file hash, transcript hash and duration. The build must pass before publication. While slots remain, a new guide or static blog article without an enrolled companion fails the publishing checks. At 30 unique articles, stop pilot enrollment; normal article publishing may continue. Failed narration and retries retain the original slot.

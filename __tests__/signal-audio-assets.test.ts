@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import manifest from '@/content/signal-pilot.json';
@@ -24,6 +24,10 @@ test('the publishing list covers existing guides and keeps their short versions 
     ...insights.map(item => ({ sourcePath:`/insights/${item.slug}`, title:item.title, summary:item.directAnswer, publishedAt:item.published ?? '2026-07-22' })),
   ];
   if (articles.length < 30) {
+    const staticBlogRoutes = readdirSync(path.join(process.cwd(), 'app/blog'), { withFileTypes:true })
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('[') && existsSync(path.join(process.cwd(), 'app/blog', entry.name, 'page.tsx')))
+      .map(entry => `/blog/${entry.name}`);
+    expect(staticBlogRoutes.filter(route => !articles.some(article => article.sourcePath === route))).toEqual([]);
     expect(guides.filter(guide => !articles.some(article => article.sourcePath === guide.sourcePath))).toEqual([]);
   }
   for (const article of articles) {
