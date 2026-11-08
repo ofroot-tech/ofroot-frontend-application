@@ -6,6 +6,7 @@ module.exports = {
     '<rootDir>/__tests__/blog-markdown.test.ts',
     '<rootDir>/__tests__/reading-jsonld.test.tsx',
     '<rootDir>/__tests__/signal-audio-assets.test.ts',
+    '<rootDir>/__tests__/signal-audio-player.test.tsx',
     '<rootDir>/__tests__/signal-digest.test.ts',
   ],
   preset: 'ts-jest/presets/js-with-ts',
