@@ -9,6 +9,7 @@ This bounded pilot adds a short Signal companion to OfRoot-owned published artic
 - The initial manifest contains short extracts from 11 existing OfRoot guides. Their original article URLs, publication dates and identity remain intact. The remaining 19 slots are for future eligible articles, not invented filler.
 - Count **30 unique articles total**, including existing articles and failed/pending narration. `checkedPilot` rejects a 31st article. Corrections or retries retain the same identity and slot.
 - `registerPilotArticle` checks enrollment; it does not publish to the CMS. A publisher must check the manifest and the actual article before enabling its companion. The remote CMS publication hook is not yet integrated.
+- Both the Codex publishing workflow and the website editor must use this one list and limit. Do not create a second counter. The build checks owned-guide coverage while slots remain, source summaries, and the actual accepted recording bytes. Website-editor integration and its real publish/readback checks remain blocked until the existing article API is reachable and its correct target is confirmed.
 - Release the pilot only after content, actual audio assets, complete application verification and source review pass. The count includes every enrolled article, even when audio is pending or failed.
 
 ## Audio

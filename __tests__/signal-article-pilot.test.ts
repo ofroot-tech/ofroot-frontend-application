@@ -1,7 +1,9 @@
 import manifest from '@/content/signal-pilot.json';
 import { checkedPilot, registerPilotArticle, playableAudio, transcriptHash } from '@/app/lib/signal-pilot';
 
-const original=manifest.articles[0];
+// Unit cases use an article awaiting narration, independent of whether the
+// shipped pilot recordings have already been generated.
+const original={...manifest.articles[0],audio:undefined};
 const article=(index:number)=>({...original,slug:`article-${index}`,sourcePath:`/blog/article-${index}`});
 describe('The bounded Signal audio pilot',()=>{
   it('counts existing articles and refuses a thirty-first unique article',()=>{
