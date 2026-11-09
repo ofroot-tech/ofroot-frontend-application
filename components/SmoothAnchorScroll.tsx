@@ -10,17 +10,22 @@ import { useEffect } from "react";
  */
 export default function SmoothAnchorScroll() {
   useEffect(() => {
+    let cancelScroll: (() => void) | undefined;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     const onClick = (ev: MouseEvent) => {
+      if (ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
       const t = ev.target as Element | null;
       if (!t) return;
       const a = t.closest('a');
-      if (!a) return;
+      if (!a || a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
 
       const href = a.getAttribute('href') || '';
       // Only handle local hash links like "#features"
       if (!href || !href.startsWith('#')) return;
 
-      const id = href.slice(1);
+      let id: string;
+      try { id = decodeURIComponent(href.slice(1)); } catch { return; }
       const target = document.getElementById(id);
       if (!target) return;
 
@@ -33,58 +38,60 @@ export default function SmoothAnchorScroll() {
       }
 
       ev.preventDefault();
+      cancelScroll?.();
 
       // Temporarily disable snapping during the smooth scroll
       if (container instanceof HTMLElement) {
         container.classList.add('snap-disabled');
-      } else {
-        // document scrolling is already smooth via html { scroll-behavior: smooth }
       }
 
+      let timeoutId: number | undefined;
       const finish = () => {
+        window.clearTimeout(timeoutId);
+        container.removeEventListener('scrollend', finish);
+        window.removeEventListener('wheel', finish);
+        window.removeEventListener('touchstart', finish);
+        reducedMotion.removeEventListener('change', onMotionChange);
         if (container instanceof HTMLElement) {
           container.classList.remove('snap-disabled');
         }
+        if (cancelScroll === finish) cancelScroll = undefined;
       };
 
-      // Scroll into view; scroll-margin on target (e.g., .scroll-target) is respected
-      try {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-      } catch {
-        // Fallback for older browsers
-        const y = target.getBoundingClientRect().top + (container instanceof HTMLElement ? container.scrollTop : window.scrollY);
-        if (container instanceof HTMLElement) container.scrollTo({ top: y, behavior: 'smooth' });
-        else window.scrollTo({ top: y, behavior: 'smooth' });
-      }
-
-      // Re-enable snap shortly after (and also on stability check)
-      let rafId = 0; let timeoutId = 0;
-      const checkSettle = () => {
-        const rect = target.getBoundingClientRect();
-        const nearTop = Math.abs(rect.top - (container instanceof HTMLElement ? container.getBoundingClientRect().top : 0)) < 2;
-        if (nearTop) {
-          finish();
-        } else {
-          rafId = window.requestAnimationFrame(checkSettle);
+      const scrollToTarget = (behavior: ScrollBehavior) => {
+        try {
+          target.scrollIntoView({ behavior, block: 'start', inline: 'nearest' });
+        } catch {
+          const margin = parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+          const containerTop = container instanceof HTMLElement ? container.getBoundingClientRect().top + container.clientTop : 0;
+          const y = target.getBoundingClientRect().top - containerTop - margin + (container instanceof HTMLElement ? container.scrollTop : window.scrollY);
+          container.scrollTo({ top: y, behavior });
         }
       };
-      rafId = window.requestAnimationFrame(checkSettle);
-      timeoutId = window.setTimeout(finish, 1000);
 
-      const cleanup = () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        if (timeoutId) clearTimeout(timeoutId);
-        finish();
+      const onMotionChange = () => {
+        if (reducedMotion.matches) {
+          scrollToTarget('instant');
+          finish();
+        }
       };
 
-      // As a safety, re-enable on user wheel/touch interactions too
-      const onUserInput = () => cleanup();
-      window.addEventListener('wheel', onUserInput, { once: true, passive: true });
-      window.addEventListener('touchstart', onUserInput, { once: true, passive: true });
+      cancelScroll = finish;
+      container.addEventListener('scrollend', finish, { once: true });
+      window.addEventListener('wheel', finish, { once: true, passive: true });
+      window.addEventListener('touchstart', finish, { once: true, passive: true });
+      reducedMotion.addEventListener('change', onMotionChange);
+      // A bounded fallback also covers targets with scroll margins and browsers without scrollend.
+      timeoutId = window.setTimeout(finish, 1000);
+      scrollToTarget(reducedMotion.matches ? 'instant' : 'smooth');
+      if (reducedMotion.matches) finish();
     };
 
     document.addEventListener('click', onClick);
-    return () => document.removeEventListener('click', onClick);
+    return () => {
+      document.removeEventListener('click', onClick);
+      cancelScroll?.();
+    };
   }, []);
 
   return null;

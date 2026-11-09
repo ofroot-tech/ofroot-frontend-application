@@ -7,16 +7,41 @@
  *  - This ensures the chosen variant persists across future visits without leaking the
  *    query param to analytics/canonical URLs.
  *
- * Scope
- *  - Applies to /landing/:slug* paths only.
+ * Public reading routes also expose a page-specific Markdown representation when
+ * explicitly requested. No authenticated content or origin requests are involved.
  */
 
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { agentDiscoveryHeaders, CONTENT_SIGNAL, markdownResponse } from '@/app/lib/agent-readiness';
+import { agentRobotsText } from '@/app/lib/agent-robots';
 
 export function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const { pathname, searchParams } = url;
+
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    if (pathname === '/robots.txt') {
+      return new NextResponse(req.method === 'HEAD' ? null : agentRobotsText(), {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Content-Signal': CONTENT_SIGNAL,
+          'Cache-Control': 'public, max-age=3600',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
+    }
+
+    const markdown = markdownResponse(req.method, pathname, req.headers.get('accept'));
+    if (markdown) return new NextResponse(markdown.body, { headers: markdown.headers });
+
+    const discovery = agentDiscoveryHeaders(pathname);
+    if (discovery) {
+      const response = NextResponse.next();
+      Object.entries(discovery).forEach(([name, value]) => response.headers.set(name, value));
+      return response;
+    }
+  }
 
   // Only handle /landing/... paths
   if (!pathname.startsWith('/landing/')) return NextResponse.next();
@@ -44,5 +69,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/landing/:path*'],
+  matcher: ['/', '/robots.txt', '/services/:path*', '/solutions/:path*', '/insights/:path*', '/landing/:path*'],
 };
