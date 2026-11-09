@@ -62,10 +62,24 @@ function BrandLink({ onNavigate }: { onNavigate?: () => void }) {
 
 function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: string }) {
   const active = group.links.some(link => isCurrentPath(pathname, link.href));
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      const details = detailsRef.current;
+      if (details?.open && event.target instanceof Node && !details.contains(event.target)) details.open = false;
+    };
+    document.addEventListener('pointerdown', closeOutside);
+    return () => document.removeEventListener('pointerdown', closeOutside);
+  }, []);
 
   return (
     <details
+      ref={detailsRef}
       className="group relative"
+      onBlur={event => {
+        if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
+      }}
       onKeyDown={event => {
         if (event.key !== 'Escape' || !event.currentTarget.open) return;
         event.preventDefault();
@@ -95,6 +109,7 @@ function DesktopGroup({ group, pathname }: { group: NavigationGroup; pathname: s
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => { if (detailsRef.current) detailsRef.current.open = false; }}
               aria-current={current ? 'page' : undefined}
               className={`group/link flex min-h-[44px] items-center justify-between rounded-xl !px-[12px] !py-[10px] !text-[14px] font-medium !leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ffb78f] ${
                 current
@@ -123,11 +138,19 @@ export default function Navbar() {
   ] : links;
   const panel = useRef<HTMLDivElement>(null);
   const shouldRender = !pathname.startsWith('/landing') && !pathname.startsWith('/dashboard');
+  const menuOpen = open && shouldRender;
 
   useEffect(() => {
-    if (!open) return;
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
 
     const previous = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    const mobile = window.matchMedia(home ? '(max-width: 900px)' : '(max-width: 1350px)');
+    const closeOnDesktop = () => { if (!mobile.matches) setOpen(false); };
     const keydown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -138,7 +161,7 @@ export default function Navbar() {
       if (event.key !== 'Tab' || !panel.current) return;
       const nodes = Array.from(
         panel.current.querySelectorAll<HTMLElement>('a[href], button, [tabindex]:not([tabindex="-1"])'),
-      ).filter(node => !node.hasAttribute('disabled'));
+      ).filter(node => !node.hasAttribute('disabled') && !node.closest('[inert], [hidden]') && node.getClientRects().length > 0);
       const first = nodes[0];
       const last = nodes[nodes.length - 1];
 
@@ -146,22 +169,24 @@ export default function Navbar() {
         event.preventDefault();
         last?.focus();
       }
-      if (!event.shiftKey && document.activeElement === last) {
+      if (!panel.current.contains(document.activeElement) || (!event.shiftKey && document.activeElement === last)) {
         event.preventDefault();
         first?.focus();
       }
     };
 
     document.body.style.overflow = 'hidden';
+    mobile.addEventListener('change', closeOnDesktop);
     document.addEventListener('keydown', keydown);
     panel.current?.querySelector<HTMLElement>('button')?.focus();
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+      mobile.removeEventListener('change', closeOnDesktop);
       document.removeEventListener('keydown', keydown);
-      previous?.focus();
+      if (previous?.isConnected && window.getComputedStyle(previous).display !== 'none') previous.focus();
     };
-  }, [open]);
+  }, [menuOpen, home]);
 
   if (!shouldRender) return null;
 
@@ -224,7 +249,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {open && (
+      {menuOpen && (
         <div
           className={`${home ? '' : styles.innerOverlay} fixed inset-0 z-[10000] bg-slate-950/65 backdrop-blur-sm lg:hidden`}
           role="presentation"

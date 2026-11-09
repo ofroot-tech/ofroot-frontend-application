@@ -1,6 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci",
+  "routes": [
+    {
+      "src": "^/(?:services(?:/.*)?|solutions(?:/.*)?|insights(?:/.*)?)?$",
+      "methods": ["GET", "HEAD"],
+      "continue": true,
+      "transforms": [
+        {
+          "type": "response.headers",
+          "op": "append",
+          "target": { "key": "Vary" },
+          "args": "Accept"
+        }
+      ]
+    }
+  ],
   "crons": [
     {
       "path": "/api/news/refresh",
