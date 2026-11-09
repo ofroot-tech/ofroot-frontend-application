@@ -1,6 +1,7 @@
 import { SITE_URL } from '@/app/lib/growth-content';
 import { featurePages, featurePath } from '@/app/lib/feature-content';
 import { insights } from '@/app/lib/insights-content';
+import { agentLlmsLinks } from '@/app/lib/agent-discovery';
 
 export function GET() {
   const featureGroups = [
@@ -42,6 +43,8 @@ ${featureGroups}
 - [Generate Demand](${SITE_URL}/solutions/generate-demand)
 - [Convert More Leads](${SITE_URL}/solutions/convert-more-leads)
 - [Unlock Company Knowledge](${SITE_URL}/solutions/unlock-company-knowledge)
+
+${agentLlmsLinks}
 
 ## Evidence and guidance
 - [Results](${SITE_URL}/results)

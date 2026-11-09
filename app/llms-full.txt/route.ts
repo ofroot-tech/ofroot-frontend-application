@@ -1,6 +1,7 @@
 import { SITE_URL } from '@/app/lib/growth-content';
 import { featurePages, featurePath } from '@/app/lib/feature-content';
 import { insights } from '@/app/lib/insights-content';
+import { agentLlmsLinks } from '@/app/lib/agent-discovery';
 
 export function GET() {
   const featureDetails = [
@@ -53,6 +54,8 @@ Technical website scanner: ${SITE_URL}/services/ai-audit
 Scoring methodology: ${SITE_URL}/research/ai-agent-readiness-methodology
 
 ## Editorial and research standards
+
+${agentLlmsLinks}
 OfRoot attributes practical guidance to the OfRoot Technology Editorial Team until a named contributor has reviewed and approved publication under their own public profile. The published standards cover primary sourcing, evidence boundaries, AI assistance, corrections, substantive updates, research methods, and commercial transparency.
 
 Editorial standards: ${SITE_URL}/about/editorial-standards

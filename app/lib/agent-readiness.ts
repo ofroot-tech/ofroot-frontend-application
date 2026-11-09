@@ -222,6 +222,10 @@ export function isPublicMarkdownPath(path: string): boolean {
   return documents.has(path);
 }
 
+export function publicMarkdownPaths(): string[] {
+  return [...documents.keys()];
+}
+
 /** Only an explicit, acceptable Markdown preference selects the alternate body. */
 export function prefersMarkdown(accept: string | null): boolean {
   const qualities = new Map<string, number>();
@@ -242,7 +246,7 @@ export function agentDiscoveryHeaders(path: string): Record<string, string> | nu
   return {
     Vary: 'Accept',
     'Content-Signal': CONTENT_SIGNAL,
-    Link: `</llms.txt>; rel="describedby"; type="text/plain", <${CANONICAL_SITE_URL}${path}>; rel="alternate"; type="text/markdown"`,
+    Link: `</llms.txt>; rel="describedby"; type="text/plain", <${CANONICAL_SITE_URL}${path}>; rel="alternate"; type="text/markdown", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", </agents>; rel="service-doc"; type="text/markdown"`,
   };
 }
 
