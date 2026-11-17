@@ -3,6 +3,7 @@ import { TrackedLink } from './Analytics';
 import HeroShimmer from './HeroShimmer';
 import BarReveal from './BarReveal';
 import MotionText from './MotionText';
+import { PartnerTrackedLink } from '@/components/partners/PartnerAnalytics';
 import styles from './ApprovedHome.module.css';
 
 export default function HomeHero() {
@@ -18,6 +19,7 @@ export default function HomeHero() {
               <p>We connect your tools, automate repetitive tasks, and set up AI around the work your team actually does.</p>
               <BarReveal className={styles.heroCta}><TrackedLink href="/book?source=homepage-hero" source="homepage:hero" className={`${styles.primary} ${styles.barPlane}`}><MotionText trigger="bar" className={styles.barHeading}>Discuss your project</MotionText><ArrowRight className={`${styles.arrow} ${styles.barArrow}`} aria-hidden="true" /></TrackedLink></BarReveal>
               <div className={styles.trust}>Tell us where work gets stuck.<br />We’ll review it and reply by email with a practical next step.</div>
+              <PartnerTrackedLink href="/partners/staffing" placement="homepage_hero" className={styles.partnerLink}>Staffing or talent partner? Discuss an engineering partnership <ArrowRight aria-hidden="true" /></PartnerTrackedLink>
             </div>
           </div>
           <BarReveal className={styles.heroTiles}>

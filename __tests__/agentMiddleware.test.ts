@@ -7,7 +7,7 @@ jest.mock('next/server', () => {
   class NextResponse extends Response {
     cookies = { set: (name: string, value: string) => this.headers.set('set-cookie', `${name}=${value}`) };
     static next() { return new NextResponse(null, { headers: { 'x-middleware-next': '1' } }); }
-    static redirect(url: URL, { status }: { status: number }) { return new NextResponse(null, { status, headers: { location: url.href } }); }
+    static redirect(url: string | URL, init: number | ResponseInit = 307) { return new NextResponse(null, { status: typeof init === 'number' ? init : init.status, headers: { location: String(url) } }); }
   }
   return { NextResponse };
 }, { virtual: true });

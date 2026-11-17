@@ -1243,7 +1243,10 @@ export async function updateSalesInquiryPipeline(id: number, update: SalesInquir
   const result = await pool.query<DbSalesInquiryRow>(
     `
       UPDATE ofroot_sales_inquiries
-      SET payload = COALESCE(payload, '{}'::jsonb) || $2::jsonb
+      SET payload = COALESCE(payload, '{}'::jsonb) || jsonb_build_object(
+        'pipeline', CASE WHEN jsonb_typeof(payload->'pipeline') = 'object'
+          THEN payload->'pipeline' ELSE '{}'::jsonb END || ($2::jsonb->'pipeline')
+      )
       WHERE id = $1
       RETURNING id, name, email, business_name, business_formation_status, llc_upsell_opportunity, payload, created_at
     `,

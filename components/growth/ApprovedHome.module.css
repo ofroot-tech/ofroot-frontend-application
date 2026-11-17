@@ -6,6 +6,7 @@
 .page :where(a,button,summary):focus-visible{outline:2px solid var(--peach);outline-offset:6px}
 .page :where(section,div)[id]{scroll-margin-top:105px}
 .shell{max-width:1600px;margin-inline:auto;padding-inline:var(--gutter)}
+.partnerLink{display:inline-flex;align-items:center;gap:12px;max-width:440px;min-height:44px;margin-top:18px;font-size:14px!important;line-height:1.6!important;color:#e3c8f0!important;text-decoration:underline!important;text-underline-offset:4px}.partnerLink svg{width:18px;height:18px;flex-shrink:0}
 .arrow{width:23px;height:23px;flex-shrink:0;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 80% 54%,#252033 0,transparent 58%),var(--ink)}
 .field{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-2}
