@@ -149,10 +149,10 @@ function databaseDouble(initial: SignalSubscriber = subscriber) {
     }
     if (sql.startsWith('SELECT item_key')) return result([...delivered.keys()].map(item_key => ({ item_key })));
     if (sql.startsWith('SELECT * FROM ofroot_signal_subscribers WHERE id=')) return result([row]);
-    if (sql.startsWith("SELECT id FROM ofroot_signal_digest_issues WHERE id=")) { const issue = issues.get(String(values[0])); return result(issue?.owner === values[1] && issue.status === 'preparing' ? [{ id: issue.id }] : []); }
+    if (sql.startsWith("SELECT id FROM ofroot_signal_digest_issues WHERE id=")) { const issue = issues.get(String(values[0])); return result(issue && issue.owner === values[1] && issue.status === 'preparing' ? [{ id: issue.id }] : []); }
     if (sql.startsWith('INSERT INTO ofroot_signal_digest_items')) { const key = String(values[1]); if (delivered.has(key)) return result(); delivered.set(key, { issueId: String(values[2]), status: 'reserved' }); return result([{ item_key: key }]); }
     if (sql.startsWith("UPDATE ofroot_signal_digest_issues SET status='sending'")) { const issue = issues.get(String(values[2]))!; issue.status = 'sending'; issue.attemptedAt = String(values[1]); return result([issue]); }
-    if (sql.startsWith('UPDATE ofroot_signal_digest_issues SET status=$1,provider_id=')) { const issue = issues.get(String(values[3])); if (issue?.owner !== values[4] || issue.status !== 'sending') return result(); issue.status = String(values[0]); issue.providerId = values[1] as string | null; return result([{ id: issue.id }]); }
+    if (sql.startsWith('UPDATE ofroot_signal_digest_issues SET status=$1,provider_id=')) { const issue = issues.get(String(values[3])); if (!issue || issue.owner !== values[4] || issue.status !== 'sending') return result(); issue.status = String(values[0]); issue.providerId = values[1] as string | null; return result([{ id: issue.id }]); }
     if (sql.startsWith('UPDATE ofroot_signal_digest_items SET status=')) { for (const value of delivered.values()) if (value.issueId === values[1]) value.status = String(values[0]); return result(); }
     if (sql.startsWith('UPDATE ofroot_signal_subscribers SET next_send_at=$1,last_sent_at=')) { if (row.status === 'active' && row.next_send_at === values[4]) { row.next_send_at = values[0]; if (values[1]) row.last_sent_at = values[2]; } return result(); }
     if (sql.startsWith('UPDATE ofroot_signal_digest_issues SET status=$1 WHERE')) { const issue = issues.get(String(values[1]))!; issue.status = String(values[0]); return result(); }

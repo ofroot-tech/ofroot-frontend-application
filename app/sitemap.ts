@@ -8,7 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
   // Dates reflect substantive source changes and must be updated intentionally.
   const routes: Array<{ path: string; lastModified: string }> = [
-    { path: '', lastModified: '2026-11-07' },
+    { path: '', lastModified: '2026-11-16' },
+    { path: '/partners/staffing', lastModified: '2026-11-16' },
     { path: '/automations', lastModified: '2026-08-07' },
     { path: '/ai-process', lastModified: '2026-08-07' },
     { path: '/hubspot-integration', lastModified: '2026-02-09' },

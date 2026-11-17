@@ -45,6 +45,7 @@ const groups: NavigationGroup[] = [
 ];
 
 const links: NavigationLink[] = [
+  { label: 'Talent partners', href: '/partners/staffing' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Capabilities', href: '/results' },
   { label: 'News', href: '/news' },
@@ -132,9 +133,9 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const home = pathname === '/';
   const desktopLinks = home ? [
+    { label: 'Talent partners', href: '/partners/staffing' },
     { label: 'Our approach', href: '/#approach' },
     { label: 'Examples', href: '/#examples' },
-    { label: 'Company', href: '/#contact' },
   ] : links;
   const panel = useRef<HTMLDivElement>(null);
   const shouldRender = !pathname.startsWith('/landing') && !pathname.startsWith('/dashboard');

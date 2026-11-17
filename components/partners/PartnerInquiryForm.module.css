@@ -1,0 +1,11 @@
+.fieldset{min-width:0;margin:0;padding:0;border:0}
+.fieldset[hidden]{display:none}
+.hint{display:block;margin-top:8px;font-size:12px;color:#c0b5cc;font-weight:400}
+.honeypot{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.consent{display:flex;align-items:flex-start;gap:12px;margin-top:28px;font-size:14px;line-height:1.65;color:#e6dfed;cursor:pointer}
+.consent input{flex-shrink:0;width:20px;height:20px;margin-top:2px;accent-color:#ffb78f}
+.consent input:focus-visible{outline:2px solid #ffb78f;outline-offset:4px}
+.link{text-decoration:underline!important;text-underline-offset:4px}
+.feedback:focus-visible{outline:2px solid #ffb78f;outline-offset:6px}
+.receipt strong{display:block;overflow-wrap:anywhere;font-family:var(--font-geist-mono),monospace;font-size:13px;margin-top:12px}
+@media(prefers-reduced-motion:reduce){.fieldset input,.fieldset select,.fieldset textarea,.fieldset button{transition:none}}

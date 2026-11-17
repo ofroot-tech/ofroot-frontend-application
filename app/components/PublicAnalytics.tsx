@@ -10,7 +10,8 @@ import { isPrivateSignalRoute } from '@/app/lib/signal-subscriptions/privacy';
  * forms never become analytics URLs, form events, or email-address payloads. */
 export default function PublicAnalytics({ measurementId }: { measurementId: string }) {
   const pathname = usePathname();
-  const privatePage = isPrivateSignalRoute(pathname);
+  // Partner measurement is local-only until consent-aware wiring is approved.
+  const privatePage = isPrivateSignalRoute(pathname) || pathname === '/partners/staffing';
   useEffect(() => {
     const target = window as unknown as Record<string, unknown>;
     target[`ga-disable-${measurementId}`] = privatePage;
@@ -18,7 +19,7 @@ export default function PublicAnalytics({ measurementId }: { measurementId: stri
   }, [measurementId, privatePage]);
   if (privatePage) return null;
   return <>
-    <Analytics beforeSend={event => isPrivateSignalRoute(window.location.pathname) || isPrivateSignalRoute(event.url) ? null : event} />
+    <Analytics beforeSend={event => window.location.pathname === '/partners/staffing' || new URL(event.url, window.location.origin).pathname === '/partners/staffing' || isPrivateSignalRoute(window.location.pathname) || isPrivateSignalRoute(event.url) ? null : event} />
     <Script src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`} strategy="afterInteractive" />
     <Script id="google-analytics" strategy="afterInteractive">{`
       window.dataLayer = window.dataLayer || [];

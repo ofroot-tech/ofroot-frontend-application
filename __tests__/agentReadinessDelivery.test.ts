@@ -36,7 +36,7 @@ describe('public Markdown delivery', () => {
     expect(get?.body).toContain('Less manual work. More time to grow.');
     expect(head?.body).toBeNull();
     expect(head?.headers).toEqual(get?.headers);
-    expect(get?.headers.Vary).toBe('Accept');
+    expect(get && new Headers(get.headers).get('Vary')).toBe('Accept');
     expect(get?.headers['Content-Type']).toBe('text/markdown; charset=utf-8');
   });
 
