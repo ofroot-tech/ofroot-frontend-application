@@ -55,9 +55,9 @@ export default function PartnerInquiryForm({ enabled = false }: { enabled?: bool
   }
 
   if (!enabled) return <div className={styles.form}>
-    <h3 className={styles.formTitle}>Discuss an engineering partnership</h3>
-    <p className={styles.formDescription}>Partnership inquiries are being prepared. You can use our current project contact form to discuss your needs.</p>
-    <Link className={styles.submit} href="/book?source=staffing-partnership">Discuss your project</Link>
+    <h3 className={styles.formTitle}>Start a conversation</h3>
+    <p className={styles.formDescription}>Use our project form to tell us about the role or project, the skills you need and your preferred start date.</p>
+    <Link className={styles.submit} href="/book?source=staffing-partnership">Discuss a partnership</Link>
   </div>;
 
   return <form className={styles.form} onSubmit={submit} aria-busy={state === 'submitting'} onFocus={() => {
@@ -65,8 +65,8 @@ export default function PartnerInquiryForm({ enabled = false }: { enabled?: bool
   }} aria-labelledby="partner-form-heading">
     <div className={styles.formHeader}>
       <p className={styles.formEyebrow}>Engineering partnership inquiry</p>
-      <h3 id="partner-form-heading" className={styles.formTitle}>Tell us what your engagement needs.</h3>
-      <p className={styles.formDescription}>Required fields are marked *. Share a short overview. Leave out passwords, confidential client details and personal customer information.</p>
+      <h3 id="partner-form-heading" className={styles.formTitle}>Tell us about the role or project.</h3>
+      <p className={styles.formDescription}>Required fields are marked *. Please leave out passwords and sensitive client information.</p>
     </div>
     <fieldset disabled={state === 'submitting' || state === 'success'} className={extra.fieldset} hidden={state === 'success'}>
       <legend className="sr-only">Your contact and engineering needs</legend>
@@ -80,7 +80,7 @@ export default function PartnerInquiryForm({ enabled = false }: { enabled?: bool
         <label className={styles.label}>Engineering need *<select name="need" required defaultValue="" className={styles.input}>
           <option value="" disabled>Select one</option><option value="embedded">Embedded senior engineer / lead</option><option value="managed">Managed engineering delivery</option><option value="project">Defined project or integration</option>
         </select></label>
-        <label className={`${styles.label} ${styles.fullWidth}`}>What needs to be delivered? *<textarea name="description" required minLength={20} maxLength={3000} className={`${styles.input} ${styles.textarea}`} aria-describedby="partner-description-help" placeholder="The work, the team it supports, and the result you need." /><span id="partner-description-help" className={extra.hint}>20–3,000 characters. No confidential client information.</span></label>
+        <label className={`${styles.label} ${styles.fullWidth}`}>What needs to be delivered? *<textarea name="description" required minLength={20} maxLength={3000} className={`${styles.input} ${styles.textarea}`} aria-describedby="partner-description-help" placeholder="Tell us about the work, the team it supports and the result you need." /><span id="partner-description-help" className={extra.hint}>20–3,000 characters.</span></label>
         <label className={`${styles.label} ${styles.fullWidth}`}>Target start timeframe *<select name="timeframe" required defaultValue="" className={styles.input}>
           <option value="" disabled>Select one</option><option value="within-month">Within a month</option><option value="one-three-months">In 1–3 months</option><option value="planning">Planning ahead</option><option value="unsure">Not sure yet</option>
         </select></label>
@@ -98,9 +98,9 @@ export default function PartnerInquiryForm({ enabled = false }: { enabled?: bool
       {state === 'success' && <div role="status" className={extra.receipt}>
         <h3 className={styles.formTitle}>Your inquiry is saved.</h3>
         <p className={styles.successDescription}>Keep this reference: <strong>{reference}</strong></p>
-        <p className={styles.successDescription}>Your request is awaiting a fit review. This confirms receipt, not availability, scope, pricing or a start date.</p>
+        <p className={styles.successDescription}>We’ll review the details before discussing next steps with you.</p>
       </div>}
     </div>
-    <p className={styles.privacy}>An inquiry creates no contract or payment obligation.</p>
+    <p className={styles.privacy}>We’ll agree the scope and terms together before work begins.</p>
   </form>;
 }
