@@ -8,6 +8,7 @@ import SignalAudio from '@/components/editorial/SignalAudio';
 import JsonLd from '@/components/seo/JsonLd';
 import styles from '@/components/editorial/Reading.module.css';
 import SubscribeCTA from '../../subscriptions/SubscribeCTA';
+import { ofrootArticleTakeaways } from '@/app/lib/signal-article-summary';
 
 type Props={params:Promise<{slug:string}>};
 function findArticle(slug:string) {
@@ -23,15 +24,17 @@ export async function generateMetadata({params}:Props):Promise<Metadata> {
 export default async function OfRootSignal({params}:Props) {
   const article=findArticle((await params).slug);
   const audio=playableAudio(article);
+  const takeaways=ofrootArticleTakeaways(article);
   const url=`${CANONICAL_SITE_URL}/news/from-ofroot/${article.slug}`;
   const schema={ '@context':'https://schema.org','@type':'Article',headline:article.title,description:article.summary,url,mainEntityOfPage:{'@type':'WebPage','@id':url},isBasedOn:`${CANONICAL_SITE_URL}${article.sourcePath}`,
     author:{'@type':'Organization',name:'OfRoot Technology Editorial Team',url:`${CANONICAL_SITE_URL}/authors/ofroot-technology`},publisher:{'@type':'Organization',name:'OfRoot Technology',url:CANONICAL_SITE_URL},
     ...(audio ? {audio:{'@type':'AudioObject',name:`Audio: ${article.title}`,contentUrl:`${CANONICAL_SITE_URL}${audio.path}`,encodingFormat:'audio/mpeg',duration:`PT${audio.durationSeconds}S`,transcript:pilotTranscript(article)}} : {}) };
   return <main id="main-content" className={styles.page}><JsonLd data={schema}/><article className={styles.article}>
     <Link href="/news/from-ofroot" className={styles.link}>← More Signals from OfRoot</Link><h1>{article.title}</h1>
-    <p className={styles.date}>A short version of an OfRoot guide · OfRoot Technology Editorial Team</p><p>{article.summary}</p>
-    <Link href={article.sourcePath} className={styles.link}>Read the full article and its sources →</Link><SignalAudio article={article}/>
+    <p className={styles.date}>A short version of an OfRoot guide · OfRoot Technology Editorial Team</p><h2>The short version</h2><p>{article.summary}</p>
+    {takeaways.length > 0 && <section aria-labelledby="takeaways-heading"><h2 id="takeaways-heading">What to take away</h2><ul>{takeaways.map(point=><li key={point}>{point}</li>)}</ul></section>}
+    <Link href={article.sourcePath} className={styles.link}>Read the full article and its sources →</Link>{audio && <SignalAudio article={article}/>}
     <SubscribeCTA compact content="both" heading="More of what helps you." description="Choose the categories you want to follow and receive a daily or weekly Signal digest."/>
-    <p className={styles.note}>This short version is drawn from our published article. It is a starting point, rather than a replacement for the full advice and limitations. <Link href="/about/editorial-standards">Read our editorial standards.</Link></p>
+    <p className={styles.note}>This summary and its takeaways are drawn from our full article. Read the guide for the supporting sources, examples and limitations. <Link href="/about/editorial-standards">Read our editorial standards.</Link></p>
   </article></main>;
 }

@@ -4,6 +4,13 @@
   "basis": "Short extracts from already-published OfRoot-owned guides. No external publisher bodies or newly invented claims.",
   "articles": [
     {
+      "slug": "application-security-review-and-penetration-testing",
+      "title": "Application security: from review to penetration test to verified fix",
+      "sourcePath": "/blog/application-security-review-and-penetration-testing",
+      "summary": "Start by agreeing which applications, APIs, accounts and environments are in scope. Review how the software handles access, data and dependencies, then use an authorized penetration test to investigate realistic attack paths. Rank findings by evidence and business impact, assign fixes, and retest the affected behavior. A clean report describes the checks performed and their limits; it cannot guarantee that an application has no vulnerabilities.",
+      "publishedAt": "2026-11-17"
+    },
+    {
       "slug": "find-expensive-manual-work-before-automating",
       "title": "How to Find the Manual Work Worth Automating First",
       "sourcePath": "/blog/find-expensive-manual-work-before-automating",

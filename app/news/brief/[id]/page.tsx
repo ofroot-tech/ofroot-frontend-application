@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ready = brief.status === 'ready' && !!brief.evidence;
   return {
     title: `Signal brief — ${article.title}`,
-    description: ready ? brief.perspective?.changed || brief.introduction : 'A Signal discovery reference. A substantive source digest is available only when an approved primary record supports it.',
+    description: ready ? brief.summary?.text || brief.perspective?.changed || brief.introduction : 'A Signal discovery reference. A substantive source digest is available only when an approved primary record supports it.',
     alternates: { canonical: `/news/brief/${article.id}` },
     robots: { index: ready, follow: true },
   };
@@ -55,7 +55,7 @@ export default async function SignalBriefPage({ params }: Props) {
   const evidence = brief.status === 'ready' ? brief.evidence : undefined;
 
   return <main id="main-content" className={`${news.news} ${styles.page}`}>
-    {evidence && <JsonLd data={signalArticleSchema({ id:article.id, title:article.title, description:brief.introduction, generatedAt:brief.generatedAt, sourceUrl:article.url, evidenceUrl:evidence.url, evidencePublisher:evidence.publisher })} />}
+    {evidence && <JsonLd data={signalArticleSchema({ id:article.id, title:article.title, description:brief.summary?.text || brief.introduction, generatedAt:brief.generatedAt, sourceUrl:article.url, evidenceUrl:evidence.url, evidencePublisher:evidence.publisher })} />}
     <div className={news.container}>
       <SignalHeader current="briefs" />
       <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/news">The latest</Link><span aria-hidden="true">/</span><Link href="/news/briefs">Signal briefs</Link><span aria-hidden="true">/</span><span aria-current="page">{topic}</span></nav>
@@ -72,9 +72,9 @@ export default async function SignalBriefPage({ params }: Props) {
         <article className={styles.reading} aria-label="Source digest and context">
           <section id="digest" className={styles.section} aria-labelledby="digest-heading">
             <p className={styles.kicker}>A SHORTER WAY INTO THE SOURCE</p><h2 id="digest-heading">The source, in brief.</h2>
-            {brief.introduction && <p className={styles.introduction}>{brief.introduction}</p>}
-            {brief.digest ? <div className={styles.excerpt}><p className={styles.excerptLabel}>Abridged primary-source text <a href="#source-2" className={styles.citation} aria-label={`Reference 2: primary record from ${evidence.publisher}`}>[2]</a></p><blockquote><p>{brief.digest}</p></blockquote></div> : <p className={styles.explanation}>The primary record is presented as structured details below. No abridged excerpt was prepared.</p>}
-            <p className={styles.explanation}>This automated digest uses the approved primary record identified below. The excerpt is abridged source text, rather than original reporting or an AI-written paraphrase.</p>
+            {brief.summary?.kind === 'overview' && <p className={styles.introduction}>{brief.summary.text} <a href="#source-2" className={styles.citation} aria-label="Reference 2 supporting this summary">[2]</a></p>}
+            {brief.summary?.kind === 'excerpt' && <><p className={styles.introduction}>{brief.introduction}</p><div className={styles.excerpt}><p className={styles.excerptLabel}>{brief.summary.label} <a href="#source-2" className={styles.citation} aria-label={`Reference 2: primary record from ${evidence.publisher}`}>[2]</a></p><blockquote><p>{brief.summary.text}</p></blockquote></div></>}
+            <p className={styles.explanation}>This automated digest uses the approved primary record identified below. Record summaries combine only its stated facts. Labelled excerpts retain complete source sentences. OfRoot’s questions appear separately.</p>
           </section>
           {evidence.facts.length > 0 && <section id="facts" className={styles.section} aria-labelledby="facts-heading"><p className={styles.kicker}>FROM THE PRIMARY RECORD</p><h2 id="facts-heading">Key details.</h2><dl className={styles.facts}>{evidence.facts.map((fact, index) => <div key={`${fact.label}:${index}`}><dt>{fact.label}</dt><dd>{fact.value} <a href="#source-2" className={styles.citation} aria-label={`Reference 2 supporting ${fact.label}`}>[2]</a></dd></div>)}</dl></section>}
           {brief.perspective ? <section id="perspective" className={`${styles.section} ${styles.perspective}`} aria-labelledby="context-heading"><p className={styles.kicker}>OFROOT / A PRACTICAL READING</p><h2 id="context-heading">Put it in perspective.</h2><p className={styles.explanation}>A record-specific starting point for deciding what to investigate. Source facts and OfRoot’s suggested questions have different roles.</p><dl className={styles.decisions}><div><dt>What changed</dt><dd>{brief.perspective.changed} <a href="#source-2" className={styles.citation} aria-label="Reference 2 supporting the record details">[2]</a></dd></div><div><dt>Who should review it</dt><dd>{brief.perspective.audience}</dd></div><div><dt>Why it matters</dt><dd>{brief.perspective.relevance}</dd></div><div><dt>What to consider next</dt><dd>{brief.perspective.nextStep}</dd></div></dl><p className={styles.explanation}>{brief.perspective.basis}</p></section> : brief.context && <section id="perspective" className={styles.section} aria-labelledby="context-heading"><p className={styles.kicker}>OFROOT / CONTEXT</p><h2 id="context-heading">What to keep in view.</h2><p>{brief.context}</p></section>}

@@ -33,4 +33,15 @@ export const serviceOffers = [
     outcome: 'Task-specific AI assistance with explicit access, review, and operational boundaries.',
     includes: ['Knowledge search, summarization, and AI-assisted tools', 'Model and API integration with evaluation and human review', 'Cloud deployment, CI/CD, monitoring, and handoff'],
   },
+  {
+    id: 'security',
+    step: 'Protect',
+    title: 'Application Security & Penetration Testing',
+    shortTitle: 'Application security',
+    href: '/services/application-security',
+    description: 'Review web applications and APIs, coordinate formal penetration testing with approved specialists, and turn findings into checked engineering fixes.',
+    problem: 'You need to understand application risk, prepare for a release, or resolve security findings with clear ownership.',
+    outcome: 'Evidence-backed findings, a prioritized remediation plan, and retesting within an agreed scope.',
+    includes: ['Code, architecture, access-control and dependency reviews', 'Authorized penetration testing with client-approved security specialists', 'Engineering remediation, retesting and a documented handoff'],
+  },
 ] as const;

@@ -4,11 +4,12 @@ import JsonLd from '@/components/seo/JsonLd';
 import { CANONICAL_SITE_URL } from '@/app/config/site';
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide';
 import { insights } from '@/app/lib/insights-content';
+import { SECURITY_GUIDE } from '@/app/lib/application-security-content';
 import styles from '@/components/editorial/Reading.module.css';
 import SubscribeCTA from '@/app/news/subscriptions/SubscribeCTA';
 
-const title = 'OfRoot Blog — Practical AI and Automation';
-const description = 'Clear guides to connecting your tools, reducing manual work, and using AI responsibly. Read the full article or explore source-linked technology briefs in Signal.';
+const title = 'OfRoot Blog — Engineering, AI and Application Security';
+const description = 'Practical guides to connected software, responsible AI and application security, with source-linked technology and security briefs in Signal.';
 export const metadata: Metadata = {
   title, description, alternates: { canonical: '/blog' },
   openGraph: { title, description, url: `${CANONICAL_SITE_URL}/blog`, type: 'website' },
@@ -18,11 +19,11 @@ export const metadata: Metadata = {
 export default async function BlogPage() {
   // Codex publishes the current guides in source; reading does not depend on
   // a separate legacy editor or an unconfigured article API.
-  const entries = insights.map(insight => ({ title:insight.title, description:insight.description, href:`/insights/${insight.slug}`, label:insight.category }));
+  const entries = [{ title: SECURITY_GUIDE.title, description: SECURITY_GUIDE.description, href: SECURITY_GUIDE.href, label: 'Application security' }, ...insights.map(insight => ({ title:insight.title, description:insight.description, href:`/insights/${insight.slug}`, label:insight.category }))];
   const schema = { '@context':'https://schema.org', '@type':'CollectionPage', name:title, description, url:`${CANONICAL_SITE_URL}/blog`, mainEntity:{ '@type':'ItemList', itemListElement:[{title:AI_PROCESS_GUIDE.title,href:AI_PROCESS_GUIDE.href},...entries].map((entry,index)=>({ '@type':'ListItem', position:index+1, name:entry.title, url:`${CANONICAL_SITE_URL}${entry.href}` })) } };
   return <main id="main-content" className={styles.page}><JsonLd data={schema}/><div className={styles.shell}>
     <h1>Useful ideas.<br/>A practical next step.</h1>
-    <p className={styles.intro}>Clear guides to connecting your tools, reducing manual work, and using AI responsibly. Start with a question your business is trying to answer.</p>
+    <p className={styles.intro}>Clear guides to connected software, responsible AI and application security. Start with a question your business is trying to answer.</p>
     <section className={styles.featured} aria-labelledby="featured-guide"><div><span className={styles.label}>Start here</span><p>Find the work worth improving before choosing the software.</p></div><div><h2 id="featured-guide">{AI_PROCESS_GUIDE.title}</h2><p>{AI_PROCESS_GUIDE.description}</p><Link className={styles.link} href={AI_PROCESS_GUIDE.href}>Read the guide →</Link></div></section>
     <section aria-labelledby="more-articles"><div className={styles.heading}><h2 id="more-articles">Explore our guides</h2><Link href="/news" className={styles.link}>What’s changing? Read Signal →</Link></div>
       {entries.map(entry=><article className={styles.row} key={entry.href}><span className={styles.date}>{entry.label}</span><div><h3><Link href={entry.href}>{entry.title}</Link></h3>{entry.description && <p>{entry.description}</p>}<Link className={styles.link} href={entry.href}>Read the article →</Link></div></article>)}

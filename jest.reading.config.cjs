@@ -11,6 +11,7 @@ module.exports = {
     '<rootDir>/__tests__/signal-audio-assets.test.ts',
     '<rootDir>/__tests__/signal-audio-player.test.tsx',
     '<rootDir>/__tests__/signal-digest.test.ts',
+    '<rootDir>/__tests__/ofroot-summaries.test.ts',
   ],
   preset: 'ts-jest/presets/js-with-ts',
   transformIgnorePatterns: ['/node_modules/(?!marked/)'],

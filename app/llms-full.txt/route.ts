@@ -21,7 +21,14 @@ export function GET() {
 
   const text = `# OfRoot Technology: Websites, Integrations, and AI Systems
 
-OfRoot provides three connected offers: marketing websites and growth; integrations and internal tools; and AI systems and deployment. Its founder brings 11 years in technology. Home-service companies are one audience alongside founders, service businesses, and operational teams.
+OfRoot provides marketing websites and growth; integrations and internal tools; AI systems and deployment; and application security reviews, specialist-led penetration testing and remediation. Its founder brings 11 years in technology. Home-service companies are one audience alongside founders, service businesses, and operational teams.
+
+## Application security and penetration testing
+OfRoot scopes code, architecture, access-control and dependency reviews for web applications and APIs. Formal penetration tests are coordinated with client-approved security specialists. Tester suitability, availability, confidentiality, data access and written authorization are agreed before commitment. Engineering remediation and retesting can be included in the scope. No certification or guarantee of finding every vulnerability is implied.
+
+Canonical service: ${SITE_URL}/services/application-security
+Practical guide: ${SITE_URL}/blog/application-security-review-and-penetration-testing
+Dated security briefing: ${SITE_URL}/news/security-briefing-november-2026
 
 ## Marketing websites and growth
 Marketing websites, landing pages, ad campaign setup and management, and conversion measurement connect with technical SEO, AEO, and GEO. AI Discoverability combines technical SEO, answer-oriented content, entity consistency, structured data, landing pages, internal linking, original research planning, and third-party authority. SEO, AEO, and GEO are treated as one integrated system. OfRoot does not guarantee rankings, citations, or inclusion in a specific generated answer.

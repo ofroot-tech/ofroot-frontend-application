@@ -21,6 +21,7 @@ const services = [
   { tag: 'Connect your tools', title: <>Stop moving data<br />by hand.</>, body: 'Connect your CRM, forms, reporting, and internal tools so your team spends less time copying records and chasing updates.', label: 'Discuss integrations and automation', href: '/services/automation-systems' },
   { tag: 'Put AI to work', title: <>Make AI useful<br />to your team.</>, body: 'Build AI around a specific task. Get help with setup, software integrations, approved company knowledge, and getting your team started.', label: 'Discuss AI setup and integrations', href: '/services/private-company-ai' },
   { tag: 'Improve your website', title: <>Give customers a<br />clear next step.</>, body: 'Build or improve your website so people understand your offer, trust your business, and know how to get in touch.', label: 'Discuss your website', href: '/services/ai-discoverability' },
+  { tag: 'Address application risk', title: <>Find the risk.<br />Fix what matters.</>, body: 'Review your web application or API, arrange penetration testing with approved security specialists, and turn findings into verified engineering fixes.', label: 'Explore application security and penetration testing', href: '/services/application-security' },
 ];
 const examples = [
   { type: 'Lead handoffs', title: <>Give every new inquiry<br />a clear next step.</>, body: 'Connect an inquiry form to your CRM, assign an owner, and flag anything that needs attention.', steps: ['Inquiry received', 'CRM updated', 'Owner notified'] },
@@ -36,7 +37,7 @@ const questions = [
 ];
 
 export default function HomePage() {
-  const schema = { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'OfRoot', url: SITE_URL, description, logo: `${SITE_URL}/ofroot-monogram.svg`, serviceType: ['Workflow automation', 'Software integrations', 'AI setup and integration', 'Website design and development'], areaServed: 'US' };
+  const schema = { '@context': 'https://schema.org', '@type': 'ProfessionalService', name: 'OfRoot', url: SITE_URL, description, logo: `${SITE_URL}/ofroot-monogram.svg`, serviceType: ['Workflow automation', 'Software integrations', 'AI setup and integration', 'Website design and development', 'Application security reviews and specialist-led penetration testing'], areaServed: 'US' };
   return (
     <main id="main-content" className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />

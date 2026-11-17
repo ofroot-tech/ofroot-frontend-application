@@ -27,6 +27,9 @@ export function GET() {
 - [AI Discoverability](${SITE_URL}/services/ai-discoverability): Search, answer, content, schema, and citation-readiness systems.
 - [Automation Systems](${SITE_URL}/services/automation-systems): Lead capture, CRM, routing, follow-up, reporting, and workflow monitoring.
 - [Private Company AI](${SITE_URL}/services/private-company-ai): Permission-aware assistants built around approved company knowledge.
+- [Application Security & Penetration Testing](${SITE_URL}/services/application-security): Scoped application reviews, authorized testing with client-approved security specialists, engineering remediation and retesting. Specialist suitability, availability and authorization are confirmed for each engagement.
+- [Application security guide](${SITE_URL}/blog/application-security-review-and-penetration-testing): How reviews, penetration tests and verified fixes fit together.
+- [November 2026 security briefing](${SITE_URL}/news/security-briefing-november-2026): Dated summaries of CISA, Next.js and PHP security records, with primary sources.
 - [AI Agent Integration Services](${SITE_URL}/agent-integrations): Production agent workflows with approved data, limited tools, human approval boundaries, safe failure handling, and observable outcomes.
 - [AI Process Audit](${SITE_URL}/ai-process): Process discovery, manual-cost analysis, opportunity scoring, implementation planning, and measured improvement.
 - [How to Find the Manual Work Worth Automating First](${SITE_URL}/blog/find-expensive-manual-work-before-automating): A practical guide to mapping work, calculating cost, scoring opportunities, and measuring results.

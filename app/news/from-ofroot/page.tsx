@@ -16,7 +16,7 @@ export default function OfRootSignals() {
     <p className={styles.intro}>A quick starting point for our practical guides. Each Signal links to the full article, where you can explore the advice, sources and limitations.</p>
     <Link href="/news/subscribe?content=both" className={styles.link}>Follow the categories that matter to you →</Link>
     {articles.map(article=><article className={styles.row} key={article.slug}><span className={styles.label}>From OfRoot</span><div><h2><Link href={`/news/from-ofroot/${article.slug}`}>{article.title}</Link></h2><p>{article.summary}</p><Link href={`/news/from-ofroot/${article.slug}`} className={styles.link}>Open this Signal →</Link></div></article>)}
-    <p className={styles.note}>This is a 30-article pilot, including existing articles. We’re starting with {articles.length} published OfRoot guides.</p>
+    <p className={styles.note}>Explore summaries of {articles.length} OfRoot guides. Each short version includes key takeaways and a link to the full article.</p>
     <SubscribeCTA content="both" heading="Choose what you want to follow." description="Pick your categories, choose articles or briefs, and confirm your email. You stay in control of your reading and delivery."/>
     <Link href="/news" className={styles.link}>Back to technology news →</Link>
   </div></main>;

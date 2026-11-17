@@ -25,6 +25,7 @@ const groups: NavigationGroup[] = [
       { label: 'Websites & Growth', href: '/services/ai-discoverability' },
       { label: 'Integrations & Tools', href: '/services/automation-systems' },
       { label: 'AI & Deployment', href: '/services/private-company-ai' },
+      { label: 'Application Security', href: '/services/application-security' },
     ],
   },
   {

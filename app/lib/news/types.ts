@@ -41,5 +41,6 @@ export type NewsSnapshot = {
   storageMessage?: string;
   refreshState?: 'completed' | 'in_progress' | 'failed';
   briefAvailability?: Record<string, 'ready' | 'unsupported' | 'unavailable' | 'unchecked'>;
+  briefSummaries?: Record<string, { text: string; label: string; kind: 'overview' | 'excerpt'; publisher: string; url: string }>;
   registryVersion?: string;
 };
