@@ -13,16 +13,18 @@ CREATE TABLE public.ofroot_partner_inquiry_limits (
   window_start TIMESTAMPTZ NOT NULL,
   request_count INTEGER NOT NULL CHECK (request_count > 0)
 );
--- These server-only tables must not inherit public Data API access.
+-- Inquiries and their server-only bookkeeping must not inherit Data API access.
+-- The existing server pipeline connects as the table owner and retains access.
+ALTER TABLE public.ofroot_sales_inquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ofroot_partner_inquiry_receipts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ofroot_partner_inquiry_limits ENABLE ROW LEVEL SECURITY;
-REVOKE ALL ON public.ofroot_partner_inquiry_receipts, public.ofroot_partner_inquiry_limits FROM PUBLIC;
+REVOKE ALL ON public.ofroot_sales_inquiries, public.ofroot_partner_inquiry_receipts, public.ofroot_partner_inquiry_limits FROM PUBLIC;
 DO $$
 DECLARE role_name TEXT;
 BEGIN
   FOREACH role_name IN ARRAY ARRAY['anon', 'authenticated'] LOOP
     IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = role_name) THEN
-      EXECUTE format('REVOKE ALL ON public.ofroot_partner_inquiry_receipts, public.ofroot_partner_inquiry_limits FROM %I', role_name);
+      EXECUTE format('REVOKE ALL ON public.ofroot_sales_inquiries, public.ofroot_partner_inquiry_receipts, public.ofroot_partner_inquiry_limits FROM %I', role_name);
     END IF;
   END LOOP;
 END $$;
