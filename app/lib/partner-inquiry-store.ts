@@ -1,6 +1,7 @@
 import { createHmac } from 'node:crypto';
 import { Pool, type PoolClient } from 'pg';
 import { PARTNER_CONSENT_VERSION, PartnerInquiryError, type PartnerInquiry } from './partner-inquiry';
+import { partnerDatabaseOptions } from './partner-database';
 
 let pool: Pool | undefined;
 
@@ -16,14 +17,14 @@ function configuration() {
 function database() {
   const { url } = configuration();
   if (!pool) {
-    pool = new Pool({ connectionString: url, max: 2, connectionTimeoutMillis: 3000, query_timeout: 5000, idleTimeoutMillis: 10000, allowExitOnIdle: true });
+    pool = new Pool(partnerDatabaseOptions(url));
     pool.on('error', () => console.warn('Partner inquiry database unavailable.'));
   }
   return pool;
 }
 
 async function consumeRate(client: PoolClient, bucket: string, limit: number) {
-  const result = await client.query(`INSERT INTO ofroot_partner_inquiry_limits (bucket, window_start, request_count)
+  const result = await client.query(`INSERT INTO public.ofroot_partner_inquiry_limits (bucket, window_start, request_count)
     VALUES ($1, NOW(), 1) ON CONFLICT (bucket) DO UPDATE SET
     request_count=CASE WHEN ofroot_partner_inquiry_limits.window_start <= NOW()-INTERVAL '1 hour' THEN 1 ELSE ofroot_partner_inquiry_limits.request_count+1 END,
     window_start=CASE WHEN ofroot_partner_inquiry_limits.window_start <= NOW()-INTERVAL '1 hour' THEN NOW() ELSE ofroot_partner_inquiry_limits.window_start END
@@ -46,7 +47,7 @@ export async function savePartnerInquiry(input: PartnerInquiry, address: string)
     // One bounded, low-volume intake lock makes retries and shared rate budgets
     // atomic across server instances, including submissions racing each other.
     await client.query('SELECT pg_advisory_xact_lock($1)', [741908350]);
-    const previous = await client.query('SELECT payload_hash FROM ofroot_partner_inquiry_receipts WHERE request_id=$1', [requestId]);
+    const previous = await client.query('SELECT payload_hash FROM public.ofroot_partner_inquiry_receipts WHERE request_id=$1', [requestId]);
     if (previous.rows.length) {
       if (previous.rows[0].payload_hash !== fingerprint) throw new PartnerInquiryError('This request changed. Please submit it again with a new reference.', 409);
       await client.query('COMMIT');
@@ -56,7 +57,7 @@ export async function savePartnerInquiry(input: PartnerInquiry, address: string)
     await consumeRate(client, `network:${hash('network', address)}`, 20);
     await consumeRate(client, `email:${hash('email', input.email)}`, 5);
     const capturedAt = new Date().toISOString();
-    const result = await client.query(`INSERT INTO ofroot_sales_inquiries (name,email,business_name,payload)
+    const result = await client.query(`INSERT INTO public.ofroot_sales_inquiries (name,email,business_name,payload)
       VALUES ($1,$2,$3,$4::jsonb) RETURNING id`, [input.name, input.email, input.company, JSON.stringify({
       message: input.description,
       form: { form_type: 'engineering_partnership', partnerType: input.partnerType, need: input.need, timeframe: input.timeframe, budget: input.budget, landingPage: '/partners/staffing', utm: input.attribution },
@@ -68,8 +69,8 @@ export async function savePartnerInquiry(input: PartnerInquiry, address: string)
       // These are drafts, not a delivery queue. Nothing sends automatically.
       notifications: { status: 'approval_required', founder: { subject: 'Engineering partnership inquiry', body: `Review request ${requestId} in the owner pipeline.` }, acknowledgement: { subject: 'OfRoot received your engineering inquiry', body: `We received request ${requestId}. It is awaiting a fit review. This receipt does not confirm availability, scope, pricing or a start date.` } },
     })]);
-    await client.query('INSERT INTO ofroot_partner_inquiry_receipts (request_id,payload_hash,inquiry_id) VALUES ($1,$2,$3)', [requestId, fingerprint, result.rows[0].id]);
-    await client.query("DELETE FROM ofroot_partner_inquiry_limits WHERE window_start < NOW()-INTERVAL '2 days'");
+    await client.query('INSERT INTO public.ofroot_partner_inquiry_receipts (request_id,payload_hash,inquiry_id) VALUES ($1,$2,$3)', [requestId, fingerprint, result.rows[0].id]);
+    await client.query("DELETE FROM public.ofroot_partner_inquiry_limits WHERE window_start < NOW()-INTERVAL '2 days'");
     await client.query('COMMIT');
     return { requestId };
   } catch (error) {

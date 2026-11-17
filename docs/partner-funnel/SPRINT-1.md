@@ -29,11 +29,14 @@ Default intake is disabled. Server configuration names:
 
 - `PARTNER_INQUIRY_ENABLED` — explicit enablement.
 - `PARTNER_INQUIRY_DATABASE_URL` — reviewed durable sales-pipeline database; no fallback to shared credentials.
+- `PARTNER_INQUIRY_DATABASE_CA` — reviewed PEM root certificate when the database uses a private CA. Remote connections always verify TLS; URL SSL switches cannot disable verification. Only non-production loopback fixtures allow plaintext.
 - `PARTNER_INQUIRY_HASH_SECRET` — stable server-only secret of at least 32 characters.
 
 Apply `migrations/20261116_partner_inquiry.sql` explicitly only after reviewing the target environment, existing sales table, migration state/drift, encrypted connection, ownership and rollback. It adds receipt and rate-limit tables; startup and requests never run migrations. Verify a synthetic saved result and owner access on the approved target before enablement.
 
-Only the isolated loopback `ofroot_partner_test` fixture was written during this task. No production database or customer data was accessed.
+The migration also protects the existing sales-inquiry table and both new tables with row-level security and removes PUBLIC/anon/authenticated grants. The server pipeline must connect as the reviewed table owner or an explicitly authorized role; anonymous Data API access is not supported for these private records.
+
+Initial Sprint 1 validation wrote only the isolated loopback `ofroot_partner_test` fixture. Production setup is a separate explicit operation subject to the target checks above; production metadata inspection does not replace a saved-inquiry readback.
 
 ## Validation
 
