@@ -1,10 +1,13 @@
 export type SecurityArticleContent = {
+  kind: 'guide' | 'news';
   slug: string;
   href: string;
   title: string;
   description: string;
   label: string;
   publishedAt: string;
+  modifiedAt?: string;
+  sourcesCheckedAt?: string;
   summary: string;
   sections: Array<{ id: string; title: string; paragraphs: string[]; points?: string[]; sourceIds?: number[] }>;
   sources: Array<{ label: string; href: string }>;
@@ -13,6 +16,7 @@ export type SecurityArticleContent = {
 export const SECURITY_SERVICE_PATH = '/services/application-security';
 
 export const SECURITY_GUIDE: SecurityArticleContent = {
+  kind: 'guide',
   slug: 'application-security-review-and-penetration-testing',
   href: '/blog/application-security-review-and-penetration-testing',
   title: 'Application security: from review to penetration test to verified fix',
@@ -69,6 +73,8 @@ export const SECURITY_GUIDE: SecurityArticleContent = {
 };
 
 export const SECURITY_NEWS: SecurityArticleContent = {
+  kind: 'news',
+  sourcesCheckedAt: '2026-11-17',
   slug: 'security-briefing-november-2026',
   href: '/news/security-briefing-november-2026',
   title: 'Security briefing: exploited vulnerabilities and web application updates',
