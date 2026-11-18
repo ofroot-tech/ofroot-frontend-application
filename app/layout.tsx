@@ -13,6 +13,7 @@ import SectionSnapperAll from "@/components/SectionSnapperAll";
 import SmoothAnchorScroll from "@/components/SmoothAnchorScroll";
 import LoadingOnClickManager from "@/components/LoadingOnClickManager";
 import PublicAnalytics from './components/PublicAnalytics';
+import SignalProvider from '@/components/brand/SignalProvider';
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-YMTYCJ2876";
 
@@ -90,6 +91,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <AuthProvider>
+          <SignalProvider>
           <Toaster />
       <AlphaTextReveal />
           {/* Render Navbar at the top-level (outside overflow/transform wrappers)
@@ -135,6 +137,7 @@ export default function RootLayout({
             }}
           />
           <PublicAnalytics measurementId={GA_MEASUREMENT_ID} />
+          </SignalProvider>
         </AuthProvider>
       </body>
     </html>
