@@ -1,0 +1,45 @@
+.system { display: contents; }
+.surface { position: relative; min-width: 0; isolation: isolate; }
+.art { position: absolute; inset: 0 0 38px; pointer-events: none; }
+.fallback, .canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.canvas { opacity: 0; transition: opacity 220ms cubic-bezier(.16, 1, .3, 1); }
+.surface[data-active='true'][data-rendered='true'] .canvas { opacity: 1; }
+.surface[data-active='true'][data-rendered='true'] .fallback { visibility: hidden; }
+.control {
+  position: absolute; right: 8px; bottom: 0; display: inline-flex; align-items: center;
+  justify-content: center; gap: 8px; min-height: 44px; padding: 8px;
+  border: 0; background: transparent; color: #c3afe1; cursor: pointer;
+  font: 10px/1.5 var(--font-geist-mono), monospace; white-space: nowrap;
+}
+.control span { font-size: inherit; line-height: inherit; }
+.control:focus-visible { outline: 2px solid #ffb78f; outline-offset: 3px; }
+.control:disabled { cursor: default; color: #b9accb; }
+.hero { grid-column: 3; align-self: center; width: 100%; height: 300px; }
+.hero .art { inset: -30px -30% 38px; }
+.footer { width: min(100%, 390px); height: 180px; margin: 12px 0 0; }
+.background {
+  position: fixed; z-index: 20; right: 0; top: 52vh; width: min(520px, 48vw); height: 210px;
+  pointer-events: none; opacity: 0; visibility: hidden;
+  transition: opacity 220ms cubic-bezier(.16, 1, .3, 1), visibility 220ms;
+}
+.background[data-control-visible='true'] { opacity: 1; visibility: visible; }
+.background .art { inset: 0; opacity: .2; }
+.background .fallback { display: none; }
+.background .control {
+  position: fixed; top: auto; bottom: 18px; right: 20px; pointer-events: auto;
+  background: #211c2c; border: 1px solid #54475f; border-radius: 3px; padding-inline: 12px;
+}
+@media (hover: hover) and (pointer: fine) { .control:not(:disabled):hover { color: #ffb78f; } }
+@media (max-width: 1100px) and (min-width: 761px) { .hero { grid-column: auto; width: 100%; height: 215px; } }
+@media (max-width: 760px) {
+  .hero { height: 200px; max-width: 470px; margin: 26px auto 0; }
+  .hero .art { inset: 0 -12% 38px; }
+  .footer { height: 170px; }
+  .background { width: 250px; max-width: 65vw; height: 110px; top: 58vh; right: -12px; }
+  .background .art { opacity: .16; }
+  .background .control { right: 16px; bottom: 12px; font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .canvas, .background { transition: none; }
+  .background { display: none; }
+}

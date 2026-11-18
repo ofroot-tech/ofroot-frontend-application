@@ -3,6 +3,7 @@ import { TrackedLink } from './Analytics';
 import HeroShimmer from './HeroShimmer';
 import BarReveal from './BarReveal';
 import MotionText from './MotionText';
+import { SignalSurface } from '@/components/brand/SignalProvider';
 import { PartnerTrackedLink } from '@/components/partners/PartnerAnalytics';
 import styles from './ApprovedHome.module.css';
 
@@ -21,6 +22,7 @@ export default function HomeHero() {
               <div className={styles.trust}>Tell us where work gets stuck.<br />We’ll review it and reply by email with a practical next step.</div>
               <PartnerTrackedLink href="/partners/staffing" placement="homepage_hero" className={styles.partnerLink}>Staffing or talent partner? Discuss an engineering partnership <ArrowRight aria-hidden="true" /></PartnerTrackedLink>
             </div>
+            <SignalSurface placement="hero" />
           </div>
           <BarReveal className={styles.heroTiles}>
             <TrackedLink href="/services/automation-systems" source="homepage:hero:connect" event="service_cta_clicked" className={`${styles.featureTile} ${styles.barPlane}`}><span className={styles.tileKicker}>Connected workflows</span><div><span className={styles.tileTitle}><MotionText trigger="bar" className={styles.barHeading}>Connect your tools.</MotionText><ArrowRight className={`${styles.arrow} ${styles.barArrow}`} aria-hidden="true" /></span><p className={styles.tileSub}>CRM · Reporting · Internal software</p></div></TrackedLink>
