@@ -24,6 +24,7 @@ export type GrowthPageContent = {
     body: string;
     items?: Array<{ title: string; body: string }>;
     flow?: string[];
+    visual?: 'pixel-signal';
   }>;
   related: Array<{ label: string; href: string }>;
 };
@@ -160,6 +161,7 @@ export const growthPages: Record<string, GrowthPageContent> = {
         eyebrow: 'Process',
         title: 'Connect. Organize. Deploy. Improve.',
         body: 'The system begins with approved sources and ends with measurable use.',
+        visual: 'pixel-signal',
         items: [
           { title: '1. Connect', body: 'GitHub, Google Drive, HubSpot, internal APIs, Notion, and Slack.' },
           { title: '2. Organize', body: 'Group knowledge by brand, customer, department, product, project, and security level.' },

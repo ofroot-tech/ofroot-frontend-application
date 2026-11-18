@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import SiteBrand from '@/components/brand/SiteBrand';
 import HeroShimmer from '@/components/growth/HeroShimmer';
+import { SignalSurface } from '@/components/brand/SignalProvider';
 import styles from './PublicChrome.module.css';
 import Link from 'next/link';
 
@@ -22,6 +23,7 @@ export default function Footer() {
         <span className={styles.footerLine}>Software, automation &amp; practical AI.</span>
         <div className={styles.footerLinks}><Link href="/book?source=footer">Discuss your project</Link><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link></div>
       </div>
+      <div className={styles.footerSignal}><SignalSurface placement="footer" /></div>
     </HeroShimmer>
   );
   return (
@@ -33,6 +35,7 @@ export default function Footer() {
             <SiteBrand />
             <p className="mx-0 mt-5 max-w-sm text-sm text-slate-400">Workflow automation, connected software, and practical AI. Hands-on design and engineering for growing businesses.</p>
             <a href="mailto:communications@ofroot.technology" className="mt-6 inline-block text-sm font-semibold text-slate-200 hover:text-white">communications@ofroot.technology</a>
+            <SignalSurface placement="footer" />
           </div>
           <div className="grid gap-8 sm:grid-cols-3">
             {columns.map(column => (

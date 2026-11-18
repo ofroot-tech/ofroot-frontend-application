@@ -5,6 +5,7 @@ import { SITE_URL } from '@/app/lib/growth-content';
 import { featurePath, getFeaturesForService } from '@/app/lib/feature-content';
 import { PageView, TrackedLink } from './Analytics';
 import PublicHero from './PublicHero';
+import PixelSignal from '@/components/brand/PixelSignal';
 import styles from './PublicPage.module.css';
 
 export default function GrowthPage({ content, kind }: { content: GrowthPageContent; kind: 'service' | 'solution' }) {
@@ -38,7 +39,10 @@ export default function GrowthPage({ content, kind }: { content: GrowthPageConte
         {section.eyebrow && <p className={styles.eyebrow}>{section.eyebrow}</p>}
         <div className={styles.split}><h2 className={styles.sectionTitle}>{section.title}</h2><p>{section.body}</p></div>
         {section.flow && <ol className={styles.flow} aria-label="System flow">{section.flow.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span>{step}</li>)}</ol>}
-        {section.items && <div className={styles.grid}>{section.items.map(item => <article key={item.title} className={styles.card}><CheckCircle2 className={styles.icon} aria-hidden="true" /><h3>{item.title}</h3><p>{item.body}</p></article>)}</div>}
+        {section.items && <div className={styles.grid}>
+          {section.items.map(item => <article key={item.title} className={styles.card}><CheckCircle2 className={styles.icon} aria-hidden="true" /><h3>{item.title}</h3><p>{item.body}</p></article>)}
+          {section.visual === 'pixel-signal' && <PixelSignal className={styles.sectionVisual} />}
+        </div>}
       </section>)}</div>
       <section className={styles.section}>
         <div className={styles.closing}><div><p className={styles.eyebrow}>Next step</p><h2 className={styles.sectionTitle}>Find the highest-impact gap in your growth system.</h2></div><TrackedLink href={content.primaryCta.href} source={`${content.eyebrow}:final`} className={styles.primary}>{content.primaryCta.label}<ArrowRight aria-hidden="true" /></TrackedLink></div>
