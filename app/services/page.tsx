@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, SearchCheck, Network, Bot } from 'lucide-react';
+import { ArrowRight, CheckCircle2, SearchCheck, Network, Bot, ShieldCheck } from 'lucide-react';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE } from '@/app/config/site';
 import { growthMetadata } from '@/app/lib/growth-content';
@@ -7,14 +7,14 @@ import { serviceOffers } from '@/app/lib/service-offers';
 import PublicHero from '@/components/growth/PublicHero';
 import styles from '@/components/growth/PublicPage.module.css';
 
-export const metadata = growthMetadata('Websites, Integrations & AI Services', 'Marketing websites, SEO, AEO, GEO and ads; integrations and internal tools; AI systems and deployment. Explore three ways to work with OfRoot.', '/services');
-const icons = [SearchCheck, Network, Bot];
+export const metadata = growthMetadata('Websites, Integrations, AI & Application Security', 'Marketing websites, integrations, AI systems, application security reviews and specialist-led penetration testing. Explore ways to work with OfRoot.', '/services');
+const icons = [SearchCheck, Network, Bot, ShieldCheck];
 
 export default function ServicesIndexPage() {
   return (
     <main id="main-content" className={styles.page}>
       <JsonLd data={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'OfRoot Services', url: `${SITE.url}/services`, mainEntity: { '@type': 'ItemList', itemListElement: serviceOffers.map((offer, index) => ({ '@type': 'ListItem', position: index + 1, item: { '@type': 'Service', name: offer.title, description: offer.description, url: `${SITE.url}${offer.href}`, provider: { '@type': 'Organization', name: SITE.name, url: SITE.url } } })) } }} />
-      <PublicHero eyebrow="Attract · Connect · Enable" title="The website. The workflow. The system behind it." description="Three clear offers, with the design and engineering to connect them. Start with a specific goal and build a scope around what your business needs."
+      <PublicHero eyebrow="Attract · Connect · Enable · Protect" title="The website. The workflow. The system behind it." description="Build your digital presence, connect your operations, put AI to work, and address application risk. Start with a specific goal and a scope built around your business."
         breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Services' }]}
         primary={{ href: '/book?source=services-hero', label: 'Discuss your project', source: 'services:hero' }}
         secondary={{ href: '/pricing', label: 'Review engagement options', source: 'services:pricing' }} />

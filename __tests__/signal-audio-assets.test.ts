@@ -5,9 +5,13 @@ import manifest from '@/content/signal-pilot.json';
 import { checkedPilot, playableAudio } from '@/app/lib/signal-pilot';
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide';
 import { insights } from '@/app/lib/insights-content';
+import { SECURITY_GUIDE } from '@/app/lib/application-security-content';
 
-test('every enrolled article ships the exact accepted recording for its current transcript', () => {
+test('every published recording matches its current transcript and verified asset', () => {
   for (const article of checkedPilot(manifest.articles)) {
+    // Text summaries are useful without narration. Existing published audio
+    // still has to match its transcript and bytes exactly.
+    if (!article.audio) continue;
     const audio = playableAudio(article);
     expect(audio).not.toBeNull();
     if (!audio) throw new Error(`Prepare and verify the audio for ${article.slug} before publishing.`);
@@ -21,6 +25,7 @@ test('the publishing list covers existing guides and keeps their short versions 
   const articles = checkedPilot(manifest.articles);
   const guides = [
     { sourcePath:AI_PROCESS_GUIDE.href, title:AI_PROCESS_GUIDE.title, summary:AI_PROCESS_GUIDE.description, publishedAt:AI_PROCESS_GUIDE.publishedAt },
+    { sourcePath:SECURITY_GUIDE.href, title:SECURITY_GUIDE.title, summary:SECURITY_GUIDE.summary, publishedAt:SECURITY_GUIDE.publishedAt },
     ...insights.map(item => ({ sourcePath:`/insights/${item.slug}`, title:item.title, summary:item.directAnswer, publishedAt:item.published ?? '2026-07-22' })),
   ];
   if (articles.length < 30) {

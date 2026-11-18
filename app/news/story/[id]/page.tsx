@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, ArrowUpRight, GitBranch } from 'lucide-react';
 import { getNewsSnapshot } from '@/app/lib/news';
 import { groupStories } from '@/app/lib/news/editorial';
-import { getBriefArticle, getBriefAvailability } from '@/app/lib/signal-briefs';
+import { getBriefArticle, getBriefAvailability, getBriefSummaries } from '@/app/lib/signal-briefs';
 import SignalHeader from '../../SignalHeader';
 import SignalBriefLink from '../../SignalBriefLink';
 import SubscribeCTA from '../../subscriptions/SubscribeCTA';
@@ -14,6 +14,7 @@ import news from '../../news.module.css';
 import styles from './story.module.css';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /** The anchor reference keeps the URL useful after it leaves the latest window.
  * Every archive read still applies current source and suppression policy. */
@@ -46,6 +47,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
   const result = await resolveStory(id);
   if (!result) notFound();
   const { story, snapshot } = result;
+  const summaries = await getBriefSummaries(story.articles, 9);
   const availability = await getBriefAvailability(story.articles);
   const sourceMap = new Map(snapshot.sources.map(source => [source.id, source]));
   const timeline = [...story.articles].sort((a, b) => (b.publishedAt || '').localeCompare(a.publishedAt || ''));
@@ -66,6 +68,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
           <div><div className={styles.entryMeta}><span>{sourceMap.get(article.sourceId)?.name || 'Original source'}</span><time dateTime={article.publishedAt || undefined}>{formatPublished(article.publishedAt)}</time></div>
             <h3><a href={article.url} target="_blank" rel="noopener noreferrer">{article.title}</a></h3>
             <p>{topics.find(topic => topic.id === article.category)?.label}{article.author ? ` · By ${article.author}` : ''}</p>
+            {summaries[article.id] ? <p className={styles.summary}><span>{summaries[article.id].label} · {summaries[article.id].publisher}</span>{summaries[article.id].text}</p> : <p>Source reference only. Read the original for the full account.</p>}
             <div className={styles.actions}><a href={article.url} target="_blank" rel="noopener noreferrer">Read at source <ArrowUpRight size={15} aria-hidden="true" /></a><SignalBriefLink id={article.id} title={article.title} availability={availability[article.id]} /></div>
           </div>
         </article>)}

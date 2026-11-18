@@ -11,6 +11,7 @@ jest.mock('@/components/growth/HeroShimmer', () => ({ __esModule: true, default:
 jest.mock('@/components/growth/MotionText', () => ({ __esModule: true, default: ({ children }: { children: ReactNode }) => <span>{children}</span> }));
 jest.mock('@/app/news/SignalHeader', () => ({ __esModule: true, default: () => <nav>Signal</nav> }));
 jest.mock('@/app/news/subscriptions/SubscribeCTA', () => ({ __esModule: true, default: () => <a href="/news/subscribe">Subscribe</a> }));
+jest.mock('@/components/editorial/SecurityNewsSpotlight', () => ({ __esModule: true, default: () => <section>Application security briefing</section> }));
 
 const snapshot: NewsSnapshot = {
   articles: [
@@ -47,4 +48,34 @@ test('related coverage retains the member matching the selected publisher', () =
 test('unchecked references use the Signal sources action instead of promising a ready brief', () => {
   expect(host.querySelector('a[aria-label="Read Signal brief for Source A reports CVE-2026-12345"]')).toBeNull();
   expect(host.querySelector('a[aria-label="View Signal sources for Source A reports CVE-2026-12345"]')).not.toBeNull();
+  expect(host.querySelector('section[aria-labelledby="stream-title"]')?.textContent).toContain('Source reference only');
+});
+
+test('only checked summaries appear in the feed and survive a news refresh', async () => {
+  const id = snapshot.articles[1].id;
+  const summary = { text: 'The catalog identifies Example Gateway and its supplied remediation action.', label: 'CISA record summary', kind: 'overview' as const, publisher: 'CISA', url: 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog' };
+  const prepared: NewsSnapshot = { ...snapshot, briefAvailability: { [id]: 'ready' }, briefSummaries: { [id]: summary } };
+  const originalFetch = global.fetch;
+  jest.useFakeTimers();
+  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ ...prepared, checkedAt: '2026-10-29T13:01:00Z' }) });
+  try {
+    act(() => root.render(<Newsroom key="prepared" initialSnapshot={prepared} />));
+    const stream = () => host.querySelector('section[aria-labelledby="stream-title"]')!;
+    expect(stream().textContent).toContain(summary.text);
+    await act(async () => { jest.advanceTimersByTime(60_000); });
+    expect(global.fetch).toHaveBeenCalledWith('/api/news', expect.objectContaining({ cache: 'no-store' }));
+    expect(stream().textContent).toContain(summary.text);
+    expect(stream().querySelector(`a[aria-label="Read Signal brief for ${snapshot.articles[1].title}"]`)).not.toBeNull();
+
+    // A failed recheck must remove the old summary even if a malformed response
+    // still carries its text. The source link and reading controls remain.
+    jest.mocked(global.fetch).mockResolvedValue({ ok: true, json: async () => ({ ...prepared, briefAvailability: { [id]: 'unavailable' } }) } as Response);
+    await act(async () => { jest.advanceTimersByTime(60_000); });
+    expect(stream().textContent).not.toContain(summary.text);
+    expect(stream().textContent).toContain('source summary is temporarily unavailable');
+    expect(stream().querySelector(`a[href="${snapshot.articles[1].url}"]`)).not.toBeNull();
+  } finally {
+    global.fetch = originalFetch;
+    jest.useRealTimers();
+  }
 });

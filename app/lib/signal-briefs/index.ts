@@ -1,8 +1,8 @@
 import { getNewsSnapshot, publicSnapshot } from '../news';
-import type { NewsArticle } from '../news/types';
+import type { NewsArticle, NewsSnapshot } from '../news/types';
 import { briefFingerprint, composeSignalBrief } from './compose';
 import { fetchBriefEvidence, supportsBrief } from './evidence';
-import { readArchivedBriefArticle, readStoredBrief, readStoredBriefAvailability, writeStoredBrief } from './store';
+import { readArchivedBriefArticle, readStoredBrief, readStoredBriefAvailability, readStoredBriefSummaries, writeStoredBrief } from './store';
 import type { SignalBrief } from './types';
 import { initialBriefAvailability, type BriefAvailability } from './availability';
 
@@ -74,4 +74,24 @@ export async function getBriefCollection(articles: NewsArticle[], limit = 9): Pr
     }
   }));
   return output.sort((a, b) => articles.indexOf(a.article) - articles.indexOf(b.article));
+}
+
+/** Feed and timeline previews share the same checked evidence and request
+ * limits as the detail view. Unsupported or failed records produce no text. */
+export async function getBriefSummaries(articles: NewsArticle[], limit = 3): Promise<NonNullable<NewsSnapshot['briefSummaries']>> {
+  const candidates = articles.filter(supportsBrief).slice(0, 50);
+  await getBriefCollection(candidates, limit);
+  const current = state();
+  const summaries: NonNullable<NewsSnapshot['briefSummaries']> = {};
+  const missing: { id: string; fingerprint: string }[] = [];
+  for (const article of candidates) {
+    const fingerprint = briefFingerprint(article);
+    const cached = current.cache.get(fingerprint);
+    if (!cached || cached.until <= Date.now()) { missing.push({ id: article.id, fingerprint }); continue; }
+    const brief = cached.value;
+    if (brief.status === 'ready' && brief.summary && brief.evidence) summaries[article.id] = { ...brief.summary, publisher: brief.evidence.publisher, url: brief.evidence.url };
+  }
+  // A new headline can move an older ready brief outside the preparation
+  // window. Keep its still-current stored summary visible without more fetches.
+  return { ...await readStoredBriefSummaries(missing), ...summaries };
 }

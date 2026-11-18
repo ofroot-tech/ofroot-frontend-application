@@ -50,6 +50,8 @@ describe('Signal brief evidence boundaries', () => {
     const variants: NewsArticle[] = [
       ...['http://arxiv.org/abs/2610.12345', 'https://arxiv.org.evil.test/abs/2610.12345', 'https://user:password@arxiv.org/abs/2610.12345', 'https://arxiv.org:444/abs/2610.12345', 'https://127.0.0.1/abs/2610.12345', 'https://arxiv.org/abs/2610.12345?url=https://evil.test', 'https://arxiv.org/abs/2610.12345#untrusted', 'https://arxiv.org/abs/2610.12345v2'].map(url => ({ ...research, url })),
       { ...research, sourceId: 'techcrunch', kind: 'reporting', url: 'https://techcrunch.com/2026/10/25/a-story/' },
+      { ...research, sourceId: 'nist', kind: 'release', url: 'https://www.nist.gov/news-events/news/2026/10/example' },
+      { ...research, sourceId: 'cms', kind: 'release', url: 'https://www.cms.gov/newsroom/press-releases/example' },
       { ...cisa, url: `${cisa.url}&search_api_fulltext=CVE-2026-99999` },
       { ...cisa, title: 'CVE-2026-99999: A different vulnerability' },
       { ...federal, url: 'https://www.federalregister.gov/documents/../../api/private' },

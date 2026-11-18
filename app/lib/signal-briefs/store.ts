@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { z } from 'zod';
 import type { SignalBrief } from './types';
-import type { NewsArticle } from '../news/types';
+import type { NewsArticle, NewsSnapshot } from '../news/types';
 import type { BriefAvailability } from './availability';
 
 const archivedArticle = z.object({
@@ -14,6 +14,7 @@ const storedBrief = z.object({
   version: z.string(), articleId: z.string(), fingerprint: z.string(), generatedAt: z.iso.datetime(),
   status: z.enum(['ready', 'unsupported', 'unavailable']), reason: z.string().optional(),
   introduction: z.string(), digest: z.string(), context: z.string(),
+  summary: z.object({ text: z.string().min(1), label: z.string().min(1), kind: z.enum(['overview', 'excerpt']) }).optional(),
   perspective: z.object({ changed: z.string(), audience: z.string(), relevance: z.string(), nextStep: z.string(), basis: z.string() }).optional(),
   evidence: z.object({
     url: z.url(), retrievalUrl: z.url(), publisher: z.string(), title: z.string(), publishedAt: z.string().nullable(), fetchedAt: z.iso.datetime(),
@@ -69,30 +70,41 @@ export async function readStoredBrief(articleId: string, fingerprint: string): P
     const parsed = storedBrief.safeParse(result.rows[0]?.brief);
     if (!parsed.success || parsed.data.articleId !== articleId || parsed.data.fingerprint !== fingerprint) return null;
     const value = parsed.data;
-    if (value.status === 'ready' && (!value.evidence || !value.evidence.url.startsWith('https://'))) return null;
+    if (value.status === 'ready' && (!value.summary || !value.evidence || !value.evidence.url.startsWith('https://'))) return null;
     return value;
   } catch { return null; }
 }
 
-/** The board needs status, not every evidence body. A single bounded lookup
- * avoids one cache query per card and never fetches new primary records. */
-export async function readStoredBriefAvailability(references: { id: string; fingerprint: string }[]): Promise<Record<string, BriefAvailability>> {
+/** Batch reads retain current fingerprints and expiry. They never fetch new
+ * primary records or expose a removed reference without a caller-supplied ID. */
+async function readStoredBriefCollection(references: { id: string; fingerprint: string }[]): Promise<Record<string, SignalBrief>> {
   const db = database();
   if (!db || !references.length) return {};
   const expected = new Map(references.slice(0, 500).map(item => [item.id, item.fingerprint]));
   try {
     await schema(db);
     const result = await db.query('SELECT article_id, fingerprint, brief FROM ofroot_signal_briefs WHERE article_id = ANY($1::text[]) AND expires_at > NOW()', [Array.from(expected.keys())]);
-    const output: Record<string, BriefAvailability> = {};
+    const output: Record<string, SignalBrief> = {};
     for (const row of result.rows) {
       if (expected.get(row.article_id) !== row.fingerprint) continue;
       const parsed = storedBrief.safeParse(row.brief);
       if (!parsed.success || parsed.data.articleId !== row.article_id || parsed.data.fingerprint !== row.fingerprint) continue;
-      if (parsed.data.status === 'ready' && !parsed.data.evidence?.url.startsWith('https://')) continue;
-      output[row.article_id] = parsed.data.status;
+      if (parsed.data.status === 'ready' && (!parsed.data.summary || !parsed.data.evidence?.url.startsWith('https://'))) continue;
+      output[row.article_id] = parsed.data;
     }
     return output;
   } catch { return {}; }
+}
+
+export async function readStoredBriefAvailability(references: { id: string; fingerprint: string }[]): Promise<Record<string, BriefAvailability>> {
+  const briefs = await readStoredBriefCollection(references);
+  return Object.fromEntries(Object.entries(briefs).map(([id, brief]) => [id, brief.status]));
+}
+
+export async function readStoredBriefSummaries(references: { id: string; fingerprint: string }[]): Promise<NonNullable<NewsSnapshot['briefSummaries']>> {
+  const briefs = await readStoredBriefCollection(references);
+  return Object.fromEntries(Object.entries(briefs).flatMap(([id, brief]) => brief.status === 'ready' && brief.summary && brief.evidence
+    ? [[id, { ...brief.summary, publisher: brief.evidence.publisher, url: brief.evidence.url }]] : []));
 }
 
 /** Standalone permalinks outlive the bounded latest-news window. The caller

@@ -3,12 +3,13 @@ import { CANONICAL_SITE_URL } from '@/app/config/site'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
+import { SECURITY_GUIDE, SECURITY_NEWS, SECURITY_SERVICE_PATH } from '@/app/lib/application-security-content'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
   // Dates reflect substantive source changes and must be updated intentionally.
   const routes: Array<{ path: string; lastModified: string }> = [
-    { path: '', lastModified: '2026-11-16' },
+    { path: '', lastModified: '2026-11-18' },
     { path: '/partners/staffing', lastModified: '2026-11-16' },
     { path: '/automations', lastModified: '2026-08-07' },
     { path: '/ai-process', lastModified: '2026-08-07' },
@@ -21,7 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/authors/ofroot-technology', lastModified: '2026-09-09' },
     { path: '/about/editorial-standards', lastModified: '2026-09-09' },
     { path: '/gpu-llm-training', lastModified: '2026-02-11' },
-    { path: '/services', lastModified: '2026-10-14' },
+    { path: '/services', lastModified: '2026-11-18' },
+    { path: SECURITY_SERVICE_PATH, lastModified: '2026-11-18' },
     { path: '/services/ai-audit', lastModified: '2026-09-11' },
     { path: '/services/hubspot-meta-integrations', lastModified: '2026-03-05' },
     { path: '/services/workflow-automation', lastModified: '2026-03-05' },
@@ -37,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/solutions/unlock-company-knowledge', lastModified: '2026-09-11' },
     { path: '/results', lastModified: '2026-10-14' },
     { path: '/pricing', lastModified: '2026-09-11' },
-    { path: '/security', lastModified: '2026-07-22' },
+    { path: '/security', lastModified: '2026-11-18' },
     { path: '/insights', lastModified: '2026-09-09' },
     { path: '/news', lastModified: '2026-10-29' },
     { path: '/news/briefs', lastModified: '2026-10-29' },
@@ -47,7 +49,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/news/methodology', lastModified: '2026-10-29' },
     { path: '/book', lastModified: '2026-10-14' },
     { path: '/demo/private-ai', lastModified: '2026-07-22' },
-    { path: '/blog', lastModified: '2026-11-07' },
+    { path: '/blog', lastModified: '2026-11-17' },
+    { path: SECURITY_GUIDE.href, lastModified: SECURITY_GUIDE.publishedAt },
+    { path: SECURITY_NEWS.href, lastModified: SECURITY_NEWS.publishedAt },
     { path: AI_PROCESS_GUIDE.href, lastModified: AI_PROCESS_GUIDE.publishedAt },
     { path: '/case-studies/home-services-mvp', lastModified: '2026-10-14' },
     { path: '/case-studies/crm-erp-sync', lastModified: '2026-10-14' },

@@ -29,6 +29,10 @@ export type BriefPerspective = {
   basis: string;
 };
 
+/** A source-bound reading preview. Excerpts retain complete source sentences;
+ * structured overviews stay separate from editorial questions. */
+export type BriefSummary = { text: string; label: string; kind: 'overview' | 'excerpt' };
+
 export type SignalBrief = {
   version: string;
   articleId: string;
@@ -39,6 +43,7 @@ export type SignalBrief = {
   introduction: string;
   digest: string;
   context: string;
+  summary?: BriefSummary;
   perspective?: BriefPerspective;
   evidence?: BriefEvidence;
 };
