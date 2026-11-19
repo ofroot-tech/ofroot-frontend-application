@@ -3,7 +3,8 @@ import { CANONICAL_SITE_URL } from '@/app/config/site'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
-import { SECURITY_GUIDE, SECURITY_NEWS, SECURITY_SERVICE_PATH } from '@/app/lib/application-security-content'
+import { SECURITY_SERVICE_PATH } from '@/app/lib/application-security-content'
+import { SECURITY_EDITORIAL_GUIDES, SECURITY_EDITORIAL_NEWS } from '@/app/lib/security-editorial'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
@@ -41,17 +42,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pricing', lastModified: '2026-09-11' },
     { path: '/security', lastModified: '2026-11-18' },
     { path: '/insights', lastModified: '2026-09-09' },
-    { path: '/news', lastModified: '2026-10-29' },
+    { path: '/news', lastModified: '2026-11-19' },
     { path: '/news/briefs', lastModified: '2026-10-29' },
-    { path: '/news/from-ofroot', lastModified: '2026-11-07' },
+    { path: '/news/from-ofroot', lastModified: '2026-11-19' },
     { path: '/news/stories', lastModified: '2026-10-29' },
     { path: '/news/sources', lastModified: '2026-10-29' },
     { path: '/news/methodology', lastModified: '2026-10-29' },
     { path: '/book', lastModified: '2026-10-14' },
     { path: '/demo/private-ai', lastModified: '2026-07-22' },
-    { path: '/blog', lastModified: '2026-11-17' },
-    { path: SECURITY_GUIDE.href, lastModified: SECURITY_GUIDE.publishedAt },
-    { path: SECURITY_NEWS.href, lastModified: SECURITY_NEWS.publishedAt },
+    { path: '/blog', lastModified: '2026-11-19' },
+    ...[...SECURITY_EDITORIAL_GUIDES, ...SECURITY_EDITORIAL_NEWS].map(article => ({ path: article.href, lastModified: article.modifiedAt ?? article.publishedAt })),
     { path: AI_PROCESS_GUIDE.href, lastModified: AI_PROCESS_GUIDE.publishedAt },
     { path: '/case-studies/home-services-mvp', lastModified: '2026-10-14' },
     { path: '/case-studies/crm-erp-sync', lastModified: '2026-10-14' },

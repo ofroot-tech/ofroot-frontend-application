@@ -152,6 +152,20 @@
         "sha256": "8f797e536eed363ada2fe8ecb52e8814e33d075ab48f854290f86734d24216d6",
         "durationSeconds": 26.208
       }
+    },
+    {
+      "slug": "review-account-recovery-and-mfa-changes",
+      "title": "Review account recovery as carefully as sign-in",
+      "sourcePath": "/blog/review-account-recovery-and-mfa-changes",
+      "summary": "An account’s protection includes the ways someone can get back in or change its security settings. Map those routes, choose authentication that fits the risk, and test the transitions with synthetic accounts. Keep a clear record of expected behavior, observed results and unresolved questions.",
+      "publishedAt": "2026-11-19"
+    },
+    {
+      "slug": "review-third-party-javascript-on-sensitive-pages",
+      "title": "Review third-party JavaScript on your sensitive pages",
+      "sourcePath": "/blog/review-third-party-javascript-on-sensitive-pages",
+      "summary": "Start with one important user journey. Identify the scripts it loads, who can change them and the controls that limit their behavior. Test changes with synthetic data and keep a rollback ready. A passing repository scan cannot answer all of these browser and supplier questions.",
+      "publishedAt": "2026-11-19"
     }
   ]
 }

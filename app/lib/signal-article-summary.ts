@@ -1,11 +1,29 @@
 import { AI_PROCESS_GUIDE } from './ai-process-guide';
 import { insights } from './insights-content';
 import { SECURITY_GUIDE } from './application-security-content';
+import { ACCOUNT_RECOVERY_GUIDE } from './security-editorial-20261118';
+import { THIRD_PARTY_SCRIPT_GUIDE } from './security-editorial-20261119';
 import type { PilotArticle } from './signal-pilot';
 
 /** Short versions use the published guide itself, never a title-only rewrite.
  * Keep existing narration transcripts stable while adding readable takeaways. */
 export function ofrootArticleTakeaways(article: PilotArticle): string[] {
+  if (article.sourcePath === ACCOUNT_RECOVERY_GUIDE.href) {
+    return [
+      'Map password resets, lost-factor recovery, phone-number changes and support-assisted recovery.',
+      'Evaluate phishing-resistant authentication together with its fallback and recovery behavior.',
+      'Protect factor replacement with existing-factor reauthentication and risk checks.',
+      'Test an authorized transition with synthetic accounts and record exclusions and rollback.',
+    ];
+  }
+  if (article.sourcePath === THIRD_PARTY_SCRIPT_GUIDE.href) {
+    return [
+      'Inventory the scripts loaded by one sensitive journey, including tag managers and embedded services.',
+      'Review supplier-side publishing access and change history.',
+      'Test a report-only Content Security Policy while retaining existing enforced protection; report-only does not block execution.',
+      'Use synthetic data, verify the legitimate journey and keep a rollback ready.',
+    ];
+  }
   if (article.sourcePath === SECURITY_GUIDE.href) {
     return [
       'Agree the targets, methods, tester and written authorization before active testing.',

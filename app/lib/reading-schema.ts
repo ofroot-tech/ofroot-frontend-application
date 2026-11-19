@@ -11,10 +11,11 @@ export function readingCollection(path: string, name: string, items: { title: st
  * Dates come from editorial content, never the current render or fetch time. */
 export function authoredArticleSchema(input: {
   type: 'BlogPosting' | 'NewsArticle'; path: string; title: string; description: string;
-  publishedAt: string; modifiedAt?: string; section: string;
+  section: string;
   parent: { name: string; path: string };
   sources: { label: string; href: string }[];
-}) {
+} & ({ publishedAt: string; modifiedAt?: string; draftPreparedAt?: never }
+  | { publishedAt?: never; modifiedAt?: never; draftPreparedAt: string })) {
   const url = `${site}${input.path}`;
   const parentUrl = `${site}${input.parent.path}`;
   return [
@@ -22,7 +23,9 @@ export function authoredArticleSchema(input: {
       '@context': 'https://schema.org', '@type': input.type, '@id': `${url}#article`,
       headline: input.title, description: input.description, url,
       mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-      datePublished: input.publishedAt, dateModified: input.modifiedAt ?? input.publishedAt,
+      ...(input.draftPreparedAt !== undefined
+        ? { dateCreated: input.draftPreparedAt, creativeWorkStatus: 'Draft' }
+        : { datePublished: input.publishedAt, dateModified: input.modifiedAt ?? input.publishedAt }),
       author: { '@type': 'Organization', name: 'OfRoot Technology', url: site },
       publisher: { '@type': 'Organization', name: 'OfRoot Technology', url: site },
       citation: input.sources.map(source => ({ '@type': 'CreativeWork', name: source.label, url: source.href })),
