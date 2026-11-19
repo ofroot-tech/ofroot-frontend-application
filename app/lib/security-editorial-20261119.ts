@@ -1,4 +1,4 @@
-import type { SecurityArticleDraft } from './application-security-content';
+import type { SecurityArticleContent } from './application-security-content';
 
 const newsPath = '/news/optimizely-web-experimentation-incident-update';
 const guidePath = '/blog/review-third-party-javascript-on-sensitive-pages';
@@ -8,8 +8,8 @@ const sources = [
   { label: 'MDN: Content Security Policy', href: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP' },
 ];
 
-export const OPTIMIZELY_NEWS_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'news',
+export const OPTIMIZELY_NEWS: SecurityArticleContent = {
+  publishedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'news',
   slug: 'optimizely-web-experimentation-incident-update', href: newsPath,
   title: 'Optimizely updates its Web Experimentation incident report',
   label: 'Signal / Vendor incident update',
@@ -41,8 +41,8 @@ export const OPTIMIZELY_NEWS_DRAFT: SecurityArticleDraft = {
   sources,
 };
 
-export const THIRD_PARTY_SCRIPT_GUIDE_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'guide',
+export const THIRD_PARTY_SCRIPT_GUIDE: SecurityArticleContent = {
+  publishedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'guide',
   slug: 'review-third-party-javascript-on-sensitive-pages', href: guidePath,
   title: 'Review third-party JavaScript on your sensitive pages',
   label: 'Application security / Practical guide',

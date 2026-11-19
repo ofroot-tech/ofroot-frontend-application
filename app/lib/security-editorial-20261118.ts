@@ -1,4 +1,4 @@
-import type { SecurityArticleDraft } from './application-security-content';
+import type { SecurityArticleContent } from './application-security-content';
 
 const newsPath = '/news/doj-sms-phishing-sentencing-november-2026';
 const guidePath = '/blog/review-account-recovery-and-mfa-changes';
@@ -8,8 +8,8 @@ const sources = [
   { label: 'OWASP Multifactor Authentication Cheat Sheet, changing factors', href: 'https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html#changing-mfa-factors' },
 ];
 
-export const SMS_PHISHING_NEWS_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-18', sourcesCheckedAt: '2026-11-18', kind: 'news',
+export const SMS_PHISHING_NEWS: SecurityArticleContent = {
+  publishedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'news',
   slug: 'doj-sms-phishing-sentencing-november-2026', href: newsPath,
   title: 'DOJ sentencing update highlights SMS phishing and account recovery risk',
   label: 'Signal / Security case update',
@@ -42,8 +42,8 @@ export const SMS_PHISHING_NEWS_DRAFT: SecurityArticleDraft = {
   sources,
 };
 
-export const ACCOUNT_RECOVERY_GUIDE_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-18', sourcesCheckedAt: '2026-11-18', kind: 'guide',
+export const ACCOUNT_RECOVERY_GUIDE: SecurityArticleContent = {
+  publishedAt: '2026-11-19', sourcesCheckedAt: '2026-11-19', kind: 'guide',
   slug: 'review-account-recovery-and-mfa-changes', href: guidePath,
   title: 'Review account recovery as carefully as sign-in',
   label: 'Application security / Practical guide',

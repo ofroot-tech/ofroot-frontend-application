@@ -7,7 +7,7 @@ import Newsroom from './Newsroom';
 import styles from './news.module.css';
 import JsonLd from '@/components/seo/JsonLd';
 import { readingCollection } from '@/app/lib/reading-schema';
-import { SECURITY_NEWS } from '@/app/lib/application-security-content';
+import { SECURITY_EDITORIAL_NEWS } from '@/app/lib/security-editorial';
 
 export const metadata: Metadata = {
   title: 'Signal — Technology News',
@@ -24,7 +24,7 @@ async function NewsContent() {
   const candidates = [...selectHighlights(snapshot.articles, snapshot.sources, Date.parse(snapshot.checkedAt)), ...snapshot.articles];
   const briefSummaries = await getBriefSummaries(candidates.filter((article, index) => candidates.findIndex(item => item.id === article.id) === index), 3);
   const briefAvailability = await getBriefAvailability(snapshot.articles);
-  return <><JsonLd data={readingCollection('/news', 'Signal — Technology News', [{ title: SECURITY_NEWS.title, path: SECURITY_NEWS.href }, ...snapshot.articles.map(article => ({ title:article.title, path:article.url }))])}/><Newsroom initialSnapshot={{ ...snapshot, briefAvailability, briefSummaries }} /></>;
+  return <><JsonLd data={readingCollection('/news', 'Signal — Technology News', [...SECURITY_EDITORIAL_NEWS.map(article => ({ title: article.title, path: article.href })), ...snapshot.articles.map(article => ({ title:article.title, path:article.url }))])}/><Newsroom initialSnapshot={{ ...snapshot, briefAvailability, briefSummaries }} /></>;
 }
 
 export default function NewsPage() {

@@ -3,8 +3,8 @@ import JsonLd from '@/components/seo/JsonLd';
 import SecurityArticle, { securityArticleMetadata } from '@/components/editorial/SecurityArticle';
 import { SECURITY_GUIDE, SECURITY_NEWS } from '@/app/lib/application-security-content';
 import { readingCollection, signalArticleSchema } from '@/app/lib/reading-schema';
-import { SMS_PHISHING_NEWS_DRAFT, ACCOUNT_RECOVERY_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261118';
-import { OPTIMIZELY_NEWS_DRAFT, THIRD_PARTY_SCRIPT_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261119';
+import { SMS_PHISHING_NEWS, ACCOUNT_RECOVERY_GUIDE } from '@/app/lib/security-editorial-20261118';
+import { OPTIMIZELY_NEWS, THIRD_PARTY_SCRIPT_GUIDE } from '@/app/lib/security-editorial-20261119';
 
 jest.mock('@/components/editorial/Reading.module.css', () => ({}));
 
@@ -24,24 +24,24 @@ test('article schema cannot close its script tag and keeps the original text', (
 });
 
 it.each([
-  { article: SMS_PHISHING_NEWS_DRAFT, type: 'NewsArticle', related: ACCOUNT_RECOVERY_GUIDE_DRAFT },
-  { article: ACCOUNT_RECOVERY_GUIDE_DRAFT, type: 'BlogPosting', related: SMS_PHISHING_NEWS_DRAFT },
-  { article: OPTIMIZELY_NEWS_DRAFT, type: 'NewsArticle', related: THIRD_PARTY_SCRIPT_GUIDE_DRAFT },
-  { article: THIRD_PARTY_SCRIPT_GUIDE_DRAFT, type: 'BlogPosting', related: OPTIMIZELY_NEWS_DRAFT },
-])('renders review-only $type with creation date, no fabricated publication and matching related article', ({ article, type, related }) => {
+  { article: SMS_PHISHING_NEWS, type: 'NewsArticle', related: ACCOUNT_RECOVERY_GUIDE },
+  { article: ACCOUNT_RECOVERY_GUIDE, type: 'BlogPosting', related: SMS_PHISHING_NEWS },
+  { article: OPTIMIZELY_NEWS, type: 'NewsArticle', related: THIRD_PARTY_SCRIPT_GUIDE },
+  { article: THIRD_PARTY_SCRIPT_GUIDE, type: 'BlogPosting', related: OPTIMIZELY_NEWS },
+])('publishes $type with the actual date and matching related article', ({ article, type, related }) => {
   const html = renderToStaticMarkup(<SecurityArticle article={article} related={related} />);
   const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
   const schema = graphs.find(item => item['@type'] === type);
-  expect(schema).toMatchObject({ creativeWorkStatus: 'Draft', dateCreated: article.preparedAt, url: `https://www.ofroot.technology${article.href}` });
-  expect(schema).not.toHaveProperty('datePublished');
-  expect(schema).not.toHaveProperty('dateModified');
+  expect(schema).toMatchObject({ datePublished: '2026-11-19', dateModified: '2026-11-19', url: `https://www.ofroot.technology${article.href}` });
+  expect(schema).not.toHaveProperty('creativeWorkStatus');
+  expect(schema).not.toHaveProperty('dateCreated');
   expect(schema).not.toHaveProperty('image');
-  expect(html).toContain('Draft for review · Prepared');
+  expect(html).not.toContain('Draft for review');
+  expect(html).toContain('<time dateTime="2026-11-19">November 19, 2026</time>');
   expect(html).toContain(`href="${related.href}"`);
   expect(html).toContain('href="/services/application-security"');
-  expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
-  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('publishedTime');
-  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('modifiedTime');
+  expect(securityArticleMetadata(article).robots).toBeUndefined();
+  expect(securityArticleMetadata(article).openGraph).toMatchObject({ publishedTime: article.publishedAt, modifiedTime: article.publishedAt });
 });
 
 it.each([
