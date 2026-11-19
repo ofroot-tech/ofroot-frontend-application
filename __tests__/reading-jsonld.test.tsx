@@ -3,10 +3,12 @@ import JsonLd from '@/components/seo/JsonLd';
 import SecurityArticle, { securityArticleMetadata } from '@/components/editorial/SecurityArticle';
 import { SECURITY_GUIDE, SECURITY_NEWS } from '@/app/lib/application-security-content';
 import { readingCollection, signalArticleSchema } from '@/app/lib/reading-schema';
+import { SMS_PHISHING_NEWS_DRAFT, ACCOUNT_RECOVERY_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261118';
+import { OPTIMIZELY_NEWS_DRAFT, THIRD_PARTY_SCRIPT_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261119';
 
 jest.mock('@/components/editorial/Reading.module.css', () => ({}));
 
-function renderedSchema(data: typeof SECURITY_GUIDE) {
+function renderedSchema(data: Parameters<typeof SecurityArticle>[0]['article']) {
   const html = renderToStaticMarkup(<SecurityArticle article={data} />);
   const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
   return { html, graphs };
@@ -19,6 +21,27 @@ test('article schema cannot close its script tag and keeps the original text', (
   const json = html.slice(html.indexOf('>') + 1, html.lastIndexOf('</script>'));
   expect(json).not.toContain('<');
   expect(JSON.parse(json)).toEqual(data);
+});
+
+it.each([
+  { article: SMS_PHISHING_NEWS_DRAFT, type: 'NewsArticle', related: ACCOUNT_RECOVERY_GUIDE_DRAFT },
+  { article: ACCOUNT_RECOVERY_GUIDE_DRAFT, type: 'BlogPosting', related: SMS_PHISHING_NEWS_DRAFT },
+  { article: OPTIMIZELY_NEWS_DRAFT, type: 'NewsArticle', related: THIRD_PARTY_SCRIPT_GUIDE_DRAFT },
+  { article: THIRD_PARTY_SCRIPT_GUIDE_DRAFT, type: 'BlogPosting', related: OPTIMIZELY_NEWS_DRAFT },
+])('renders review-only $type with creation date, no fabricated publication and matching related article', ({ article, type, related }) => {
+  const html = renderToStaticMarkup(<SecurityArticle article={article} related={related} />);
+  const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
+  const schema = graphs.find(item => item['@type'] === type);
+  expect(schema).toMatchObject({ creativeWorkStatus: 'Draft', dateCreated: article.preparedAt, url: `https://www.ofroot.technology${article.href}` });
+  expect(schema).not.toHaveProperty('datePublished');
+  expect(schema).not.toHaveProperty('dateModified');
+  expect(schema).not.toHaveProperty('image');
+  expect(html).toContain('Draft for review · Prepared');
+  expect(html).toContain(`href="${related.href}"`);
+  expect(html).toContain('href="/services/application-security"');
+  expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
+  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('publishedTime');
+  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('modifiedTime');
 });
 
 it.each([

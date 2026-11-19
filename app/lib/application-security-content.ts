@@ -8,9 +8,16 @@ export type SecurityArticleContent = {
   publishedAt: string;
   modifiedAt?: string;
   sourcesCheckedAt?: string;
+  sourceNote?: string;
   summary: string;
+  summarySourceIds?: number[];
   sections: Array<{ id: string; title: string; paragraphs: string[]; points?: string[]; sourceIds?: number[] }>;
   sources: Array<{ label: string; href: string }>;
+};
+
+export type SecurityArticleDraft = Omit<SecurityArticleContent, 'publishedAt' | 'modifiedAt'> & {
+  status: 'draft';
+  preparedAt: string;
 };
 
 export const SECURITY_SERVICE_PATH = '/services/application-security';
