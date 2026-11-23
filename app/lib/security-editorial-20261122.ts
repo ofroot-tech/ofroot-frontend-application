@@ -1,4 +1,4 @@
-import type { SecurityArticleDraft } from './application-security-content';
+import type { SecurityArticleContent } from './application-security-content';
 
 const newsPath = '/news/optimizely-configured-commerce-build-server-incident';
 const guidePath = '/blog/retire-build-systems-and-revoke-access';
@@ -8,8 +8,8 @@ const sources = [
   { label: 'AWS IAM security best practices', href: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
 ];
 
-export const CONFIGURED_COMMERCE_NEWS_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-22', sourcesCheckedAt: '2026-11-22', kind: 'news',
+export const CONFIGURED_COMMERCE_NEWS: SecurityArticleContent = {
+  publishedAt: '2026-11-23', sourcesCheckedAt: '2026-11-23', kind: 'news',
   slug: 'optimizely-configured-commerce-build-server-incident', href: newsPath,
   title: 'Optimizely reports a separate Configured Commerce incident',
   label: 'Signal / Vendor incident update',
@@ -37,12 +37,12 @@ export const CONFIGURED_COMMERCE_NEWS_DRAFT: SecurityArticleDraft = {
       paragraphs: ['The companion guide turns one retiring build system into a small review: identify its owner and dependencies, plan access removal, test the replacement and record the result. Use an authorized environment and synthetic data.', 'For suspected compromise, follow your incident-response process before deleting hosts or evidence. Routine decommissioning and an incident investigation can require different sequencing.'],
     },
   ],
-  sourceNote: 'Vendor statement checked November 22. OfRoot’s suggested checks are separate analysis.',
+  sourceNote: 'Vendor statement checked November 23. OfRoot’s suggested checks are separate analysis.',
   sources,
 };
 
-export const BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-22', sourcesCheckedAt: '2026-11-22', kind: 'guide',
+export const BUILD_SYSTEM_RETIREMENT_GUIDE: SecurityArticleContent = {
+  publishedAt: '2026-11-23', sourcesCheckedAt: '2026-11-23', kind: 'guide',
   slug: 'retire-build-systems-and-revoke-access', href: guidePath,
   title: 'Retire build systems without leaving access behind',
   label: 'Application security / Practical guide',

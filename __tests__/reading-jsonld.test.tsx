@@ -5,7 +5,7 @@ import { SECURITY_GUIDE, SECURITY_NEWS } from '@/app/lib/application-security-co
 import { readingCollection, signalArticleSchema } from '@/app/lib/reading-schema';
 import { SMS_PHISHING_NEWS, ACCOUNT_RECOVERY_GUIDE } from '@/app/lib/security-editorial-20261118';
 import { OPTIMIZELY_NEWS, THIRD_PARTY_SCRIPT_GUIDE } from '@/app/lib/security-editorial-20261119';
-import { CONFIGURED_COMMERCE_NEWS_DRAFT, BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261122';
+import { CONFIGURED_COMMERCE_NEWS, BUILD_SYSTEM_RETIREMENT_GUIDE } from '@/app/lib/security-editorial-20261122';
 
 jest.mock('@/components/editorial/Reading.module.css', () => ({}));
 
@@ -25,21 +25,22 @@ test('article schema cannot close its script tag and keeps the original text', (
 });
 
 it.each([
-  { article: CONFIGURED_COMMERCE_NEWS_DRAFT, type: 'NewsArticle', related: BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT },
-  { article: BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT, type: 'BlogPosting', related: CONFIGURED_COMMERCE_NEWS_DRAFT },
-])('keeps the review-only $type dated as a draft and linked to its companion', ({ article, type, related }) => {
+  { article: CONFIGURED_COMMERCE_NEWS, type: 'NewsArticle', related: BUILD_SYSTEM_RETIREMENT_GUIDE },
+  { article: BUILD_SYSTEM_RETIREMENT_GUIDE, type: 'BlogPosting', related: CONFIGURED_COMMERCE_NEWS },
+])('publishes the $type with its actual date and companion link', ({ article, type, related }) => {
   const html = renderToStaticMarkup(<SecurityArticle article={article} related={related} />);
   const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
   const schema = graphs.find(item => item['@type'] === type);
-  expect(schema).toMatchObject({ dateCreated: '2026-11-22', creativeWorkStatus: 'Draft', headline: article.title, url: `https://www.ofroot.technology${article.href}` });
-  expect(schema).not.toHaveProperty('datePublished');
-  expect(schema).not.toHaveProperty('dateModified');
+  expect(schema).toMatchObject({ datePublished: '2026-11-23', dateModified: '2026-11-23', headline: article.title, url: `https://www.ofroot.technology${article.href}` });
+  expect(schema).not.toHaveProperty('dateCreated');
+  expect(schema).not.toHaveProperty('creativeWorkStatus');
   expect(schema).not.toHaveProperty('image');
-  expect(html).toContain('Draft for review');
+  expect(html).not.toContain('Draft for review');
+  expect(html).toContain('<time dateTime="2026-11-23">November 23, 2026</time>');
   expect(html).toContain(`href="${related.href}"`);
   expect(html).toContain('href="/services/application-security"');
-  expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
-  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('publishedTime');
+  expect(securityArticleMetadata(article).robots).toBeUndefined();
+  expect(securityArticleMetadata(article).openGraph).toMatchObject({ publishedTime: article.publishedAt, modifiedTime: article.publishedAt });
 });
 
 it.each([

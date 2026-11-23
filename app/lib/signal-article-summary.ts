@@ -3,11 +3,20 @@ import { insights } from './insights-content';
 import { SECURITY_GUIDE } from './application-security-content';
 import { ACCOUNT_RECOVERY_GUIDE } from './security-editorial-20261118';
 import { THIRD_PARTY_SCRIPT_GUIDE } from './security-editorial-20261119';
+import { BUILD_SYSTEM_RETIREMENT_GUIDE } from './security-editorial-20261122';
 import type { PilotArticle } from './signal-pilot';
 
 /** Short versions use the published guide itself, never a title-only rewrite.
  * Keep existing narration transcripts stable while adding readable takeaways. */
 export function ofrootArticleTakeaways(article: PilotArticle): string[] {
+  if (article.sourcePath === BUILD_SYSTEM_RETIREMENT_GUIDE.href) {
+    return [
+      'Inventory the jobs, identities, repositories and deployment targets before retiring a build system.',
+      'Give the supported replacement only the permissions it needs, using temporary workload credentials where the platform supports them.',
+      'Revoke obsolete credentials at their issuing service and verify removed access in an authorized test environment.',
+      'Preserve required logs and record rollback through an approved deployment path and identity.',
+    ];
+  }
   if (article.sourcePath === ACCOUNT_RECOVERY_GUIDE.href) {
     return [
       'Map password resets, lost-factor recovery, phone-number changes and support-assisted recovery.',
