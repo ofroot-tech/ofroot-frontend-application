@@ -8,6 +8,7 @@ import { insights } from '@/app/lib/insights-content';
 import { SECURITY_GUIDE } from '@/app/lib/application-security-content';
 import { ACCOUNT_RECOVERY_GUIDE } from '@/app/lib/security-editorial-20261118';
 import { THIRD_PARTY_SCRIPT_GUIDE } from '@/app/lib/security-editorial-20261119';
+import { BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261122';
 
 test('every published recording matches its current transcript and verified asset', () => {
   for (const article of checkedPilot(manifest.articles)) {
@@ -31,9 +32,13 @@ test('the publishing list covers published guides and keeps their short versions
     ...insights.map(item => ({ sourcePath:`/insights/${item.slug}`, title:item.title, summary:item.directAnswer, publishedAt:item.published ?? '2026-07-22' })),
   ];
   if (articles.length < 30) {
+    // This unpublished preview has no Signal entry or recording. Its draft
+    // metadata and schema are checked by reading-jsonld before publication.
+    const unpublishedPaths = new Set([BUILD_SYSTEM_RETIREMENT_GUIDE_DRAFT]
+      .filter(article => article.status === 'draft').map(article => article.href));
     const staticBlogRoutes = readdirSync(path.join(process.cwd(), 'app/blog'), { withFileTypes:true })
       .filter(entry => entry.isDirectory() && !entry.name.startsWith('[') && existsSync(path.join(process.cwd(), 'app/blog', entry.name, 'page.tsx')))
-      .map(entry => `/blog/${entry.name}`);
+      .map(entry => `/blog/${entry.name}`).filter(route => !unpublishedPaths.has(route));
     expect(staticBlogRoutes.filter(route => !articles.some(article => article.sourcePath === route))).toEqual([]);
     expect(guides.filter(guide => !articles.some(article => article.sourcePath === guide.sourcePath))).toEqual([]);
   }
