@@ -1,3 +1,6 @@
+import { MAIL_ASSURE_NEWS_DRAFT, SAAS_RECOVERY_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261123';
+import { SECURITY_EDITORIAL_NEWS, SECURITY_EDITORIAL_GUIDES } from '@/app/lib/security-editorial';
+import manifest from '@/content/signal-pilot.json';
 import { renderToStaticMarkup } from 'react-dom/server';
 import JsonLd from '@/components/seo/JsonLd';
 import SecurityArticle, { securityArticleMetadata } from '@/components/editorial/SecurityArticle';
@@ -126,4 +129,25 @@ it('does not turn an automated digest refresh into an invented publication date'
   expect(schema['@type']).toBe('Article');
   expect(schema).not.toHaveProperty('datePublished');
   expect(schema).not.toHaveProperty('dateModified');
+});
+
+it.each([
+  { article: MAIL_ASSURE_NEWS_DRAFT, type: 'NewsArticle', related: SAAS_RECOVERY_GUIDE_DRAFT },
+  { article: SAAS_RECOVERY_GUIDE_DRAFT, type: 'BlogPosting', related: MAIL_ASSURE_NEWS_DRAFT },
+])('keeps the recovery $type draft out of published collections and dates', ({ article, type, related }) => {
+  const html = renderToStaticMarkup(<SecurityArticle article={article} related={related} />);
+  const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
+  const schema = graphs.find(item => item['@type'] === type);
+  expect(schema).toMatchObject({ dateCreated: '2026-11-23', creativeWorkStatus: 'Draft', headline: article.title, url: `https://www.ofroot.technology${article.href}` });
+  expect(schema).not.toHaveProperty('datePublished');
+  expect(schema).not.toHaveProperty('dateModified');
+  expect(schema).not.toHaveProperty('image');
+  expect(schema.citation).toHaveLength(2);
+  expect(html).toContain('Draft for review');
+  expect(html).toContain(`href="${related.href}"`);
+  expect(html).toContain('href="/services/application-security"');
+  expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
+  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('publishedTime');
+  expect([...SECURITY_EDITORIAL_NEWS, ...SECURITY_EDITORIAL_GUIDES].some(item => item.href === article.href)).toBe(false);
+  expect(manifest.articles.some(item => item.sourcePath === article.href)).toBe(false);
 });
