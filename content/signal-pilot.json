@@ -166,6 +166,13 @@
       "sourcePath": "/blog/review-third-party-javascript-on-sensitive-pages",
       "summary": "Start with one important user journey. Identify the scripts it loads, who can change them and the controls that limit their behavior. Test changes with synthetic data and keep a rollback ready. A passing repository scan cannot answer all of these browser and supplier questions.",
       "publishedAt": "2026-11-19"
+    },
+    {
+      "slug": "retire-build-systems-and-revoke-access",
+      "title": "Retire build systems without leaving access behind",
+      "sourcePath": "/blog/retire-build-systems-and-revoke-access",
+      "summary": "Retiring a build system includes its credentials, integrations and remaining permissions. Start with one system, identify its owner and dependencies, plan access removal and verify that the supported replacement still works. Keep an evidence trail and an approved rollback path.",
+      "publishedAt": "2026-11-23"
     }
   ]
 }
