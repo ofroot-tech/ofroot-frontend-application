@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { CANONICAL_SITE_URL } from '@/app/config/site'
+import { HOUSTON_AC_OFFER } from '@/app/lib/houston-rental-ac'
 import { insights } from '@/app/lib/insights-content'
 import { featurePages, featurePath } from '@/app/lib/feature-content'
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
@@ -37,6 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/solutions/convert-more-leads', lastModified: '2026-09-11' },
     { path: '/solutions/home-services-automation', lastModified: '2026-10-14' },
     { path: '/solutions/hvac-lead-follow-up-automation', lastModified: '2026-10-14' },
+    { path: HOUSTON_AC_OFFER.path, lastModified: '2026-11-23' },
     { path: '/solutions/unlock-company-knowledge', lastModified: '2026-09-11' },
     { path: '/results', lastModified: '2026-10-14' },
     { path: '/pricing', lastModified: '2026-09-11' },

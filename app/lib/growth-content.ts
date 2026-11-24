@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { HOUSTON_AC_OFFER } from '@/app/lib/houston-rental-ac';
 import { CANONICAL_SITE_URL } from '@/app/config/site';
 
 export const SITE_URL = CANONICAL_SITE_URL;
@@ -270,7 +271,12 @@ export const growthPages: Record<string, GrowthPageContent> = {
         { title: 'Prove completion', body: 'Track response time, booking, estimate movement, payment completion, and exceptions.' },
       ] },
     ],
-    related: [{ label: 'Home-Services Automation', href: '/solutions/home-services-automation' }, { label: 'Automation Systems', href: '/services/automation-systems' }, { label: 'Pricing and starting ranges', href: '/pricing' }],
+    related: [
+      { label: HOUSTON_AC_OFFER.name, href: HOUSTON_AC_OFFER.path },
+      { label: 'Home-Services Automation', href: '/solutions/home-services-automation' },
+      { label: 'Automation Systems', href: '/services/automation-systems' },
+      { label: 'Pricing and starting ranges', href: '/pricing' },
+    ],
   },
   unlockKnowledge: {
     path: '/solutions/unlock-company-knowledge', eyebrow: 'Unlock Company Knowledge',
