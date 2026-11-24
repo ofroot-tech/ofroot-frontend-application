@@ -5,26 +5,32 @@ const guidePath = '/blog/verify-saas-recovery-beyond-the-status-page';
 const sources = [
   { label: 'N-able: Mail Assure incident update, November 22, 2026', href: 'https://www.n-able.com/blog/mail-assure-incident-update' },
   { label: 'OWASP Logging Cheat Sheet', href: 'https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html' },
+  { label: 'CISA Known Exploited Vulnerabilities catalog, November 23, 2026', href: 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json' },
 ];
 
 export const MAIL_ASSURE_NEWS_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-23', sourcesCheckedAt: '2026-11-23', kind: 'news',
+  status: 'draft', preparedAt: '2026-11-23', sourcesCheckedAt: '2026-11-24', kind: 'news',
   slug: 'n-able-mail-assure-recovery-update', href: newsPath,
-  title: 'N-able reports restored Mail Assure dashboard and API access',
-  label: 'Signal / Vendor recovery update',
-  description: 'What the November 22 update confirms, what remains open and how to plan a useful recovery check.',
-  summary: 'N-able says it restored Mail Assure and SpamExperts dashboard and API access on November 21 at 23:45 UTC after a security incident. Its November 22 update says email delivery and spam filtering continued. The investigation remains open.',
-  summarySourceIds: [1],
+  title: 'CISA adds Mail Assure flaw to its exploited vulnerabilities list',
+  label: 'Signal / Exploitation and recovery update',
+  description: 'The November 23 catalog addition, N-able’s recovery update and the questions service owners still need answered.',
+  summary: 'CISA added Mail Assure vulnerability CVE-2026-134624 to its Known Exploited Vulnerabilities catalog on November 23. N-able’s earlier update reports restored dashboard and API access while its incident investigation continues. The listing signals evidence of exploitation of the flaw, without establishing which customers were affected or how the earlier intrusion began.',
+  summarySourceIds: [3, 1],
   sections: [
     {
-      id: 'confirmed', title: 'What changed in the vendor update',
+      id: 'cisa-update', title: 'November 23: CISA adds an exploitation signal',
+      paragraphs: ['CISA describes a server-side request forgery issue: an authenticated API user can make the LDAP synchronization connection check reach internal hosts and ports. In everyday terms, a service that checks a connection can be directed toward destinations it should not reach.', 'The entry displays a November 26 remediation date and flags forensic triage under its referenced federal directive. Covered federal teams should consult those agency requirements. Other organizations should follow current vendor instructions and their own incident-response process; the date is not a universal customer deadline.'],
+      sourceIds: [3],
+    },
+    {
+      id: 'confirmed', title: 'What N-able’s November 22 update confirms',
       paragraphs: ['The update is dated November 22 at 2:30 p.m. EST. N-able reports fixing a vulnerability, finding no evidence of exploitation beyond one N-able-hosted server and engaging outside forensic investigators. It links CVE-2026-134624 and says a root-cause report is being prepared.'],
       sourceIds: [1],
     },
     {
       id: 'scope', title: 'Which questions still need an answer',
-      paragraphs: ['The statement does not identify affected U.S. customers or establish the intrusion dates or entry point. Its limited finding about exploitation does not resolve each tenant’s exposure.', 'If your team uses either service, ask the provider for the notice and next steps that apply to your tenant. A vulnerability record alone cannot establish whether your organization was compromised.'],
-      sourceIds: [1],
+      paragraphs: ['The catalog entry and vendor update do not identify affected U.S. customers or prove that this vulnerability was the entry point for the earlier server intrusion. They do not establish whether your tenant or its data was affected.', 'If your team uses either service, ask the provider for the notice and next steps that apply to your tenant. Restored access and an ongoing investigation answer different questions.'],
+      sourceIds: [1, 3],
     },
     {
       id: 'engineering-reading', title: 'OfRoot’s reading: check the work behind the dashboard',
@@ -32,12 +38,12 @@ export const MAIL_ASSURE_NEWS_DRAFT: SecurityArticleDraft = {
       sourceIds: [2],
     },
   ],
-  sourceNote: 'Source checked November 23. OfRoot’s recovery method is separate engineering analysis.',
+  sourceNote: 'Sources checked November 24. OfRoot’s recovery method is separate engineering analysis.',
   sources,
 };
 
 export const SAAS_RECOVERY_GUIDE_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-23', sourcesCheckedAt: '2026-11-23', kind: 'guide',
+  status: 'draft', preparedAt: '2026-11-23', sourcesCheckedAt: '2026-11-24', kind: 'guide',
   slug: 'verify-saas-recovery-beyond-the-status-page', href: guidePath,
   title: 'Verify SaaS recovery beyond the status page',
   label: 'Application security / Practical guide',
@@ -46,8 +52,13 @@ export const SAAS_RECOVERY_GUIDE_DRAFT: SecurityArticleDraft = {
   sections: [
     {
       id: 'context', title: 'Start with the workflow you need back',
-      paragraphs: ['N-able reports restored management access while its investigation continues. This general method is OfRoot’s analysis.', 'Choose one important workflow, such as reviewing a test item in an admin console or synchronizing a synthetic record through an API. Name its owner, normal input, expected output and relevant user roles. Keep the check small enough to assess clearly.'],
-      sourceIds: [1],
+      paragraphs: ['The N-able update and CISA’s later catalog addition show why recovery checks need current security context. This general method is OfRoot’s analysis, rather than a customer-specific instruction from either source.', 'Choose one important workflow, such as reviewing a test item in an admin console or synchronizing a synthetic record through an API. Name its owner, normal input, expected output and relevant user roles. Keep the check small enough to assess clearly.'],
+      sourceIds: [1, 3],
+    },
+    {
+      id: 'current-instructions', title: 'Review current instructions before testing recovery',
+      paragraphs: ['Check the latest vendor notice for your service, deployment model and account. Record which remediation steps the provider performs and which actions your team must complete. Do not infer those responsibilities from a restored dashboard or a vulnerability identifier alone.', 'If an exploitation notice or an applicable agency rule calls for forensic triage, follow that process before routine cleanup or rebuilding. Keep evidence preservation, remediation and workflow verification as distinct tasks with named owners. Avoid reconnecting old credentials or replaying queued work until the approved recovery sequence permits it.'],
+      sourceIds: [3],
     },
     {
       id: 'boundaries', title: 'Agree on a safe test',

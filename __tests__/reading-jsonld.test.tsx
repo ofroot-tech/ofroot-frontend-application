@@ -142,8 +142,11 @@ it.each([
   expect(schema).not.toHaveProperty('datePublished');
   expect(schema).not.toHaveProperty('dateModified');
   expect(schema).not.toHaveProperty('image');
-  expect(schema.citation).toHaveLength(2);
+  expect(schema.citation).toHaveLength(3);
+  expect(schema.citation).toContainEqual(expect.objectContaining({ url: 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json' }));
   expect(html).toContain('Draft for review');
+  expect(html).toContain('Prepared <time dateTime="2026-11-23">November 23, 2026</time>');
+  expect(html).toContain('Sources checked <time dateTime="2026-11-24">November 24, 2026</time>');
   expect(html).toContain(`href="${related.href}"`);
   expect(html).toContain('href="/services/application-security"');
   expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
