@@ -1,3 +1,4 @@
+import { SETUP_ROUTE_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261125';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
@@ -35,7 +36,8 @@ test('the publishing list covers published guides and keeps their short versions
     const staticBlogRoutes = readdirSync(path.join(process.cwd(), 'app/blog'), { withFileTypes:true })
       .filter(entry => entry.isDirectory() && !entry.name.startsWith('[') && existsSync(path.join(process.cwd(), 'app/blog', entry.name, 'page.tsx')))
       .map(entry => `/blog/${entry.name}`);
-    expect(staticBlogRoutes.filter(route => !articles.some(article => article.sourcePath === route))).toEqual([]);
+    expect(SETUP_ROUTE_GUIDE_DRAFT.status).toBe('draft');
+    expect(staticBlogRoutes.filter(route => route !== SETUP_ROUTE_GUIDE_DRAFT.href && !articles.some(article => article.sourcePath === route))).toEqual([]);
     expect(guides.filter(guide => !articles.some(article => article.sourcePath === guide.sourcePath))).toEqual([]);
   }
   for (const article of articles) {
