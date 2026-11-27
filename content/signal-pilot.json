@@ -180,6 +180,13 @@
       "sourcePath": "/blog/retire-build-systems-and-revoke-access",
       "summary": "Retiring a build system includes its credentials, integrations and remaining permissions. Start with one system, identify its owner and dependencies, plan access removal and verify that the supported replacement still works. Keep an evidence trail and an approved rollback path.",
       "publishedAt": "2026-11-23"
+    },
+    {
+      "slug": "close-setup-routes-after-installation",
+      "title": "Close setup routes after installation",
+      "sourcePath": "/blog/close-setup-routes-after-installation",
+      "summary": "Map the routes that can initialize an application, write its configuration or create its first administrator. After setup is complete, verify that unauthorized requests cannot reopen those paths. Use an isolated copy and synthetic data, check expected failures as well as normal operation, and confirm the protection survives deployment.",
+      "publishedAt": "2026-11-27"
     }
   ]
 }
