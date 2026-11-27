@@ -13,9 +13,7 @@ const archivedArticle = z.object({
 const storedBrief = z.object({
   version: z.string(), articleId: z.string(), fingerprint: z.string(), generatedAt: z.iso.datetime(),
   status: z.enum(['ready', 'unsupported', 'unavailable']), reason: z.string().optional(),
-  introduction: z.string(), digest: z.string(), context: z.string(),
   summary: z.object({ text: z.string().min(1), label: z.string().min(1), kind: z.enum(['overview', 'excerpt']) }).optional(),
-  perspective: z.object({ changed: z.string(), audience: z.string(), relevance: z.string(), nextStep: z.string(), basis: z.string() }).optional(),
   evidence: z.object({
     url: z.url(), retrievalUrl: z.url(), publisher: z.string(), title: z.string(), publishedAt: z.string().nullable(), fetchedAt: z.iso.datetime(),
     license: z.string(), scope: z.string(), abstract: z.string(), facts: z.array(z.object({ label: z.string(), value: z.string() })),

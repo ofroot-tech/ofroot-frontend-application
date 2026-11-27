@@ -1,6 +1,6 @@
 # Signal briefs
 
-Implementation policy and reading experience, updated October 29, 2026.
+Implementation policy and reading experience, updated November 26, 2026.
 
 ## Improved product prompt
 
@@ -50,9 +50,9 @@ Source policies can change. Review the relevant rights basis before expanding to
 
 ## Composition and provenance
 
-The generator is deterministic and extractive. It selects up to three complete sentences within a 110-word reading budget from the approved record’s abstract or short description. It does not splice claims, paraphrase restricted reporting, or call an LLM. Structured primary-record details can support a brief even when no sentence fits the excerpt budget; the reading view should then show those details without an empty quotation.
+Each brief leads with one compact note. Research excerpts prioritize a reported finding or contribution. They retain adjacent source sentences and recognize common signals of a qualification. The normal reading budget is 75 words. A longer sentence or an attached qualification can use a bounded larger budget. Agency excerpts retain source wording. Structured security and policy summaries preserve the exact record identity and any applicable federal deadline or document status.
 
-The introduction describes the record type and its scope. Version 2 adds an evidence-bound OfRoot perspective with What changed, Who should review it, Why it matters, and What to consider next. The composition uses the exact CVE/vendor/product, policy document type/number/date, or research DOI/title. Research questions use a title-based evaluation lens (retrieval, agent permissions, security, interoperability, healthcare, or general evaluation); they do not assert research outcomes. This is deterministic automated editorial guidance, not additional reporting or human review. The record-specific factual statement and every displayed key detail link to the primary-record citation. The prepared timestamp and automatic process attribution are visible.
+A brief can use an edited plain-language summary when both its approved source URL and the fingerprint of its source text match. A changed abstract uses the current excerpt until its new wording is checked. The detail page, news card, related coverage, and email digest reuse the composed text and link to its source.
 
 Evidence retrieval rejects redirects and unsafe record identities, applies an eight-second timeout and a streamed four-megabyte body limit, renders source material as plain text, and rejects unsafe XML declarations in the FDA feed. The CISA catalog request is coalesced and cached for 15 minutes to avoid fetching the whole catalog separately for every CVE.
 
@@ -81,7 +81,7 @@ The standalone collection uses bounded candidates and concurrency. It is a view 
 
 The brief page uses the current Signal and OfRoot public-site palette and typography. It keeps the original headline at a compact 32–54px scale rather than turning a long headline into a marketing hero. A readable main column and a separate provenance rail stack into one column on smaller screens.
 
-Readers first encounter the digest and its scope, then structured details, optional OfRoot context, caveats, and full references. Short inline citations lead to a visible source layer with return links. Discovery attribution is distinguished from evidence, and commentary is distinguished from source text. Original-source actions remain prominent. The page uses semantic headings, descriptive link labels, visible focus, comfortable touch targets, and static reading text; it adds no continuous canvas animation to the detail view.
+Readers first encounter the short version, then any structured details, source limitations, and references. Short citations lead to the supporting record with return links. The original-source action remains prominent. The page uses semantic headings, descriptive link labels, visible focus, comfortable touch targets, and static reading text; it adds no continuous canvas animation to the detail view.
 
 This structure gives readers a useful first read while making it easy to inspect the evidence and continue at the source. Empty, unsupported, and temporarily unavailable states explain their limits rather than borrowing the visual appearance of a completed summary.
 
@@ -90,4 +90,4 @@ This structure gives readers a useful first read while making it easy to inspect
 
 The Signal mark retains its identity and adds a visible descriptor: **Brief** only when a matching current-version primary-source digest is ready; **Sources** for an unsupported, temporarily unavailable, or unchecked reference. A browser-safe exact identity classifier shares the adapter rules. Adapter support alone never claims that an excerpt exists. The public board can read existing status using one bounded batch database query, without fetching source content for every card. Title corrections invalidate status through the same fingerprint used for digest caching.
 
-The reading page adds a compact in-page navigation and a numbered perspective section. Collection cards use a small two-pixel hover lift and border transition; reduced-motion users receive static cards. Source excerpts and references stay stationary while reading.
+The reading page links directly to the short version, any key details, and references. Collection cards use a small hover lift and border transition, with static cards for reduced motion. Source excerpts and references stay stationary while reading.

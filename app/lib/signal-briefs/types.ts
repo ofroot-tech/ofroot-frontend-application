@@ -19,18 +19,8 @@ export type EvidenceResult =
   | { status: 'available'; evidence: BriefEvidence }
   | { status: 'unsupported' | 'unavailable'; reason: string };
 
-/** Record-bound guidance stays distinct from the verbatim primary-source digest.
- * The questions help a reader investigate applicability; they do not assert it. */
-export type BriefPerspective = {
-  changed: string;
-  audience: string;
-  relevance: string;
-  nextStep: string;
-  basis: string;
-};
-
 /** A source-bound reading preview. Excerpts retain complete source sentences;
- * structured overviews stay separate from editorial questions. */
+ * overviews use structured details or a reviewed summary of the record. */
 export type BriefSummary = { text: string; label: string; kind: 'overview' | 'excerpt' };
 
 export type SignalBrief = {
@@ -40,10 +30,6 @@ export type SignalBrief = {
   generatedAt: string;
   status: 'ready' | 'unsupported' | 'unavailable';
   reason?: string;
-  introduction: string;
-  digest: string;
-  context: string;
   summary?: BriefSummary;
-  perspective?: BriefPerspective;
   evidence?: BriefEvidence;
 };
