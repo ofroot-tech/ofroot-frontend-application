@@ -1,4 +1,4 @@
-import { DRUPAL_INSTALLER_NEWS_DRAFT, SETUP_ROUTE_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261125';
+import { DRUPAL_INSTALLER_NEWS, SETUP_ROUTE_GUIDE } from '@/app/lib/security-editorial-20261125';
 import { SECURITY_EDITORIAL_NEWS, SECURITY_EDITORIAL_GUIDES } from '@/app/lib/security-editorial';
 import manifest from '@/content/signal-pilot.json';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -132,23 +132,23 @@ it('does not turn an automated digest refresh into an invented publication date'
 });
 
 it.each([
-  { article: DRUPAL_INSTALLER_NEWS_DRAFT, type: 'NewsArticle', related: SETUP_ROUTE_GUIDE_DRAFT },
-  { article: SETUP_ROUTE_GUIDE_DRAFT, type: 'BlogPosting', related: DRUPAL_INSTALLER_NEWS_DRAFT },
-])('keeps the installer $type draft out of published collections and dates', ({ article, type, related }) => {
+  { article: DRUPAL_INSTALLER_NEWS, type: 'NewsArticle', related: SETUP_ROUTE_GUIDE },
+  { article: SETUP_ROUTE_GUIDE, type: 'BlogPosting', related: DRUPAL_INSTALLER_NEWS },
+])('publishes the installer $type with its actual date and companion link', ({ article, type, related }) => {
   const html = renderToStaticMarkup(<SecurityArticle article={article} related={related} />);
   const graphs = Array.from(html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g), match => JSON.parse(match[1])).flat();
   const schema = graphs.find(item => item['@type'] === type);
-  expect(schema).toMatchObject({ dateCreated: '2026-11-25', creativeWorkStatus: 'Draft', headline: article.title, url: 'https://www.ofroot.technology' + article.href });
-  expect(schema).not.toHaveProperty('datePublished');
-  expect(schema).not.toHaveProperty('dateModified');
+  expect(schema).toMatchObject({ datePublished: '2026-11-27', dateModified: '2026-11-27', headline: article.title, url: 'https://www.ofroot.technology' + article.href });
+  expect(schema).not.toHaveProperty('dateCreated');
+  expect(schema).not.toHaveProperty('creativeWorkStatus');
   expect(schema).not.toHaveProperty('image');
   expect(schema.citation).toHaveLength(4);
-  expect(html).toContain('Draft for review');
-  expect(html).toContain('<time dateTime="2026-11-25">November 25, 2026</time>');
+  expect(html).not.toContain('Draft for review');
+  expect(html).toContain('<time dateTime="2026-11-27">November 27, 2026</time>');
   expect(html).toContain('href="' + related.href + '"');
   expect(html).toContain('href="/services/application-security"');
-  expect(securityArticleMetadata(article).robots).toEqual({ index: false, follow: false });
-  expect(securityArticleMetadata(article).openGraph).not.toHaveProperty('publishedTime');
-  expect([...SECURITY_EDITORIAL_NEWS, ...SECURITY_EDITORIAL_GUIDES].some(item => item.href === article.href)).toBe(false);
-  expect(manifest.articles.some(item => item.sourcePath === article.href)).toBe(false);
+  expect(securityArticleMetadata(article).robots).toBeUndefined();
+  expect(securityArticleMetadata(article).openGraph).toMatchObject({ publishedTime: article.publishedAt, modifiedTime: article.publishedAt });
+  expect([...SECURITY_EDITORIAL_NEWS, ...SECURITY_EDITORIAL_GUIDES].some(item => item.href === article.href)).toBe(true);
+  expect(manifest.articles.some(item => item.sourcePath === article.href)).toBe(article.kind === 'guide');
 });

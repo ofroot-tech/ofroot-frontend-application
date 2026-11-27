@@ -1,16 +1,16 @@
-import type { SecurityArticleDraft } from './application-security-content';
+import type { SecurityArticleContent } from './application-security-content';
 
 const newsPath = '/news/drupal-installer-exploited-vulnerability-update';
 const guidePath = '/blog/close-setup-routes-after-installation';
 const sources = [
   { label: 'CISA Known Exploited Vulnerabilities catalog: Drupal core, added November 24', href: 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json' },
   { label: 'Drupal security advisory SA-CORE-2026-017', href: 'https://www.drupal.org/sa-core-2026-017' },
-  { label: 'Drupal: Securing the installer, updated November 21', href: 'https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-installer-installphp' },
+  { label: 'Drupal: Securing the installer, updated November 27', href: 'https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-installer-installphp' },
   { label: 'OWASP Authorization Cheat Sheet', href: 'https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html' },
 ];
 
-export const DRUPAL_INSTALLER_NEWS_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-25', sourcesCheckedAt: '2026-11-25', kind: 'news',
+export const DRUPAL_INSTALLER_NEWS: SecurityArticleContent = {
+  publishedAt: '2026-11-27', sourcesCheckedAt: '2026-11-27', kind: 'news',
   slug: 'drupal-installer-exploited-vulnerability-update', href: newsPath,
   title: 'CISA lists Drupal installer flaw as exploited',
   label: 'Signal / Advisory update',
@@ -39,12 +39,12 @@ export const DRUPAL_INSTALLER_NEWS_DRAFT: SecurityArticleDraft = {
       sourceIds: [4],
     },
   ],
-  sourceNote: 'Sources checked November 25. Advisory, exploitation-report and catalog dates are distinct. OfRoot’s review method is separate analysis.',
+  sourceNote: 'Sources checked November 27. Advisory, exploitation-report and catalog dates are distinct. OfRoot’s review method is separate analysis.',
   sources,
 };
 
-export const SETUP_ROUTE_GUIDE_DRAFT: SecurityArticleDraft = {
-  status: 'draft', preparedAt: '2026-11-25', sourcesCheckedAt: '2026-11-25', kind: 'guide',
+export const SETUP_ROUTE_GUIDE: SecurityArticleContent = {
+  publishedAt: '2026-11-27', sourcesCheckedAt: '2026-11-27', kind: 'guide',
   slug: 'close-setup-routes-after-installation', href: guidePath,
   title: 'Close setup routes after installation',
   label: 'Application security / Practical guide',
@@ -72,7 +72,7 @@ export const SETUP_ROUTE_GUIDE_DRAFT: SecurityArticleDraft = {
     },
     {
       id: 'deployment', title: 'Make the protection survive the next release',
-      paragraphs: ['Check the deployed artifact and hosting configuration, not only a developer’s local rule. Drupal’s guide warns that dependency or scaffold operations can restore installer files or replace manual configuration edits.', 'Repeat the narrow checks after an ordinary deployment in the test environment. Confirm that the intended installer restrictions remain and that authorized maintenance still succeeds. Keep a rollback path that restores service without reopening public setup.'],
+      paragraphs: ['Check the deployed artifact and hosting configuration, not only a developer’s local rule. Drupal’s current guide recommends removing the installer file and blocking it at the web server because the two controls cover different failure modes. It warns that dependency or scaffold operations can restore installer files or replace manual configuration edits.', 'Repeat the narrow checks after an ordinary deployment in the test environment. Confirm that the intended installer restrictions remain and that authorized maintenance still succeeds. Keep a rollback path that restores service without reopening public setup.'],
       sourceIds: [3],
     },
     {

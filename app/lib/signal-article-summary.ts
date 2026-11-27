@@ -4,12 +4,21 @@ import { SECURITY_GUIDE } from './application-security-content';
 import { ACCOUNT_RECOVERY_GUIDE } from './security-editorial-20261118';
 import { THIRD_PARTY_SCRIPT_GUIDE } from './security-editorial-20261119';
 import { BUILD_SYSTEM_RETIREMENT_GUIDE } from './security-editorial-20261122';
+import { SETUP_ROUTE_GUIDE } from './security-editorial-20261125';
 import type { PilotArticle } from './signal-pilot';
 import { INBOUND_EMAIL_GUIDE } from './signal-weekly-20261126';
 
 /** Short versions use the published guide itself, never a title-only rewrite.
  * Keep existing narration transcripts stable while adding readable takeaways. */
 export function ofrootArticleTakeaways(article: PilotArticle): string[] {
+  if (article.sourcePath === SETUP_ROUTE_GUIDE.href) {
+    return [
+      'Map installation, configuration and first-administrator routes, including alternate entry paths.',
+      'Use an isolated environment and synthetic data to test denied requests and dependency failures.',
+      'Keep setup restrictions in place through deployment while preserving authorized maintenance.',
+      'Record the tested version, observed results, unresolved paths and rollback plan.',
+    ];
+  }
   if (article.sourcePath === INBOUND_EMAIL_GUIDE.href) return INBOUND_EMAIL_GUIDE.steps.map(step => step.takeaway);
   if (article.sourcePath === BUILD_SYSTEM_RETIREMENT_GUIDE.href) {
     return [

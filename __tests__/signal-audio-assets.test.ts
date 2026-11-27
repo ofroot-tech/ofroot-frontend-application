@@ -1,4 +1,4 @@
-import { SETUP_ROUTE_GUIDE_DRAFT } from '@/app/lib/security-editorial-20261125';
+import { SETUP_ROUTE_GUIDE } from '@/app/lib/security-editorial-20261125';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
@@ -30,15 +30,14 @@ test('the publishing list covers published guides and keeps their short versions
   const articles = checkedPilot(manifest.articles);
   const guides = [
     { sourcePath:AI_PROCESS_GUIDE.href, title:AI_PROCESS_GUIDE.title, summary:AI_PROCESS_GUIDE.description, publishedAt:AI_PROCESS_GUIDE.publishedAt },
-    ...[SECURITY_GUIDE, ACCOUNT_RECOVERY_GUIDE, THIRD_PARTY_SCRIPT_GUIDE, BUILD_SYSTEM_RETIREMENT_GUIDE, INBOUND_EMAIL_GUIDE].map(article => ({ sourcePath:article.href, title:article.title, summary:article.summary, publishedAt:article.publishedAt })),
+    ...[SECURITY_GUIDE, ACCOUNT_RECOVERY_GUIDE, THIRD_PARTY_SCRIPT_GUIDE, BUILD_SYSTEM_RETIREMENT_GUIDE, SETUP_ROUTE_GUIDE, INBOUND_EMAIL_GUIDE].map(article => ({ sourcePath:article.href, title:article.title, summary:article.summary, publishedAt:article.publishedAt })),
     ...insights.map(item => ({ sourcePath:`/insights/${item.slug}`, title:item.title, summary:item.directAnswer, publishedAt:item.published ?? '2026-07-22' })),
   ];
   if (articles.length < 30) {
     const staticBlogRoutes = readdirSync(path.join(process.cwd(), 'app/blog'), { withFileTypes:true })
       .filter(entry => entry.isDirectory() && !entry.name.startsWith('[') && existsSync(path.join(process.cwd(), 'app/blog', entry.name, 'page.tsx')))
       .map(entry => `/blog/${entry.name}`);
-    expect(SETUP_ROUTE_GUIDE_DRAFT.status).toBe('draft');
-    expect(staticBlogRoutes.filter(route => route !== SETUP_ROUTE_GUIDE_DRAFT.href && !articles.some(article => article.sourcePath === route))).toEqual([]);
+    expect(staticBlogRoutes.filter(route => !articles.some(article => article.sourcePath === route))).toEqual([]);
     expect(guides.filter(guide => !articles.some(article => article.sourcePath === guide.sourcePath))).toEqual([]);
   }
   for (const article of articles) {
