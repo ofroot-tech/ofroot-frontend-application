@@ -74,7 +74,7 @@ export default function AuditRequestButton() {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div ref={dialogRef} className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5" onMouseDown={(e) => e.stopPropagation()}>
+          <div ref={dialogRef} className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-xl bg-white p-6 shadow-2xl ring-1 ring-black/5" onMouseDown={(e) => e.stopPropagation()}>
             <h2 id="audit-title" className="font-extrabold text-2xl md:text-3xl text-gray-900">Request AI audit</h2>
             <p className="mt-1 text-sm text-gray-600">We’ll review your site and ad accounts and send quick wins within 48 hours.</p>
             <div className="mt-3 space-y-2 rounded-md border border-teal-100 bg-teal-50 p-3 text-sm text-gray-700">
