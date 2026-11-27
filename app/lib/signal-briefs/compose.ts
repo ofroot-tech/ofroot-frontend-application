@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { NewsArticle } from '../news/types';
-import { getReviewedSummary } from './reviewed-summaries';
+import { getReviewedNote } from './reviewed-summaries';
 import type { BriefEvidence, BriefSummary, EvidenceResult, SignalBrief } from './types';
 
 export const BRIEF_VERSION = 'signal-source-summary-4';
@@ -59,8 +59,8 @@ function researchExcerpt(parts: string[]): string {
 
 export function composeBriefSummary(article: NewsArticle, evidence: BriefEvidence): BriefSummary | undefined {
   if (!evidence.abstract.trim()) return undefined;
-  const reviewed = getReviewedSummary(evidence);
-  if (reviewed) return { kind: 'overview', label: 'Plain-language summary', text: reviewed };
+  const reviewed = getReviewedNote(evidence);
+  if (reviewed) return { kind: 'overview', label: 'Plain-language summary', text: reviewed.text };
 
   const fact = (label: string) => evidence.facts.find(item => item.label === label)?.value;
   const parts = sentences(evidence.abstract);

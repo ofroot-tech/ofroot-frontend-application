@@ -3,6 +3,7 @@ jest.mock('@/app/lib/signal-briefs/evidence', () => ({ fetchBriefEvidence: jest.
 jest.mock('@/app/lib/signal-briefs/store', () => ({ readStoredBrief: jest.fn(), readStoredBriefAvailability: jest.fn(), readStoredBriefSummaries: jest.fn(), writeStoredBrief: jest.fn(), readArchivedBriefArticle: jest.fn() }));
 
 import { getNewsSnapshot, publicSnapshot } from '@/app/lib/news';
+import { formatNewsTitle } from '@/app/lib/news/display-title';
 import { briefFingerprint, composeSignalBrief } from '@/app/lib/signal-briefs/compose';
 import { fetchBriefEvidence } from '@/app/lib/signal-briefs/evidence';
 import { getBriefArticle, getBriefAvailability, getBriefCollection, getBriefForArticle } from '@/app/lib/signal-briefs';
@@ -25,6 +26,20 @@ beforeEach(() => {
   jest.mocked(publicSnapshot).mockImplementation(value => value);
   jest.mocked(fetchBriefEvidence).mockResolvedValue({ status: 'available', evidence });
   jest.mocked(writeStoredBrief).mockResolvedValue(undefined);
+});
+
+describe('Signal source headline formatting', () => {
+  it('renders arXiv superscripts without changing stored metadata', () => {
+    const source = { ...article, title: 'M$^{2}$AdaptVLA and O$^3$' };
+    expect(formatNewsTitle(source)).toBe('M²AdaptVLA and O³');
+    expect(source.title).toBe('M$^{2}$AdaptVLA and O$^3$');
+  });
+
+  it('preserves unsupported formulas, currency, and non-arXiv headlines', () => {
+    const title = 'A $25 model with $x^{2}$ and M$^{2}$';
+    expect(formatNewsTitle({ ...article, title })).toBe('A $25 model with $x^{2}$ and M²');
+    expect(formatNewsTitle({ ...article, sourceId: 'techcrunch', title })).toBe(title);
+  });
 });
 
 describe('evidence-bound digest composition', () => {
