@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { formatNewsTitle } from '@/app/lib/news/display-title';
 import { getNewsSnapshot } from '@/app/lib/news';
 import type { NewsCategory, NewsSnapshot } from '@/app/lib/news/types';
 import { insights, type Insight } from '@/app/lib/insights-content';
@@ -6,7 +7,6 @@ import pilotManifest from '@/content/signal-pilot.json';
 import { checkedPilot, type PilotArticle } from '@/app/lib/signal-pilot';
 import { getBriefForArticle } from '@/app/lib/signal-briefs';
 import { supportsBrief } from '@/app/lib/signal-briefs/evidence';
-import { abridgeAbstract } from '@/app/lib/signal-briefs/compose';
 import { assertSubscriptionConfiguration, escapeEmailHtml, nextSignalSend, SIGNAL_SITE_URL } from './config';
 import { sendSignalEmail, signalEmailFrame, type SignalEmail } from './email';
 import { getSubscriptionDatabase, ensureSubscriptionSchema, mapSubscriberRow } from './store';
@@ -115,9 +115,9 @@ export async function prepareDigestItems(subscriber: SignalSubscriber, excluded 
         if (supplied?.deadline !== undefined && Date.now() >= supplied.deadline) throw new Error('Digest preparation time budget reached.');
         const article = references[cursor++];
         const brief = await getBriefForArticle(article);
-        if (brief.status !== 'ready' || !brief.evidence) continue;
-        candidates.push({ key: `brief:${article.id}`, title: article.title, url: `${SIGNAL_SITE_URL}/news/brief/${article.id}`,
-          excerpt: abridgeAbstract(brief.digest, 55) || 'Review the cited primary record, its structured details, and the evidence scope in this Signal brief.',
+        if (brief.status !== 'ready' || !brief.evidence || !brief.summary) continue;
+        candidates.push({ key: `brief:${article.id}`, title: formatNewsTitle(article), url: `${SIGNAL_SITE_URL}/news/brief/${article.id}`,
+          excerpt: brief.summary.text,
           kind: 'brief', topic: article.category, publishedAt: article.publishedAt!, source: brief.evidence.publisher, sourceUrl: brief.evidence.url });
       }
     }));
@@ -143,7 +143,7 @@ export function renderSignalDigest(subscriber: SignalSubscriber, items: DigestIt
   const footer = `You confirmed a ${subscriber.frequency} Signal digest for your selected interests.<br /><a href="${e(manage)}" style="color:#dfc7f1">Manage preferences or pause</a> · <a href="${e(humanUnsubscribe)}" style="color:#dfc7f1">Unsubscribe</a><br />OfRoot Signal · <a href="${SIGNAL_SITE_URL}/news/methodology#briefs" style="color:#dfc7f1">How sources are used</a><br />${e(postalAddress).replace(/\r?\n/g, '<br />')}`;
   const heading = subscriber.frequency === 'weekly' ? 'Your weekly Signal.' : 'Your daily Signal.';
   return { to: subscriber.email, subject: `Signal · ${items.length} ${items.length === 1 ? 'read' : 'reads'} for ${date}`,
-    html: signalEmailFrame(heading, `<p style="color:#c0b5cc;font-size:15px;line-height:1.8">${e(date)} · A short collection for the topics you chose. Source excerpts and OfRoot writing are identified separately.</p>${cards}`, footer),
+    html: signalEmailFrame(heading, `<p style="color:#c0b5cc;font-size:15px;line-height:1.8">${e(date)} · A short collection for the topics you chose. Each brief links to the primary record it uses.</p>${cards}`, footer),
     text: `${heading}\n${date}\n\n${items.map(item => `${item.kind === 'brief' ? 'SIGNAL SOURCE DIGEST' : 'OFROOT INSIGHTS'} · ${item.topic}\n${item.title}\n${item.excerpt}\nSource: ${item.source} ${item.sourceUrl}\nRead: ${item.url}`).join('\n\n')}\n\nManage preferences or pause: ${manage}\nUnsubscribe: ${humanUnsubscribe}\nOfRoot Signal · ${SIGNAL_SITE_URL}/news/methodology#briefs\n${postalAddress}`,
     idempotencyKey: `signal-digest/${issueId}`, unsubscribeUrl: oneClick };
 }

@@ -4,12 +4,13 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, ArrowUpRight, GitBranch } from 'lucide-react';
 import { getNewsSnapshot } from '@/app/lib/news';
+import { formatNewsTitle } from '@/app/lib/news/display-title';
 import { groupStories } from '@/app/lib/news/editorial';
 import { getBriefArticle, getBriefAvailability, getBriefSummaries } from '@/app/lib/signal-briefs';
 import SignalHeader from '../../SignalHeader';
 import SignalBriefLink from '../../SignalBriefLink';
 import SubscribeCTA from '../../subscriptions/SubscribeCTA';
-import { formatPublished, topics } from '../../presentation';
+import { formatPublished, formatStoryTitle, topics } from '../../presentation';
 import news from '../../news.module.css';
 import styles from './story.module.css';
 
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const result = await resolveStory(id);
   return {
-    title: result ? `Related coverage — ${result.story.title}` : 'Coverage not found',
+    title: result ? `Related coverage — ${formatStoryTitle(result.story)}` : 'Coverage not found',
     description: 'Follow related technology references, publication dates, and the original sources in Signal.',
     alternates: { canonical: `/news/story/${id}` },
     // A source-link timeline helps navigation; substantive standalone briefs
@@ -56,7 +57,7 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
     <header className={styles.intro}>
       <Link href="/news/stories" className={styles.back}><ArrowLeft size={14} aria-hidden="true" /> Related coverage</Link>
       <p className={news.eyebrow}><GitBranch size={17} aria-hidden="true" /> SIGNAL / CONNECTED REFERENCES</p>
-      <h1>{story.title}</h1>
+      <h1>{formatStoryTitle(story)}</h1>
       <div className={styles.meta}><span>{story.articles.length} {story.articles.length === 1 ? 'reference' : 'references'}</span><span>{story.sourceCount} {story.sourceCount === 1 ? 'publishing organization' : 'publishing organizations'}</span>{story.updatedAt && <span>Latest publication {formatPublished(story.updatedAt)}</span>}</div>
       <p className={styles.explanation}>A reading trail through related coverage. Each headline belongs to its publisher; follow the original to assess its claims.</p>
     </header>
@@ -66,10 +67,10 @@ export default async function StoryPage({ params }: { params: Promise<{ id: stri
         {timeline.map((article, index) => <article key={article.id} className={styles.entry}>
           <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
           <div><div className={styles.entryMeta}><span>{sourceMap.get(article.sourceId)?.name || 'Original source'}</span><time dateTime={article.publishedAt || undefined}>{formatPublished(article.publishedAt)}</time></div>
-            <h3><a href={article.url} target="_blank" rel="noopener noreferrer">{article.title}</a></h3>
+            <h3><a href={article.url} target="_blank" rel="noopener noreferrer">{formatNewsTitle(article)}</a></h3>
             <p>{topics.find(topic => topic.id === article.category)?.label}{article.author ? ` · By ${article.author}` : ''}</p>
             {summaries[article.id] ? <p className={styles.summary}><span>{summaries[article.id].label} · {summaries[article.id].publisher}</span>{summaries[article.id].text}</p> : <p>Source reference only. Read the original for the full account.</p>}
-            <div className={styles.actions}><a href={article.url} target="_blank" rel="noopener noreferrer">Read at source <ArrowUpRight size={15} aria-hidden="true" /></a><SignalBriefLink id={article.id} title={article.title} availability={availability[article.id]} /></div>
+            <div className={styles.actions}><a href={article.url} target="_blank" rel="noopener noreferrer">Read at source <ArrowUpRight size={15} aria-hidden="true" /></a><SignalBriefLink id={article.id} title={formatNewsTitle(article)} availability={availability[article.id]} /></div>
           </div>
         </article>)}
       </section>

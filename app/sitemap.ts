@@ -6,6 +6,7 @@ import { featurePages, featurePath } from '@/app/lib/feature-content'
 import { AI_PROCESS_GUIDE } from '@/app/lib/ai-process-guide'
 import { SECURITY_SERVICE_PATH } from '@/app/lib/application-security-content'
 import { SECURITY_EDITORIAL_GUIDES, SECURITY_EDITORIAL_NEWS } from '@/app/lib/security-editorial'
+import { INBOUND_EMAIL_GUIDE, SIGNAL_NOVEMBER_26 } from '@/app/lib/signal-weekly-20261126'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = CANONICAL_SITE_URL
@@ -44,15 +45,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pricing', lastModified: '2026-09-11' },
     { path: '/security', lastModified: '2026-11-18' },
     { path: '/insights', lastModified: '2026-09-09' },
-    { path: '/news', lastModified: '2026-11-23' },
-    { path: '/news/briefs', lastModified: '2026-10-29' },
-    { path: '/news/from-ofroot', lastModified: '2026-11-23' },
+    { path: '/news', lastModified: SIGNAL_NOVEMBER_26.publishedAt },
+    { path: SIGNAL_NOVEMBER_26.href, lastModified: SIGNAL_NOVEMBER_26.publishedAt },
+    { path: '/news/briefs', lastModified: '2026-11-26' },
+    { path: '/news/from-ofroot', lastModified: INBOUND_EMAIL_GUIDE.publishedAt },
     { path: '/news/stories', lastModified: '2026-10-29' },
     { path: '/news/sources', lastModified: '2026-10-29' },
-    { path: '/news/methodology', lastModified: '2026-10-29' },
+    { path: '/news/methodology', lastModified: '2026-11-26' },
     { path: '/book', lastModified: '2026-10-14' },
     { path: '/demo/private-ai', lastModified: '2026-07-22' },
-    { path: '/blog', lastModified: '2026-11-23' },
+    { path: '/blog', lastModified: INBOUND_EMAIL_GUIDE.publishedAt },
+    { path: INBOUND_EMAIL_GUIDE.href, lastModified: INBOUND_EMAIL_GUIDE.publishedAt },
     ...[...SECURITY_EDITORIAL_GUIDES, ...SECURITY_EDITORIAL_NEWS].map(article => ({ path: article.href, lastModified: article.modifiedAt ?? article.publishedAt })),
     { path: AI_PROCESS_GUIDE.href, lastModified: AI_PROCESS_GUIDE.publishedAt },
     { path: '/case-studies/home-services-mvp', lastModified: '2026-10-14' },
