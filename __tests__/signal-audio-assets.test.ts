@@ -9,6 +9,7 @@ import { SECURITY_GUIDE } from '@/app/lib/application-security-content';
 import { ACCOUNT_RECOVERY_GUIDE } from '@/app/lib/security-editorial-20261118';
 import { THIRD_PARTY_SCRIPT_GUIDE } from '@/app/lib/security-editorial-20261119';
 import { BUILD_SYSTEM_RETIREMENT_GUIDE } from '@/app/lib/security-editorial-20261122';
+import { INBOUND_EMAIL_GUIDE } from '@/app/lib/signal-weekly-20261126';
 
 test('every published recording matches its current transcript and verified asset', () => {
   for (const article of checkedPilot(manifest.articles)) {
@@ -28,7 +29,7 @@ test('the publishing list covers published guides and keeps their short versions
   const articles = checkedPilot(manifest.articles);
   const guides = [
     { sourcePath:AI_PROCESS_GUIDE.href, title:AI_PROCESS_GUIDE.title, summary:AI_PROCESS_GUIDE.description, publishedAt:AI_PROCESS_GUIDE.publishedAt },
-    ...[SECURITY_GUIDE, ACCOUNT_RECOVERY_GUIDE, THIRD_PARTY_SCRIPT_GUIDE, BUILD_SYSTEM_RETIREMENT_GUIDE].map(article => ({ sourcePath:article.href, title:article.title, summary:article.summary, publishedAt:article.publishedAt })),
+    ...[SECURITY_GUIDE, ACCOUNT_RECOVERY_GUIDE, THIRD_PARTY_SCRIPT_GUIDE, BUILD_SYSTEM_RETIREMENT_GUIDE, INBOUND_EMAIL_GUIDE].map(article => ({ sourcePath:article.href, title:article.title, summary:article.summary, publishedAt:article.publishedAt })),
     ...insights.map(item => ({ sourcePath:`/insights/${item.slug}`, title:item.title, summary:item.directAnswer, publishedAt:item.published ?? '2026-07-22' })),
   ];
   if (articles.length < 30) {

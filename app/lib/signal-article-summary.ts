@@ -5,10 +5,12 @@ import { ACCOUNT_RECOVERY_GUIDE } from './security-editorial-20261118';
 import { THIRD_PARTY_SCRIPT_GUIDE } from './security-editorial-20261119';
 import { BUILD_SYSTEM_RETIREMENT_GUIDE } from './security-editorial-20261122';
 import type { PilotArticle } from './signal-pilot';
+import { INBOUND_EMAIL_GUIDE } from './signal-weekly-20261126';
 
 /** Short versions use the published guide itself, never a title-only rewrite.
  * Keep existing narration transcripts stable while adding readable takeaways. */
 export function ofrootArticleTakeaways(article: PilotArticle): string[] {
+  if (article.sourcePath === INBOUND_EMAIL_GUIDE.href) return INBOUND_EMAIL_GUIDE.steps.map(step => step.takeaway);
   if (article.sourcePath === BUILD_SYSTEM_RETIREMENT_GUIDE.href) {
     return [
       'Inventory the jobs, identities, repositories and deployment targets before retiring a build system.',
