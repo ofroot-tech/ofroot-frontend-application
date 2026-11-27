@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { formatNewsTitle } from '@/app/lib/news/display-title';
 import { getNewsSnapshot } from '@/app/lib/news';
 import type { NewsCategory, NewsSnapshot } from '@/app/lib/news/types';
 import { insights, type Insight } from '@/app/lib/insights-content';
@@ -115,7 +116,7 @@ export async function prepareDigestItems(subscriber: SignalSubscriber, excluded 
         const article = references[cursor++];
         const brief = await getBriefForArticle(article);
         if (brief.status !== 'ready' || !brief.evidence || !brief.summary) continue;
-        candidates.push({ key: `brief:${article.id}`, title: article.title, url: `${SIGNAL_SITE_URL}/news/brief/${article.id}`,
+        candidates.push({ key: `brief:${article.id}`, title: formatNewsTitle(article), url: `${SIGNAL_SITE_URL}/news/brief/${article.id}`,
           excerpt: brief.summary.text,
           kind: 'brief', topic: article.category, publishedAt: article.publishedAt!, source: brief.evidence.publisher, sourceUrl: brief.evidence.url });
       }

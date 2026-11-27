@@ -25,6 +25,9 @@
 .section h2 { font-size:clamp(27px,2.5vw,35px); line-height:1.2; letter-spacing:-.035em; font-weight:510; margin-block:18px 22px; }
 .section > p:not(.kicker) { color:var(--muted); font-size:16px; line-height:1.85; margin-block:18px; }
 .section > p.introduction { font-size:20px; line-height:1.7; letter-spacing:-.015em; color:var(--reading-ink,#e0d5e9); }
+.section.shortVersion { max-width:810px; padding-block:0; border:0; }
+.section.shortVersion h2 { margin-block:0 10px; font-size:18px; line-height:1.4; letter-spacing:-.015em; }
+.shortVersion > p.introduction, .shortVersion .excerpt { margin-block:0 14px; }
 .excerpt { border-left:2px solid var(--accent); background:var(--panel); padding:20px 24px; margin-block:26px; }
 .page .excerptLabel { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font:10px/1.7 var(--font-geist-mono),monospace; letter-spacing:.03em; text-transform:uppercase; color:var(--lavender); margin-bottom:10px; }
 .excerpt blockquote { margin:0; }
