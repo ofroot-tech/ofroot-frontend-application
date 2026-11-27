@@ -3,7 +3,7 @@ jest.mock('@/app/lib/signal-briefs/evidence', () => ({ fetchBriefEvidence: jest.
 jest.mock('@/app/lib/signal-briefs/store', () => ({ readStoredBrief: jest.fn(), readStoredBriefAvailability: jest.fn(), readStoredBriefSummaries: jest.fn(), writeStoredBrief: jest.fn(), readArchivedBriefArticle: jest.fn() }));
 
 import { getNewsSnapshot, publicSnapshot } from '@/app/lib/news';
-import { abridgeAbstract, briefFingerprint, composeSignalBrief } from '@/app/lib/signal-briefs/compose';
+import { briefFingerprint, composeSignalBrief } from '@/app/lib/signal-briefs/compose';
 import { fetchBriefEvidence } from '@/app/lib/signal-briefs/evidence';
 import { getBriefArticle, getBriefAvailability, getBriefCollection, getBriefForArticle } from '@/app/lib/signal-briefs';
 import { readArchivedBriefArticle, readStoredBrief, readStoredBriefAvailability, readStoredBriefSummaries, writeStoredBrief } from '@/app/lib/signal-briefs/store';
@@ -13,7 +13,7 @@ import { createHash } from 'node:crypto';
 import { getBriefSummaries } from '@/app/lib/signal-briefs';
 
 const article: NewsArticle = { id: 'a'.repeat(20), title: 'A research record', url: 'https://arxiv.org/abs/2610.12345', sourceId: 'arxiv', category: 'ai', publishedAt: '2026-10-28', kind: 'research' };
-const evidence: BriefEvidence = { url: article.url, retrievalUrl: 'https://api.datacite.org/dois/10.48550/arxiv.2610.12345', publisher: 'arXiv via DataCite', title: article.title, publishedAt: article.publishedAt, fetchedAt: '2026-10-28T12:00:00.000Z', license: 'CC0 metadata', scope: 'Abstract only', abstract: 'The authors describe a bounded experiment. They report limitations in the evaluation setting. The paper needs independent assessment.', facts: [{ label: 'DOI', value: '10.48550/arxiv.2610.12345' }], caveats: ['Full paper not reviewed.'], contentHash: 'test-evidence-hash' };
+const evidence: BriefEvidence = { url: article.url, retrievalUrl: 'https://api.datacite.org/dois/10.48550/arxiv.2610.12345', publisher: 'arXiv via DataCite', title: article.title, publishedAt: article.publishedAt, fetchedAt: '2026-10-28T12:00:00.000Z', license: 'CC0 metadata', scope: 'Abstract only', abstract: 'The authors describe a bounded experiment. They report limitations in the evaluation setting.', facts: [{ label: 'DOI', value: '10.48550/arxiv.2610.12345' }], caveats: ['Full paper not reviewed.'], contentHash: 'test-evidence-hash' };
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -28,36 +28,44 @@ beforeEach(() => {
 });
 
 describe('evidence-bound digest composition', () => {
-  it('uses complete source sentences inside the reading budget', () => {
-    expect(abridgeAbstract('One complete sentence. Another complete sentence. A third sentence.', 7)).toBe('One complete sentence. Another complete sentence.');
-    expect(abridgeAbstract('This single sentence exceeds the tiny reading budget.', 2)).toBe('');
-  });
   it.each([
     'We evaluate GPT-4.1 models on 40 tasks. Results are limited.',
     'The improvement was 1.5 percent. Larger gains were not established.',
     'The U.S. agency published the record. Its scope remains limited.',
   ])('preserves numbers, model names, and abbreviations verbatim: %s', source => {
-    expect(abridgeAbstract(source)).toBe(source);
+    expect(composeSignalBrief(article, { status: 'available', evidence: { ...evidence, abstract: source } }).summary?.text).toBe(source);
   });
   it('does not manufacture a summary or OfRoot analysis from a headline alone', () => {
     const brief = composeSignalBrief(article, { status: 'unsupported', reason: 'Primary evidence needed.' });
     expect(brief.status).toBe('unsupported');
-    expect([brief.introduction, brief.digest, brief.context]).toEqual(['', '', '']);
     expect(brief.evidence).toBeUndefined();
     expect(brief.summary).toBeUndefined();
   });
   it('does not attach a summary when approved evidence is temporarily unavailable', () => {
     expect(composeSignalBrief(article, { status: 'unavailable', reason: 'Temporary source failure.' }).summary).toBeUndefined();
   });
-  it('keeps primary evidence and conditional OfRoot context separate', () => {
+  it('returns a short excerpt with its source and scope', () => {
     const brief = composeSignalBrief(article, { status: 'available', evidence });
-    expect(brief.digest).toBe(evidence.abstract);
     expect(brief.summary).toEqual({ kind: 'excerpt', label: 'Research abstract excerpt', text: evidence.abstract });
-    expect(brief.context).toContain('does not establish production readiness');
-    expect(brief.perspective?.changed).toContain('10.48550/arxiv.2610.12345');
-    expect(brief.perspective?.basis).toContain('Prepared automatically');
     expect(brief.evidence?.retrievalUrl).toBe(evidence.retrievalUrl);
-    expect(brief.introduction).toContain('rather than a review of the full paper');
+    expect(brief.evidence?.scope).toBe('Abstract only');
+  });
+  it('finds the reported result after the background and keeps its adjacent qualification', () => {
+    const finding = 'We report that a new robot controller completed 83% of the eight test tasks.';
+    const limit = 'However, all trials used the same lab setup.';
+    const abstract = `Robots use many different controllers. Test setup affects their performance. This has motivated prior work. ${finding} ${limit} The data are available online.`;
+    const brief = composeSignalBrief(article, { status: 'available', evidence: { ...evidence, abstract } });
+    expect(brief.summary?.text).toBe(`${finding} ${limit}`);
+  });
+  it('includes the previous sentence when a result refers back to it', () => {
+    const abstract = 'The research area is broad. We present a model for sorting invoices. This model outperforms a fixed rule on the test set.';
+    const brief = composeSignalBrief(article, { status: 'available', evidence: { ...evidence, abstract } });
+    expect(brief.summary?.text).toBe('We present a model for sorting invoices. This model outperforms a fixed rule on the test set.');
+  });
+  it('uses the current excerpt when a curated source changes', () => {
+    const revised = { ...evidence, url: 'https://arxiv.org/abs/2611.34241', abstract: 'We report revised speech-generation results. The new measurements use a different graphics processor.' };
+    const brief = composeSignalBrief(article, { status: 'available', evidence: revised });
+    expect(brief.summary).toEqual({ kind: 'excerpt', label: 'Research abstract excerpt', text: revised.abstract });
   });
   it('does not treat bibliographic metadata alone as a substantive summary', () => {
     const brief = composeSignalBrief(article, { status: 'available', evidence: { ...evidence, abstract: '', facts: evidence.facts } });
@@ -68,9 +76,8 @@ describe('evidence-bound digest composition', () => {
     const opening = Array.from({ length: 140 }, (_, index) => `word${index}`).join(' ') + ' but the result does not generalize to production.';
     const brief = composeSignalBrief(article, { status: 'available', evidence: { ...evidence, abstract: `${opening} However, the full paper requires review.` } });
     expect(brief.status).toBe('ready');
-    expect(brief.summary).toEqual({ kind: 'excerpt', label: 'Research abstract excerpt', text: opening });
+    expect(brief.summary).toEqual({ kind: 'excerpt', label: 'Research abstract excerpt', text: `${opening} However, the full paper requires review.` });
     expect(brief.summary?.text).toContain('does not generalize to production.');
-    expect(brief.digest).toBe('');
   });
   it('declines a sentence too long to preserve safely instead of cutting away a qualification', () => {
     const abstract = Array.from({ length: 230 }, () => 'finding').join(' ') + ' but the approach is not suitable for production.';
@@ -82,10 +89,10 @@ describe('evidence-bound digest composition', () => {
     const description = 'Example Gateway permits an unauthenticated attacker to read configured records.';
     const action = 'Apply mitigations according to vendor instructions.';
     const brief = composeSignalBrief({ ...article, sourceId: 'cisa', kind: 'advisory' }, { status: 'available', evidence: { ...evidence, publisher: 'CISA', abstract: description, facts: [{ label: 'CVE', value: 'CVE-2026-12345' }, { label: 'Vendor', value: 'Example' }, { label: 'Product', value: 'Gateway' }, { label: 'CISA required action', value: action }, { label: 'Federal agency due date', value: '2026-12-01' }] } });
-    expect(brief.summary?.text).toContain('CVE-2026-12345 for Example / Gateway');
+    expect(brief.summary?.text).toContain('CVE-2026-12345 in Example Gateway');
     expect(brief.summary?.text).toContain(description);
-    expect(brief.summary?.text).toContain(`CISA required action: ${action}`);
-    expect(brief.summary?.text).toContain('2026-12-01 due date applies to covered U.S. federal agencies');
+    expect(brief.summary?.text).toContain(`CISA’s instructions: ${action}`);
+    expect(brief.summary?.text).toContain('Covered U.S. federal agencies have a 2026-12-01 remediation deadline.');
     expect(brief.summary?.text).not.toContain('your organization is compromised');
     expect(brief.summary?.kind).toBe('overview');
   });
@@ -95,8 +102,7 @@ describe('evidence-bound digest composition', () => {
   });
   it('keeps standard vendor-mitigation instructions readable without reproducing federal boilerplate', () => {
     const brief = composeSignalBrief({ ...article, sourceId: 'cisa', kind: 'advisory' }, { status: 'available', evidence: { ...evidence, facts: [{ label: 'CVE', value: 'CVE-2026-12345' }, { label: 'CISA required action', value: 'Apply mitigations in accordance with vendor instructions, ensuring compliance with agency-specific directives.' }] } });
-    expect(brief.summary?.text).toContain('CISA calls for vendor-directed mitigation.');
-    expect(brief.summary?.text).toContain('Read the linked record for its complete action');
+    expect(brief.summary?.text).toContain('Follow the vendor’s mitigation instructions and check CISA’s full requirements.');
     expect(brief.summary?.text).not.toContain('ensuring compliance');
   });
   it('preserves policy proposal status beside the actual source abstract', () => {
@@ -104,8 +110,8 @@ describe('evidence-bound digest composition', () => {
     expect(brief.summary?.text).toBe(`Proposed Rule 2026-12345. ${evidence.abstract}`);
     expect(brief.summary?.text).not.toMatch(/now requires|enacted/i);
   });
-  it('invalidates older metadata-only cached briefs after the summary policy changes', () => {
-    const priorFingerprint = createHash('sha256').update(JSON.stringify(['signal-primary-digest-2', article])).digest('hex');
+  it('invalidates cached briefs that use the old summary and perspective', () => {
+    const priorFingerprint = createHash('sha256').update(JSON.stringify(['signal-source-summary-3', article])).digest('hex');
     expect(briefFingerprint(article)).not.toBe(priorFingerprint);
   });
   it('invalidates a cached brief after a title correction or source change', () => {

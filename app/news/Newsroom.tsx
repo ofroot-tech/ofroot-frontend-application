@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDown, ArrowRight, ArrowUpRight, AudioLines, Bookmark, Check, ChevronRight, CircleHelp, GitBranch, Radio, RefreshCw, Search, X } from 'lucide-react';
 import type { NewsArticle, NewsCategory, NewsSnapshot } from '@/app/lib/news/types';
+import { SIGNAL_NOVEMBER_26 } from '@/app/lib/signal-weekly-20261126';
 import { groupStories, selectHighlights, selectionReason } from '@/app/lib/news/editorial';
 import HeroShimmer from '@/components/growth/HeroShimmer';
 import MotionText from '@/components/growth/MotionText';
@@ -136,7 +137,7 @@ export default function Newsroom({ initialSnapshot }: { initialSnapshot: NewsSna
     <HeroShimmer headingId="news-title" className={styles.hero}>
       <div className={styles.heroGrid} aria-hidden="true"><span /><span /><span /></div>
       <div className={`${styles.container} ${styles.intro}`}>
-        <div><p className={styles.eyebrow}><span /> THE OFROOT TECHNOLOGY BRIEF</p><h1 id="news-title"><MotionText trigger="load">The news. In context.</MotionText></h1><p className={styles.introCopy}>Five technology beats. Sources you can inspect. Context you can use.</p></div>
+        <div><p className={styles.eyebrow}><span /> THE OFROOT TECHNOLOGY BRIEF</p><h1 id="news-title"><MotionText trigger="load">The news. In context.</MotionText></h1><p className={styles.introCopy}>Five technology beats. Sources you can inspect. Context you can use.</p><div className={styles.heroActions}><Link href={SIGNAL_NOVEMBER_26.href}>Read the November 26 issue <ArrowRight size={16} aria-hidden="true" /></Link></div></div>
         <div className={styles.introAside}><span className={styles.eyebrow}>FIVE BEATS. ONE CONNECTED VIEW.</span><dl><div><dt>Feeds available</dt><dd>{healthyCount}<span> / {activeCount}</span></dd></div><div><dt>Source-linked references</dt><dd>{snapshot.articles.length}</dd></div></dl><Link href="/news/methodology#selection">How we choose highlights <ArrowUpRight size={15} aria-hidden="true" /></Link></div>
       </div>
     </HeroShimmer>

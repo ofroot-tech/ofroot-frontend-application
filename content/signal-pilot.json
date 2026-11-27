@@ -4,6 +4,13 @@
   "basis": "Short extracts from already-published OfRoot-owned guides. No external publisher bodies or newly invented claims.",
   "articles": [
     {
+      "slug": "turn-inbound-emails-into-crm-tasks",
+      "title": "How to turn inbound emails into CRM tasks with an approval step",
+      "sourcePath": "/blog/turn-inbound-emails-into-crm-tasks",
+      "summary": "An incoming message creates a draft, and a person decides whether it should become a task. In our local test with synthetic messages, replaying a message or its approval still produced just one task for that message.",
+      "publishedAt": "2026-11-26"
+    },
+    {
       "slug": "application-security-review-and-penetration-testing",
       "title": "Application security: from review to penetration test to verified fix",
       "sourcePath": "/blog/application-security-review-and-penetration-testing",

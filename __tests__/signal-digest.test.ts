@@ -21,7 +21,7 @@ const subscriber: SignalSubscriber = { id: 'c318ca2f-3c23-4bdf-a321-58205694b69a
 const article: NewsArticle = { id: 'a'.repeat(20), title: 'A bounded research record', url: 'https://arxiv.org/abs/2610.12345', sourceId: 'arxiv', category: 'ai', kind: 'research', publishedAt: '2026-10-28T12:00:00.000Z' };
 const item = (key: string, topic: DigestItem['topic'] = 'ai'): DigestItem => ({ key, topic, title: key, url: `https://www.ofroot.technology/news/brief/${'a'.repeat(20)}`, excerpt: 'A complete source sentence.', kind: 'brief', publishedAt: '2026-10-28T12:00:00.000Z', source: 'Approved record', sourceUrl: 'https://arxiv.org/abs/2610.12345' });
 const snapshot = (articles: NewsArticle[]) => ({ articles } as NewsSnapshot);
-const brief = { status: 'ready', digest: 'A complete source sentence. A bounded result with limitations.', evidence: { publisher: 'arXiv via DataCite', url: article.url } } as SignalBrief;
+const brief = { status: 'ready', summary: { kind: 'overview', label: 'Plain-language summary', text: 'The authors report a result in one lab. They only tested one setup.' }, evidence: { publisher: 'arXiv via DataCite', url: article.url } } as SignalBrief;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -56,6 +56,7 @@ describe('Signal digest content and preference boundaries', () => {
     expect(selected.map(value => value.key)).toEqual([`brief:${article.id}`]);
     expect(getBriefForArticle).toHaveBeenCalledTimes(1);
     expect(selected[0].sourceUrl).toBe(article.url);
+    expect(selected[0].excerpt).toBe(brief.summary?.text);
   });
   it('omits unsupported or missing primary evidence', async () => {
     jest.mocked(getBriefForArticle).mockResolvedValue({ status: 'unavailable' } as SignalBrief);
